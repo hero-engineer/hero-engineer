@@ -1,9 +1,9 @@
-import fs from 'fs'
-import path from 'path'
+// import fs from 'fs'
+// import path from 'path'
 
-import configuration from '../configuration'
+// import configuration from '../configuration'
 
-import template from '../templates/Component.tsx.template'
+// import template from '../templates/Component.tsx.template'
 
 type DragComponentArgumentsType = {
   index: string
@@ -11,20 +11,20 @@ type DragComponentArgumentsType = {
   position: 'after' | 'before'
 }
 
-function createComponent(parent: any, {index, nextIndex, position}: DragComponentArgumentsType) {
-  const componentsLocation = path.join(configuration.rootPath, configuration.appRoot, 'src/components')
-  const componentLocation = path.join(componentsLocation, `${name}.tsx`)
+function createComponent(parent: any, { index, nextIndex, position }: DragComponentArgumentsType) {
+  // const componentsLocation = path.join(configuration.rootPath, configuration.appRoot, 'src/components')
+  // const componentLocation = path.join(componentsLocation, `${name}.tsx`)
 
-  fs.mkdirSync(componentsLocation, { recursive: true })
+  // fs.mkdirSync(componentsLocation, { recursive: true })
 
-  const content = template(name)
+  // const content = template(name)
 
-  fs.writeFileSync(componentLocation, content, 'utf8')
+  // fs.writeFileSync(componentLocation, content, 'utf8')
 
-  return {
-    name,
-    content,
-  }
+  // return {
+  //   name,
+  //   content,
+  // }
 }
 
 export default createComponent

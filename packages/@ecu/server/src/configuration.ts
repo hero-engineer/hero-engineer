@@ -16,6 +16,7 @@ while (currentPath !== '/') {
 let configuration
 
 try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   configuration = require(path.join(currentPath, 'ecu.config.js')).default
 }
 catch (error) {

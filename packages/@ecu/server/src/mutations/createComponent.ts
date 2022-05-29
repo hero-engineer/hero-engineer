@@ -9,7 +9,7 @@ type CreateComponentArgumentsType = {
   name: string
 }
 
-function createComponent(parent: any, {name}: CreateComponentArgumentsType) {
+function createComponent(parent: any, { name }: CreateComponentArgumentsType) {
   const componentsLocation = path.join(configuration.rootPath, configuration.appRoot, 'src/components')
   const componentLocation = path.join(componentsLocation, `${name}.tsx`)
 

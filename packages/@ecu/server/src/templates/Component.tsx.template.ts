@@ -3,7 +3,7 @@ export default (name: string) => `import { Div } from 'honorable'
 function ${name}(props: any) {
   return (
     <Div>
-      {props.children}
+      A simple div component
     </Div>
   )
 }

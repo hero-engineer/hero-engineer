@@ -4,7 +4,14 @@
   "description": "A npm package",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "link:packages": "npm run link:client && npm run link:app",
+    "link:client": "(cd packages/@ecu/client && npm run clean:peerDependencies && npm link)",
+    "link:app": "(cd app && npm link @ecu/client)",
+    "dev:packages": "npm run dev:client",
+    "dev:client": "(cd packages/@ecu/client && npm run dev)",
+    "dev:server": "(cd packages/@ecu/server && (npm run dev & (sleep 3 && npm start)))",
+    "dev:app": "npm run link:packages && (cd app && npm run dev)"
   },
   "repository": {
     "type": "git",
@@ -15,5 +22,17 @@
   "bugs": {
     "url": "https://github.com/dherault/ecu/issues"
   },
-  "homepage": "https://github.com/dherault/ecu#readme"
+  "homepage": "https://github.com/dherault/ecu#readme",
+  "devDependencies": {
+    "@babel/core": "^7.18.2",
+    "@babel/eslint-parser": "^7.18.2",
+    "@babel/preset-env": "^7.18.2",
+    "@babel/preset-react": "^7.17.12",
+    "@typescript-eslint/eslint-plugin": "^5.26.0",
+    "@typescript-eslint/parser": "^5.26.0",
+    "eslint": "^8.16.0",
+    "eslint-config-dherault": "^1.7.3",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.7.2"
+  }
 }
