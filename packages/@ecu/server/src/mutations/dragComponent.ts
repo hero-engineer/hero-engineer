@@ -5,11 +5,13 @@ import configuration from '../configuration'
 
 import template from '../templates/Component.tsx.template'
 
-type CreateComponentArgumentsType = {
-  name: string
+type DragComponentArgumentsType = {
+  index: string
+  nextIndex: string
+  position: 'after' | 'before'
 }
 
-function createComponent(parent: any, {name}: CreateComponentArgumentsType) {
+function createComponent(parent: any, {index, nextIndex, position}: DragComponentArgumentsType) {
   const componentsLocation = path.join(configuration.rootPath, configuration.appRoot, 'src/components')
   const componentLocation = path.join(componentsLocation, `${name}.tsx`)
 

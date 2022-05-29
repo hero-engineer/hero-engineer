@@ -8,11 +8,17 @@ function getComponents() {
 
   fs.mkdirSync(componentsLocation, { recursive: true })
 
-  return fs.readdirSync(componentsLocation).map(file => ({
-    id: file.replace('.tsx', ''),
-    name: file.replace('.tsx', ''),
-    content: fs.readFileSync(path.join(componentsLocation, file), 'utf8'),
-  }))
+  return fs.readdirSync(componentsLocation).map(file => {
+    const name = file.replace('.tsx', '')
+    const content = fs.readFileSync(path.join(componentsLocation, file), 'utf8')
+
+    return {
+      name,
+      id: name,
+      content,
+      // ast:
+    }
+  })
 }
 
 export default getComponents
