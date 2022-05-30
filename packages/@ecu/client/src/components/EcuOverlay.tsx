@@ -1,11 +1,12 @@
 import { PropsWithChildren, useState } from 'react'
 import {
   gql,
+  useMutation,
   useQuery,
 } from '@apollo/client'
 import hotKeys from 'react-piano-keys'
 
-import { Div } from 'honorable'
+import { Button, Div } from 'honorable'
 
 type EcuOverlayProps = PropsWithChildren<unknown>
 
@@ -20,11 +21,18 @@ function EcuOverlay({ children }: EcuOverlayProps) {
   return (
     <>
       {isVisible && (
-        <ComponentsList
-          position="fixed"
-          top={0}
-          left={0}
-        />
+        <>
+          <ComponentsList
+            position="fixed"
+            top={0}
+            left={0}
+          />
+          <CreateComponentButton
+            position="fixed"
+            top={0}
+            right={0}
+          />
+        </>
       )}
       {children}
     </>
@@ -67,11 +75,47 @@ type ComponentListItemProps = {
   component: any
 }
 
+const ADD_COMPONENT_MUTATION = gql`
+  mutation AddComponentMutation($name: String!) {
+    addComponent(name: $name) {
+      id
+    }
+  }
+`
+
 function ComponentListItem({ component }: ComponentListItemProps) {
+  const [mutation] = useMutation(ADD_COMPONENT_MUTATION, {
+    variables: {
+      name: component.name,
+    },
+  })
+
   return (
-    <Div>
+    <Div onClick={() => mutation()}>
       {component.name}
     </Div>
+  )
+}
+
+const CREATE_COMPONENT_MUTATION = gql`
+  mutation CreateComponentMutation {
+    createComponent {
+      id
+    }
+  }
+`
+
+function CreateComponentButton(props: any) {
+  const [mutation, { loading }] = useMutation(CREATE_COMPONENT_MUTATION)
+
+  return (
+    <Button
+      onClick={() => mutation()}
+      loading={loading}
+      {...props}
+    >
+      Create Component
+    </Button>
   )
 }
 

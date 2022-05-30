@@ -1,7 +1,8 @@
 import { ApolloServer, gql } from 'apollo-server'
 
-import createComponent from './mutations/createComponent'
 import getComponents from './queries/getComponents'
+import createComponent from './mutations/createComponent'
+import addComponent from './mutations/addComponent'
 
 const typeDefs = gql`
   type Component {
@@ -13,7 +14,8 @@ const typeDefs = gql`
     components: [Component]
   }
   type Mutation {
-    createComponent(name: String!): Component
+    createComponent: Component
+    addComponent(name: String!): Component
   }
 `
 
@@ -23,6 +25,7 @@ const resolvers = {
   },
   Mutation: {
     createComponent,
+    addComponent,
   },
 }
 

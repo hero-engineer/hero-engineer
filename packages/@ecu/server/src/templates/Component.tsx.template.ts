@@ -2,7 +2,7 @@ export default (name: string) => `import { Div } from 'honorable'
 
 function ${name}(props: any) {
   return (
-    <Div>
+    <Div {...props}>
       A simple div component
     </Div>
   )

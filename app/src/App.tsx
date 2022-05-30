@@ -1,12 +1,17 @@
 import { Ecu } from '@ecu/client'
 
+/* ecu-imports */
+import MyComponent from './components/MyComponent'
+
 function App() {
   return (
     <Ecu>
-      {/* ecu-start */}
-      {/* ecu-stop */}
+      <MyComponent />
+      <MyComponent />
+      <MyComponent />
+      <MyComponent />
     </Ecu>
-  );
+  )
 }
 
-export default App;
+export default App
