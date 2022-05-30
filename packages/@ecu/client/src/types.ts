@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from 'react'
+
 export type EcuType = {
   activeIndex: string
   hoveredIndex: string
@@ -8,10 +10,13 @@ export type EcuType = {
   createEditorId: () => number
 }
 
+export type EcuDispatcherType = Dispatch<SetStateAction<EcuType>>
+export type EcuContextType = [EcuType, EcuDispatcherType]
+
 export type MenuItemType = {
   label: string
   on: 'component'
-  handler: (ecu: EcuType) => void
+  handler: (ecu: EcuType, setEcu: EcuDispatcherType) => void
 }
 
 export type PositionType = {

@@ -8,6 +8,7 @@ function App() {
   return (
     <Ecu>
       <MyComponent1 />
+      <MyComponent1 />
       <MyComponent />
       <MyComponent />
       <MyComponent />

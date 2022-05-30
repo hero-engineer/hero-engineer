@@ -1,7 +1,9 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext } from 'react'
+import { gql } from '@apollo/client'
 import { Div } from 'honorable'
 
 import { MenuItemType, PositionType } from '../types'
+import client from '../client'
 
 import EcuContext from '../contexts/EcuContext'
 
@@ -9,34 +11,50 @@ type EcuOverlayMenuProps = {
   mousePosition: PositionType
 }
 
+const REMOVE_COMPONENT_MUTATION = gql`
+  mutation removeComponentMutation($index: String!) {
+    removeComponent(index: $index) {
+      id
+    }
+  }
+`
+
 // TODO plugin system
 const menuItems: MenuItemType[] = [
   {
     label: 'Remove',
     on: 'component',
-    handler: ecu => {
-      console.log('remove', ecu.hoveredIndex)
+    handler: (ecu, setEcu) => {
+      client.mutate({
+        mutation: REMOVE_COMPONENT_MUTATION,
+        variables: {
+          index: ecu.activeIndex,
+        },
+      })
+      .then(() => {
+        setEcu(ecu => ({ ...ecu, activeIndex: null }))
+      })
     },
   },
   {
     label: 'Remove',
     on: 'component',
     handler: ecu => {
-      console.log('remove', ecu.hoveredIndex)
+      console.log('remove', ecu.activeIndex)
     },
   },
   {
     label: 'Remove',
     on: 'component',
     handler: ecu => {
-      console.log('remove', ecu.hoveredIndex)
+      console.log('remove', ecu.activeIndex)
     },
   },
   {
     label: 'Remove',
     on: 'component',
     handler: ecu => {
-      console.log('remove', ecu.hoveredIndex)
+      console.log('remove', ecu.activeIndex)
     },
   },
 ]
@@ -56,7 +74,7 @@ function computePositions(items: MenuItemType[], mousePosition: PositionType) {
 }
 
 function EcuOverlayMenu({ mousePosition }: EcuOverlayMenuProps) {
-  const [ecu] = useContext(EcuContext)
+  const [ecu, setEcu] = useContext(EcuContext)
   const positions = computePositions(menuItems, mousePosition)
 
   return (
@@ -76,7 +94,7 @@ function EcuOverlayMenu({ mousePosition }: EcuOverlayMenuProps) {
             border="1px solid border"
             backgroundColor="white"
             cursor="pointer"
-            onClick={() => handler(ecu)}
+            onClick={() => handler(ecu, setEcu)}
           >
             {label}
           </Div>

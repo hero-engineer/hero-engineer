@@ -1,8 +1,5 @@
-import { Dispatch, SetStateAction, createContext } from 'react'
+import { createContext } from 'react'
 
-import { EcuType } from '../types'
-
-export type EcuDispatcherType = Dispatch<SetStateAction<EcuType>>
-export type EcuContextType = [EcuType, EcuDispatcherType]
+import { EcuContextType, EcuType } from '../types'
 
 export default createContext<EcuContextType>([{} as EcuType, () => {}])

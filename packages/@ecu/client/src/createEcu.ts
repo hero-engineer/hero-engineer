@@ -2,6 +2,7 @@ import { EcuType } from './types'
 
 function createEcu(): EcuType {
   return {
+    activeIndex: '-1',
     hoveredIndex: null,
     dragIndex: null,
     dragHoveredIndex: null,

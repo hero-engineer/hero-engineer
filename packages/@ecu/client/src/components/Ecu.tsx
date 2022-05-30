@@ -1,9 +1,5 @@
 import { PropsWithChildren, useMemo, useRef, useState } from 'react'
-import {
-  ApolloClient,
-  ApolloProvider,
-  InMemoryCache,
-} from '@apollo/client'
+import { ApolloProvider } from '@apollo/client'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { DndProvider } from 'react-dnd'
 
@@ -12,17 +8,15 @@ import defaultTheme from 'honorable-theme-default'
 
 import createEcu from '../createEcu'
 import withEcuEditor from '../withEcuEditor'
+import client from '../client'
 
-import EcuContext, { EcuContextType } from '../contexts/EcuContext'
+import { EcuContextType } from '../types'
+
+import EcuContext from '../contexts/EcuContext'
 
 import EcuOverlay from './EcuOverlay'
 
 type EcuProps = PropsWithChildren<unknown>
-
-const client = new ApolloClient({
-  uri: 'http://localhost:4000/graphql',
-  cache: new InMemoryCache(),
-})
 
 function Ecu({ children }: EcuProps) {
   const childrenRef = useRef<HTMLDivElement>()

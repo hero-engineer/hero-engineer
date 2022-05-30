@@ -1,50 +1,21 @@
-import fs from 'fs'
-import path from 'path'
+import { Node, SourceFile, SyntaxKind } from 'ts-morph'
 
-import { Node, Project, SourceFile, SyntaxKind } from 'ts-morph'
-import { ESLint } from 'eslint'
-
-import configuration from '../configuration'
+import {
+  getAppSourceAndHierarchy,
+  saveAppSource,
+} from './helpers'
 
 async function insertComponentInApp(name: string, index: string) {
-  const appRootLocation = path.join(configuration.rootPath, configuration.appRoot)
-  const appTsxLocation = path.join(appRootLocation, 'src/App.tsx')
-
-  const project = new Project({
-    tsConfigFilePath: path.join(appRootLocation, 'tsconfig.json'),
-  })
-
-  const AppSource = project.getSourceFile(appTsxLocation)
+  const { AppSource, EcuTag } = getAppSourceAndHierarchy()
 
   insertImportStatement(AppSource, name)
+  insertComponentInHierarchy(EcuTag, name, index)
 
-  const AppFunction = AppSource.getFunction('App')
-
-  const returnStatement = AppFunction.getLastChild().getChildrenOfKind(SyntaxKind.ReturnStatement)[0]
-
-  if (!returnStatement) {
-    throw new Error('No return statement in App.tsx')
-  }
-
-  const ecuTag = returnStatement.getDescendantsOfKind(SyntaxKind.JsxElement)[0]
-
-  if (!(ecuTag && ecuTag.getChildAtIndex(0).getChildAtIndex(1).getText() === 'Ecu')) {
-    throw new Error('No Ecu tag in App.tsx')
-  }
-
-  insertComponentInHierarchy(ecuTag, name, index)
-
-  console.log()
-  console.log('---')
-  console.log()
+  console.log('\n---\n')
   console.log(AppSource.getText())
+  console.log('\n---\n')
 
-  fs.writeFileSync(appTsxLocation, AppSource.getText(), 'utf8')
-
-  const eslint = new ESLint({ fix: true })
-  const results = await eslint.lintFiles([appTsxLocation])
-
-  await ESLint.outputFixes(results)
+  await saveAppSource(AppSource)
 }
 
 async function insertImportStatement(AppSource: SourceFile, name: string) {
