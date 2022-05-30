@@ -1,7 +1,7 @@
 import { PropsWithChildren, Ref, forwardRef, useContext, useEffect, useRef, useState } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 
-import { Div, useForkedRef } from 'honorable'
+import { Div } from 'honorable'
 
 import EcuContext from '../contexts/EcuContext'
 
@@ -10,17 +10,16 @@ type EcuEditorProps = PropsWithChildren<{
 }>
 
 function EcuEditorRef({ children, index }: EcuEditorProps, ref: Ref<any>) {
-  const rootRef = useRef<HTMLDivElement>()
-  const forkedRef = useForkedRef(ref, rootRef)
+  const childrenRef = useRef<HTMLDivElement>()
   const [ecu, setEcu] = useContext(EcuContext)
   const { dragHoveredIndex, dragMousePosition, dragRect } = ecu
   const [dragPlaceholderPosition, setDragPlaceholderPosition] = useState(null)
 
   useEffect(() => {
-    if (!rootRef.current) return
+    if (!childrenRef.current) return
 
     if (dragHoveredIndex === index) {
-      const rect = rootRef.current.getBoundingClientRect()
+      const rect = childrenRef.current.getBoundingClientRect()
 
       setDragPlaceholderPosition(dragMousePosition.y - rect.top < rect.height / 2 ? 'top' : 'bottom')
 
@@ -30,7 +29,7 @@ function EcuEditorRef({ children, index }: EcuEditorProps, ref: Ref<any>) {
     setDragPlaceholderPosition(null)
   }, [dragHoveredIndex, index, dragMousePosition])
 
-  const [{ handlerId }, drop] = useDrop({
+  const [, drop] = useDrop({
     accept: 'component',
     collect(monitor) {
       return {
@@ -38,10 +37,6 @@ function EcuEditorRef({ children, index }: EcuEditorProps, ref: Ref<any>) {
       }
     },
     hover(item: any, monitor) {
-      if (!rootRef.current) {
-        return
-      }
-
       const dragIndex = item.index
       const dragHoveredIndex = index
 
@@ -66,11 +61,13 @@ function EcuEditorRef({ children, index }: EcuEditorProps, ref: Ref<any>) {
       // item.index = dragHoveredIndex
     },
   })
+
   const [{ isDragging }, drag] = useDrag({
     type: 'component',
     item: () => ({ id: index, index }),
     collect: monitor => ({ isDragging: monitor.isDragging() }),
     end: () => {
+      setDragPlaceholderPosition(null)
       setEcu(ecu => ({
         ...ecu,
         dragIndex: null,
@@ -82,19 +79,18 @@ function EcuEditorRef({ children, index }: EcuEditorProps, ref: Ref<any>) {
 
   useEffect(() => {
     if (isDragging) {
-      const dragRect = rootRef.current.getBoundingClientRect()
+      const dragRect = childrenRef.current.getBoundingClientRect()
 
       setEcu(ecu => ({ ...ecu, dragRect }))
     }
   }, [isDragging, setEcu])
 
-  // const opacity = isDragging ? 0 : 1
-  drag(drop(rootRef))
+  drag(drop(childrenRef))
 
   return (
     <Div
       ecu={index}
-      ref={forkedRef}
+      ref={ref}
     >
       {dragRect && dragPlaceholderPosition === 'top' && (
         <Div
@@ -104,11 +100,14 @@ function EcuEditorRef({ children, index }: EcuEditorProps, ref: Ref<any>) {
         />
       )}
       <Div
+        ref={childrenRef}
         p={0.5}
-        border="1px solid gold"
-        borderColor={ecu.hoveredIndex === index ? 'red' : 'gold'}
+        borderStyle="solid"
+        borderWidth={1}
+        borderColor={ecu.activeIndex === index ? 'black' : ecu.hoveredIndex === index ? 'red' : 'transparent'}
         onMouseEnter={() => setEcu(ecu => ({ ...ecu, hoveredIndex: index }))}
         onMouseLeave={() => setEcu(ecu => ({ ...ecu, hoveredIndex: null }))}
+        onClick={() => setEcu(ecu => ({ ...ecu, activeIndex: index }))}
       >
         {children}
       </Div>

@@ -1,4 +1,4 @@
-import { PropsWithChildren, useMemo, useState } from 'react'
+import { PropsWithChildren, useMemo, useRef, useState } from 'react'
 import {
   ApolloClient,
   ApolloProvider,
@@ -7,7 +7,7 @@ import {
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { DndProvider } from 'react-dnd'
 
-import { CssBaseline, ThemeProvider, mergeTheme } from 'honorable'
+import { CssBaseline, Div, ThemeProvider, mergeTheme } from 'honorable'
 import defaultTheme from 'honorable-theme-default'
 
 import createEcu from '../createEcu'
@@ -25,6 +25,7 @@ const client = new ApolloClient({
 })
 
 function Ecu({ children }: EcuProps) {
+  const childrenRef = useRef<HTMLDivElement>()
   const [ecu, setEcu] = useState(createEcu())
   const ecuValue = useMemo<EcuContextType>(() => [ecu, setEcu], [ecu])
 
@@ -32,10 +33,16 @@ function Ecu({ children }: EcuProps) {
     stylesheet: {
       body: [
         {
-          position: 'relative',
+          minHeight: '100vh',
         },
       ],
     },
+  }
+
+  function handleChildrenClick(event: React.MouseEvent) {
+    if (event.target === childrenRef.current) {
+      setEcu(ecu => ({ ...ecu, activeIndex: null, hoveredIndex: null }))
+    }
   }
 
   return (
@@ -45,7 +52,13 @@ function Ecu({ children }: EcuProps) {
         <EcuContext.Provider value={ecuValue}>
           <DndProvider backend={HTML5Backend}>
             <EcuOverlay>
-              {withEcuEditor(children, ecu)}
+              <Div
+                ref={childrenRef}
+                minHeight="100vh"
+                onClick={handleChildrenClick}
+              >
+                {withEcuEditor(children, ecu)}
+              </Div>
             </EcuOverlay>
           </DndProvider>
         </EcuContext.Provider>

@@ -1,22 +1,54 @@
-import { PropsWithChildren, useState } from 'react'
-import {
-  gql,
-  useMutation,
-  useQuery,
-} from '@apollo/client'
-import hotKeys from 'react-piano-keys'
-
+import { PropsWithChildren, useEffect, useState } from 'react'
+import { gql, useMutation, useQuery } from '@apollo/client'
 import { Button, Div } from 'honorable'
+
+import { PositionType } from '../types'
+
+import EcuOverlayMenu from './EcuOverlayMenu'
 
 type EcuOverlayProps = PropsWithChildren<unknown>
 
 function EcuOverlay({ children }: EcuOverlayProps) {
   const [isVisible, setIsVisible] = useState(false)
+  const [mousePosition, setMousePosition] = useState<PositionType>({ x: 0, y: 0 })
 
-  hotKeys(document.documentElement, 'space', event => {
-    event.preventDefault()
-    setIsVisible(x => !x)
-  })
+  useEffect(() => {
+    function handler(event: MouseEvent) {
+      if (!isVisible) {
+        setMousePosition({ x: event.clientX, y: event.clientY })
+      }
+    }
+
+    window.addEventListener('mousemove', handler)
+
+    return () => {
+      window.removeEventListener('mousemove', handler)
+    }
+  }, [isVisible])
+
+  useEffect(() => {
+    function handler(isKeyDown: boolean) {
+      return (event: KeyboardEvent) => {
+        event.preventDefault()
+        event.stopImmediatePropagation()
+
+        if (event.key === 'Tab') {
+          setIsVisible(isKeyDown)
+        }
+      }
+    }
+
+    const onKeyDown = handler(true)
+    const onKeyUp = handler(false)
+
+    window.addEventListener('keydown', onKeyDown)
+    window.addEventListener('keyup', onKeyUp)
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+      window.removeEventListener('keyup', onKeyUp)
+    }
+  }, [])
 
   return (
     <>
@@ -32,6 +64,7 @@ function EcuOverlay({ children }: EcuOverlayProps) {
             top={0}
             right={0}
           />
+          <EcuOverlayMenu mousePosition={mousePosition} />
         </>
       )}
       {children}
