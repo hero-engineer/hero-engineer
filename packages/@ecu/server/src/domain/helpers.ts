@@ -1,52 +1,42 @@
+import fs from 'fs'
 import path from 'path'
 
-import { Project, SourceFile, SyntaxKind } from 'ts-morph'
+import { ExpressionStatement, JSXElement, Program } from '@babel/types'
+import { ParserOptions, parse } from '@babel/parser'
+import traverse, { NodePath } from '@babel/traverse'
+import generate, { GeneratorOptions } from '@babel/generator'
+
 import { ESLint } from 'eslint'
 
 import configuration from '../configuration'
 
-export function getAppLocations() {
-  const appRootLocation = path.join(configuration.rootPath, configuration.appRoot)
-  const appTsxLocation = path.join(appRootLocation, 'src/App.tsx')
+import babelConfig from './babel.config'
 
-  return {
-    appRootLocation,
-    appTsxLocation,
-  }
+// !!!
+// Rewrite everything to use babel
+// !!!
+
+export function getFileLocation(fileName: string) {
+  return path.join(configuration.rootPath, configuration.appRoot, `src/${fileName}.tsx`)
 }
 
-export function getAppSourceAndHierarchy() {
-  const { appRootLocation, appTsxLocation } = getAppLocations()
-
-  const project = new Project({
-    tsConfigFilePath: path.join(appRootLocation, 'tsconfig.json'),
-  })
-
-  const AppSource = project.getSourceFile(appTsxLocation)
-  const AppFunction = AppSource.getFunction('App')
-  const returnStatement = AppFunction.getLastChild().getChildrenOfKind(SyntaxKind.ReturnStatement)[0]
-
-  if (!returnStatement) {
-    throw new Error('No return statement in App.tsx')
-  }
-
-  const EcuTag = returnStatement.getDescendantsOfKind(SyntaxKind.JsxElement)[0]
-
-  if (!(EcuTag && EcuTag.getChildAtIndex(0).getChildAtIndex(1).getText() === 'Ecu')) {
-    throw new Error('No Ecu tag in App.tsx')
-  }
-
-  return {
-    AppSource,
-    EcuTag,
-  }
+export function parseJsx(code: string) {
+  return (parse(code, babelConfig as ParserOptions).program.body[0] as ExpressionStatement).expression as JSXElement
 }
 
-export async function saveAppSource(AppSource: SourceFile) {
-  await AppSource.save()
+export function getFileAst(location: string) {
+  return parse(
+    fs.readFileSync(location, 'utf8'),
+    babelConfig as ParserOptions
+  )
+}
 
+export async function regenerateFile(ast: Program, fileLocation: string) {
+  const text = generate(ast, babelConfig as GeneratorOptions).code
   const eslint = new ESLint({ fix: true })
-  const results = await eslint.lintFiles([getAppLocations().appTsxLocation])
+  const results = await eslint.lintText(text)
 
-  await ESLint.outputFixes(results)
+  // await ESLint.outputFixes(results)
+
+  console.log('results', results[0].output)
 }
