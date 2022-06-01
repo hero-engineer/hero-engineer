@@ -7,3 +7,20 @@ export const DRAG_COMPONENT_MUTATION = gql`
     }
   }
 `
+
+export const CREATE_SCENE_MUTATION = gql`
+  mutation createSceneMutation($name: String!) {
+    createScene(name: $name) {
+      id
+    }
+  }
+`
+
+export const SCENES_QUERY = gql`
+  query scenesQuery {
+    scenes {
+      id
+      name
+    }
+  }
+`

@@ -1,23 +1,26 @@
 import fs from 'fs'
 import path from 'path'
 
+import { ComponentType } from '../../types'
+
 import configuration from '../configuration'
 
 import template from '../templates/Component.tsx.template'
 
+type CreateComponentArgumentsType = {
+  name: string
+}
+
 const componentsLocation = path.join(configuration.rootPath, configuration.appRoot, 'src/components')
 
-function createComponent() {
-  let index = 0
-  let name = 'MyComponent'
+function createComponent(parent: any, { name }: CreateComponentArgumentsType): ComponentType {
+  const fileName = `${name}.tsx`
 
   fs.readdirSync(componentsLocation).forEach(file => {
-    if (file.startsWith(name)) {
-      index++
+    if (file === fileName) {
+      throw new Error(`Component ${name} already exists`)
     }
   })
-
-  name += index > 0 ? index : ''
 
   const content = template(name)
   const componentLocation = path.join(componentsLocation, `${name}.tsx`)
@@ -27,7 +30,6 @@ function createComponent() {
   return {
     id: name,
     name,
-    content,
   }
 }
 

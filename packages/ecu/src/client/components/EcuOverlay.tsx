@@ -1,8 +1,9 @@
 import { PropsWithChildren, useEffect, useState } from 'react'
 import { gql, useMutation, useQuery } from '@apollo/client'
+import { Link } from 'react-router-dom'
 import { Button, Div } from 'honorable'
 
-import { PositionType } from '../types'
+import { PositionType } from '../../types'
 
 import EcuOverlayMenu from './EcuOverlayMenu'
 
@@ -59,6 +60,15 @@ function EcuOverlay({ children }: EcuOverlayProps) {
             top={0}
             left={0}
           />
+          <Button
+            position="fixed"
+            top={0}
+            right="50vh"
+            as={Link}
+            to="/_ecu_"
+          >
+            Ecu
+          </Button>
           <CreateComponentButton
             position="fixed"
             top={0}

@@ -28,3 +28,17 @@ export type PositionType = {
   x: number
   y: number
 }
+
+export type QueryResultsType<K extends string, P> = {
+  [key in K]: P
+}
+
+export type SceneType = {
+  id: string
+  name: string
+}
+
+export type ComponentType = {
+  id: string
+  name: string
+}

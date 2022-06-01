@@ -1,4 +1,4 @@
-import { EcuType } from './types'
+import { EcuType } from '../types'
 
 function createEcu(): EcuType {
   return {

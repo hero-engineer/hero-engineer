@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import { gql } from '@apollo/client'
 import { Div } from 'honorable'
 
-import { MenuItemType, PositionType } from '../types'
+import { MenuItemType, PositionType } from '../../types'
 import client from '../client'
 
 import EcuContext from '../contexts/EcuContext'

@@ -10,10 +10,11 @@ import createEcu from '../createEcu'
 import withEcuEditor from '../withEcuEditor'
 import client from '../client'
 
-import { EcuContextType } from '../types'
+import { EcuContextType } from '../../types'
 
 import EcuContext from '../contexts/EcuContext'
 
+import EcuRouter from './EcuRouter'
 import EcuOverlay from './EcuOverlay'
 
 type EcuProps = PropsWithChildren<unknown>
@@ -52,15 +53,17 @@ function Ecu({ children }: EcuProps) {
         <CssBaseline />
         <EcuContext.Provider value={ecuValue}>
           <DndProvider backend={HTML5Backend}>
-            <EcuOverlay>
-              <Div
-                ref={childrenRef}
-                minHeight="100vh"
-                onClick={handleChildrenClick}
-              >
-                {withEcuEditor(children, ecu)}
-              </Div>
-            </EcuOverlay>
+            <EcuRouter>
+              <EcuOverlay>
+                <Div
+                  ref={childrenRef}
+                  minHeight="100vh"
+                  onClick={handleChildrenClick}
+                >
+                  {withEcuEditor(children, ecu)}
+                </Div>
+              </EcuOverlay>
+            </EcuRouter>
           </DndProvider>
         </EcuContext.Provider>
       </ThemeProvider>

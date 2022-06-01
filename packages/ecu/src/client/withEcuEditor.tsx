@@ -1,6 +1,7 @@
 import { Children, ReactNode, cloneElement, isValidElement } from 'react'
 
-import { EcuType } from './types'
+import { EcuType } from '../types'
+
 import EcuEditor from './components/EcuEditor'
 
 function withEcuEditor(children: ReactNode, ecu: EcuType, index = '0') {
