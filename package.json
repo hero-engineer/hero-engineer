@@ -8,7 +8,8 @@
     "link:app": "(cd app && npm link ecu)",
     "dev:client": "(cd packages/ecu && npm run dev)",
     "dev:server": "(cd packages/ecu && npm run start:watch)",
-    "dev:app": "npm run link:packages && (cd app && npm run dev)"
+    "dev:app": "npm run link:packages && (cd app && npm run dev)",
+    "minor:ecu": "(cd packages/ecu && npm version minor && npm publish)"
   },
   "repository": {
     "type": "git",
