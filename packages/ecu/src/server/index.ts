@@ -12,6 +12,7 @@ const typeDefs = gql`
   type Scene {
     id: ID!
     name: String!
+    url: String!
   }
 
   type Component {
@@ -25,7 +26,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    createScene(name: String!): Scene
+    createScene(name: String!, url: String!): Scene
     createComponent(name: String!): Component
     addComponent(name: String!, index: String!, position: String!): Component
     removeComponent(index: String!): Component

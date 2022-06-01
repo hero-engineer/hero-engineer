@@ -23,7 +23,12 @@ catch (error) {
   throw new Error('Ecu configuration not found')
 }
 
+const srcLocation = path.join(currentPath, configuration.appRoot, 'src')
+
 export default {
   ...configuration,
-  rootPath: currentPath,
+  rootLocation: currentPath,
+  srcLocation,
+  componentsLocation: path.join(srcLocation, 'components'),
+  scenesLocation: path.join(srcLocation, 'scenes'),
 }

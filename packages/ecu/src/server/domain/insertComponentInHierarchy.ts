@@ -1,22 +1,22 @@
 import { FunctionDeclaration } from '@babel/types'
 import traverse, { NodePath } from '@babel/traverse'
 
-import { UpdateHierarchyAstResolverType, updateHierarchyAst } from './updateHierarchyTree'
-import { getFileAst, getFileLocation, parseJsx, regenerateFile } from './helpers'
+import { ComponentType, FileType } from '../../types'
 
-async function insertComponentInHierarchy(
-  fileName: string,
-  componentName: string,
-  insertedComponentFileName: string,
-  insertedComponentName: string,
+import { UpdateHierarchyAstResolverType, updateHierarchyAst } from './updateHierarchyTree'
+import generateComponentString from './generateComponentString'
+import { getFileAst, parseJsx, regenerateFile } from './helpers'
+
+function insertComponentInHierarchy(
+  file: FileType,
+  sourceComponent: ComponentType,
+  targetComponent: ComponentType,
   index: string,
   position: 'before' | 'after',
 ) {
+  const fileAst = getFileAst(file)
 
-  const fileLocation = getFileLocation(fileName)
-  const fileAst = getFileAst(fileLocation)
-
-  let componentFunctionAstPath: NodePath<FunctionDeclaration>
+  let sourceComponentFunctionAstPath: NodePath<FunctionDeclaration>
 
   traverse(
     fileAst,
@@ -25,8 +25,8 @@ async function insertComponentInHierarchy(
 
       // },
       FunctionDeclaration(path) {
-        if (path.node.id.name === componentName) {
-          componentFunctionAstPath = path
+        if (path.node.id.name === sourceComponent.name) {
+          sourceComponentFunctionAstPath = path
 
           path.stop()
         }
@@ -34,14 +34,14 @@ async function insertComponentInHierarchy(
     }
   )
 
-  if (!componentFunctionAstPath) {
-    throw new Error(`${componentName} not found in ${fileName}`)
+  if (!sourceComponentFunctionAstPath) {
+    throw new Error(`${sourceComponent.name} not found in ${file.name}`)
   }
 
   let returnStatementAstPath
 
   traverse(
-    componentFunctionAstPath.node,
+    sourceComponentFunctionAstPath.node,
     {
       ReturnStatement(path) {
         returnStatementAstPath = path
@@ -50,31 +50,31 @@ async function insertComponentInHierarchy(
         path.stop()
       },
     },
-    componentFunctionAstPath.scope,
-    componentFunctionAstPath
+    sourceComponentFunctionAstPath.scope,
+    sourceComponentFunctionAstPath
   )
 
   if (!returnStatementAstPath) {
-    throw new Error(`${componentName} in ${fileName} has no return statement`)
+    throw new Error(`${sourceComponent.name} in ${file.name} has no return statement`)
   }
 
   const resolver: UpdateHierarchyAstResolverType = (path, within) => {
+    const targetComponentAst = parseJsx(generateComponentString(targetComponent))
+
     if (within) {
-      path.node.children.push(parseJsx(`<${insertedComponentName} />`))
+      path.node.children.push(targetComponentAst)
     }
     else if (position === 'before') {
-      path.insertBefore(parseJsx(`<${insertedComponentName} />`))
+      path.insertBefore(targetComponentAst)
     }
     else {
-      path.insertAfter(parseJsx(`<${insertedComponentName} />`))
+      path.insertAfter(targetComponentAst)
     }
   }
 
   updateHierarchyAst(returnStatementAstPath, resolver, index)
 
-  await regenerateFile(fileAst.program, fileLocation)
+  regenerateFile(fileAst.program, file)
 }
-
-// insertComponentInHierarchy('App', 'App', 'components/Cool', 'Cool', '0.0.0', 'before')
 
 export default insertComponentInHierarchy

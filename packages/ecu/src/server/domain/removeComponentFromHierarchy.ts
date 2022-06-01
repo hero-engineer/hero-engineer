@@ -1,19 +1,19 @@
 import { FunctionDeclaration } from '@babel/types'
 import traverse, { NodePath } from '@babel/traverse'
 
-import { UpdateHierarchyAstResolverType, updateHierarchyAst } from './updateHierarchyTree'
-import { getFileAst, getFileLocation, regenerateFile } from './helpers'
+import { ComponentType, FileType } from '../../types'
 
-async function removeComponentFromHierarchy(
-  fileName: string,
-  componentName: string,
+import { UpdateHierarchyAstResolverType, updateHierarchyAst } from './updateHierarchyTree'
+import { getFileAst, regenerateFile } from './helpers'
+
+function removeComponentFromHierarchy(
+  file: FileType,
+  sourceComponent: ComponentType,
   index: string,
 ) {
+  const fileAst = getFileAst(file)
 
-  const fileLocation = getFileLocation(fileName)
-  const fileAst = getFileAst(fileLocation)
-
-  let componentFunctionAstPath: NodePath<FunctionDeclaration>
+  let sourceComponentFunctionAstPath: NodePath<FunctionDeclaration>
 
   traverse(
     fileAst,
@@ -22,8 +22,8 @@ async function removeComponentFromHierarchy(
 
       // },
       FunctionDeclaration(path) {
-        if (path.node.id.name === componentName) {
-          componentFunctionAstPath = path
+        if (path.node.id.name === sourceComponent.name) {
+          sourceComponentFunctionAstPath = path
 
           path.stop()
         }
@@ -31,14 +31,14 @@ async function removeComponentFromHierarchy(
     }
   )
 
-  if (!componentFunctionAstPath) {
-    throw new Error(`${componentName} not found in ${fileName}`)
+  if (!sourceComponentFunctionAstPath) {
+    throw new Error(`${sourceComponent.name} not found in ${file.name}`)
   }
 
   let returnStatementAstPath
 
   traverse(
-    componentFunctionAstPath.node,
+    sourceComponentFunctionAstPath.node,
     {
       ReturnStatement(path) {
         returnStatementAstPath = path
@@ -47,12 +47,12 @@ async function removeComponentFromHierarchy(
         path.stop()
       },
     },
-    componentFunctionAstPath.scope,
-    componentFunctionAstPath
+    sourceComponentFunctionAstPath.scope,
+    sourceComponentFunctionAstPath
   )
 
   if (!returnStatementAstPath) {
-    throw new Error(`${componentName} in ${fileName} has no return statement`)
+    throw new Error(`${sourceComponent.name} in ${file.name} has no return statement`)
   }
 
   const resolver: UpdateHierarchyAstResolverType = path => {
@@ -61,9 +61,7 @@ async function removeComponentFromHierarchy(
 
   updateHierarchyAst(returnStatementAstPath, resolver, index)
 
-  await regenerateFile(fileAst.program, fileLocation)
+  regenerateFile(fileAst.program, file)
 }
-
-// removeComponentFromHierarchy('App', 'App', '0.0')
 
 export default removeComponentFromHierarchy

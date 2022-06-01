@@ -8,10 +8,12 @@ import { CREATE_SCENE_MUTATION, SCENES_QUERY } from '../queries'
 
 function Scenes() {
   const [name, setName] = useState('')
+  const [url, setUrl] = useState('/')
   const { data, loading, error } = useQuery<QueryResultsType<'scenes', SceneType[]>>(SCENES_QUERY)
   const [createScene] = useMutation(CREATE_SCENE_MUTATION, {
     variables: {
       name,
+      url,
     },
     refetchQueries: [
       SCENES_QUERY,
@@ -44,6 +46,10 @@ function Scenes() {
         <Input
           value={name}
           onChange={event => setName(event.target.value)}
+        />
+        <Input
+          value={url}
+          onChange={event => setUrl(event.target.value)}
         />
         <Button onClick={handleCreateScene}>
           Add scene

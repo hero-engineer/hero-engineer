@@ -34,11 +34,19 @@ export type QueryResultsType<K extends string, P> = {
 }
 
 export type SceneType = {
-  id: string
   name: string
+  url: string
 }
 
 export type ComponentType = {
-  id: string
   name: string
+  props: Record<string, any> & { children?: ComponentType[] }
+  importType: 'named' | 'default'
+  importName: string
+  importPath: string
+}
+
+export type FileType = {
+  name: string
+  location: string,
 }

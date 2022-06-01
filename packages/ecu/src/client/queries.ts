@@ -9,8 +9,8 @@ export const DRAG_COMPONENT_MUTATION = gql`
 `
 
 export const CREATE_SCENE_MUTATION = gql`
-  mutation createSceneMutation($name: String!) {
-    createScene(name: $name) {
+  mutation createSceneMutation($name: String!, $url: String!) {
+    createScene(name: $name, url: $url) {
       id
     }
   }

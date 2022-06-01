@@ -1,9 +1,15 @@
 import fs from 'fs'
 import path from 'path'
 
+import { ComponentType } from '../../types'
+
 import configuration from '../configuration'
 
+import appFile from '../constants/appFile'
+import appComponent from '../constants/appComponent'
+
 import insertComponentInHierarchy from '../domain/insertComponentInHierarchy'
+import { lintFile } from '../domain/helpers'
 
 type AddComponentArgumentsType = {
   name: string
@@ -18,11 +24,18 @@ async function addComponent(parent: any, { name, index, position }: AddComponent
     throw new Error('Component does not exists')
   }
 
-  await insertComponentInHierarchy('App', 'App', `components/${name}`, name, index, position)
-
-  return {
-    id: 'noid',
+  const component: ComponentType = {
+    name,
+    props: {},
+    importName: name,
+    importPath: `/components/${name}`,
+    importType: 'default',
   }
+
+  insertComponentInHierarchy(appFile, appComponent, component, index, position)
+  lintFile(appFile)
+
+  return component
 }
 
 export default addComponent
