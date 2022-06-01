@@ -1,16 +1,13 @@
 {
-  "name": "ecu",
-  "version": "0.0.0",
-  "description": "A npm package",
-  "main": "index.js",
+  "private": true,
+  "name": "ecu-monorepo",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "link:packages": "npm run link:client && npm run link:app",
-    "link:client": "(cd packages/@ecu/client && npm run clean:peerDependencies && npm link)",
-    "link:app": "(cd app && npm link @ecu/client)",
-    "dev:packages": "npm run dev:client",
-    "dev:client": "(cd packages/@ecu/client && npm run dev)",
-    "dev:server": "(cd packages/@ecu/server && npm run dev)",
+    "link:packages": "npm run link:ecu && npm run link:app",
+    "link:ecu": "(cd packages/ecu && npm run clean:peerDependencies && npm link)",
+    "link:app": "(cd app && npm link ecu)",
+    "dev:client": "(cd packages/ecu && npm run dev)",
+    "dev:server": "(cd packages/ecu && npm run start:watch)",
     "dev:app": "npm run link:packages && (cd app && npm run dev)"
   },
   "repository": {
