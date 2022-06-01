@@ -6,11 +6,11 @@ import MyComponent from './components/MyComponent'
 function App() {
   return (
     <Ecu>
+      <MyComponent /><MyComponent1 />
+      
       <MyComponent1 />
       
       <MyComponent1 /><MyComponent />
-      <MyComponent />
-      <MyComponent1 />
     </Ecu>
   )
 }
