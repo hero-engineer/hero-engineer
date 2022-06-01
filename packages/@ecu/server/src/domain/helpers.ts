@@ -3,7 +3,6 @@ import path from 'path'
 
 import { ExpressionStatement, JSXElement, Program } from '@babel/types'
 import { ParserOptions, parse } from '@babel/parser'
-import traverse, { NodePath } from '@babel/traverse'
 import generate, { GeneratorOptions } from '@babel/generator'
 
 import { ESLint } from 'eslint'
@@ -11,10 +10,6 @@ import { ESLint } from 'eslint'
 import configuration from '../configuration'
 
 import babelConfig from './babel.config'
-
-// !!!
-// Rewrite everything to use babel
-// !!!
 
 export function getFileLocation(fileName: string) {
   return path.join(configuration.rootPath, configuration.appRoot, `src/${fileName}.tsx`)
@@ -36,7 +31,7 @@ export async function regenerateFile(ast: Program, fileLocation: string) {
   const eslint = new ESLint({ fix: true })
   const results = await eslint.lintText(text)
 
-  // await ESLint.outputFixes(results)
+  await ESLint.outputFixes(results)
 
-  console.log('results', results[0].output)
+  fs.writeFileSync(fileLocation, results[0].output, 'utf8')
 }

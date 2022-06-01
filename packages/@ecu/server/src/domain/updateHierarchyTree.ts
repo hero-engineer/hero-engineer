@@ -1,19 +1,14 @@
-import { ExpressionStatement, JSXElement, JSXIdentifier } from '@babel/types'
-import { ParserOptions, parse } from '@babel/parser'
+import { JSXElement, JSXIdentifier } from '@babel/types'
 import traverse, { NodePath } from '@babel/traverse'
-import generate, { GeneratorOptions } from '@babel/generator'
-
-import babelConfig from './babel.config'
 
 import { parseJsx } from './helpers'
 
-export type UpdateHierarchyAstResolverType = (path: NodePath<JSXElement>) => void
+export type UpdateHierarchyAstResolverType = (path: NodePath<JSXElement>, within: boolean) => void
 
 export function updateHierarchyAst(
   path: NodePath<any>,
   resolver: UpdateHierarchyAstResolverType,
-  openElement: boolean,
-  targetIndex: string
+  targetIndex: string,
 ) {
   let currentIndex = '-1'
 
@@ -27,14 +22,20 @@ export function updateHierarchyAst(
         currentIndex = [...indexArray, last + 1].join('.')
 
         if (targetIndex === currentIndex) {
-          if (openElement) {
-            const { name } = path.node.openingElement.name as JSXIdentifier
+          resolver(path, false)
+          path.stop()
 
-            path.node.openingElement.selfClosing = false
-            path.node.closingElement = parseJsx(`<${name}></${name}>`).closingElement
-          }
+          return
+        }
 
-          resolver(path)
+        if (path.node.openingElement.selfClosing && `${currentIndex}.0` === targetIndex) {
+          const { name } = path.node.openingElement.name as JSXIdentifier
+
+          path.node.openingElement.selfClosing = false
+          path.node.closingElement = parseJsx(`<${name}></${name}>`).closingElement
+
+          resolver(path, true)
+          path.stop()
         }
       },
       JSXOpeningElement(path) {

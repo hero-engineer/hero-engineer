@@ -1,30 +1,29 @@
-// import fs from 'fs'
-// import path from 'path'
+import fs from 'fs'
+import path from 'path'
 
-// import configuration from '../configuration'
+import configuration from '../configuration'
 
-// import template from '../templates/Component.tsx.template'
+import moveComponentInHierarchy from '../domain/moveComponentInHierarchy'
 
 type DragComponentArgumentsType = {
-  index: string
-  nextIndex: string
-  position: 'after' | 'before'
+  name: string
+  sourceIndex: string
+  targetIndex: string
+  position: 'before' | 'after'
 }
 
-function createComponent(parent: any, { index, nextIndex, position }: DragComponentArgumentsType) {
-  // const componentsLocation = path.join(configuration.rootPath, configuration.appRoot, 'src/components')
-  // const componentLocation = path.join(componentsLocation, `${name}.tsx`)
+const componentsLocation = path.join(configuration.rootPath, configuration.appRoot, 'src/components')
 
-  // fs.mkdirSync(componentsLocation, { recursive: true })
+async function dragComponent(parent: any, { name, sourceIndex, targetIndex, position }: DragComponentArgumentsType) {
+  if (!fs.existsSync(path.join(componentsLocation, `${name}.tsx`))) {
+    throw new Error('Component does not exists')
+  }
 
-  // const content = template(name)
+  await moveComponentInHierarchy('App', 'App', `components/${name}`, name, sourceIndex, targetIndex, position)
 
-  // fs.writeFileSync(componentLocation, content, 'utf8')
-
-  // return {
-  //   name,
-  //   content,
-  // }
+  return {
+    id: 'noid',
+  }
 }
 
-export default createComponent
+export default dragComponent

@@ -35,7 +35,14 @@ function Ecu({ children }: EcuProps) {
 
   function handleChildrenClick(event: React.MouseEvent) {
     if (event.target === childrenRef.current) {
-      setEcu(ecu => ({ ...ecu, activeIndex: null, hoveredIndex: null }))
+      setEcu(ecu => ({
+        ...ecu,
+        component: {
+          ...ecu.component,
+          index: null,
+          name: null,
+        },
+      }))
     }
   }
 

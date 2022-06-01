@@ -1,12 +1,17 @@
 import { Dispatch, SetStateAction } from 'react'
 
 export type EcuType = {
-  activeIndex: string
-  hoveredIndex: string
-  dragIndex: string
-  dragHoveredIndex: string
-  dragRect: DOMRect
-  dragMousePosition: { x: number, y: number }
+  component: {
+    index: string
+    name: string
+  },
+  dragState: {
+    sourceIndex: string
+    targetIndex: string
+    position: 'before' | 'after'
+    rect: DOMRect
+    mouse: { x: number, y: number }
+  }
   createEditorId: () => number
 }
 

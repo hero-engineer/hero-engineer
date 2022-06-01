@@ -7,8 +7,8 @@ function App() {
   return (
     <Ecu>
       <MyComponent1 />
-      <MyComponent />
-      <MyComponent />
+      
+      <MyComponent1 /><MyComponent />
       <MyComponent />
       <MyComponent1 />
     </Ecu>

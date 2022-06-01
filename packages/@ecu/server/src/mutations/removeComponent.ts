@@ -1,11 +1,13 @@
-import removeComponentInApp from '../domain/removeComponentInApp'
+import removeComponentFromHierarchy from '../domain/removeComponentFromHierarchy'
 
 type RemoveComponentArgumentsType = {
   index: string
 }
 
 async function removeComponent(parent: any, { index }: RemoveComponentArgumentsType) {
-  await removeComponentInApp(index)
+  console.log('removeComponent', index)
+
+  await removeComponentFromHierarchy('App', 'App', index)
 
   return {
     id: 'noid',

@@ -10,7 +10,7 @@
     "link:app": "(cd app && npm link @ecu/client)",
     "dev:packages": "npm run dev:client",
     "dev:client": "(cd packages/@ecu/client && npm run dev)",
-    "dev:server": "(cd packages/@ecu/server && (npm run dev & (sleep 3 && npm start)))",
+    "dev:server": "(cd packages/@ecu/server && npm run dev)",
     "dev:app": "npm run link:packages && (cd app && npm run dev)"
   },
   "repository": {

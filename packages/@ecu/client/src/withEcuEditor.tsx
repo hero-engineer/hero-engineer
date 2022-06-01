@@ -3,10 +3,10 @@ import { Children, ReactNode, cloneElement, isValidElement } from 'react'
 import { EcuType } from './types'
 import EcuEditor from './components/EcuEditor'
 
-function withEcuEditor(children: ReactNode, ecu: EcuType, index = '') {
+function withEcuEditor(children: ReactNode, ecu: EcuType, index = '0') {
   return Children.map(children, (child, i) => {
     if (isValidElement(child)) {
-      const nextIndex = index + (index ? '.' : '') + i
+      const nextIndex = `${index}.${i}`
 
       return (
         <EcuEditor

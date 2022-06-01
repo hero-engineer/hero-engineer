@@ -29,10 +29,10 @@ function EcuOverlay({ children }: EcuOverlayProps) {
   useEffect(() => {
     function handler(isKeyDown: boolean) {
       return (event: KeyboardEvent) => {
-        event.preventDefault()
-        event.stopImmediatePropagation()
+        // event.preventDefault()
+        // event.stopImmediatePropagation()
 
-        if (event.key === 'Tab') {
+        if (event.code === 'Backquote') {
           setIsVisible(isKeyDown)
         }
       }
@@ -109,8 +109,8 @@ type ComponentListItemProps = {
 }
 
 const ADD_COMPONENT_MUTATION = gql`
-  mutation AddComponentMutation($name: String!) {
-    addComponent(name: $name) {
+  mutation AddComponentMutation($name: String!, $index: String!, $position: String!) {
+    addComponent(name: $name, index: $index, position: $position) {
       id
     }
   }
@@ -120,6 +120,8 @@ function ComponentListItem({ component }: ComponentListItemProps) {
   const [mutation] = useMutation(ADD_COMPONENT_MUTATION, {
     variables: {
       name: component.name,
+      index: '0.0',
+      position: 'before',
     },
   })
 

@@ -28,7 +28,7 @@ const menuItems: MenuItemType[] = [
       client.mutate({
         mutation: REMOVE_COMPONENT_MUTATION,
         variables: {
-          index: ecu.activeIndex,
+          index: ecu.component.index,
         },
       })
       .then(() => {
@@ -40,21 +40,21 @@ const menuItems: MenuItemType[] = [
     label: 'Remove',
     on: 'component',
     handler: ecu => {
-      console.log('remove', ecu.activeIndex)
+      console.log('remove', ecu.component.index)
     },
   },
   {
     label: 'Remove',
     on: 'component',
     handler: ecu => {
-      console.log('remove', ecu.activeIndex)
+      console.log('remove', ecu.component.index)
     },
   },
   {
     label: 'Remove',
     on: 'component',
     handler: ecu => {
-      console.log('remove', ecu.activeIndex)
+      console.log('remove', ecu.component.index)
     },
   },
 ]

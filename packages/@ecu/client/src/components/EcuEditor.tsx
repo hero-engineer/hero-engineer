@@ -1,7 +1,10 @@
-import { PropsWithChildren, Ref, forwardRef, useContext, useEffect, useRef, useState } from 'react'
+import { PropsWithChildren, Ref, forwardRef, useContext, useEffect, useRef } from 'react'
+import { useApolloClient } from '@apollo/client'
 import { useDrag, useDrop } from 'react-dnd'
 
 import { Div } from 'honorable'
+
+import { DRAG_COMPONENT_MUTATION } from '../queries'
 
 import EcuContext from '../contexts/EcuContext'
 
@@ -10,24 +13,27 @@ type EcuEditorProps = PropsWithChildren<{
 }>
 
 function EcuEditorRef({ children, index }: EcuEditorProps, ref: Ref<any>) {
+  const client = useApolloClient()
   const childrenRef = useRef<HTMLDivElement>()
   const [ecu, setEcu] = useContext(EcuContext)
-  const { dragHoveredIndex, dragMousePosition, dragRect } = ecu
-  const [dragPlaceholderPosition, setDragPlaceholderPosition] = useState(null)
+  const { sourceIndex, targetIndex, mouse, rect: dragRect, position } = ecu.dragState
 
   useEffect(() => {
     if (!childrenRef.current) return
 
-    if (dragHoveredIndex === index) {
+    if (targetIndex === index) {
+      // console.log(index, position, sourceIndex)
       const rect = childrenRef.current.getBoundingClientRect()
 
-      setDragPlaceholderPosition(dragMousePosition.y - rect.top < rect.height / 2 ? 'top' : 'bottom')
-
-      return
+      setEcu(ecu => ({
+        ...ecu,
+        dragState: {
+          ...ecu.dragState,
+          position: mouse.y - rect.top < rect.height / 2 ? 'before' : 'after',
+        },
+      }))
     }
-
-    setDragPlaceholderPosition(null)
-  }, [dragHoveredIndex, index, dragMousePosition])
+  }, [targetIndex, index, mouse, setEcu])
 
   const [, drop] = useDrop({
     accept: 'component',
@@ -36,63 +42,82 @@ function EcuEditorRef({ children, index }: EcuEditorProps, ref: Ref<any>) {
         handlerId: monitor.getHandlerId(),
       }
     },
-    hover(item: any, monitor) {
-      const dragIndex = item.index
-      const dragHoveredIndex = index
-
-      // Don't replace items with themselves
-      // if (dragIndex === dragHoveredIndex) {
-      //   return
-      // }
-
-      const dragMousePosition = monitor.getClientOffset()
-
-      // console.log('dragHoveredIndex', dragHoveredIndex)
-
-      setEcu(ecu => ({ ...ecu, dragIndex, dragHoveredIndex, dragMousePosition }))
-      // Determine rectangle on screen
-
-      // Time to actually perform the action
-
-      // Note: we're mutating the monitor item here!
-      // Generally it's better to avoid mutations,
-      // but it's good here for the sake of performance
-      // to avoid expensive index searches.
-      // item.index = dragHoveredIndex
+    hover(_item: any, monitor) {
+      // console.log('index', index)
+      setEcu(ecu => ({
+        ...ecu,
+        dragState: {
+          ...ecu.dragState,
+          targetIndex: index,
+          mouse: monitor.getClientOffset(),
+        },
+      }))
     },
   })
 
   const [{ isDragging }, drag] = useDrag({
     type: 'component',
-    item: () => ({ id: index, index }),
+    item: () => index === ecu.component.index ? { id: index, index } : null,
     collect: monitor => ({ isDragging: monitor.isDragging() }),
     end: () => {
-      setDragPlaceholderPosition(null)
+      if (sourceIndex && targetIndex && position) {
+        client.mutate({
+          mutation: DRAG_COMPONENT_MUTATION,
+          variables: {
+            name: ecu.component.name,
+            sourceIndex,
+            targetIndex,
+            position,
+          },
+        })
+      }
+
       setEcu(ecu => ({
         ...ecu,
-        dragIndex: null,
-        dragHoveredIndex: null,
-        dragRect: null,
+        dragState: {
+          ...ecu.dragState,
+          rect: null,
+          sourceIndex: null,
+          targetIndex: null,
+          position: null,
+        },
       }))
     },
   })
 
   useEffect(() => {
+    if (!childrenRef.current) return
     if (isDragging) {
-      const dragRect = childrenRef.current.getBoundingClientRect()
-
-      setEcu(ecu => ({ ...ecu, dragRect }))
+      setEcu(ecu => ({
+        ...ecu,
+        dragState: {
+          ...ecu.dragState,
+          rect: childrenRef.current.getBoundingClientRect(),
+          sourceIndex: index,
+        },
+      }))
     }
-  }, [isDragging, setEcu])
+  }, [isDragging, setEcu, index])
 
   drag(drop(childrenRef))
+
+  function handleClick() {
+    setEcu(ecu => ({
+      ...ecu,
+      component: {
+        ...ecu.component,
+        index,
+        name: 'MyComponent',
+      },
+    }))
+  }
 
   return (
     <Div
       ecu={index}
       ref={ref}
     >
-      {dragRect && dragPlaceholderPosition === 'top' && (
+      {targetIndex === index && position === 'before' && (
         <Div
           width={dragRect.width}
           height={dragRect.height}
@@ -104,14 +129,12 @@ function EcuEditorRef({ children, index }: EcuEditorProps, ref: Ref<any>) {
         p={0.5}
         borderStyle="solid"
         borderWidth={1}
-        borderColor={ecu.activeIndex === index ? 'black' : ecu.hoveredIndex === index ? 'red' : 'transparent'}
-        onMouseEnter={() => setEcu(ecu => ({ ...ecu, hoveredIndex: index }))}
-        onMouseLeave={() => setEcu(ecu => ({ ...ecu, hoveredIndex: null }))}
-        onClick={() => setEcu(ecu => ({ ...ecu, activeIndex: index }))}
+        borderColor={ecu.component.index === index ? 'gold' : 'transparent'}
+        onClick={handleClick}
       >
         {children}
       </Div>
-      {dragRect && dragPlaceholderPosition === 'bottom' && (
+      {targetIndex === index && position === 'after' && (
         <Div
           width={dragRect.width}
           height={dragRect.height}
