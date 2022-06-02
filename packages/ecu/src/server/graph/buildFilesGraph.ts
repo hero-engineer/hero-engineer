@@ -7,14 +7,8 @@ import { FileType, GraphType } from '../../types'
 
 import configuration from '../configuration'
 
-import { filterByType } from './helpers'
-
 function buildFilesGraph(graph: GraphType) {
   traverseDirectories(graph, configuration.appPath)
-
-  const files = filterByType(graph, 'File')
-
-  console.log('files', files)
 }
 
 function traverseDirectories(graph: GraphType, rootPath: string) {
