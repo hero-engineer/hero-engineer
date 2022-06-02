@@ -1,9 +1,15 @@
 import fs from 'fs'
 import path from 'path'
 
+import { ComponentType } from '../../types'
+
 import configuration from '../configuration'
 
+import appFile from '../constants/appFile'
+import appComponent from '../constants/appComponent'
+
 import moveComponentInHierarchy from '../domain/moveComponentInHierarchy'
+import { lintFile } from '../domain/helpers'
 
 type DragComponentArgumentsType = {
   name: string
@@ -12,18 +18,23 @@ type DragComponentArgumentsType = {
   position: 'before' | 'after'
 }
 
-const componentsLocation = path.join(configuration.rootPath, configuration.appRoot, 'src/components')
-
-async function dragComponent(parent: any, { name, sourceIndex, targetIndex, position }: DragComponentArgumentsType) {
-  if (!fs.existsSync(path.join(componentsLocation, `${name}.tsx`))) {
+function dragComponent(parent: any, { name, sourceIndex, targetIndex, position }: DragComponentArgumentsType) {
+  if (!fs.existsSync(path.join(configuration.componentsLocation, `${name}.tsx`))) {
     throw new Error('Component does not exists')
   }
 
-  await moveComponentInHierarchy('App', 'App', `components/${name}`, name, sourceIndex, targetIndex, position)
-
-  return {
-    id: 'noid',
+  const component: ComponentType = {
+    name,
+    props: {},
+    importName: name,
+    importPath: `/components/${name}`,
+    importType: 'default',
   }
+
+  moveComponentInHierarchy(appFile, appComponent, component, sourceIndex, targetIndex, position)
+  lintFile(appFile)
+
+  return component
 }
 
 export default dragComponent

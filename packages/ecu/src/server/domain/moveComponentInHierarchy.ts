@@ -3,7 +3,7 @@ import { ComponentType, FileType } from '../../types'
 import removeComponentFromHierarchy from './removeComponentFromHierarchy'
 import insertComponentInHierarchy from './insertComponentInHierarchy'
 
-async function moveComponentInHierarchy(
+function moveComponentInHierarchy(
   file: FileType,
   sourceComponent: ComponentType,
   targetComponent: ComponentType,
@@ -11,7 +11,7 @@ async function moveComponentInHierarchy(
   targetIndex: string,
   position: 'before' | 'after',
 ) {
-  await removeComponentFromHierarchy(file, sourceComponent, sourceIndex)
+  removeComponentFromHierarchy(file, sourceComponent, sourceIndex)
 
   let nextTargetIndex = targetIndex
 
@@ -23,7 +23,7 @@ async function moveComponentInHierarchy(
     nextTargetIndex = targetIndexArray.join('.')
   }
 
-  await insertComponentInHierarchy(file, sourceComponent, targetComponent, nextTargetIndex, position)
+  insertComponentInHierarchy(file, sourceComponent, targetComponent, nextTargetIndex, position)
 }
 
 export default moveComponentInHierarchy

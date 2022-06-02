@@ -1,17 +1,16 @@
+import appFile from '../constants/appFile'
+import appComponent from '../constants/appComponent'
+
 import removeComponentFromHierarchy from '../domain/removeComponentFromHierarchy'
 
 type RemoveComponentArgumentsType = {
   index: string
 }
 
-async function removeComponent(parent: any, { index }: RemoveComponentArgumentsType) {
-  console.log('removeComponent', index)
+function removeComponent(parent: any, { index }: RemoveComponentArgumentsType): null {
+  removeComponentFromHierarchy(appFile, appComponent, index)
 
-  await removeComponentFromHierarchy('App', 'App', index)
-
-  return {
-    id: 'noid',
-  }
+  return null
 }
 
 export default removeComponent

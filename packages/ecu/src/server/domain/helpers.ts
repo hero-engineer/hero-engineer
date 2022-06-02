@@ -1,5 +1,4 @@
 import fs from 'fs'
-import path from 'path'
 
 import { ExpressionStatement, JSXElement, Program } from '@babel/types'
 import { ParserOptions, parse } from '@babel/parser'
@@ -8,42 +7,32 @@ import { ESLint } from 'eslint'
 
 import { FileType } from '../../types'
 
-import configuration from '../configuration'
-
 import babelConfig from './babel.config'
 
 const eslint = new ESLint({ fix: true })
-
-export function getFileLocation(file: FileType) {
-  return path.join(configuration.srcLocation, `${file.location}/${file.name}`)
-}
 
 export function parseJsx(code: string) {
   return (parse(code, babelConfig as ParserOptions).program.body[0] as ExpressionStatement).expression as JSXElement
 }
 
 export function getFileAst(file: FileType) {
-  const fileLocation = getFileLocation(file)
-
   return parse(
-    fs.readFileSync(fileLocation, 'utf8'),
+    fs.readFileSync(file.path, 'utf8'),
     babelConfig as ParserOptions
   )
 }
 
 export function regenerateFile(ast: Program, file: FileType) {
-  const fileLocation = getFileLocation(file)
   const { code } = generate(ast, babelConfig as GeneratorOptions)
 
-  fs.writeFileSync(fileLocation, code, 'utf8')
+  fs.writeFileSync(file.path, code, 'utf8')
 }
 
 export async function lintFile(file: FileType) {
-  const fileLocation = getFileLocation(file)
-  const text = fs.readFileSync(fileLocation, 'utf8')
+  const text = fs.readFileSync(file.path, 'utf8')
   const results = await eslint.lintText(text)
 
   await ESLint.outputFixes(results)
 
-  fs.writeFileSync(fileLocation, results[0].output, 'utf8')
+  fs.writeFileSync(file.path, results[0].output, 'utf8')
 }

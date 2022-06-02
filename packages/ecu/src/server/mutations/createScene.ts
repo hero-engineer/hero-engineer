@@ -7,6 +7,7 @@ import appFile from '../constants/appFile'
 import appComponent from '../constants/appComponent'
 import ecuComponent from '../constants/ecuComponent'
 import routerComponent from '../constants/routerComponent'
+import routesComponent from '../constants/routesComponent'
 
 import configuration from '../configuration'
 import insertComponentInHierarchy from '../domain/insertComponentInHierarchy'
@@ -43,7 +44,9 @@ function createScene(parent: any, { name, url }: CreateSceneArgumentsType): Scen
 
   // TODO app route in App.jsx
   if (!hasDirectChild(appFile, appComponent, ecuComponent, routerComponent)) {
+    insertComponentImport(appFile, routerComponent)
     insertComponentInHierarchy(appFile, appComponent, routerComponent, '0.0', 'before')
+    insertComponentImport(appFile, routesComponent)
     insertComponentInHierarchy(appFile, appComponent, routesComponent, '0.0.0', 'before')
   }
 
@@ -61,6 +64,8 @@ function createScene(parent: any, { name, url }: CreateSceneArgumentsType): Scen
     },
   }
 
+  insertComponentImport(appFile, sceneComponent)
+  insertComponentImport(appFile, routeComponent)
   insertComponentInHierarchy(appFile, appComponent, routeComponent, `0.0.0.${Math.max(0, nChildren - 1)}`, 'after')
 
   lintFile(appFile)
