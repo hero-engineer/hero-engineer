@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from 'react'
-import { File } from '@babel/types'
+import { File, FunctionDeclaration } from '@babel/types'
 import { ParseResult } from '@babel/parser'
+import { NodePath } from '@babel/traverse'
 /* ---
   CLIENT
 --- */
@@ -42,37 +43,37 @@ export type QueryResultsType<K extends string, P> = {
   SERVER
 --- */
 
-export type TripletType = [string, string, string]
-export interface GraphNode {
+export interface GraphNodeType {
   id: string
   type: string
 }
+export type TripletType = [string, string, string]
 export type GraphType = {
   nodes: {
-    [id: string]: GraphNode
+    [id: string]: GraphNodeType
   }
   triplets: Array<TripletType>
 }
-
+export type ExportType = 'default' | 'named' | 'none'
 export type SceneType = {
   name: string
   url: string
 }
 
-export type ComponentType = {
-  name: string
-  props: Record<string, any> & { children?: ComponentType[] }
-  importType: 'named' | 'default'
-  importName: string
-  importPath: string
-}
-
-export interface FileType extends GraphNode {
+export interface FileType extends GraphNodeType {
   type: 'File',
   name: string
   path: string
   text: string
   ast: ParseResult<File>
+}
+
+export interface FunctionType extends GraphNodeType {
+  type: 'Function',
+  name: string
+  exportType: ExportType
+  isComponent: boolean
+  astPath: NodePath<FunctionDeclaration>
 }
 
 export type ConfigurationType = {

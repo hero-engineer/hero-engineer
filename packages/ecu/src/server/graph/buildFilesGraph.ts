@@ -14,11 +14,8 @@ function buildFilesGraph(graph: GraphType) {
 function traverseDirectories(graph: GraphType, rootPath: string) {
   fs.readdirSync(rootPath).forEach(fileName => {
     const filePath = path.join(rootPath, fileName)
-    console.log(filePath)
 
-    const stats = fs.statSync(filePath)
-
-    if (stats.isDirectory() && fileName !== 'node_modules') {
+    if (fs.statSync(filePath).isDirectory() && fileName !== 'node_modules') {
       traverseDirectories(graph, filePath)
     }
     else if (fileName.endsWith('.ts') || fileName.endsWith('.tsx')) {
