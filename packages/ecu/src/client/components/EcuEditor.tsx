@@ -25,9 +25,8 @@ function EcuEditorRef({ children, index }: EcuEditorProps, ref: Ref<any>) {
       }
     },
     hover(item: any, monitor) {
-      const rect = childrenRef.current.getBoundingClientRect()
       const mouse = monitor.getClientOffset()
-      let position = mouse.y - rect.top < rect.height / 2 ? 'before' : 'after' as 'before' | 'after'
+      let position = mouse.y - item.rect.top < item.rect.height / 2 ? 'before' : 'after' as 'before' | 'after'
 
       const indexArray = index.split('.')
       let lastIndex = parseInt(indexArray.pop())
@@ -48,7 +47,7 @@ function EcuEditorRef({ children, index }: EcuEditorProps, ref: Ref<any>) {
           sourceIndex: item.index,
           targetIndex: index,
           position,
-          rect,
+          rect: item.rect,
         },
       }))
     },
@@ -56,22 +55,10 @@ function EcuEditorRef({ children, index }: EcuEditorProps, ref: Ref<any>) {
 
   const [{ isDragging }, drag] = useDrag({
     type: 'component',
-    item: () => ({ index }),
+    item: () => ({ index, rect: childrenRef.current.getBoundingClientRect() }),
     collect: monitor => ({ isDragging: monitor.isDragging() }),
-    end: () => {
+    end() {
       const { sourceIndex, targetIndex, position } = ecu.dragState
-
-      if (sourceIndex && targetIndex && position) {
-        client.mutate({
-          mutation: DRAG_COMPONENT_MUTATION,
-          variables: {
-            activeComponentIndex: ecu.activeComponent?.name,
-            sourceIndex,
-            targetIndex,
-            position,
-          },
-        })
-      }
 
       setEcu(ecu => ({
         ...ecu,
@@ -83,6 +70,19 @@ function EcuEditorRef({ children, index }: EcuEditorProps, ref: Ref<any>) {
           position: null,
         },
       }))
+
+      console.log('drop', sourceIndex, targetIndex, position)
+
+      if (sourceIndex && targetIndex && position) {
+        client.mutate({
+          mutation: DRAG_COMPONENT_MUTATION,
+          variables: {
+            sourceIndex,
+            targetIndex,
+            position,
+          },
+        })
+      }
     },
   })
 
@@ -109,7 +109,7 @@ function EcuEditorRef({ children, index }: EcuEditorProps, ref: Ref<any>) {
       )}
       <Div
         ref={childrenRef}
-        p={0.5}
+        m="-1px"
         borderStyle="solid"
         borderWidth={1}
         borderColor={ecu.activeComponentIndex === index ? 'gold' : 'transparent'}

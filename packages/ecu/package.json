@@ -11,7 +11,6 @@
     "clean": "npm run clean:build && npm run clean:node-modules && npm i",
     "clean:node-modules": "rimraf node_module package-lock.json",
     "clean:build": "rimraf dist",
-    "clean:peerDependencies": "rimraf node_modules/react node_modules/react-dom",
     "test": "echo \"Error: no test specified\" && exit 0",
     "test:watch": "nodemon --watch src --watch tests --ext ts,tsx,snap --exec \"npm run test\"",
     "prepublishOnly": "npm run clean && npm test && npm run build"
@@ -27,7 +26,7 @@
   },
   "homepage": "https://github.com/dherault/ecu#readme",
   "dependencies": {
-    "@apollo/client": "^3.6.5",
+    "@apollo/client": "^3.6.6",
     "@babel/core": "^7.18.2",
     "@babel/generator": "^7.18.2",
     "@babel/parser": "^7.18.4",
@@ -41,7 +40,7 @@
     "graphql": "^16.5.0",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
-    "typescript": "^4.7.2"
+    "typescript": "^4.7.3"
   },
   "peerDependencies": {
     "@emotion/react": ">=10.0.0",
@@ -56,10 +55,10 @@
     "@types/babel__generator": "^7.6.4",
     "@types/babel__traverse": "^7.17.1",
     "@types/eslint": "^8.4.2",
-    "@types/node": "^17.0.38",
-    "@types/react": "^18.0.9",
+    "@types/node": "^17.0.39",
+    "@types/react": "^18.0.10",
     "nodemon": "^2.0.16",
     "rimraf": "^3.0.2",
-    "ts-node": "^10.8.0"
+    "ts-node": "^10.8.1"
   }
 }

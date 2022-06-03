@@ -1,9 +1,12 @@
-import { Div } from 'honorable'
+import { Div, P } from 'honorable'
 
 function MyComponent1(props: any) {
+  const { children, otherProps } = props
+
   return (
-    <Div {...props}>
-      A div component 1
+    <Div {...otherProps}>
+      <P>Component1</P>
+      {children}
     </Div>
   )
 }

@@ -3,12 +3,11 @@
   "name": "ecu-monorepo",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "link:packages": "npm run link:ecu && npm run link:app",
-    "link:ecu": "(cd packages/ecu && npm run clean:peerDependencies && npm link)",
-    "link:app": "(cd app && npm link ecu)",
+    "link:ecu": "rimraf app/node_modules/ecu && mkdir app/node_modules/ecu && cp -r packages/ecu/package.json app/node_modules/ecu/package.json && cp -r packages/ecu/dist app/node_modules/ecu && cp -r packages/ecu/src app/node_modules/ecu",
     "dev:client": "(cd packages/ecu && npm run dev)",
     "dev:server": "(cd packages/ecu && npm run start:watch)",
-    "dev:app": "npm run link:packages && (cd app && npm run dev)",
+    "dev:app": "(cd app && npm run dev)",
+    "dev:ecu": "nodemon --watch packages/ecu/src --ext ts,tsx,snap --exec \"npm run link:ecu\"",
     "minor:ecu": "(cd packages/ecu && npm version minor && npm publish)"
   },
   "repository": {
@@ -26,11 +25,11 @@
     "@babel/eslint-parser": "^7.18.2",
     "@babel/preset-env": "^7.18.2",
     "@babel/preset-react": "^7.17.12",
-    "@typescript-eslint/eslint-plugin": "^5.26.0",
-    "@typescript-eslint/parser": "^5.26.0",
+    "@typescript-eslint/eslint-plugin": "^5.27.0",
+    "@typescript-eslint/parser": "^5.27.0",
     "eslint": "^8.16.0",
     "eslint-config-dherault": "^1.7.3",
     "rimraf": "^3.0.2",
-    "typescript": "^4.7.2"
+    "typescript": "^4.7.3"
   }
 }

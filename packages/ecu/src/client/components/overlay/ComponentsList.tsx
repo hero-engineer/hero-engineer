@@ -43,7 +43,7 @@ const ADD_COMPONENT_MUTATION = gql`
 function ComponentListItem({ component }: ComponentListItemProps) {
   const [mutation] = useMutation(ADD_COMPONENT_MUTATION, {
     variables: {
-      name: component.name,
+      componentId: component.id,
       index: '0.0',
       position: 'before',
     },
@@ -54,15 +54,21 @@ function ComponentListItem({ component }: ComponentListItemProps) {
       align="center"
       px={1}
       py={0.5}
+      backgroundColor="background"
       borderBottom="1px solid border"
-      onClick={() => mutation()}
     >
       {component.name}
       <Div flexGrow={1} />
       <A
+        ml={1}
+        onClick={() => mutation()}
+      >
+        add
+      </A>
+      <A
         as={Link}
         to={`/_ecu_/component/${component.id.replaceAll('/', '_')}`}
-        ml={1}
+        ml={0.5}
       >
         edit
       </A>
