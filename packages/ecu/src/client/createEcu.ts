@@ -2,10 +2,9 @@ import { EcuType } from '../types'
 
 function createEcu(): EcuType {
   return {
-    component: {
-      index: null,
-      name: null,
-    },
+    parentComponent: null,
+    activeComponent: null,
+    activeComponentIndex: '0',
     dragState: {
       sourceIndex: null,
       targetIndex: null,
@@ -13,7 +12,6 @@ function createEcu(): EcuType {
       rect: null,
       mouse: { x: 0, y: 0 },
     },
-    createEditorId: () => Math.random(),
   }
 }
 

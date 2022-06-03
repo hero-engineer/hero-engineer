@@ -6,19 +6,24 @@ import traverse from '@babel/traverse'
 
 import { FileType, FunctionType, GraphType } from '../../../types'
 
+import configuration from '../../configuration'
+
 import { addEdge, addNode } from '../helpers'
 
 function addFile(graph: GraphType, filePath: string) {
+  const relativePath = path.relative(configuration.appPath, filePath)
+  const relativePathSlug = relativePath.replaceAll('/', '_')
   const nameArray = path.basename(filePath).split('.')
   const extension = nameArray.pop()
   const name = nameArray.join('.')
 
   const file: FileType = {
-    id: `File:::${filePath}`,
+    id: `File:::${relativePathSlug}`,
     type: 'File',
     name,
     extension,
     path: filePath,
+    relativePath,
     get text() {
       return fs.readFileSync(filePath, 'utf8')
     },
@@ -45,7 +50,8 @@ function addFile(graph: GraphType, filePath: string) {
 
       if (value.startsWith('.')) {
         const absolutePath = path.join(path.dirname(file.path), value)
-        const dependency = graph.nodes[`File:::${absolutePath}.ts`] || graph.nodes[`File:::${absolutePath}.tsx`] || graph.nodes[`File:::${absolutePath}`]
+        const relativePathSlug = path.relative(configuration.appPath, absolutePath).replaceAll('/', '_')
+        const dependency = graph.nodes[`File:::${relativePathSlug}.ts`] || graph.nodes[`File:::${relativePathSlug}.tsx`] || graph.nodes[`File:::${relativePathSlug}`]
 
         if (dependency) {
           addEdge(graph, [file.id, 'importsFile', dependency.id])
@@ -61,7 +67,7 @@ function addFile(graph: GraphType, filePath: string) {
   FUNCTIONS
   --- */
 
-  const createFunctionId = (name: string) => `Function:::${filePath}:::${name}`
+  const createFunctionId = (name: string) => `Function:::${relativePathSlug}:::${name}`
 
   traverse(file.ast, {
     FunctionDeclaration(path) {

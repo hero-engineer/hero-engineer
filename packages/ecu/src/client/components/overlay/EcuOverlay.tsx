@@ -1,11 +1,12 @@
 import { PropsWithChildren, useEffect, useState } from 'react'
-import { gql, useMutation, useQuery } from '@apollo/client'
+import { gql, useMutation } from '@apollo/client'
 import { Link } from 'react-router-dom'
-import { Button, Div } from 'honorable'
+import { Button } from 'honorable'
 
-import { PositionType } from '../../types'
+import { PositionType } from '../../../types'
 
 import EcuOverlayMenu from './EcuOverlayMenu'
+import ComponentsList from './ComponentsList'
 
 type EcuOverlayProps = PropsWithChildren<unknown>
 
@@ -28,26 +29,19 @@ function EcuOverlay({ children }: EcuOverlayProps) {
   }, [isVisible])
 
   useEffect(() => {
-    function handler(isKeyDown: boolean) {
-      return (event: KeyboardEvent) => {
-        // event.preventDefault()
-        // event.stopImmediatePropagation()
+    function handler(event: KeyboardEvent) {
+      // event.preventDefault()
+      // event.stopImmediatePropagation()
 
-        if (event.code === 'Backquote') {
-          setIsVisible(isKeyDown)
-        }
+      if (event.code === 'Backquote') {
+        setIsVisible(x => !x)
       }
     }
 
-    const onKeyDown = handler(true)
-    const onKeyUp = handler(false)
-
-    window.addEventListener('keydown', onKeyDown)
-    window.addEventListener('keyup', onKeyUp)
+    window.addEventListener('keydown', handler)
 
     return () => {
-      window.removeEventListener('keydown', onKeyDown)
-      window.removeEventListener('keyup', onKeyUp)
+      window.removeEventListener('keydown', handler)
     }
   }, [])
 
@@ -79,65 +73,6 @@ function EcuOverlay({ children }: EcuOverlayProps) {
       )}
       {children}
     </>
-  )
-}
-
-const COMPONENTS_LIST_QUERY = gql`
-  query ComponentsList {
-    components {
-      id
-      name
-    }
-  }
-`
-
-function ComponentsList(props: any) {
-  const { data, loading, error } = useQuery(COMPONENTS_LIST_QUERY)
-
-  if (loading || error) {
-    return null
-  }
-
-  return (
-    <Div
-      border="1px solid border"
-      {...props}
-    >
-      {data.components.map((component: any) => (
-        <ComponentListItem
-          key={component.id}
-          component={component}
-        />
-      ))}
-    </Div>
-  )
-}
-
-type ComponentListItemProps = {
-  component: any
-}
-
-const ADD_COMPONENT_MUTATION = gql`
-  mutation AddComponentMutation($name: String!, $index: String!, $position: String!) {
-    addComponent(name: $name, index: $index, position: $position) {
-      id
-    }
-  }
-`
-
-function ComponentListItem({ component }: ComponentListItemProps) {
-  const [mutation] = useMutation(ADD_COMPONENT_MUTATION, {
-    variables: {
-      name: component.name,
-      index: '0.0',
-      position: 'before',
-    },
-  })
-
-  return (
-    <Div onClick={() => mutation()}>
-      {component.name}
-    </Div>
   )
 }
 

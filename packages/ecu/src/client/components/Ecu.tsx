@@ -15,7 +15,7 @@ import { EcuContextType } from '../../types'
 import EcuContext from '../contexts/EcuContext'
 
 import EcuRouter from './EcuRouter'
-import EcuOverlay from './EcuOverlay'
+import EcuOverlay from './overlay/EcuOverlay'
 
 type EcuProps = PropsWithChildren<unknown>
 
@@ -38,11 +38,7 @@ function Ecu({ children }: EcuProps) {
     if (event.target === childrenRef.current) {
       setEcu(ecu => ({
         ...ecu,
-        component: {
-          ...ecu.component,
-          index: null,
-          name: null,
-        },
+        activeComponent: null,
       }))
     }
   }

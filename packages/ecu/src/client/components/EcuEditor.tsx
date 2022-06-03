@@ -16,24 +16,6 @@ function EcuEditorRef({ children, index }: EcuEditorProps, ref: Ref<any>) {
   const client = useApolloClient()
   const childrenRef = useRef<HTMLDivElement>()
   const [ecu, setEcu] = useContext(EcuContext)
-  const { sourceIndex, targetIndex, mouse, rect: dragRect, position } = ecu.dragState
-
-  useEffect(() => {
-    if (!childrenRef.current) return
-
-    if (targetIndex === index) {
-      // console.log(index, position, sourceIndex)
-      const rect = childrenRef.current.getBoundingClientRect()
-
-      setEcu(ecu => ({
-        ...ecu,
-        dragState: {
-          ...ecu.dragState,
-          position: mouse.y - rect.top < rect.height / 2 ? 'before' : 'after',
-        },
-      }))
-    }
-  }, [targetIndex, index, mouse, setEcu])
 
   const [, drop] = useDrop({
     accept: 'component',
@@ -42,14 +24,31 @@ function EcuEditorRef({ children, index }: EcuEditorProps, ref: Ref<any>) {
         handlerId: monitor.getHandlerId(),
       }
     },
-    hover(_item: any, monitor) {
-      // console.log('index', index)
+    hover(item: any, monitor) {
+      const rect = childrenRef.current.getBoundingClientRect()
+      const mouse = monitor.getClientOffset()
+      let position = mouse.y - rect.top < rect.height / 2 ? 'before' : 'after' as 'before' | 'after'
+
+      const indexArray = index.split('.')
+      let lastIndex = parseInt(indexArray.pop())
+
+      if (position === 'before') lastIndex--
+      else lastIndex++
+
+      const nextIndex = [...indexArray, lastIndex].join('.')
+
+      if (index === item.index || nextIndex === item.index) {
+        position = null
+      }
+
       setEcu(ecu => ({
         ...ecu,
         dragState: {
           ...ecu.dragState,
+          sourceIndex: item.index,
           targetIndex: index,
-          mouse: monitor.getClientOffset(),
+          position,
+          rect,
         },
       }))
     },
@@ -57,14 +56,16 @@ function EcuEditorRef({ children, index }: EcuEditorProps, ref: Ref<any>) {
 
   const [{ isDragging }, drag] = useDrag({
     type: 'component',
-    item: () => index === ecu.component.index ? { id: index, index } : null,
+    item: () => ({ index }),
     collect: monitor => ({ isDragging: monitor.isDragging() }),
     end: () => {
+      const { sourceIndex, targetIndex, position } = ecu.dragState
+
       if (sourceIndex && targetIndex && position) {
         client.mutate({
           mutation: DRAG_COMPONENT_MUTATION,
           variables: {
-            name: ecu.component.name,
+            activeComponentIndex: ecu.activeComponent?.name,
             sourceIndex,
             targetIndex,
             position,
@@ -85,30 +86,12 @@ function EcuEditorRef({ children, index }: EcuEditorProps, ref: Ref<any>) {
     },
   })
 
-  useEffect(() => {
-    if (!childrenRef.current) return
-    if (isDragging) {
-      setEcu(ecu => ({
-        ...ecu,
-        dragState: {
-          ...ecu.dragState,
-          rect: childrenRef.current.getBoundingClientRect(),
-          sourceIndex: index,
-        },
-      }))
-    }
-  }, [isDragging, setEcu, index])
-
   drag(drop(childrenRef))
 
-  function handleClick() {
+  function handleMouseDown() {
     setEcu(ecu => ({
       ...ecu,
-      component: {
-        ...ecu.component,
-        index,
-        name: 'MyComponent',
-      },
+      activeComponentIndex: index,
     }))
   }
 
@@ -117,11 +100,11 @@ function EcuEditorRef({ children, index }: EcuEditorProps, ref: Ref<any>) {
       ecu={index}
       ref={ref}
     >
-      {targetIndex === index && position === 'before' && (
+      {ecu.dragState.targetIndex === index && ecu.dragState.position === 'before' && (
         <Div
-          width={dragRect.width}
-          height={dragRect.height}
-          backgroundColor="chartreuse"
+          width={ecu.dragState.rect.width}
+          height={ecu.dragState.rect.height}
+          backgroundColor="gold"
         />
       )}
       <Div
@@ -129,16 +112,16 @@ function EcuEditorRef({ children, index }: EcuEditorProps, ref: Ref<any>) {
         p={0.5}
         borderStyle="solid"
         borderWidth={1}
-        borderColor={ecu.component.index === index ? 'gold' : 'transparent'}
-        onClick={handleClick}
+        borderColor={ecu.activeComponentIndex === index ? 'gold' : 'transparent'}
+        onMouseDown={handleMouseDown}
       >
         {children}
       </Div>
-      {targetIndex === index && position === 'after' && (
+      {ecu.dragState.targetIndex === index && ecu.dragState.position === 'after' && (
         <Div
-          width={dragRect.width}
-          height={dragRect.height}
-          backgroundColor="pink"
+          width={ecu.dragState.rect.width}
+          height={ecu.dragState.rect.height}
+          backgroundColor="gold"
         />
       )}
     </Div>

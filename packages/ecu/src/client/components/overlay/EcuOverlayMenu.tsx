@@ -2,10 +2,10 @@ import { useContext } from 'react'
 import { gql } from '@apollo/client'
 import { Div } from 'honorable'
 
-import { MenuItemType, PositionType } from '../../types'
-import client from '../client'
+import { MenuItemType, PositionType } from '../../../types'
+import client from '../../client'
 
-import EcuContext from '../contexts/EcuContext'
+import EcuContext from '../../contexts/EcuContext'
 
 type EcuOverlayMenuProps = {
   mousePosition: PositionType
@@ -25,36 +25,36 @@ const menuItems: MenuItemType[] = [
     label: 'Remove',
     on: 'component',
     handler: (ecu, setEcu) => {
-      client.mutate({
-        mutation: REMOVE_COMPONENT_MUTATION,
-        variables: {
-          index: ecu.component.index,
-        },
-      })
-      .then(() => {
-        setEcu(ecu => ({ ...ecu, activeIndex: null }))
-      })
+      // client.mutate({
+      //   mutation: REMOVE_COMPONENT_MUTATION,
+      //   variables: {
+      //     index: ecu.component.index,
+      //   },
+      // })
+      // .then(() => {
+      //   setEcu(ecu => ({ ...ecu, activeIndex: null }))
+      // })
     },
   },
   {
     label: 'Remove',
     on: 'component',
     handler: ecu => {
-      console.log('remove', ecu.component.index)
+      // console.log('remove', ecu.component.index)
     },
   },
   {
     label: 'Remove',
     on: 'component',
     handler: ecu => {
-      console.log('remove', ecu.component.index)
+      // console.log('remove', ecu.component.index)
     },
   },
   {
     label: 'Remove',
     on: 'component',
     handler: ecu => {
-      console.log('remove', ecu.component.index)
+      // console.log('remove', ecu.component.index)
     },
   },
 ]

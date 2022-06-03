@@ -7,10 +7,9 @@ import { NodePath } from '@babel/traverse'
 --- */
 
 export type EcuType = {
-  component: {
-    index: string
-    name: string
-  },
+  parentComponent: FunctionType
+  activeComponent: FunctionType
+  activeComponentIndex: string
   dragState: {
     sourceIndex: string
     targetIndex: string
@@ -18,7 +17,6 @@ export type EcuType = {
     rect: DOMRect
     mouse: { x: number, y: number }
   }
-  createEditorId: () => number
 }
 
 export type EcuDispatcherType = Dispatch<SetStateAction<EcuType>>
@@ -81,6 +79,7 @@ export interface FileType extends GraphNodeType {
   name: string
   extension: string
   path: string
+  relativePath: string
   text: string
   ast: ParseResult<File>
 }

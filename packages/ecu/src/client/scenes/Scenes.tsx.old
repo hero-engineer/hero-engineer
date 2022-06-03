@@ -2,34 +2,36 @@ import { useState } from 'react'
 import { useMutation, useQuery } from '@apollo/client'
 import { Button, Div, Flex, H1, Input } from 'honorable'
 
-import { QueryResultsType, SceneType } from '../../types'
+import { FunctionType, QueryResultsType } from '../../types'
 
 import { CREATE_SCENE_MUTATION, SCENES_QUERY } from '../queries'
 
 function Scenes() {
   const [name, setName] = useState('')
   const [url, setUrl] = useState('/')
-  const { data, loading, error } = useQuery<QueryResultsType<'scenes', SceneType[]>>(SCENES_QUERY)
-  const [createScene] = useMutation(CREATE_SCENE_MUTATION, {
-    variables: {
-      name,
-      url,
-    },
-    refetchQueries: [
-      SCENES_QUERY,
-    ],
-  })
+  const { data, loading, error } = useQuery<QueryResultsType<'components', FunctionType[]>>(SCENES_QUERY)
+  // const [createScene] = useMutation(CREATE_SCENE_MUTATION, {
+  //   variables: {
+  //     name,
+  //     url,
+  //   },
+  //   refetchQueries: [
+  //     SCENES_QUERY,
+  //   ],
+  // })
 
   function handleCreateScene() {
-    if (name) {
-      createScene()
-    }
+    // if (name) {
+    //   createScene()
+    // }
   }
 
   function renderContent() {
     if (loading || error) return null
 
-    return data.scenes.map(({ id, name }) => (
+    return data.components
+    .filter(({ }) => )
+    .map(({ id, name }) => (
       <Div key={id}>
         {name}
       </Div>
