@@ -1,16 +1,18 @@
 import { FunctionDeclaration } from '@babel/types'
 import traverse, { NodePath } from '@babel/traverse'
 
-import { ComponentType, FileType } from '../../types'
+import { FileType, FunctionType } from '../../../types'
 
-import { UpdateHierarchyAstResolverType, updateHierarchyAst } from './updateHierarchyTree'
-import generateComponentString from './generateComponentString'
-import { getFileAst, parseJsx, regenerateFile } from './helpers'
+import { getFileAst, parseJsx, regenerateFile } from '../../domain/helpers'
+
+import generateComponentString from './generateComponentString.ts.old'
+
+import { UpdateHierarchyAstResolverType, updateHierarchyAst } from './updateHierarchyAst'
 
 function insertComponentInHierarchy(
   file: FileType,
-  sourceComponent: ComponentType,
-  targetComponent: ComponentType,
+  sourceFunction: FunctionType,
+  targetComponent: FunctionType,
   index: string,
   position: 'before' | 'after',
 ) {
@@ -25,7 +27,7 @@ function insertComponentInHierarchy(
 
       // },
       FunctionDeclaration(path) {
-        if (path.node.id.name === sourceComponent.name) {
+        if (path.node.id.name === sourceFunction.name) {
           sourceComponentFunctionAstPath = path
 
           path.stop()
@@ -35,7 +37,7 @@ function insertComponentInHierarchy(
   )
 
   if (!sourceComponentFunctionAstPath) {
-    throw new Error(`${sourceComponent.name} not found in ${file.name}`)
+    throw new Error(`${sourceFunction.name} not found in ${file.name}`)
   }
 
   let returnStatementAstPath
@@ -55,7 +57,7 @@ function insertComponentInHierarchy(
   )
 
   if (!returnStatementAstPath) {
-    throw new Error(`${sourceComponent.name} in ${file.name} has no return statement`)
+    throw new Error(`${sourceFunction.name} in ${file.name} has no return statement`)
   }
 
   const resolver: UpdateHierarchyAstResolverType = (path, within) => {

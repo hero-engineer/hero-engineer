@@ -3,7 +3,8 @@ import traverse, { NodePath } from '@babel/traverse'
 
 import { ComponentType, FileType } from '../../types'
 
-import { UpdateHierarchyAstResolverType, updateHierarchyAst } from './updateHierarchyTree'
+import { UpdateHierarchyAstResolverType, updateHierarchyAst } from '../graph/modify/updateHierarchyAst'
+
 import { getFileAst, regenerateFile } from './helpers'
 
 function removeComponentFromHierarchy(

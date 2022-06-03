@@ -1,20 +1,12 @@
 import { GraphType } from '../../types'
 
-import buildFilesGraph from './buildFilesGraph'
-import buildDependenciesGraph from './buildDependenciesGraph'
-import buildFunctionsGraph from './buildFunctionsGraph'
-import buildComponentsGraph from './buildComponentsGraph'
-import buildExportsGraph from './buildExportsGraph'
+import buildGraph from './build'
 
 const graph: GraphType = {
   nodes: {},
-  triplets: [],
+  edges: [],
 }
 
-buildFilesGraph(graph)
-buildDependenciesGraph(graph)
-buildFunctionsGraph(graph)
-buildComponentsGraph(graph)
-buildExportsGraph(graph)
+buildGraph(graph)
 
 export default graph

@@ -87,7 +87,6 @@ const COMPONENTS_LIST_QUERY = gql`
     components {
       id
       name
-      content
     }
   }
 `

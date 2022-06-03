@@ -1,19 +1,19 @@
 import { JSXElement, JSXIdentifier } from '@babel/types'
 import traverse, { NodePath } from '@babel/traverse'
 
-import { parseJsx } from './helpers'
+import { parseJsx } from '../../domain/helpers'
 
 export type UpdateHierarchyAstResolverType = (path: NodePath<JSXElement>, within: boolean) => void
 
 export function updateHierarchyAst(
-  path: NodePath<any>,
+  rootPath: NodePath<any>,
   resolver: UpdateHierarchyAstResolverType,
   targetIndex: string,
 ) {
   let currentIndex = '-1'
 
   traverse(
-    path.node,
+    rootPath.node,
     {
       JSXElement(path) {
         const indexArray = currentIndex.split('.')
@@ -50,7 +50,7 @@ export function updateHierarchyAst(
         currentIndex = indexArray.join('.')
       },
     },
-    path.scope,
-    path,
+    rootPath.scope,
+    rootPath,
   )
 }

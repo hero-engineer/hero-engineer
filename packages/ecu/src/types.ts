@@ -43,39 +43,6 @@ export type QueryResultsType<K extends string, P> = {
   SERVER
 --- */
 
-export interface GraphNodeType {
-  id: string
-  type: string
-}
-export type TripletType = [string, string, string]
-export type GraphType = {
-  nodes: {
-    [id: string]: GraphNodeType
-  }
-  triplets: Array<TripletType>
-}
-export type ExportType = 'default' | 'named' | 'none'
-export type SceneType = {
-  name: string
-  url: string
-}
-
-export interface FileType extends GraphNodeType {
-  type: 'File',
-  name: string
-  path: string
-  text: string
-  ast: ParseResult<File>
-}
-
-export interface FunctionType extends GraphNodeType {
-  type: 'Function',
-  name: string
-  exportType: ExportType
-  isComponent: boolean
-  astPath: NodePath<FunctionDeclaration>
-}
-
 export type ConfigurationType = {
   appRoot?: string
   srcLocation?: string
@@ -90,4 +57,48 @@ export type ExtendedConfigurationType = ConfigurationType & {
   appPath: string
   componentsPath: string
   scenesPath: string
+}
+
+export interface GraphNodeType {
+  id: string
+  type: string
+}
+export type GraphEdgeType = [string, string, string]
+export type GraphType = {
+  nodes: {
+    [id: string]: GraphNodeType
+  }
+  edges: Array<GraphEdgeType>
+}
+export type ExportType = 'default' | 'named' | 'none'
+export type SceneType = {
+  name: string
+  url: string
+}
+
+export interface FileType extends GraphNodeType {
+  type: 'File',
+  name: string
+  extension: string
+  path: string
+  text: string
+  ast: ParseResult<File>
+}
+
+export interface FunctionType extends GraphNodeType {
+  type: 'Function',
+  name: string
+  exportType: ExportType
+  isComponent: boolean
+  astPath: NodePath<FunctionDeclaration>
+}
+
+export type ComponentModelType = {
+  fn: FunctionType
+  file: FileType
+  props: PropsType
+}
+
+export type PropsType = Record<string, any> & {
+  children?: ComponentModelType[]
 }

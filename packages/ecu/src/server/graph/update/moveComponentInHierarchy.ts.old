@@ -1,7 +1,7 @@
-import { ComponentType, FileType } from '../../types'
+import { ComponentType, FileType } from '../../../types'
 
 import removeComponentFromHierarchy from './removeComponentFromHierarchy'
-import insertComponentInHierarchy from './insertComponentInHierarchy'
+import insertComponentInHierarchy from './insertComponentInHierarchy.ts.old'
 
 function moveComponentInHierarchy(
   file: FileType,

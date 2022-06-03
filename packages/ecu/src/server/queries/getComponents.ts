@@ -1,21 +1,11 @@
-import fs from 'fs'
+import { FunctionType } from '../../types'
+import graph from '../graph'
+import { filterByType } from '../graph/helpers'
 
-import { ComponentType } from '../../types'
+function getComponents(): FunctionType[] {
+  console.log('xxx', filterByType<FunctionType>(graph, 'Function').filter(node => node.isComponent))
 
-import configuration from '../configuration'
-
-function getComponents(): ComponentType[] {
-  return fs.readdirSync(configuration.componentsLocation).map(file => {
-    const name = file.replace('.tsx', '')
-
-    return {
-      name,
-      props: {},
-      importName: name,
-      importPath: `/components/${name}`,
-      importType: 'default',
-    }
-  })
+  return filterByType<FunctionType>(graph, 'Function').filter(node => node.isComponent)
 }
 
 export default getComponents

@@ -10,7 +10,7 @@ import routerComponent from '../constants/routerComponent'
 import routesComponent from '../constants/routesComponent'
 
 import configuration from '../configuration'
-import insertComponentInHierarchy from '../domain/insertComponentInHierarchy'
+import insertComponentInHierarchy from '../graph/update/insertComponentInHierarchy.ts.old'
 import { lintFile } from '../domain/helpers'
 
 import template from '../templates/Scene.tsx.template'

@@ -1,9 +1,10 @@
 import fs from 'fs'
 import path from 'path'
 
-import { ComponentType } from '../../types'
-
 import configuration from '../configuration'
+import graph from '../graph'
+import { getNodeById } from '../graph/helpers'
+import addFile from '../graph/add/addFile'
 
 import template from '../templates/Component.tsx.template'
 
@@ -11,27 +12,24 @@ type CreateComponentArgumentsType = {
   name: string
 }
 
-function createComponent(parent: any, { name }: CreateComponentArgumentsType): ComponentType {
+function createComponent(parent: any, { name }: CreateComponentArgumentsType) {
   const fileName = `${name}.tsx`
 
-  fs.readdirSync(configuration.componentsLocation).forEach(file => {
+  // TODO custom location
+  fs.readdirSync(configuration.componentsPath).forEach(file => {
     if (file === fileName) {
       throw new Error(`Component ${name} already exists`)
     }
   })
 
   const content = template(name)
-  const componentLocation = path.join(configuration.componentsLocation, `${name}.tsx`)
+  const filePath = path.join(configuration.componentsPath, `${name}.tsx`)
 
-  fs.writeFileSync(componentLocation, content, 'utf8')
+  fs.writeFileSync(filePath, content, 'utf8')
 
-  return {
-    name,
-    props: {},
-    importName: name,
-    importPath: `/components/${name}`,
-    importType: 'default',
-  }
+  const fileNode = addFile(graph, filePath)
+
+  return getNodeById(graph, `Function:::${fileNode.path}:::${name}`)
 }
 
 export default createComponent

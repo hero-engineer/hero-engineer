@@ -1,11 +1,11 @@
 import fs from 'fs'
 import path from 'path'
 
-import { parse } from '@babel/parser'
+import { GraphType } from '../../../types'
 
-import { FileType, GraphType } from '../../types'
+import configuration from '../../configuration'
 
-import configuration from '../configuration'
+import addFile from '../add/addFile'
 
 function buildFilesGraph(graph: GraphType) {
   traverseDirectories(graph, configuration.appPath)
@@ -19,24 +19,7 @@ function traverseDirectories(graph: GraphType, rootPath: string) {
       traverseDirectories(graph, filePath)
     }
     else if (fileName.endsWith('.ts') || fileName.endsWith('.tsx')) {
-      const text = fs.readFileSync(filePath, 'utf8')
-
-      const file: FileType = {
-        id: `File:::${filePath}`,
-        type: 'File',
-        name: fileName,
-        path: filePath,
-        text,
-        ast: parse(
-          text,
-          {
-            sourceType: 'module',
-            plugins: ['jsx', 'typescript'],
-          }
-        ),
-      }
-
-      graph.nodes[file.id] = file
+      addFile(graph, filePath)
     }
   })
 }

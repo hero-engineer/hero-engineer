@@ -8,7 +8,7 @@ import configuration from '../configuration'
 import appFile from '../constants/appFile'
 import appComponent from '../constants/appComponent'
 
-import moveComponentInHierarchy from '../domain/moveComponentInHierarchy'
+import moveComponentInHierarchy from '../graph/update/moveComponentInHierarchy.ts.old'
 import { lintFile } from '../domain/helpers'
 
 type DragComponentArgumentsType = {

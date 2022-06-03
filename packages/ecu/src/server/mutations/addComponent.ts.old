@@ -8,7 +8,7 @@ import configuration from '../configuration'
 import appFile from '../constants/appFile'
 import appComponent from '../constants/appComponent'
 
-import insertComponentInHierarchy from '../domain/insertComponentInHierarchy'
+import insertComponentInHierarchy from '../graph/update/insertComponentInHierarchy.ts.old'
 import { lintFile } from '../domain/helpers'
 
 type AddComponentArgumentsType = {

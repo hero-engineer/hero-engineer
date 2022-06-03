@@ -1,9 +1,9 @@
-import { ComponentType } from '../../types'
+import { FunctionType, PropsType } from '../../../types'
 
 import generatePropsString from './generatePropsString'
 
-function generateComponentString(component: ComponentType): string {
-  const { children, ...otherProps } = component.props
+function generateComponentString(component: FunctionType, props: PropsType): string {
+  const { children, ...otherProps } = props
 
   if (children) {
     return `<${component.name} ${generatePropsString(otherProps)}>${children.map(generateComponentString)}</${component.name}>`

@@ -1,7 +1,7 @@
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 
 import Home from '../scenes/Home'
-import Scenes from '../scenes/Scenes'
+// import Scenes from '../scenes/Scenes.tsx.old'
 import Components from '../scenes/Components'
 import SemanticTokens from '../scenes/SemanticTokens'
 
@@ -19,10 +19,10 @@ function EcuRouter({ children }: any) {
             index
             element={<Home />}
           />
-          <Route
+          {/* <Route
             path="scenes"
             element={<Scenes />}
-          />
+          /> */}
           <Route
             path="components"
             element={<Components />}
