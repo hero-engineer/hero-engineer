@@ -6,6 +6,8 @@ import EcuEditor from './components/EcuEditor'
 
 function withEcuEditor(children: ReactNode, ecu: EcuType, index = '0') {
   return Children.map(children, (child, i) => {
+    console.log(`${index}.${i}`, child)
+
     if (isValidElement(child)) {
       const nextIndex = `${index}.${i}`
 
