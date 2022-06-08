@@ -1,11 +1,9 @@
-import { ReactNode } from 'react'
+import { ReactElement } from 'react'
 
-function createRoot(element: HTMLElement) {
-  return {
-    render(node: ReactNode) {
+import renderer from './renderer'
 
-    },
-  }
+function render(element: ReactElement, container: any, callback?: () => void) {
+  renderer.updateContainer(element, container._internalRoot, null, callback)
 }
 
-export default createRoot
+export default render

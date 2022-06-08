@@ -1,1 +1,3 @@
-export { default as Ecu } from './components/Ecu'
+import render from './renderer'
+
+export default render
