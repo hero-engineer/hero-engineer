@@ -1,10 +1,8 @@
-import { Div } from 'honorable'
-
 function MyComponent2(props: any) {
   return (
-    <Div {...props}>
+    <p {...props}>
       Component 2
-    </Div>
+    </p>
   )
 }
 

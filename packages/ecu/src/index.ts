@@ -1,3 +1,3 @@
-import render from './client'
+import ecu from './client'
 
-export default { render }
+export default ecu

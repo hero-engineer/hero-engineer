@@ -5,15 +5,12 @@ import MyComponent3 from './components/MyComponent3'
 function App() {
   return (
     <>
-      <MyComponent1 />
-      <MyComponent2 />
-      <MyComponent1 />
-      <MyComponent2 />
       <MyComponent1>
-        <MyComponent3 />
-        <MyComponent3 />
-        <MyComponent3 />
+        <MyComponent2 />
+        <MyComponent2 />
+        <MyComponent2 />
       </MyComponent1>
+      <MyComponent3 />
     </>
   )
 }

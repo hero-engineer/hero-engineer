@@ -1,10 +1,12 @@
-import { Div } from 'honorable'
-
 function MyComponent3(props: any) {
   return (
-    <Div {...props}>
+    <div {...props}>
       Component 3
-    </Div>
+      <br />
+      <a href="#">
+        Link
+      </a>
+    </div>
   )
 }
 

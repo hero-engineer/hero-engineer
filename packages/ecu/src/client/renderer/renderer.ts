@@ -3,6 +3,8 @@ import Reconciler, { HostConfig } from 'react-reconciler'
 import emptyObject from 'fbjs/lib/emptyObject'
 import { DefaultEventPriority } from 'react-reconciler/constants'
 
+import wrapper from '../components/Wrapper'
+
 import isUnitlessNumber from './utils/css'
 import markIndexes from './markIndexes'
 
@@ -130,7 +132,7 @@ const hostConfig: HostConfig<
     rootContainerInstance,
     currentHostContext
   ) {
-    instance.setAttribute('ecu', '-1')
+    // inst ance.setAttribute('ecu', '-1')
 
     return newProps.autofocus
   },
@@ -140,14 +142,14 @@ const hostConfig: HostConfig<
     return null
   },
   resetAfterCommit(rootContainerInstance) {
-    rootContainerInstance.setAttribute('ecu', '-1')
-    markIndexes(rootContainerInstance)
+    // rootContainerInstance.setAttribute('ecu', '-1')
+    // markIndexes(rootContainerInstance)
   },
   commitMount(domElement, type, newProps, fiberNode) {
     domElement.focus()
   },
   appendChildToContainer(parent, child) {
-    parent.appendChild(child)
+    parent.appendChild(child) // wrapper here
   },
   prepareUpdate(
     instance,
