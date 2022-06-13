@@ -50,6 +50,99 @@ function traverseAndApplyMetaAttribute(domElements: Element[], hierarchy: any[],
   // Resolve extremities singles first
   // Got [many, ..., many] array
 
+  let workloads = splitHierarchyIntoWorkloads(hierarchy)
+
+  while (workloads.length) {
+    [domElements, workloads] = executeSingleWorkloadExtremities(domElements, workloads, previousMeta)
+    ;[domElements, workloads] = executeManyWorkloadExtremities(domElements, workloads, previousMeta)
+  }
+
+}
+
+function executeSingleWorkloadExtremities(domElements: Element[], workloads: any[], previousMeta: string) {
+  while (workloads.length) {
+    if (workloads[0].many) break
+
+    const domElement = domElements.shift()
+    const workload = workloads.shift()
+
+    if (!matchDomToNode(domElement, workload, previousMeta)) {
+      domElements.unshift(domElement)
+      workloads.unshift(workload)
+
+      return [domElements, workloads]
+    }
+  }
+
+  while (workloads.length) {
+    if (workloads[workloads.length - 1].many) break
+
+    const domElement = domElements.shift()
+    const workload = workloads.shift()
+
+    if (!matchDomToNode(domElement, workload, previousMeta)) {
+      domElements.unshift(domElement)
+      workloads.unshift(workload)
+
+      return [domElements, workloads]
+    }
+  }
+
+  return [domElements, workloads]
+}
+
+function executeManyWorkloadExtremities(domElements: Element[], workloads: any[], previousMeta: string) {
+  const l = workloads.length
+
+  for (let i = 0; i < l; i++) {
+    if (workloads[i].single) break
+
+    let matchedDom = true
+    let matchedWorkload = false
+    const workload = workloads.shift()
+
+    while (domElements.length) {
+      const domElement = domElements.shift()
+
+      if (!matchDomToNode(domElement, workload, previousMeta)) {
+        matchedDom = false
+        domElements.unshift(domElement)
+        break
+      }
+      else {
+        matchedWorkload = true
+      }
+    }
+
+    if (!matchedDom) {
+      if (!matchedWorkload) {
+        workloads.unshift(workload)
+      }
+
+      return [domElements, workloads]
+    }
+  }
+
+}
+
+function splitHierarchyIntoWorkloads(hierarchy: any[]) {
+  const workloads: any[] = []
+  const currentWorkload: any = []
+
+  for (let i = 0; i < hierarchy.length; i++) {
+    if (i > 0) {
+      if (hierarchy[i].many !== hierarchy[i - 1].many) {
+        workloads.push([...currentWorkload])
+        currentWorkload.length = 0
+      }
+    }
+
+    currentWorkload.push(hierarchy[i])
+  }
+
+  workloads.push([...currentWorkload])
+
+  return workloads
 }
 
 function matchDomToNode(domElement: Element, node: any, previousMeta: string) {
@@ -72,6 +165,7 @@ function matchDomToNode(domElement: Element, node: any, previousMeta: string) {
     return false
   }
 
+  return false
 }
 
 function handleClick(event: MouseEvent) {
