@@ -1,4 +1,6 @@
-type Particule = {
+import { nanoid } from 'nanoid'
+
+export type Particule = {
   // A unique address for this particule
   address: string
   // How a human or a machine understands what the particule does
@@ -9,4 +11,4 @@ type Particule = {
   workload: any
 }
 
-export default Particule
+export const createAddress = nanoid
