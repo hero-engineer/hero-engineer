@@ -1,6 +1,6 @@
 {
   "name": "ecu",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A shield",
   "main": "dist/index.js",
   "scripts": {
@@ -55,5 +55,8 @@
     "nodemon": "^2.0.16",
     "rimraf": "^3.0.2",
     "ts-node": "^10.8.1"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0"
   }
 }

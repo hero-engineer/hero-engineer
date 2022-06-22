@@ -6,10 +6,14 @@ For creating particules
 
 ```js
 {
+  // Address
   address: createAddress(),
-  role: 'Block:Flex', // Always 'Block:' then Flex, Anchor, ...
+  // Always 'Block:' then Flex, Anchor, ...
+  role: 'Block:Flex',
+  // Typically empty
   payload: {},
-  workload: wrapEcu(Flex),
+  // Your block component
+  workload: Flex,
 }
 ```
 
