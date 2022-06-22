@@ -1,3 +1,3 @@
-import ecu from './client'
+import Ecu from './client/Ecu'
 
-export default ecu
+export default Ecu
