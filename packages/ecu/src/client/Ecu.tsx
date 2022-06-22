@@ -1,4 +1,4 @@
-function Ecu({ children }) {
+function Ecu({ children }: any) {
   return children
 }
 

@@ -13,8 +13,6 @@
     "resolveJsonModule": true,
     "paths": {
       "*": ["node_modules/*"],
-      "@assets/*": ["./assets/*"],
-      "@src/*": ["./src/*"]
     },
     "lib": [
       "ESNext",
@@ -22,5 +20,10 @@
     ],
     "suppressImplicitAnyIndexErrors": true,
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "dist"
+  ]
 }
