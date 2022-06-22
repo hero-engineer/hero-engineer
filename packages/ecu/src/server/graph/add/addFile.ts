@@ -4,11 +4,11 @@ import path from 'path'
 import { parse } from '@babel/parser'
 import traverse from '@babel/traverse'
 
-import { FileType, FunctionType, GraphType } from '../../../types'
+import { FileType, FunctionType, GraphType } from '../../../shared/types'
 
-import configuration from '../../configuration'
+import configuration from '../../../shared/configuration'
 
-import { addEdge, addNode } from '../helpers'
+import { addEdge, addNode } from '../../../shared/graphHelpers'
 
 function addFile(graph: GraphType, filePath: string) {
   const relativePath = path.relative(configuration.appPath, filePath)

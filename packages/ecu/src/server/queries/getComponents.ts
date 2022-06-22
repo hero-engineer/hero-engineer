@@ -1,9 +1,9 @@
-import { FunctionType } from '../../types'
+import { FunctionType } from '../../shared/types'
 import graph from '../graph'
-import { filterByType } from '../graph/helpers'
+import { filterByRole } from '../../shared/graphHelpers'
 
 function getComponents(): FunctionType[] {
-  return filterByType<FunctionType>(graph, 'Function').filter(node => node.isComponent)
+  return filterByRole<FunctionType>(graph, 'Function').filter(node => node.isComponent)
 }
 
 export default getComponents

@@ -1,11 +1,11 @@
-import { GraphEdgeType, GraphNodeType, GraphType } from '../../types'
+import { GraphEdgeType, GraphNodeType, GraphType } from './types'
 
-export function getNodeById(graph: GraphType, id: string) {
-  return graph.nodes[id]
+export function getNodeByAddress(graph: GraphType, address: string) {
+  return graph.nodes[address]
 }
 
 export function addNode(graph: GraphType, node: GraphNodeType): void {
-  graph.nodes[node.id] = node
+  graph.nodes[node.address] = node
 }
 
 export function addEdge(graph: GraphType, edge: GraphEdgeType): void {
@@ -22,6 +22,6 @@ export function removeEdge(graph: GraphType, edge: GraphEdgeType): void {
   graph.edges = graph.edges.filter(e => edge.every((x, i) => x === e[i]))
 }
 
-export function filterByType<T extends GraphNodeType>(graph: GraphType, type: string) {
-  return Object.values(graph.nodes).filter(node => node.type === type) as T[]
+export function filterByRole<T extends GraphNodeType>(graph: GraphType, role: string) {
+  return Object.values(graph.nodes).filter(node => node.role === role) as T[]
 }

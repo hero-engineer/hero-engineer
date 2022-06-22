@@ -1,9 +1,9 @@
 import fs from 'fs'
 import path from 'path'
 
-import configuration from '../configuration'
+import configuration from '../../shared/configuration'
 import graph from '../graph'
-import { getNodeById } from '../graph/helpers'
+import { getNodeByAddress } from '../../shared/graphHelpers'
 import addFile from '../graph/add/addFile'
 
 import template from '../templates/Component.tsx.template'
@@ -29,7 +29,7 @@ function createComponent(parent: any, { name }: CreateComponentArgumentsType) {
 
   const fileNode = addFile(graph, filePath)
 
-  return getNodeById(graph, `Function:::${fileNode.path}:::${name}`)
+  return getNodeByAddress(graph, `Function:::${fileNode.path}:::${name}`)
 }
 
 export default createComponent

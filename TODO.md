@@ -1,0 +1,2 @@
+- Add .eslintrc to app
+- Add scripts to app

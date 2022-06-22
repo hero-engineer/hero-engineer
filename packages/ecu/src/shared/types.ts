@@ -2,6 +2,8 @@ import { Dispatch, SetStateAction } from 'react'
 import { File, FunctionDeclaration } from '@babel/types'
 import { ParseResult } from '@babel/parser'
 import { NodePath } from '@babel/traverse'
+import { Particule } from 'ecu-particule'
+
 /* ---
   CLIENT
 --- */
@@ -50,6 +52,7 @@ export type ConfigurationType = {
 }
 
 export type ExtendedConfigurationType = ConfigurationType & {
+  configurationPath: string,
   rootPath: string
   srcPath: string
   appPath: string
@@ -57,14 +60,11 @@ export type ExtendedConfigurationType = ConfigurationType & {
   scenesPath: string
 }
 
-export interface GraphNodeType {
-  id: string
-  type: string
-}
-export type GraphEdgeType = [string, string, string]
+export type GraphNodeType = Particule
+export type GraphEdgeType = [GraphNodeType['address'], GraphNodeType['address'], GraphNodeType['address']]
 export type GraphType = {
   nodes: {
-    [id: string]: GraphNodeType
+    [address: string]: GraphNodeType
   }
   edges: Array<GraphEdgeType>
 }

@@ -36,6 +36,7 @@
     "@babel/traverse": "^7.18.2",
     "@babel/types": "^7.18.4",
     "apollo-server": "^3.8.2",
+    "ecu-particule": "^1.1.0",
     "eslint": "^8.17.0",
     "fbjs": "^3.0.4",
     "graphql": "^16.5.0",

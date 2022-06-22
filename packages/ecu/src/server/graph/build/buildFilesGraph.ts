@@ -1,9 +1,9 @@
 import fs from 'fs'
 import path from 'path'
 
-import { GraphType } from '../../../types'
+import { GraphType } from '../../../shared/types'
 
-import configuration from '../../configuration'
+import configuration from '../../../shared/configuration'
 
 import addFile from '../add/addFile'
 
