@@ -26,7 +26,7 @@
     "suppressImplicitAnyIndexErrors": true,
     "preserveSymlinks": true,
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "../ecu-server/src/server"],
   "ts-node": {
     "compilerOptions": {
       "jsx": "react-jsx",

@@ -1,9 +1,9 @@
 import fs from 'fs'
 import path from 'path'
 
-import configuration from '../../shared/configuration'
+import configuration from '../../../../ecu/src/shared/configuration'
 import graph from '../graph'
-import { getNodeByAddress } from '../../shared/graphHelpers'
+import { getNodeByAddress } from '../../../../ecu/src/shared/graphHelpers'
 import addFile from '../graph/add/addFile'
 
 import template from '../templates/Component.tsx.template'

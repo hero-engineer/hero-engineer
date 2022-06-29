@@ -22,6 +22,6 @@ export function removeEdge(graph: GraphType, edge: GraphEdgeType): void {
   graph.edges = graph.edges.filter(e => edge.every((x, i) => x === e[i]))
 }
 
-export function filterByRole<T extends GraphNodeType>(graph: GraphType, role: string) {
+export function getNodesByRole<T extends GraphNodeType>(graph: GraphType, role: string) {
   return Object.values(graph.nodes).filter(node => node.role === role) as T[]
 }
