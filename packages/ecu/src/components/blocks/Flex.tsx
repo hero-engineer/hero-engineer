@@ -9,4 +9,8 @@ if (!flexRoles || flexRoles.length === 0) {
   throw new Error('No Flex block found')
 }
 
-export default wrapBlock(flexRoles[0].workload)
+const block = flexRoles[0].workload
+
+block.displayName = 'Flex'
+
+export default wrapBlock(block)

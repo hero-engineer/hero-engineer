@@ -1,6 +1,6 @@
 {
   "name": "ecu-honorable",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "The ecu plugin for the honorable UI library",
   "main": "dist/index.js",
   "scripts": {
@@ -20,5 +20,8 @@
   },
   "devDependencies": {
     "@types/react": "^18.0.14"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0"
   }
 }

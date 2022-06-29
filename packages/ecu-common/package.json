@@ -1,6 +1,6 @@
 {
   "name": "ecu-common",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Shared helpers and types for Ecu",
   "main": "dist/index.js",
   "scripts": {

@@ -9,15 +9,15 @@ import { Particule } from 'ecu-particule'
 --- */
 
 export type EcuType = {
-  parentComponent: FunctionType
-  activeComponent: FunctionType
-  activeComponentIndex: string
-  dragState: {
-    sourceIndex: string
-    targetIndex: string
-    position: 'before' | 'after'
-    rect: DOMRect
-    mouse: { x: number, y: number }
+  parentComponent?: FunctionType
+  activeComponent?: FunctionType
+  activeComponentPath?: string
+  dragState?: {
+    sourcePath?: string
+    targetPath?: string
+    position?: 'before' | 'after'
+    rect?: DOMRect
+    mouse?: { x: number, y: number }
   }
 }
 
