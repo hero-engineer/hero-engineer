@@ -29,7 +29,7 @@ function createComponent(parent: any, { name }: CreateComponentArgumentsType) {
 
   const fileNode = addFile(graph, filePath)
 
-  return getNodeByAddress(graph, `Function:::${fileNode.path}:::${name}`)
+  return getNodeByAddress(graph, `Function:::${fileNode.workload.path}:::${name}`)
 }
 
 export default createComponent

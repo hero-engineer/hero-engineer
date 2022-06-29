@@ -31,7 +31,7 @@ catch (error) {
   throw new Error('Ecu configuration not found')
 }
 
-const appPath = path.join(currentPath, configuration.appRoot || 'app')
+const appPath = currentPath
 const srcPath = path.join(appPath, configuration.srcLocation || 'src')
 
 const extendedConfiguration: ExtendedConfigurationType = {

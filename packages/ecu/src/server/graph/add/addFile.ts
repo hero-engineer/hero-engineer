@@ -18,23 +18,26 @@ function addFile(graph: GraphType, filePath: string) {
   const name = nameArray.join('.')
 
   const file: FileType = {
-    id: `File:::${relativePathSlug}`,
-    type: 'File',
-    name,
-    extension,
-    path: filePath,
-    relativePath,
-    get text() {
-      return fs.readFileSync(filePath, 'utf8')
-    },
-    get ast() {
-      return parse(
-        this.text,
-        {
-          sourceType: 'module',
-          plugins: ['jsx', 'typescript'],
-        }
-      )
+    address: `File:::${relativePathSlug}`,
+    role: 'File',
+    payload: {},
+    workload: {
+      name,
+      extension,
+      path: filePath,
+      relativePath,
+      get text() {
+        return fs.readFileSync(filePath, 'utf8')
+      },
+      get ast() {
+        return parse(
+          this.text,
+          {
+            sourceType: 'module',
+            plugins: ['jsx', 'typescript'],
+          }
+        )
+      },
     },
   }
 
@@ -44,21 +47,21 @@ function addFile(graph: GraphType, filePath: string) {
     IMPORTS
   --- */
 
-  file.ast.program.body.forEach(node => {
+  file.workload.ast.program.body.forEach(node => {
     if (node.type === 'ImportDeclaration') {
       const { value } = node.source
 
       if (value.startsWith('.')) {
-        const absolutePath = path.join(path.dirname(file.path), value)
+        const absolutePath = path.join(path.dirname(file.workload.path), value)
         const relativePathSlug = path.relative(configuration.appPath, absolutePath).replaceAll('/', '_')
-        const dependency = graph.nodes[`File:::${relativePathSlug}.ts`] || graph.nodes[`File:::${relativePathSlug}.tsx`] || graph.nodes[`File:::${relativePathSlug}`]
+        const dependency = graph.nodes[`File:::${relativePathSlug}.tsx`] || graph.nodes[`File:::${relativePathSlug}.ts`] || graph.nodes[`File:::${relativePathSlug}`]
 
         if (dependency) {
-          addEdge(graph, [file.id, 'importsFile', dependency.id])
+          addEdge(graph, [file.address, 'importsFile', dependency.address])
         }
       }
       else {
-        addEdge(graph, [file.id, 'importsModule', `Module:::${value}`])
+        addEdge(graph, [file.address, 'importsModule', `Module:::${value}`])
       }
     }
   })
@@ -69,15 +72,18 @@ function addFile(graph: GraphType, filePath: string) {
 
   const createFunctionId = (name: string) => `Function:::${relativePathSlug}:::${name}`
 
-  traverse(file.ast, {
+  traverse(file.workload.ast, {
     FunctionDeclaration(path) {
       const functionNode: FunctionType = {
-        id: createFunctionId(path.node.id.name),
-        type: 'Function',
-        name: path.node.id.name,
-        isComponent: false,
-        exportType: 'none',
-        astPath: path,
+        address: createFunctionId(path.node.id.name),
+        role: 'Function',
+        payload: {},
+        workload: {
+          name: path.node.id.name,
+          isComponent: false,
+          exportType: 'none',
+          astPath: path,
+        },
       }
 
       let isWithinReturnStatement = false
@@ -88,7 +94,7 @@ function addFile(graph: GraphType, filePath: string) {
         },
         JSXElement(path) {
           if (isWithinReturnStatement) {
-            functionNode.isComponent = true
+            functionNode.workload.isComponent = true
 
             path.stop()
           }
@@ -96,7 +102,7 @@ function addFile(graph: GraphType, filePath: string) {
       }, path.scope, path)
 
       addNode(graph, functionNode)
-      addEdge(graph, [file.id, 'declaresFunction', functionNode.id])
+      addEdge(graph, [file.address, 'declaresFunction', functionNode.address])
     },
   })
 
@@ -104,7 +110,7 @@ function addFile(graph: GraphType, filePath: string) {
     EXPORTS
   --- */
 
-  traverse(file.ast, {
+  traverse(file.workload.ast, {
     ExportDeclaration(path) {
       const { type, declaration } = path.node as any
       let name
@@ -127,7 +133,7 @@ function addFile(graph: GraphType, filePath: string) {
       const fn = graph.nodes[createFunctionId(name)] as FunctionType
 
       if (fn) {
-        fn.exportType = type === 'ExportDefaultDeclaration' ? 'default' : 'named'
+        fn.workload.exportType = type === 'ExportDefaultDeclaration' ? 'default' : 'named'
       }
     },
   })

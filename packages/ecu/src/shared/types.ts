@@ -75,29 +75,33 @@ export type SceneType = {
 }
 
 export interface FileType extends GraphNodeType {
-  type: 'File',
-  name: string
-  extension: string
-  path: string
-  relativePath: string
-  text: string
-  ast: ParseResult<File>
+  role: 'File',
+  workload: {
+    name: string
+    extension: string
+    path: string
+    relativePath: string
+    text: string
+    ast: ParseResult<File>
+  }
 }
 
 export interface FunctionType extends GraphNodeType {
-  type: 'Function',
-  name: string
-  exportType: ExportType
-  isComponent: boolean
-  astPath: NodePath<FunctionDeclaration>
+  role: 'Function',
+  workload: {
+    name: string
+    exportType: ExportType
+    isComponent: boolean
+    astPath: NodePath<FunctionDeclaration>
+  }
 }
 
-export type ComponentModelType = {
-  fn: FunctionType
-  file: FileType
-  props: PropsType
-}
+// export type ComponentModelType = {
+//   fn: FunctionType
+//   file: FileType
+//   props: PropsType
+// }
 
-export type PropsType = Record<string, any> & {
-  children?: ComponentModelType[]
-}
+// export type PropsType = Record<string, any> & {
+//   children?: ComponentModelType[]
+// }

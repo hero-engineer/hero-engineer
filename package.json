@@ -2,11 +2,11 @@
   "private": true,
   "name": "ecu-monorepo",
   "scripts": {
-    "link:ecu": "(cd packages/ecu && npm link && rimraf node_modules/react) && (cd app && npm link ecu)",
+    "link:ecu": "(cd packages/ecu && npm link && rimraf node_modules/react) && (cd app/client && npm link ecu)",
     "link:ecu:2": "rimraf app/node_modules/ecu && cp -r packages/ecu app/node_modules && rimraf app/node_modules/ecu/node_modules/react app/node_modules/ecu/node_modules/react-dom && cd app/node_modules/ecu && npm version patch",
     "dev:client": "(cd packages/ecu && npm run dev)",
     "dev:server": "(cd packages/ecu && npm run start:watch)",
-    "dev:app": "npm run link:ecu && (cd app/app && npm run dev)",
+    "dev:app": "npm run link:ecu && (cd app/client && npm run dev)",
     "dev:ecu": "nodemon --watch packages/ecu/dist --exec \"npm run link:ecu\"",
     "minor:ecu": "(cd packages/ecu && npm version minor && npm publish)"
   },
