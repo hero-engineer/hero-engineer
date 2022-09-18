@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "name": "app",
+  "description": "An ecu app",
+  "main": "index.js",
+  "scripts": {},
+  "author": "",
+  "license": "MIT"
+}

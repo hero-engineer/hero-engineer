@@ -1,0 +1,58 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "allowJs": true,
+    "target": "ES6",
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "outDir": "dist",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "paths": {
+      "*": ["node_modules/*"]
+    },
+    "lib": [
+      "ESNext",
+      "DOM"
+    ],
+    "types": [
+      "node"
+    ],
+    "suppressImplicitAnyIndexErrors": true,
+    "preserveSymlinks": true,
+  },
+  "include": ["src/**/*", "../ecu-server/src/server"],
+  "ts-node": {
+    "compilerOptions": {
+      "jsx": "react-jsx",
+      "allowJs": true,
+      "target": "ES6",
+      "module": "CommonJS",
+      "skipLibCheck": true,
+      "esModuleInterop": true,
+      "noImplicitAny": true,
+      "sourceMap": true,
+      "baseUrl": ".",
+      "outDir": "dist",
+      "moduleResolution": "node",
+      "resolveJsonModule": true,
+      "paths": {
+        "*": ["node_modules/*"]
+      },
+      "lib": [
+        "ESNext",
+        "DOM"
+      ],
+      "types": [
+        "node"
+      ],
+      "suppressImplicitAnyIndexErrors": true,
+      "preserveSymlinks": true,
+    }
+  },
+}

@@ -1,0 +1,57 @@
+{
+  "name": "ecu",
+  "version": "0.2.0",
+  "description": "A shield",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "ts-node src/server/index.ts",
+    "start:watch": "nodemon --watch src/server --ext ts,tsx,snap --exec \"npm start\"",
+    "dev": "npm run clean:build && nodemon --watch src --ext ts,tsx,snap --exec \"npm run build\"",
+    "build": "npx tsc --declaration",
+    "clean": "npm run clean:build && npm run clean:node-modules && npm i",
+    "clean:node-modules": "rimraf node_module package-lock.json",
+    "clean:build": "rimraf dist",
+    "test": "echo \"Error: no test specified\" && exit 0",
+    "test:watch": "nodemon --watch src --watch tests --ext ts,tsx,snap --exec \"npm run test\"",
+    "prepublishOnly": "npm run clean && npm test && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dherault/ecu.git"
+  },
+  "author": "David Hérault <dherault@gmail.com> (https://github.com/dherault)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dherault/ecu/issues"
+  },
+  "homepage": "https://github.com/dherault/ecu#readme",
+  "dependencies": {
+    "@babel/core": "^7.18.6",
+    "@babel/generator": "^7.18.7",
+    "@babel/parser": "^7.18.6",
+    "@babel/preset-env": "^7.18.6",
+    "@babel/preset-react": "^7.18.6",
+    "@babel/preset-typescript": "^7.18.6",
+    "@babel/traverse": "^7.18.6",
+    "@babel/types": "^7.18.7",
+    "ecu-common": "^0.2.0",
+    "ecu-particule": "^1.1.0",
+    "eslint": "^8.18.0",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1"
+  },
+  "devDependencies": {
+    "@types/babel__generator": "^7.6.4",
+    "@types/babel__traverse": "^7.17.1",
+    "@types/eslint": "^8.4.3",
+    "@types/fbjs": "^3.0.2",
+    "@types/node": "^18.0.0",
+    "@types/react-reconciler": "^0.28.0",
+    "nodemon": "^2.0.18",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.8.1"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0"
+  }
+}
