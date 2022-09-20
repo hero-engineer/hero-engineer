@@ -5,6 +5,8 @@ import buildFilesGraph from './buildFilesGraph'
 function buildGraph(graph: GraphType) {
   buildFilesGraph(graph)
 
+  console.log('graph', graph)
+
   return graph
 }
 

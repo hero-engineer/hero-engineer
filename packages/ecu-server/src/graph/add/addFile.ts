@@ -124,7 +124,7 @@ function addFile(graph: GraphType, filePath: string) {
         }
         default: {
           // FIXME
-          throw new Error(`Unsupported export type: ${declaration.type}`)
+          console.log(file.payload.relativePath, `Unsupported export type: ${declaration.type}`)
         }
       }
 

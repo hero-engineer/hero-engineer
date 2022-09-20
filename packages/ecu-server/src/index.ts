@@ -7,6 +7,10 @@ import getComponents from './queries/getComponents'
 // import removeComponent from './mutations/removeComponent'
 // import dragComponent from './mutations/dragComponent'
 // import createScene from './mutations/createScene'
+import graph from './graph'
+import buildGraph from './graph/build'
+
+buildGraph(graph)
 
 const typeDefs = gql`
   type Component {
@@ -43,6 +47,9 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   csrfPrevention: true,
+  cors: {
+    origin: '*',
+  },
 })
 
 server.listen().then(({ url }) => {
