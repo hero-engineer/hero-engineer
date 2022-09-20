@@ -1,6 +1,9 @@
-export default (name: string) => `function ${name}(props: any) {
+export default (name: string, id: string) => `function ${name}(props: any) {
   return (
-    <div {...props}>
+    <div
+      id="${id}"
+      {...props}
+    >
       Hello I'm famous
     </div>
   )

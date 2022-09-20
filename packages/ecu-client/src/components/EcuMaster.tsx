@@ -1,8 +1,25 @@
 function EcuMaster({ children }: any) {
+
   return (
-    <main>
+    <>
+      <Overlay />
       {children}
-    </main>
+    </>
+  )
+}
+
+function Overlay() {
+  function handleCreateComponentClick() {
+
+  }
+
+  return (
+    <button
+      onClick={handleCreateComponentClick}
+      type="button"
+    >
+      Create component
+    </button>
   )
 }
 

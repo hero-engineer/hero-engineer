@@ -6,9 +6,9 @@ export type Particule = {
   // How a human or a machine understands what the particule does
   role: string
   // Internal state
-  payload: object
+  state: any
   // front-facing API
-  workload: any
+  payload: any
 }
 
 export const createAddress = nanoid

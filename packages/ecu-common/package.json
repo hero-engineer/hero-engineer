@@ -15,7 +15,7 @@
     "@babel/parser": "^7.19.1",
     "@babel/traverse": "^7.19.1",
     "@babel/types": "^7.19.0",
-    "ecu-particule": "^2.0.0",
+    "ecu-particule": "^3.0.0",
     "react": "^18.2.0"
   },
   "devDependencies": {

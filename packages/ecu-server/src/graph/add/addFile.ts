@@ -18,7 +18,7 @@ function addFile(graph: GraphType, filePath: string) {
   const file: FileType = {
     address: `File:::${relativePathSlug}`,
     role: 'File',
-    workload: {},
+    state: null,
     payload: {
       name,
       extension,
@@ -75,7 +75,7 @@ function addFile(graph: GraphType, filePath: string) {
       const functionNode: FunctionType = {
         address: createFunctionId(path.node.id.name),
         role: 'Function',
-        workload: {},
+        state: null,
         payload: {
           name: path.node.id.name,
           isComponent: false,
