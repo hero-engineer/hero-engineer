@@ -3,6 +3,7 @@ import path from 'path'
 
 import { parse } from '@babel/parser'
 import traverse from '@babel/traverse'
+import slugify from 'slugify'
 
 import { FileType, FunctionType, GraphType, addEdge, addNode } from 'ecu-common'
 
@@ -10,7 +11,7 @@ import configuration from '../../configuration'
 
 function addFile(graph: GraphType, filePath: string) {
   const relativePath = path.relative(configuration.appPath, filePath)
-  const relativePathSlug = relativePath.replaceAll('/', '_') // TODO use slugify
+  const relativePathSlug = slugify(relativePath, { strict: true })
   const nameArray = path.basename(filePath).split('.')
   const extension = nameArray.pop()
   const name = nameArray.join('.')
@@ -51,7 +52,7 @@ function addFile(graph: GraphType, filePath: string) {
 
       if (value.startsWith('.')) {
         const absolutePath = path.join(path.dirname(file.payload.path), value)
-        const relativePathSlug = path.relative(configuration.appPath, absolutePath).replaceAll('/', '_') // TODO use slugify
+        const relativePathSlug = slugify(path.relative(configuration.appPath, absolutePath), { strict: true })
         const dependency = graph.nodes[`File:::${relativePathSlug}.tsx`] || graph.nodes[`File:::${relativePathSlug}.ts`] || graph.nodes[`File:::${relativePathSlug}`]
 
         if (dependency) {

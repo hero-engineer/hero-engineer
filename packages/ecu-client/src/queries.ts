@@ -15,3 +15,17 @@ export const CreateComponentMutation = `
     }
   }
 `
+
+export const ComponentQuery = `
+  query ($id: ID!){
+    component (id: $id) {
+      id
+      name
+      file {
+        id
+        path
+        relativePath
+      }
+    }
+  }
+`

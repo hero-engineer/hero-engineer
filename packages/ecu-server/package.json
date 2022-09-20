@@ -15,7 +15,8 @@
     "@babel/parser": "^7.19.1",
     "@babel/traverse": "^7.19.1",
     "apollo-server": "^3.10.2",
-    "ecu-common": "^0.2.0"
+    "ecu-common": "^0.2.0",
+    "slugify": "^1.6.5"
   },
   "devDependencies": {
     "@types/babel__traverse": "^7.18.1",

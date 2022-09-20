@@ -1,6 +1,7 @@
 import { ApolloServer, gql } from 'apollo-server'
 
 // import getScenes from './queries/getScenes'
+import getComponent from './queries/getComponent'
 import getComponents from './queries/getComponents'
 // import createComponent from './mutations/createComponent'
 // import addComponent from './mutations/addComponent'
@@ -13,12 +14,20 @@ import buildGraph from './graph/build'
 buildGraph(graph)
 
 const typeDefs = gql`
+  type File {
+    id: ID!
+    path: String!
+    relativePath: String!
+  }
+
   type Component {
     id: ID!
     name: String!
+    file: File!
   }
 
   type Query {
+    component(id: ID!): Component
     components: [Component]
   }
 
@@ -33,6 +42,7 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     // scenes: getScenes,
+    component: getComponent,
     components: getComponents,
   },
   // Mutation: {

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Suspense, lazy, useState } from 'react'
 import { Provider, useMutation, useQuery } from 'urql'
 import {
   BrowserRouter,
@@ -11,7 +11,7 @@ import {
 } from 'react-router-dom'
 
 import client from '../client'
-import { ComponentsQuery, CreateComponentMutation } from '../queries'
+import { ComponentQuery, ComponentsQuery, CreateComponentMutation } from '../queries'
 
 function EcuMaster({ children }: any) {
 
@@ -92,7 +92,6 @@ function Components() {
     query: ComponentsQuery,
   })
 
-  console.log('componentsQueryResult', componentsQueryResult)
   if (componentsQueryResult.fetching) return null
   if (componentsQueryResult.error) return null
 
@@ -114,11 +113,34 @@ function Components() {
 
 function Component() {
   const { id } = useParams()
+  const [componentQueryResult] = useQuery({
+    query: ComponentQuery,
+    variables: {
+      id,
+    },
+  })
+
+  console.log('componentQueryResult', componentQueryResult)
+  if (componentQueryResult.fetching) return null
+  if (componentQueryResult.error) return null
+  if (!componentQueryResult.data.component) return null
 
   return (
-    <section>
-      {id}
-    </section>
+    <>
+      <h2>{componentQueryResult.data.component.name}</h2>
+      <p>{componentQueryResult.data.component.file.relativePath}</p>
+      <ComponentEditor component={componentQueryResult.data.component} />
+    </>
+  )
+}
+
+function ComponentEditor({ component }: any) {
+  const Component = lazy(() => import(component.file.path))
+
+  return (
+    <Suspense fallback={<>Loading...</>}>
+      <Component />
+    </Suspense>
   )
 }
 
