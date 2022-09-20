@@ -12,13 +12,21 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@babel/core": "^7.19.1",
+    "@babel/generator": "^7.19.0",
     "@babel/parser": "^7.19.1",
+    "@babel/plugin-syntax-jsx": "^7.18.6",
+    "@babel/preset-env": "^7.19.1",
+    "@babel/preset-react": "^7.18.6",
     "@babel/traverse": "^7.19.1",
+    "@babel/types": "^7.19.0",
     "apollo-server": "^3.10.2",
     "ecu-common": "^0.2.0",
     "slugify": "^1.6.5"
   },
   "devDependencies": {
+    "@types/babel__core": "^7.1.19",
+    "@types/babel__generator": "^7.6.4",
     "@types/babel__traverse": "^7.18.1",
     "nodemon": "^2.0.20",
     "ts-node": "^10.9.1",

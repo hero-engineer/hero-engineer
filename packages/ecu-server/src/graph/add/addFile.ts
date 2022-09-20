@@ -17,7 +17,7 @@ function addFile(graph: GraphType, filePath: string) {
   const name = nameArray.join('.')
 
   const file: FileType = {
-    address: `File:::${relativePathSlug}`,
+    address: `File:${relativePathSlug}`,
     role: 'File',
     state: null,
     payload: {
@@ -53,7 +53,7 @@ function addFile(graph: GraphType, filePath: string) {
       if (value.startsWith('.')) {
         const absolutePath = path.join(path.dirname(file.payload.path), value)
         const relativePathSlug = slugify(path.relative(configuration.appPath, absolutePath), { strict: true })
-        const dependency = graph.nodes[`File:::${relativePathSlug}.tsx`] || graph.nodes[`File:::${relativePathSlug}.ts`] || graph.nodes[`File:::${relativePathSlug}`]
+        const dependency = graph.nodes[`File:${relativePathSlug}.tsx`] || graph.nodes[`File:${relativePathSlug}.ts`] || graph.nodes[`File:${relativePathSlug}`]
 
         if (dependency) {
           addEdge(graph, [file.address, 'importsFile', dependency.address])
@@ -69,7 +69,7 @@ function addFile(graph: GraphType, filePath: string) {
   FUNCTIONS
   --- */
 
-  const createFunctionId = (name: string) => `Function:::${relativePathSlug}:::${name}`
+  const createFunctionId = (name: string) => `Function:${relativePathSlug}:${name}`
 
   traverse(file.payload.ast, {
     FunctionDeclaration(path) {

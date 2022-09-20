@@ -1,9 +1,7 @@
 function App() {
-  return (
-    <div className="App">
+  return <div id="Function:srcApptsx:App_0">
       Edit me I'm famous!
-    </div>
-  )
+    </div>;
 }
 
-export default App
+export default App;
