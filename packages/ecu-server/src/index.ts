@@ -3,7 +3,7 @@ import { ApolloServer, gql } from 'apollo-server'
 // import getScenes from './queries/getScenes'
 import getComponent from './queries/getComponent'
 import getComponents from './queries/getComponents'
-// import createComponent from './mutations/createComponent'
+import createComponent from './mutations/createComponent'
 // import addComponent from './mutations/addComponent'
 // import removeComponent from './mutations/removeComponent'
 // import dragComponent from './mutations/dragComponent'
@@ -31,12 +31,12 @@ const typeDefs = gql`
     components: [Component]
   }
 
-  # type Mutation {
-    # createComponent(name: String!): Component
+  type Mutation {
+    createComponent(name: String!): Component
     # addComponent(name: String!, index: String!, position: String!): Component
     # removeComponent(index: String!): Component
     # dragComponent(name: String!, sourceIndex: String!, targetIndex: String!, position: String!): Component
-  # }
+  }
 `
 
 const resolvers = {
@@ -45,12 +45,12 @@ const resolvers = {
     component: getComponent,
     components: getComponents,
   },
-  // Mutation: {
-    // createComponent,
+  Mutation: {
+    createComponent,
     // addComponent,
     // removeComponent,
     // dragComponent,
-  // },
+  },
 }
 
 const server = new ApolloServer({

@@ -1,7 +1,14 @@
+import { Div } from 'ecu-client'
+
 function App() {
-  return <div id="Function:srcApptsx:App_0">
+  return (
+    <Div
+      className="App"
+      id="Function:srcApptsx:App_0"
+    >
       Edit me I'm famous!
-    </div>;
+    </Div>
+  )
 }
 
-export default App;
+export default App

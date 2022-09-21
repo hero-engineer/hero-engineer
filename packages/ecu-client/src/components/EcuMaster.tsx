@@ -32,6 +32,7 @@ function Overlay() {
   function handleCreateComponentClick() {
     createComponent({ name: componentName })
     .then(result => {
+      console.log('result', result)
       navigate(`/__ecu__/component/${result.data.createComponent.id}`)
     })
   }
