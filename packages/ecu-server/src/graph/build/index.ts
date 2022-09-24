@@ -1,6 +1,6 @@
 import { GraphType } from 'ecu-common'
 
-import createHierachyId from '../../watchers/createHierarchyId'
+import createHierachyIds from '../../watchers/createHierarchyIds'
 
 import buildFilesGraph from './buildFilesGraph'
 
@@ -9,7 +9,7 @@ function buildGraph(graph: GraphType) {
 
   console.log('graph', Object.keys(graph.nodes).length)
 
-  createHierachyId(graph)
+  createHierachyIds(graph)
 
   return graph
 }

@@ -3,7 +3,7 @@ import path from 'path'
 
 import capitalize from 'lodash/capitalize'
 
-import { FunctionType, getNodesByFirstNeighbourg } from 'ecu-common'
+import { FunctionNodeType, getNodesByFirstNeighbourg } from 'ecu-common'
 
 import createComponentTemplate from '../templates/Component'
 
@@ -26,7 +26,7 @@ function createComponent(_: any, { name }: CreateComponentArgs) {
 
   const fileNode = addFile(graph, filePath)
 
-  const componentNode = getNodesByFirstNeighbourg<FunctionType>(graph, fileNode.address, 'declaresFunction')[0]
+  const componentNode = getNodesByFirstNeighbourg<FunctionNodeType>(graph, fileNode.address, 'declaresFunction')[0]
 
   return nodeWithId(componentNode, { file: nodeWithId(fileNode) })
 }

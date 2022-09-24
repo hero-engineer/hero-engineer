@@ -1,3 +1,5 @@
+import { useMemo } from 'react'
+
 const registry: Record<string, number> = {}
 
 function createHierarchyId(prefix: string) {
@@ -8,4 +10,8 @@ function createHierarchyId(prefix: string) {
   return `${prefix}_0`
 }
 
-export default createHierarchyId
+function useHierarchyId(id: string) {
+  return useMemo(() => createHierarchyId(id), [id])
+}
+
+export default useHierarchyId

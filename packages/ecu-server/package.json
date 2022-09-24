@@ -22,6 +22,7 @@
     "@babel/types": "^7.19.0",
     "apollo-server": "^3.10.2",
     "ecu-common": "^0.2.0",
+    "ecu-particule": "^3.0.0",
     "lodash": "^4.17.21",
     "slugify": "^1.6.5"
   },

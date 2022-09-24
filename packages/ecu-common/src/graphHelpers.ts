@@ -37,3 +37,11 @@ export function getNodesBySecondNeighbourg<T extends GraphNodeType>(graph: Graph
 
   return edges.map(edge => graph.nodes[edge[0]]) as T[]
 }
+
+export function findNodes<T extends GraphNodeType>(graph: GraphType, predicate: (node: T) => boolean) {
+  return Object.values(graph.nodes).filter(predicate) as T[]
+}
+
+export function findNode<T extends GraphNodeType>(graph: GraphType, predicate: (node: T) => boolean) {
+  return Object.values(graph.nodes).find(predicate) as T
+}

@@ -1,14 +1,14 @@
 import fs from 'fs'
 
-import { FileType, FunctionType, GraphType, getNodesByRole, getNodesBySecondNeighbourg } from 'ecu-common'
+import { FileNodeType, FunctionNodeType, GraphType, getNodesByRole, getNodesBySecondNeighbourg } from 'ecu-common'
 import { transformSync } from '@babel/core'
 import { JSXAttribute, jsxAttribute, jsxIdentifier, stringLiteral } from '@babel/types'
 
-function createHierachyId(graph: GraphType) {
-  getNodesByRole<FunctionType>(graph, 'Function')
+function createHierachyIds(graph: GraphType) {
+  getNodesByRole<FunctionNodeType>(graph, 'Function')
   .filter(node => node.payload.isComponent)
   .forEach(componentNode => {
-    const fileNode = getNodesBySecondNeighbourg<FileType>(graph, componentNode.address, 'declaresFunction')[0]
+    const fileNode = getNodesBySecondNeighbourg<FileNodeType>(graph, componentNode.address, 'declaresFunction')[0]
 
     if (!fileNode) return
 
@@ -17,6 +17,7 @@ function createHierachyId(graph: GraphType) {
         ['@babel/plugin-syntax-typescript', { isTSX: true }],
         '@babel/plugin-syntax-jsx',
         function addIdPropPlugin() {
+          const propName = 'data-ecu'
           let cursor = 0
 
           return {
@@ -24,7 +25,7 @@ function createHierachyId(graph: GraphType) {
               JSXOpeningElement(path: any) {
                 // Remove previous id props
                 do {
-                  const idIndex = path.node.attributes.findIndex((x: JSXAttribute) => x.name.name === 'id')
+                  const idIndex = path.node.attributes.findIndex((x: JSXAttribute) => x.name.name === propName)
 
                   if (idIndex === -1) break
 
@@ -34,7 +35,7 @@ function createHierachyId(graph: GraphType) {
                 // Add id prop
                 path.node.attributes.push(
                   jsxAttribute(
-                    jsxIdentifier('id'),
+                    jsxIdentifier(propName),
                     stringLiteral(`${componentNode.address}_${cursor++}`),
                   )
                 )
@@ -49,4 +50,4 @@ function createHierachyId(graph: GraphType) {
   })
 }
 
-export default createHierachyId
+export default createHierachyIds

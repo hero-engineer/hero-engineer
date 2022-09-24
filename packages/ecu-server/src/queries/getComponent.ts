@@ -1,4 +1,4 @@
-import { FileType, getNodeByAddress, getNodesBySecondNeighbourg } from 'ecu-common'
+import { FileNodeType, getNodeByAddress, getNodesBySecondNeighbourg } from 'ecu-common'
 
 import graph from '../graph'
 
@@ -14,7 +14,7 @@ function getComponent(_: any, { id }: GetComponentArgs) {
   if (!node) return null
 
   return nodeWithId(node, {
-    file: nodeWithId(getNodesBySecondNeighbourg<FileType>(graph, node.address, 'declaresFunction')[0]),
+    file: nodeWithId(getNodesBySecondNeighbourg<FileNodeType>(graph, node.address, 'declaresFunction')[0]),
   })
 }
 

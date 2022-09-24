@@ -4,7 +4,7 @@ function App() {
   return (
     <Div
       className="App"
-      id="Function:srcApptsx:App_0"
+      data-ecu="Function:srcApptsx:App_0"
     >
       Edit me I'm famous!
     </Div>

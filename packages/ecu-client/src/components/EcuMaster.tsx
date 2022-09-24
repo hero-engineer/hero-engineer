@@ -1,4 +1,4 @@
-import { Suspense, lazy, useState } from 'react'
+import { Suspense, lazy, useMemo, useState } from 'react'
 import { Provider, useMutation, useQuery } from 'urql'
 import {
   BrowserRouter,
@@ -13,14 +13,27 @@ import {
 import client from '../client'
 import { ComponentQuery, ComponentsQuery, CreateComponentMutation } from '../queries'
 
-function EcuMaster({ children }: any) {
+import ModeContext from '../contexts/ModeContext'
+import EditionContext, { EditionContextType } from '../contexts/EditionContext'
+
+type EcuMasterProps = {
+  mode?: string
+}
+
+function EcuMaster({ mode = 'production' }: EcuMasterProps) {
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const editionContextValue = useMemo<EditionContextType>(() => ({ selectedId, setSelectedId }), [selectedId])
 
   return (
-    <Provider value={client}>
-      <Router>
-        <Overlay />
-      </Router>
-    </Provider>
+    <ModeContext.Provider value={mode}>
+      <EditionContext.Provider value={editionContextValue}>
+        <Provider value={client}>
+          <Router>
+            <Overlay />
+          </Router>
+        </Provider>
+      </EditionContext.Provider>
+    </ModeContext.Provider>
   )
 }
 
@@ -121,7 +134,6 @@ function Component() {
     },
   })
 
-  console.log('componentQueryResult', componentQueryResult)
   if (componentQueryResult.fetching) return null
   if (componentQueryResult.error) return null
   if (!componentQueryResult.data.component) return null
@@ -136,7 +148,7 @@ function Component() {
 }
 
 function ComponentEditor({ component }: any) {
-  const Component = lazy(() => import(component.file.path))
+  const Component = lazy(() => import(/* @vite-ignore */ component.file.path))
 
   return (
     <Suspense fallback={<>Loading...</>}>

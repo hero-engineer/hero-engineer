@@ -8,23 +8,6 @@ import { Particule } from 'ecu-particule'
   SERVER
 --- */
 
-export type ConfigurationType = {
-  appRoot?: string
-  srcLocation?: string
-  appLocation?: string
-  scenesLocation?: string
-  componentsLocation?: string
-}
-
-export type ExtendedConfigurationType = ConfigurationType & {
-  configurationPath: string,
-  rootPath: string
-  srcPath: string
-  appPath: string
-  componentsPath: string
-  scenesPath: string
-}
-
 export type GraphNodeType = Particule
 export type GraphEdgeType = [GraphNodeType['address'], GraphNodeType['address'], GraphNodeType['address']]
 export type GraphType = {
@@ -32,12 +15,8 @@ export type GraphType = {
   edges: Array<GraphEdgeType>
 }
 export type ExportType = 'default' | 'named' | 'none'
-export type SceneType = {
-  name: string
-  url: string
-}
 
-export interface FileType extends GraphNodeType {
+export interface FileNodeType extends GraphNodeType {
   role: 'File',
   payload: {
     name: string
@@ -49,10 +28,12 @@ export interface FileType extends GraphNodeType {
   }
 }
 
-export interface FunctionType extends GraphNodeType {
+export interface FunctionNodeType extends GraphNodeType {
   role: 'Function',
   payload: {
     name: string
+    path: string
+    relativePath: string
     exportType: ExportType
     isComponent: boolean
     astPath: NodePath<FunctionDeclaration>

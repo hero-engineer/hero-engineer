@@ -5,7 +5,7 @@ import { parse } from '@babel/parser'
 import traverse from '@babel/traverse'
 import slugify from 'slugify'
 
-import { FileType, FunctionType, GraphType, addEdge, addNode } from 'ecu-common'
+import { FileNodeType, FunctionNodeType, GraphType, addEdge, addNode } from 'ecu-common'
 
 import configuration from '../../configuration'
 
@@ -16,7 +16,7 @@ function addFile(graph: GraphType, filePath: string) {
   const extension = nameArray.pop()
   const name = nameArray.join('.')
 
-  const file: FileType = {
+  const file: FileNodeType = {
     address: `File:${relativePathSlug}`,
     role: 'File',
     state: null,
@@ -73,13 +73,15 @@ function addFile(graph: GraphType, filePath: string) {
 
   traverse(file.payload.ast, {
     FunctionDeclaration(path) {
-      const functionNode: FunctionType = {
+      const functionNode: FunctionNodeType = {
         address: createFunctionId(path.node.id.name),
         role: 'Function',
         state: null,
         payload: {
           name: path.node.id.name,
           isComponent: false,
+          path: filePath,
+          relativePath,
           exportType: 'none',
           astPath: path,
         },
@@ -129,7 +131,7 @@ function addFile(graph: GraphType, filePath: string) {
         }
       }
 
-      const fn = graph.nodes[createFunctionId(name)] as FunctionType
+      const fn = graph.nodes[createFunctionId(name)] as FunctionNodeType
 
       if (fn) {
         fn.payload.exportType = type === 'ExportDefaultDeclaration' ? 'default' : 'named'

@@ -1,28 +1,23 @@
 import { PropsWithChildren } from 'react'
 
+import useHierarchyId from '../hooks/useHierarchyId'
+import useEditionProps from '../hooks/useEditionProps'
+
 type DivProps = PropsWithChildren<{
+  'data-ecu': string
   className?: string
-  id: string
 }>
 
-function Div({ id, className, children }: DivProps) {
-  return import.meta.env.MODE === 'production'
-    ? <div className={className}>{children}</div>
-    : (
-      <DivContainer
-        id={id}
-        className={className}
-      >
-        {children}
-      </DivContainer>
-    )
-}
+// TODO use a preprocessor before production build to replace Div with a regular div
+function Div({ 'data-ecu': ecuId, className, children }: DivProps) {
+  const hierarchyId = useHierarchyId(ecuId)
+  const editionProps = useEditionProps(hierarchyId)
 
-function DivContainer({ id, className, children }: DivProps) {
   return (
     <div
       className={className}
-      id={id}
+      data-ecu={hierarchyId}
+      {...editionProps}
     >
       {children}
     </div>
