@@ -4,7 +4,7 @@ import { ApolloServer, gql } from 'apollo-server'
 import getComponent from './queries/getComponent'
 import getComponents from './queries/getComponents'
 import createComponent from './mutations/createComponent'
-// import addComponent from './mutations/addComponent'
+import addComponent from './mutations/addComponent'
 // import removeComponent from './mutations/removeComponent'
 // import dragComponent from './mutations/dragComponent'
 // import createScene from './mutations/createScene'
@@ -26,6 +26,12 @@ const typeDefs = gql`
     file: File!
   }
 
+  enum ComponentHierarchyPosition {
+    BEFORE
+    AFTER
+    WITHIN
+  }
+
   type Query {
     component(id: ID!): Component
     components: [Component]
@@ -33,6 +39,7 @@ const typeDefs = gql`
 
   type Mutation {
     createComponent(name: String!): Component
+    addComponent(componentId: ID!, hierarchyId: ID!, hierarchyPosition: ComponentHierarchyPosition!): Component
     # addComponent(name: String!, index: String!, position: String!): Component
     # removeComponent(index: String!): Component
     # dragComponent(name: String!, sourceIndex: String!, targetIndex: String!, position: String!): Component
@@ -47,7 +54,7 @@ const resolvers = {
   },
   Mutation: {
     createComponent,
-    // addComponent,
+    addComponent,
     // removeComponent,
     // dragComponent,
   },

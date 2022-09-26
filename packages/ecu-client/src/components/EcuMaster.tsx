@@ -1,4 +1,4 @@
-import { Suspense, lazy, useMemo, useState } from 'react'
+import { Suspense, lazy, useContext, useMemo, useState } from 'react'
 import { Provider, useMutation, useQuery } from 'urql'
 import {
   BrowserRouter,
@@ -11,7 +11,7 @@ import {
 } from 'react-router-dom'
 
 import client from '../client'
-import { ComponentQuery, ComponentsQuery, CreateComponentMutation } from '../queries'
+import { AddComponentMutation, ComponentQuery, ComponentsQuery, CreateComponentMutation } from '../queries'
 
 import ModeContext from '../contexts/ModeContext'
 import EditionContext, { EditionContextType } from '../contexts/EditionContext'
@@ -51,7 +51,7 @@ function Overlay() {
   }
 
   return (
-    <>
+    <div>
       <input
         value={componentName}
         onChange={e => setComponentName(e.target.value)}
@@ -65,7 +65,25 @@ function Overlay() {
       <Link to="/__ecu__/components">
         Components
       </Link>
-    </>
+    </div>
+  )
+}
+
+function AddComponentButton() {
+  const { selectedId } = useContext(EditionContext)
+  const [, addComponent] = useMutation(AddComponentMutation)
+
+  function handleAddComponentClick() {
+    addComponent({ name: componentName })
+  }
+
+  return (
+    <button
+      onClick={handleAddComponentClick}
+      type="button"
+    >
+      Add component
+    </button>
   )
 }
 

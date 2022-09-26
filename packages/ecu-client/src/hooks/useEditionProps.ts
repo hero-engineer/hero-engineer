@@ -10,6 +10,8 @@ function useEditionProps(id: string) {
   const { selectedId, setSelectedId } = useContext(EditionContext)
 
   const handleClick = useCallback((event: MouseEvent) => {
+    if (event.detail !== 2) return // Double click
+
     console.log('id', id)
 
     if (selectedId === id) {

@@ -7,14 +7,6 @@ export const ComponentsQuery = `
   }
 `
 
-export const CreateComponentMutation = `
-  mutation ($name: String!) {
-    createComponent (name: $name) {
-      id
-    }
-  }
-`
-
 export const ComponentQuery = `
   query ($id: ID!){
     component (id: $id) {
@@ -25,6 +17,22 @@ export const ComponentQuery = `
         path
         relativePath
       }
+    }
+  }
+`
+
+export const CreateComponentMutation = `
+  mutation ($name: String!) {
+    createComponent (name: $name) {
+      id
+    }
+  }
+`
+
+export const AddComponentMutation = `
+  mutation ($componentId: ID!, $hierarchyId: ID!, $hierarchyPosition: ComponentHierarchyPosition!) {
+    addComponent (componentId: $componentId, hierarchyId: $hierarchyId, hierarchyPosition: $hierarchyPosition) {
+      id
     }
   }
 `

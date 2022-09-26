@@ -3,11 +3,9 @@ import { useMemo } from 'react'
 const registry: Record<string, number> = {}
 
 function createHierarchyId(prefix: string) {
-  if (registry[prefix]) return `${prefix}_${registry[prefix]++}`
+  if (!registry[prefix]) registry[prefix] = 0
 
-  registry[prefix] = 1
-
-  return `${prefix}_0`
+  return `${prefix}_${registry[prefix]++}`
 }
 
 function useHierarchyId(id: string) {

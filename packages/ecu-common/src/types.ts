@@ -40,6 +40,11 @@ export interface FunctionNodeType extends GraphNodeType {
   }
 }
 
+export enum HierarchyPositionType {
+  BEFORE = 'BEFORE',
+  AFTER = 'AFTER',
+  WITHIN = 'WITHIN',
+}
 // export type ComponentModelType = {
 //   fn: FunctionType
 //   file: FileType
