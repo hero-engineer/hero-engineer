@@ -10,6 +10,10 @@ import { getNodesByRole } from '../helpers'
 
 function buildFilesGraph(graph: GraphType) {
   traverseDirectories(graph, configuration.appPath)
+
+  getNodesByRole(graph, 'File').forEach(fileNode => {
+    addFileDependencies(graph, fileNode)
+  })
 }
 
 function traverseDirectories(graph: GraphType, rootPath: string) {
@@ -22,10 +26,6 @@ function traverseDirectories(graph: GraphType, rootPath: string) {
     else if (fileName.endsWith('.ts') || fileName.endsWith('.tsx')) {
       addFile(graph, filePath)
     }
-  })
-
-  getNodesByRole(graph, 'File').forEach(fileNode => {
-    addFileDependencies(graph, fileNode)
   })
 }
 
