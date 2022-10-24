@@ -1,7 +1,9 @@
-import { HierarchyPositionType } from '../types'
+import { FileNodeType, HierarchyPositionType } from '../types'
 
 import graph from '../graph'
-import { getNodeById } from '../graph/helpers'
+import { getNodeById, getNodesBySecondNeighbourg } from '../graph/helpers'
+import lintFile from '../domain/lintFile'
+import insertComponentInHierarchy from '../domain/insertComponentInHierarchy'
 
 type AddComponentArgs = {
   componentId: string
@@ -16,27 +18,24 @@ async function addComponent(_: any, { componentId, hierarchyIds, hierarchyPositi
     throw new Error(`Component with id ${componentId} not found`)
   }
 
-  // const {
-  //   fileNode: targetFileNode,
-  //   componentNode: targetComponentNode,
-  // } = decomposeHierarchyId(hierarchyId)
+  const [functionNodeId, hierarchyCursorsString, hierarchyIndexString] = hierarchyIds[hierarchyIds.length - 1].split(':')
+  const hierarchyIndex = parseInt(hierarchyIndexString)
+  const hierarchyCursors = hierarchyCursorsString.split('_').map(x => parseInt(x))
 
-  // if (!fs.existsSync(path.join(componentsLocation, `${name}.tsx`))) {
-  //   throw new Error('Component does not exists')
-  // }
+  if ([hierarchyIndex, ...hierarchyCursors].some(x => x !== x)) {
+    throw new Error('Invalid indexes')
+  }
 
-  // const component: ComponentType = {
-  //   name,
-  //   props: {},
-  //   importName: name,
-  //   importPath: `/components/${name}`,
-  //   importType: 'default',
-  // }
+  const fileNode = getNodesBySecondNeighbourg<FileNodeType>(graph, functionNodeId, 'declaresFunction')[0]
 
-  // insertComponentInHierarchy(appFile, appComponent, component, index, position)
-  // lintFile(appFile)
+  if (!fileNode) {
+    throw new Error(`File for Function with id ${functionNodeId} not found`)
+  }
 
-  // return component
+  await insertComponentInHierarchy(fileNode, componentNode, hierarchyPosition, hierarchyIndex, hierarchyCursors)
+  await lintFile(fileNode.payload.path)
+
+  return true
 }
 
 export default addComponent

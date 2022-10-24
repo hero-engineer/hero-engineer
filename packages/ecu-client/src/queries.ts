@@ -8,7 +8,7 @@ export const ComponentsQuery = `
 `
 
 export const ComponentQuery = `
-  query ($id: ID!){
+  query ($id: String!){
     component (id: $id) {
       id
       name
@@ -22,7 +22,7 @@ export const ComponentQuery = `
 `
 
 export const CreateComponentMutation = `
-  mutation ($name: String!) {
+  mutation ($name: string!) {
     createComponent (name: $name) {
       id
     }
@@ -30,8 +30,8 @@ export const CreateComponentMutation = `
 `
 
 export const AddComponentMutation = `
-  mutation ($componentId: ID!, $hierarchyId: ID!, $hierarchyPosition: ComponentHierarchyPosition!) {
-    addComponent (componentId: $componentId, hierarchyId: $hierarchyId, hierarchyPosition: $hierarchyPosition) {
+  mutation ($componentId: String!, $hierarchyIds: [String!]!, $hierarchyPosition: ComponentHierarchyPosition!) {
+    addComponent (componentId: $componentId, hierarchyIds: $hierarchyIds, hierarchyPosition: $hierarchyPosition) {
       id
     }
   }

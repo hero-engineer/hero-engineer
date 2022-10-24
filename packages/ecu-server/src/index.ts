@@ -13,31 +13,31 @@ async function main() {
 
   const typeDefs = gql`
     type File {
-      id: ID!
+      id: String!
       path: String!
       relativePath: String!
     }
 
     type Component {
-      id: ID!
+      id: String!
       name: String!
       file: File!
     }
 
     enum ComponentHierarchyPosition {
-      BEFORE
-      AFTER
-      WITHIN
+      before
+      after
+      within
     }
 
     type Query {
-      component(id: ID!): Component
+      component(id: String!): Component
       components: [Component]
     }
 
     type Mutation {
       createComponent(name: String!): Component
-      addComponent(componentId: ID!, hierarchyId: ID!, hierarchyPosition: ComponentHierarchyPosition!): Component
+      addComponent(componentId: String!, hierarchyIds: [String!]!, hierarchyPosition: ComponentHierarchyPosition!): Boolean
       # addComponent(name: String!, index: String!, position: String!): Component
       # removeComponent(index: String!): Component
       # dragComponent(name: String!, sourceIndex: String!, targetIndex: String!, position: String!): Component

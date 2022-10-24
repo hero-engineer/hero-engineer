@@ -5,7 +5,7 @@ const registry: Record<string, number> = {}
 function createHierarchyId(prefix: string) {
   if (!registry[prefix]) registry[prefix] = 0
 
-  return `${prefix}_${registry[prefix]++}`
+  return `${prefix}:${registry[prefix]++}`
 }
 
 function useHierarchyId(id: string) {

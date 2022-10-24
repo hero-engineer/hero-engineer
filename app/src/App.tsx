@@ -4,7 +4,7 @@ function App() {
   return (
     <Div
       className="App"
-      data-ecu="ulYS4Ork6L:0"
+      data-ecu="c15y7_vUdD:0"
     >
       Edit me I'm famous!
     </Div>
