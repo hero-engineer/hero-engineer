@@ -1,7 +1,7 @@
 import path from 'path'
 
 import traverse from '@babel/traverse'
-import { nanoid } from 'nanoid'
+import shortId from 'shortid'
 
 import configuration from '../../configuration'
 import { FileNodeType, FunctionNodeType, GraphType } from '../../types'
@@ -41,7 +41,7 @@ function addFileDependencies(graph: GraphType, fileNode: FileNodeType) {
   traverse(ast, {
     FunctionDeclaration(path) {
       const functionNode: FunctionNodeType = {
-        address: nanoid(),
+        address: shortId(),
         role: 'Function',
         state: null,
         payload: {

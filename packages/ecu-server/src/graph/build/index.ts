@@ -4,12 +4,12 @@ import createHierachyIds from '../../watchers/createHierarchyIds'
 
 import buildFilesGraph from './buildFilesGraph'
 
-function buildGraph(graph: GraphType) {
+async function buildGraph(graph: GraphType) {
   buildFilesGraph(graph)
 
   console.log('graph', Object.keys(graph.nodes).length)
 
-  createHierachyIds(graph)
+  await createHierachyIds(graph)
 
   return graph
 }

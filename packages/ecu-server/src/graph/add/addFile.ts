@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 
 import { parse } from '@babel/parser'
-import { nanoid } from 'nanoid'
+import shortId from 'shortid'
 
 import configuration from '../../configuration'
 import { FileNodeType, GraphType } from '../../types'
@@ -16,7 +16,7 @@ function addFile(graph: GraphType, filePath: string) {
   const name = nameArray.join('.')
 
   const fileNode: FileNodeType = {
-    address: nanoid(),
+    address: shortId(),
     role: 'File',
     state: null,
     payload: {

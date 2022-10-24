@@ -1,9 +1,13 @@
-import { Div } from 'ecu-client';
+import { Div } from 'ecu-client'
 
 function App() {
-  return <Div className="App" data-ecu="Function:srcApptsx:App_0">
+  return (
+    <Div
+      className="App"
+      data-ecu="2T_KoFaIW3:0"
+    >
       Edit me I'm famous!
-    </Div>;
+    </Div>
+  )
 }
-
-export default App;
+export default App

@@ -6,11 +6,12 @@ import { JSXAttribute, jsxAttribute, jsxIdentifier, stringLiteral } from '@babel
 import { FileNodeType, FunctionNodeType, GraphType } from '../types'
 
 import { getNodesByRole, getNodesBySecondNeighbourg } from '../graph/helpers'
+import lintFile from '../domain/lintFile'
 
-function createHierachyIds(graph: GraphType) {
-  getNodesByRole<FunctionNodeType>(graph, 'Function')
-  .filter(node => node.payload.isComponent)
-  .forEach(componentNode => {
+async function createHierachyIds(graph: GraphType) {
+  const componentNodes = getNodesByRole<FunctionNodeType>(graph, 'Function').filter(node => node.payload.isComponent)
+
+  for (const componentNode of componentNodes) {
     const fileNode = getNodesBySecondNeighbourg<FileNodeType>(graph, componentNode.address, 'declaresFunction')[0]
 
     if (!fileNode) return
@@ -21,27 +22,38 @@ function createHierachyIds(graph: GraphType) {
         '@babel/plugin-syntax-jsx',
         function addIdPropPlugin() {
           const propName = 'data-ecu'
-          let cursor = 0
+          const cursors: number[] = [0]
 
           return {
             visitor: {
-              JSXOpeningElement(path: any) {
+              JSXElement(path: any) {
                 // Remove previous id props
                 do {
-                  const idIndex = path.node.attributes.findIndex((x: JSXAttribute) => x.name.name === propName)
+                  const idIndex = path.node.openingElement.attributes.findIndex((x: JSXAttribute) => x.name.name === propName)
 
                   if (idIndex === -1) break
 
-                  path.node.attributes.splice(idIndex, 1)
+                  path.node.openingElement.attributes.splice(idIndex, 1)
                 } while (true)
 
                 // Add id prop
-                path.node.attributes.push(
+                path.node.openingElement.attributes.push(
                   jsxAttribute(
                     jsxIdentifier(propName),
-                    stringLiteral(`${componentNode.address}_${cursor++}`),
+                    stringLiteral(`${componentNode.address}:${cursors.join('_')}`),
                   )
                 )
+
+                if (path.node.closingElement) {
+                  cursors.push(0)
+                }
+                else {
+                  cursors[cursors.length - 1]++
+                }
+              },
+              JSXClosingElement() {
+                cursors.pop()
+                cursors[cursors.length - 1]++
               },
             },
           }
@@ -50,7 +62,8 @@ function createHierachyIds(graph: GraphType) {
     })
 
     fs.writeFileSync(fileNode.payload.path, output?.code || '', 'utf-8')
-  })
+    await lintFile(fileNode.payload.path)
+  }
 }
 
 export default createHierachyIds

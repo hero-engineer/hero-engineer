@@ -1,17 +1,22 @@
-import { Div } from 'ecu-client';
+import { Div } from 'ecu-client'
 
 function MultipleDivs(props: any) {
-  return <Div data-ecu="Function:srccomponentsMultipleDivstsx:MultipleDivs_0">
-      <Div data-ecu="Function:srccomponentsMultipleDivstsx:MultipleDivs_1">
+  return (
+    <Div data-ecu="ev9ePhnfa9:0">
+      <Div data-ecu="ev9ePhnfa9:0_0">
         Edit me I'm famous
       </Div>
-      <Div data-ecu="Function:srccomponentsMultipleDivstsx:MultipleDivs_2">
+      <Div data-ecu="ev9ePhnfa9:0_1">
         Edit me I'm famous
       </Div>
-      <Div data-ecu="Function:srccomponentsMultipleDivstsx:MultipleDivs_3">
+      <Div data-ecu="ev9ePhnfa9:0_2">
         Edit me I'm famous
       </Div>
-    </Div>;
+      <Div data-ecu="ev9ePhnfa9:0_3" />
+      <Div data-ecu="ev9ePhnfa9:0_4">
+        Edit me I'm famous
+      </Div>
+    </Div>
+  )
 }
-
-export default MultipleDivs;
+export default MultipleDivs
