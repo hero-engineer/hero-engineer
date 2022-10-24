@@ -1,6 +1,7 @@
-import { FileNodeType, FunctionNodeType, getNodesByRole, getNodesBySecondNeighbourg } from 'ecu-common'
+import { FileNodeType, FunctionNodeType } from '../types'
 
 import graph from '../graph'
+import { getNodesByRole, getNodesBySecondNeighbourg } from '../graph/helpers'
 
 import nodeWithId from '../utils/nodeWithId'
 

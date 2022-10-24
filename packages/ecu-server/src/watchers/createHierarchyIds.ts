@@ -1,8 +1,11 @@
 import fs from 'fs'
 
-import { FileNodeType, FunctionNodeType, GraphType, getNodesByRole, getNodesBySecondNeighbourg } from 'ecu-common'
 import { transformSync } from '@babel/core'
 import { JSXAttribute, jsxAttribute, jsxIdentifier, stringLiteral } from '@babel/types'
+
+import { FileNodeType, FunctionNodeType, GraphType } from '../types'
+
+import { getNodesByRole, getNodesBySecondNeighbourg } from '../graph/helpers'
 
 function createHierachyIds(graph: GraphType) {
   getNodesByRole<FunctionNodeType>(graph, 'Function')
@@ -46,7 +49,7 @@ function createHierachyIds(graph: GraphType) {
       ],
     })
 
-    fs.writeFileSync(fileNode.payload.path, output.code, 'utf-8')
+    fs.writeFileSync(fileNode.payload.path, output?.code || '', 'utf-8')
   })
 }
 

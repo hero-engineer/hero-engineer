@@ -1,14 +1,15 @@
-import { HierarchyPositionType, getNodeById } from 'ecu-common'
+import { HierarchyPositionType } from '../types'
 
 import graph from '../graph'
+import { getNodeById } from '../graph/helpers'
 
 type AddComponentArgs = {
   componentId: string
-  hierarchyId: string
+  hierarchyIds: string[]
   hierarchyPosition: HierarchyPositionType
 }
 
-async function addComponent(_: any, { componentId, hierarchyId, hierarchyPosition }: AddComponentArgs) {
+async function addComponent(_: any, { componentId, hierarchyIds, hierarchyPosition }: AddComponentArgs) {
   const componentNode = getNodeById(graph, componentId)
 
   if (!componentNode) {

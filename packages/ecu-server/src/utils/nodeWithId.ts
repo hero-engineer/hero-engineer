@@ -1,4 +1,4 @@
-import { GraphNodeType } from 'ecu-common'
+import { GraphNodeType } from '../types'
 
 function nodeWithId(node: GraphNodeType, other = {}) {
   return {

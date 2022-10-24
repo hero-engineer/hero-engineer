@@ -1,4 +1,4 @@
-import { GraphType } from 'ecu-common'
+import { GraphType } from '../types'
 
 const graph: GraphType = {
   nodes: {},

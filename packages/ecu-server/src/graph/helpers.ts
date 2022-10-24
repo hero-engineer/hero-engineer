@@ -1,4 +1,4 @@
-import { GraphEdgeType, GraphNodeType, GraphType } from './types'
+import { GraphEdgeType, GraphNodeType, GraphType } from '../types'
 
 export function getNodeByAddress(graph: GraphType, address: string) {
   return graph.nodes[address]
@@ -43,9 +43,9 @@ export function getNodesBySecondNeighbourg<T extends GraphNodeType>(graph: Graph
 }
 
 export function findNodes<T extends GraphNodeType>(graph: GraphType, predicate: (node: T) => boolean) {
-  return Object.values(graph.nodes).filter(predicate) as T[]
+  return Object.values(graph.nodes).filter(predicate as any) as T[]
 }
 
 export function findNode<T extends GraphNodeType>(graph: GraphType, predicate: (node: T) => boolean) {
-  return Object.values(graph.nodes).find(predicate) as T
+  return Object.values(graph.nodes).find(predicate as any) as T
 }

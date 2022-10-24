@@ -3,13 +3,13 @@ import path from 'path'
 
 import capitalize from 'lodash/capitalize'
 
-import { FunctionNodeType, getNodesByFirstNeighbourg } from 'ecu-common'
+import { FunctionNodeType } from '../types'
+import configuration from '../configuration'
 
 import createComponentTemplate from '../templates/Component'
 
-import configuration from '../configuration'
-
 import graph from '../graph'
+import { getNodesByFirstNeighbourg } from '../graph/helpers'
 import addFile from '../graph/add/addFile'
 import nodeWithId from '../utils/nodeWithId'
 
