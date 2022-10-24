@@ -1,4 +1,4 @@
-import { Suspense, lazy, useContext, useMemo, useState } from 'react'
+import { PropsWithChildren, Suspense, lazy, useContext, useMemo, useState } from 'react'
 import { Provider, useMutation, useQuery } from 'urql'
 import {
   BrowserRouter,
@@ -16,13 +16,13 @@ import { AddComponentMutation, ComponentQuery, ComponentsQuery, CreateComponentM
 import ModeContext from '../contexts/ModeContext'
 import EditionContext, { EditionContextType } from '../contexts/EditionContext'
 
-type EcuMasterProps = {
+type EcuMasterProps = PropsWithChildren<{
   mode?: string
-}
+}>
 
 function EcuMaster({ mode = 'production' }: EcuMasterProps) {
-  const [selectedId, setSelectedId] = useState<string | null>(null)
-  const editionContextValue = useMemo<EditionContextType>(() => ({ selectedId, setSelectedId }), [selectedId])
+  const [hierarchyIds, setHierarchyIds] = useState<string[]>([])
+  const editionContextValue = useMemo<EditionContextType>(() => ({ hierarchyIds, setHierarchyIds }), [hierarchyIds])
 
   return (
     <ModeContext.Provider value={mode}>
@@ -65,25 +65,59 @@ function Overlay() {
       <Link to="/__ecu__/components">
         Components
       </Link>
+      <AddComponentButton />
     </div>
   )
 }
 
 function AddComponentButton() {
-  const { selectedId } = useContext(EditionContext)
+  const { hierarchyIds } = useContext(EditionContext)
+  const [componentId, setComponentId] = useState('')
+  const [hierarchyPosition, setHierarchyPosition] = useState('after')
+  const [componentsQueryResult] = useQuery({
+    query: ComponentsQuery,
+  })
   const [, addComponent] = useMutation(AddComponentMutation)
 
+  if (componentsQueryResult.fetching) return null
+  if (componentsQueryResult.error) return null
+
   function handleAddComponentClick() {
-    addComponent({ name: componentName })
+    addComponent({ componentId, hierarchyIds, hierarchyPosition })
   }
 
   return (
-    <button
-      onClick={handleAddComponentClick}
-      type="button"
-    >
-      Add component
-    </button>
+    <div>
+      <select
+        value={componentId}
+        onChange={event => setComponentId(event.target.value)}
+      >
+        <option value="">Select a component</option>
+        {componentsQueryResult.data.components.map((component: any) => (
+          <option
+            key={component.id}
+            value={component.id}
+          >
+            {component.name}
+          </option>
+        ))}
+      </select>
+      <select
+        value={hierarchyPosition}
+        onChange={event => setHierarchyPosition(event.target.value)}
+      >
+        <option value="before">Before</option>
+        <option value="after">Before</option>
+        <option value="within">Within</option>
+      </select>
+      <button
+        onClick={handleAddComponentClick}
+        type="button"
+        disabled={!(componentId && hierarchyIds.length)}
+      >
+        Add component
+      </button>
+    </div>
   )
 }
 

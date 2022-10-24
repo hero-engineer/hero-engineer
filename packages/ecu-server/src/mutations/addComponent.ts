@@ -15,10 +15,10 @@ async function addComponent(_: any, { componentId, hierarchyId, hierarchyPositio
     throw new Error(`Component with id ${componentId} not found`)
   }
 
-  const {
-    fileNode: targetFileNode,
-    componentNode: targetComponentNode,
-  } = decomposeHierarchyId(hierarchyId)
+  // const {
+  //   fileNode: targetFileNode,
+  //   componentNode: targetComponentNode,
+  // } = decomposeHierarchyId(hierarchyId)
 
   // if (!fs.existsSync(path.join(componentsLocation, `${name}.tsx`))) {
   //   throw new Error('Component does not exists')
