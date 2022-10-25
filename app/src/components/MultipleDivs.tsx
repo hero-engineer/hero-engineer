@@ -1,21 +1,29 @@
 import { Div } from 'ecu-client'
 
+import CoolDiv from './CoolDiv'
+
 function MultipleDivs(props: any) {
   return (
-    <Div data-ecu="DwTbxiajVm:0">
-      <Div data-ecu="DwTbxiajVm:0_0">
+    <Div data-ecu="MgmS1xuQQf:0">
+      <CoolDiv />
+      <CoolDiv />
+      <Div data-ecu="MgmS1xuQQf:0_0">
         Edit me I'm famous
       </Div>
-      <Div data-ecu="DwTbxiajVm:0_1">
+      <CoolDiv />
+      <Div data-ecu="MgmS1xuQQf:0_1">
         Edit me I'm famous
       </Div>
-      <Div data-ecu="DwTbxiajVm:0_2">
+      <Div data-ecu="MgmS1xuQQf:0_2">
+        <CoolDiv />
         Edit me I'm famous
       </Div>
-      <Div data-ecu="DwTbxiajVm:0_3" />
-      <Div data-ecu="DwTbxiajVm:0_4">
+      <Div data-ecu="MgmS1xuQQf:0_3" />
+      <Div data-ecu="MgmS1xuQQf:0_4">
+        <CoolDiv />
         Edit me I'm famous
       </Div>
+      <CoolDiv />
     </Div>
   )
 }

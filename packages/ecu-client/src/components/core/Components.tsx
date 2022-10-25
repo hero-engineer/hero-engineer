@@ -2,7 +2,7 @@ import { memo } from 'react'
 import { useQuery } from 'urql'
 import { Link } from 'react-router-dom'
 
-import { ComponentsQuery } from '../queries'
+import { ComponentsQuery } from '../../queries'
 
 function Components() {
   const [componentsQueryResult] = useQuery({

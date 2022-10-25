@@ -2,7 +2,7 @@ import { memo } from 'react'
 import { useQuery } from 'urql'
 import { useParams } from 'react-router-dom'
 
-import { ComponentQuery } from '../queries'
+import { ComponentQuery } from '../../queries'
 
 import ComponentEditor from './ComponentEditor'
 

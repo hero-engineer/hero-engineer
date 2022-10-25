@@ -1,9 +1,7 @@
-import fs from 'fs'
 import path from 'path'
 
 import { JSXAttribute, identifier, importDeclaration, importDefaultSpecifier, jsxElement, jsxIdentifier, jsxOpeningElement, stringLiteral } from '@babel/types'
 import traverse from '@babel/traverse'
-import generate from '@babel/generator'
 
 import { FileNodeType, FunctionNodeType, HierarchyPositionType } from '../types'
 import { ecuPropName } from '../configuration'
@@ -13,7 +11,6 @@ import { getNodeByAddress } from '../graph/helpers'
 
 import areArraysEqual from '../utils/areArraysEqual'
 
-import lintFile from './lintFile'
 import extractIdAndIndex from './extractIdAndIndex'
 
 function extractIdsAndIndexes(hierarchyIds: string[]): [string[], number[]] {
@@ -43,12 +40,13 @@ async function insertComponentInHierarchy(
   const [ids, indexes] = extractIdsAndIndexes(hierarchyIds)
   const currentIndexes = [0]
   const currentHierarchyIds: string[] = []
+  const currentIncrementation = [true]
 
-  const isSuccessiveNodeFound = () => currentHierarchyIds.every((x, i) => x === ids[i]) && currentIndexes.every((x, i) => x === indexes[i])
+  const isSuccessiveNodeFound = (nextHierarchyId: string) => currentHierarchyIds.every((x, i) => x === ids[i]) && ids[currentHierarchyIds.length] === nextHierarchyId && currentIndexes.every((x, i) => x === indexes[i])
   const isNodeFound = () => areArraysEqual(currentHierarchyIds, ids) && areArraysEqual(currentIndexes, indexes)
 
-  // console.log('ids', ids)
-  // console.log('indexes', indexes)
+  console.log('ids', ids)
+  console.log('indexes', indexes)
 
   function performMutation(path: any) {
     const inserted = jsxElement(jsxOpeningElement(jsxIdentifier(componentNode.payload.name), [], true), null, [], true)
@@ -60,11 +58,7 @@ async function insertComponentInHierarchy(
       path.insertAfter(inserted)
     }
     else if (hierarchyPosition === 'within') {
-      path.traverse({
-        JSXElement(path: any) {
-          path.insertBefore(inserted)
-        },
-      })
+      path.node.children.unshift(inserted)
     }
   }
 
@@ -75,14 +69,18 @@ async function insertComponentInHierarchy(
     JSXElement(path: any) {
       if (!path.node) return
 
-      // console.log('currentIndexes', currentIndexes)
+      currentIncrementation[currentIncrementation.length - 1] = true
 
       const idIndex = path.node.openingElement.attributes.findIndex((x: JSXAttribute) => x.name.name === ecuPropName)
 
       if (idIndex !== -1) {
+        currentIncrementation[currentIncrementation.length - 1] = false
+
         const hierarchyId = path.node.openingElement.attributes[idIndex].value.value
 
-        if (isSuccessiveNodeFound()) {
+        console.log(hierarchyId)
+
+        if (isSuccessiveNodeFound(hierarchyId)) {
           currentHierarchyIds.push(hierarchyId)
 
           if (isNodeFound()) {
@@ -102,11 +100,11 @@ async function insertComponentInHierarchy(
 
         if (!componentNode) return
 
-             // Name matching to infer component ~ hacky
+        // Name matching to infer component ~ hacky but necessary
         if (path.node.openingElement.name.name === componentNode.payload.name) {
-          // console.log('componentNode', componentNode.payload.name)
+          console.log(componentNode.payload.name)
 
-          if (isSuccessiveNodeFound()) {
+          if (isSuccessiveNodeFound(nextHierarchyId)) {
             currentHierarchyIds.push(nextHierarchyId)
 
             if (isNodeFound()) {
@@ -116,20 +114,30 @@ async function insertComponentInHierarchy(
             }
           }
         }
+        else {
+          currentIncrementation[currentIncrementation.length - 1] = false
+        }
       }
 
-      // console.log('currentHierarchyIds', currentHierarchyIds)
+      console.log('currentIndexes', currentIndexes)
+      console.log('currentHierarchyIds', currentHierarchyIds)
+      console.log('currentIncrementation', currentIncrementation)
 
       if (path.node.closingElement) {
         currentIndexes.push(0)
+        currentIncrementation.push(true)
       }
-      else {
+      else if (currentIncrementation[currentIncrementation.length - 1]) {
         currentIndexes[currentIndexes.length - 1]++
       }
     },
     JSXClosingElement() {
       currentIndexes.pop()
-      currentIndexes[currentIndexes.length - 1]++
+      currentIncrementation.pop()
+
+      if (currentIncrementation[currentIncrementation.length - 1]) {
+        currentIndexes[currentIndexes.length - 1]++
+      }
     },
   })
 
@@ -137,9 +145,9 @@ async function insertComponentInHierarchy(
     const relativePathBetweenModules = path.relative(path.dirname(fileNode.payload.path), path.dirname(componentNode.payload.path))
     let relativePath = path.join(relativePathBetweenModules, componentNode.payload.name)
 
-    if (!relativePath.startsWith('.')) relativePath = `./${relativePath}`
-
-    console.log('relativePathBetweenModules', relativePath)
+    if (!relativePath.startsWith('.')) {
+      relativePath = `./${relativePath}`
+    }
 
     if (!importReferences.includes(relativePathBetweenModules)) {
       // TODO find how to cancel a traversal
@@ -157,11 +165,7 @@ async function insertComponentInHierarchy(
     }
   }
 
-  const { code } = generate(ast)
-
-  fs.writeFileSync(fileNode.payload.path, code, 'utf-8')
-
-  await lintFile(fileNode)
+  return ast
 }
 
 export default insertComponentInHierarchy

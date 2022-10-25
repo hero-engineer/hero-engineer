@@ -2,9 +2,9 @@ import { memo, useContext, useState } from 'react'
 import { useMutation, useQuery } from 'urql'
 import { Link, useNavigate } from 'react-router-dom'
 
-import { AddComponentMutation, ComponentsQuery, CreateComponentMutation } from '../queries'
+import { AddComponentMutation, ComponentsQuery, CreateComponentMutation } from '../../queries'
 
-import EditionContext from '../contexts/EditionContext'
+import EditionContext from '../../contexts/EditionContext'
 
 function Overlay() {
   const [componentName, setComponentName] = useState('')

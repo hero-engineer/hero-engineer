@@ -2,10 +2,10 @@ import { PropsWithChildren, memo, useMemo } from 'react'
 import { Provider } from 'urql'
 import useLocalStorageState from 'use-local-storage-state'
 
-import client from '../client'
+import client from '../../client'
 
-import ModeContext from '../contexts/ModeContext'
-import EditionContext, { EditionContextType } from '../contexts/EditionContext'
+import ModeContext from '../../contexts/ModeContext'
+import EditionContext, { EditionContextType } from '../../contexts/EditionContext'
 
 import Router from './Router'
 import Overlay from './Overlay'
@@ -19,15 +19,15 @@ function EcuMaster({ mode = 'production' }: EcuMasterProps) {
   const editionContextValue = useMemo<EditionContextType>(() => ({ hierarchyIds, setHierarchyIds }), [hierarchyIds, setHierarchyIds])
 
   return (
-    <ModeContext.Provider value={mode}>
-      <EditionContext.Provider value={editionContextValue}>
-        <Provider value={client}>
+    <Provider value={client}>
+      <ModeContext.Provider value={mode}>
+        <EditionContext.Provider value={editionContextValue}>
           <Router>
             <Overlay />
           </Router>
-        </Provider>
-      </EditionContext.Provider>
-    </ModeContext.Provider>
+        </EditionContext.Provider>
+      </ModeContext.Provider>
+    </Provider>
   )
 }
 

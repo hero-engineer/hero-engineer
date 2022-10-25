@@ -8,7 +8,7 @@ import { FileNodeType, FunctionNodeType, GraphType } from '../types'
 import { ecuPropName } from '../configuration'
 
 import { getNodesByRole, getNodesBySecondNeighbourg } from '../graph/helpers'
-import lintFile from '../domain/lintFile'
+import lintCode from '../domain/lintCode'
 
 async function createHierachyIds(graph: GraphType) {
   const componentNodes = getNodesByRole<FunctionNodeType>(graph, 'Function').filter(node => node.payload.isComponent)
@@ -63,11 +63,11 @@ async function createHierachyIds(graph: GraphType) {
       },
     })
 
-    const { code } = generate(ast)
+    let { code } = generate(ast)
+
+    code = await lintCode(code)
 
     fs.writeFileSync(fileNode.payload.path, code, 'utf-8')
-
-    await lintFile(fileNode)
   }
 }
 

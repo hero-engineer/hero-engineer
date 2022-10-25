@@ -22,7 +22,7 @@ export const ComponentQuery = `
 `
 
 export const CreateComponentMutation = `
-  mutation ($name: string!) {
+  mutation ($name: String!) {
     createComponent (name: $name) {
       id
     }

@@ -1,11 +1,15 @@
+import fs from 'fs'
+
+import generate from '@babel/generator'
+
 import { FileNodeType, HierarchyPositionType } from '../../types'
 
 import graph from '../../graph'
 import { getNodeById, getNodesBySecondNeighbourg } from '../../graph/helpers'
 
-import lintFile from '../../domain/lintFile'
 import insertComponentInHierarchy from '../../domain/insertComponentInHierarchy'
 import extractIdAndIndex from '../../domain/extractIdAndIndex'
+import lintCode from '../../domain/lintCode'
 
 type AddComponentArgs = {
   componentId: string
@@ -24,7 +28,7 @@ function keepLastComponentOfHierarchy(hierarchyIds: string[], n: number) {
     const [lastComponentId] = extractIdAndIndex(ids[ids.length - 1])
     const [componentId] = extractIdAndIndex(hierarchyId)
 
-    if (lastComponentId !== componentId) {
+    if (extractIdAndIndex(lastComponentId)[0] !== extractIdAndIndex(componentId)[0]) {
       counter++
 
       if (counter > n) return
@@ -51,6 +55,7 @@ async function addComponent(_: any, { componentId, hierarchyIds, hierarchyPositi
 
   const reducedHierarchyIds = reduceHierarchy(hierarchyIds, hierarchyPosition)
 
+  console.log('hierarchyIds', hierarchyIds)
   console.log('reducedHierarchy', reducedHierarchyIds)
 
   const [functionNodeId] = reducedHierarchyIds[0].split(':')
@@ -60,8 +65,13 @@ async function addComponent(_: any, { componentId, hierarchyIds, hierarchyPositi
     throw new Error(`File for Function with id ${functionNodeId} not found`)
   }
 
-  await insertComponentInHierarchy(fileNode, componentNode, hierarchyPosition, reducedHierarchyIds)
-  await lintFile(fileNode)
+  const ast = await insertComponentInHierarchy(fileNode, componentNode, hierarchyPosition, reducedHierarchyIds)
+
+  let { code } = generate(ast)
+
+  code = await lintCode(code)
+
+  fs.writeFileSync(fileNode.payload.path, code, 'utf-8')
 
   return fileNode.payload
 }
