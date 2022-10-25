@@ -3,7 +3,7 @@ import path from 'path'
 import traverse from '@babel/traverse'
 import shortId from 'shortid'
 
-import configuration from '../../configuration'
+import { appPath } from '../../configuration'
 import { FileNodeType, FunctionNodeType, GraphType } from '../../types'
 
 import { addEdge, addNode, getNodesByRole } from '../helpers'
@@ -15,13 +15,13 @@ function addFileDependencies(graph: GraphType, fileNode: FileNodeType) {
     IMPORTS
   --- */
 
-  ast.program.body.forEach(node => {
-    if (node.type === 'ImportDeclaration') {
+  traverse(ast, {
+    ImportDeclaration({ node }) {
       const { value } = node.source
 
       if (value.startsWith('.')) {
         const absolutePath = path.join(path.dirname(fileNode.payload.path), value)
-        const relativePath = path.relative(configuration.appPath, absolutePath)
+        const relativePath = path.relative(appPath, absolutePath)
         const dependency = fileNodes.find(n => n.payload.relativePath === relativePath)
 
         if (dependency) {
@@ -31,7 +31,7 @@ function addFileDependencies(graph: GraphType, fileNode: FileNodeType) {
       else {
         addEdge(graph, [fileNode.address, 'importsModule', value])
       }
-    }
+    },
   })
 
   /* ---
@@ -50,7 +50,6 @@ function addFileDependencies(graph: GraphType, fileNode: FileNodeType) {
           path: fileNode.payload.path,
           relativePath: fileNode.payload.relativePath,
           exportType: 'none',
-          astPath: path,
         },
       }
 

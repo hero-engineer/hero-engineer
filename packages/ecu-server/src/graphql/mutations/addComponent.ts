@@ -1,11 +1,11 @@
-import { FileNodeType, HierarchyPositionType } from '../types'
+import { FileNodeType, HierarchyPositionType } from '../../types'
 
-import graph from '../graph'
-import { getNodeById, getNodesBySecondNeighbourg } from '../graph/helpers'
-import lintFile from '../domain/lintFile'
-import insertComponentInHierarchy from '../domain/insertComponentInHierarchy'
+import graph from '../../graph'
+import { getNodeById, getNodesBySecondNeighbourg } from '../../graph/helpers'
 
-import extractIdAndIndex from '../domain/extractIdAndIndex'
+import lintFile from '../../domain/lintFile'
+import insertComponentInHierarchy from '../../domain/insertComponentInHierarchy'
+import extractIdAndIndex from '../../domain/extractIdAndIndex'
 
 type AddComponentArgs = {
   componentId: string
@@ -61,7 +61,7 @@ async function addComponent(_: any, { componentId, hierarchyIds, hierarchyPositi
   }
 
   await insertComponentInHierarchy(fileNode, componentNode, hierarchyPosition, reducedHierarchyIds)
-  await lintFile(fileNode.payload.path)
+  await lintFile(fileNode)
 
   return fileNode.payload
 }

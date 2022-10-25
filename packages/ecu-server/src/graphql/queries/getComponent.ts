@@ -1,9 +1,9 @@
-import { FileNodeType } from '../types'
+import { FileNodeType } from '../../types'
 
-import graph from '../graph'
-import { getNodeByAddress, getNodesBySecondNeighbourg } from '../graph/helpers'
+import graph from '../../graph'
+import { getNodeByAddress, getNodesBySecondNeighbourg } from '../../graph/helpers'
 
-import nodeWithId from '../utils/nodeWithId'
+import nodeWithId from '../../utils/nodeWithId'
 
 type GetComponentArgs = {
   id: string

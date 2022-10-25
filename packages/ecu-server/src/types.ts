@@ -42,7 +42,6 @@ export type FunctionNodePayloadType = {
   relativePath: string
   exportType: ExportType
   isComponent: boolean
-  astPath: NodePath<FunctionDeclaration>
 }
 
 export type FunctionNodeType = Particule<FunctionNodePayloadType>

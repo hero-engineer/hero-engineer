@@ -3,15 +3,15 @@ import path from 'path'
 
 import capitalize from 'lodash/capitalize'
 
-import { FunctionNodeType } from '../types'
-import configuration from '../configuration'
+import { FunctionNodeType } from '../../types'
+import { appPath } from '../../configuration'
 
-import createComponentTemplate from '../templates/Component'
+import createComponentTemplate from '../../templates/Component'
 
-import graph from '../graph'
-import { getNodesByFirstNeighbourg } from '../graph/helpers'
-import addFile from '../graph/add/addFile'
-import nodeWithId from '../utils/nodeWithId'
+import graph from '../../graph'
+import { getNodesByFirstNeighbourg } from '../../graph/helpers'
+import addFile from '../../graph/add/addFile'
+import nodeWithId from '../../utils/nodeWithId'
 
 type CreateComponentArgs = {
   name: string
@@ -20,7 +20,7 @@ type CreateComponentArgs = {
 function createComponent(_: any, { name }: CreateComponentArgs) {
   const validatedName = capitalize(name)
   const code = createComponentTemplate(validatedName)
-  const filePath = path.join(configuration.appPath, 'src', 'components', `${validatedName}.tsx`)
+  const filePath = path.join(appPath, 'src', 'components', `${validatedName}.tsx`)
 
   fs.writeFileSync(filePath, code, 'utf-8')
 

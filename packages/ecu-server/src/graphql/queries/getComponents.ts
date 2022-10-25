@@ -1,9 +1,9 @@
-import { FileNodeType, FunctionNodeType } from '../types'
+import { FileNodeType, FunctionNodeType } from '../../types'
 
-import graph from '../graph'
-import { getNodesByRole, getNodesBySecondNeighbourg } from '../graph/helpers'
+import graph from '../../graph'
+import { getNodesByRole, getNodesBySecondNeighbourg } from '../../graph/helpers'
 
-import nodeWithId from '../utils/nodeWithId'
+import nodeWithId from '../../utils/nodeWithId'
 
 // TODO use model
 function getComponents() {

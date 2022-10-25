@@ -1,8 +1,9 @@
 import { ESLint } from 'eslint'
 
-async function lintFile(filePath: string) {
-  const eslint = new ESLint({ fix: true })
-  const results = await eslint.lintFiles(filePath)
+import { FileNodeType } from '../types'
+
+async function lintFile(fileNode: FileNodeType) {
+  const results = await new ESLint({ fix: true }).lintFiles(fileNode.payload.path)
 
   ESLint.outputFixes(results)
 }

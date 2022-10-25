@@ -2,14 +2,14 @@ import fs from 'fs'
 import path from 'path'
 
 import { GraphType } from '../../types'
-import configuration from '../../configuration'
+import { appPath } from '../../configuration'
 
 import addFile from '../add/addFile'
 import addFileDependencies from '../add/addFileDependencies'
 import { getNodesByRole } from '../helpers'
 
 function buildFilesGraph(graph: GraphType) {
-  traverseDirectories(graph, configuration.appPath)
+  traverseDirectories(graph, appPath)
 
   getNodesByRole(graph, 'File').forEach(fileNode => {
     addFileDependencies(graph, fileNode)

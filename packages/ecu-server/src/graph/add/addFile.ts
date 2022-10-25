@@ -4,13 +4,13 @@ import path from 'path'
 import { parse } from '@babel/parser'
 import shortId from 'shortid'
 
-import configuration from '../../configuration'
+import { appPath } from '../../configuration'
 import { FileNodeType, GraphType } from '../../types'
 
 import { addNode } from '../helpers'
 
 function addFile(graph: GraphType, filePath: string) {
-  const relativePath = path.relative(configuration.appPath, filePath)
+  const relativePath = path.relative(appPath, filePath)
   const nameArray = path.basename(filePath).split('.')
   const extension = nameArray.pop() || ''
   const name = nameArray.join('.')
