@@ -37,7 +37,7 @@ async function main() {
 
     type Mutation {
       createComponent(name: String!): Component
-      addComponent(componentId: String!, hierarchyIds: [String!]!, hierarchyPosition: ComponentHierarchyPosition!): Boolean
+      addComponent(componentId: String!, hierarchyIds: [String!]!, hierarchyPosition: ComponentHierarchyPosition!): File
       # addComponent(name: String!, index: String!, position: String!): Component
       # removeComponent(index: String!): Component
       # dragComponent(name: String!, sourceIndex: String!, targetIndex: String!, position: String!): Component

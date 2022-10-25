@@ -1,10 +1,10 @@
 import { Div } from 'ecu-client'
 
-function Cooldiv(props: any) {
+function CoolDiv(props: any) {
   return (
-    <Div data-ecu="CgfpFB7KGB:0">
+    <Div data-ecu="-YWL3PW4b-:0">
       Edit me I'm famous
     </Div>
   )
 }
-export default Cooldiv
+export default CoolDiv

@@ -5,14 +5,14 @@ function DivWithInput(props: any) {
   const [name, setName] = useState('Cool')
 
   return (
-    <Div data-ecu="6f8W0JwKpi:0">
-      <Div data-ecu="6f8W0JwKpi:0_0">
+    <Div data-ecu="CaeHyMveYM:0">
+      <Div data-ecu="CaeHyMveYM:0_0">
         Edit me I'm famous
       </Div>
       <input
         value={name}
         onChange={event => setName(event.target.value)}
-        data-ecu="6f8W0JwKpi:0_1"
+        data-ecu="CaeHyMveYM:0_1"
       />
     </Div>
   )

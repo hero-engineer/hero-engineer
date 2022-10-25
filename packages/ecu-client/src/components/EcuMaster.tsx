@@ -107,7 +107,7 @@ function AddComponentButton() {
         onChange={event => setHierarchyPosition(event.target.value)}
       >
         <option value="before">Before</option>
-        <option value="after">Before</option>
+        <option value="after">After</option>
         <option value="within">Within</option>
       </select>
       <button
