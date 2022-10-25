@@ -13,6 +13,8 @@ function transformFileCode(fileNode: FileNodeType, plugin: any) {
     ],
   })
 
+  console.log('output.code', output?.code)
+
   fs.writeFileSync(fileNode.payload.path, output?.code || '', 'utf-8')
 }
 

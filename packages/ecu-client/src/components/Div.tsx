@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react'
+import { PropsWithChildren, memo } from 'react'
 
 import useHierarchyId from '../hooks/useHierarchyId'
 import useEditionProps from '../hooks/useEditionProps'
@@ -24,4 +24,4 @@ function Div({ 'data-ecu': ecuId, className, children }: DivProps) {
   )
 }
 
-export default Div
+export default memo(Div)

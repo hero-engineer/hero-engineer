@@ -1,4 +1,4 @@
-import { JSXAttribute } from '@babel/types'
+import { JSXAttribute, jsxElement, jsxIdentifier, jsxOpeningElement } from '@babel/types'
 
 import { FileNodeType, FunctionNodeType, HierarchyPositionType } from '../types'
 
@@ -41,7 +41,28 @@ async function insertComponentInHierarchy(
   console.log('indexes', indexes)
 
   function performMutation(path: any) {
+    const inserted = `<${componentNode.payload.name} />`
 
+    console.log('inserted', inserted)
+
+    if (hierarchyPosition === 'before') {
+      path.insertBefore(inserted)
+    }
+    else if (hierarchyPosition === 'after') {
+      console.log('inserting after')
+
+      path.insertAfter(jsxElement(jsxOpeningElement(jsxIdentifier(componentNode.payload.name), [], true), null, [], true))
+
+      console.log('inserted after')
+    }
+    else if (hierarchyPosition === 'within') {
+      // path.node.children.unshift()
+      path.traverse({
+        JSXElement(path: any) {
+          path.insertBefore(inserted)
+        },
+      })
+    }
   }
 
   transformFileCode(fileNode, () => {
@@ -54,6 +75,12 @@ async function insertComponentInHierarchy(
 
     return {
       visitor: {
+        // enter(path: any) {
+        //   console.log('enter', path.node.name)
+        // },
+        // exit(path: any) {
+        //   console.log('exit', path.node.name)
+        // },
         JSXElement(path: any) {
           if (!path.node) return
 
@@ -77,22 +104,16 @@ async function insertComponentInHierarchy(
           else {
             const nextHierarchyId = ids[currentHierarchyIds.length]
 
-            if (!nextHierarchyId) {
-              throw new Error(`Could not find hierarchy id at index ${currentHierarchyIds.length}`)
-            }
+            if (!nextHierarchyId) return
 
             const [componentId] = extractIdAndIndex(nextHierarchyId)
             const componentNode = getNodeByAddress(graph, componentId)
 
-            if (!componentNode) {
-              throw new Error(`Could not find component node with address ${componentId}`)
-            }
+            if (!componentNode) return
 
-             // Name matching to infer component
+             // Name matching to infer component ~ hacky
             if (path.node.openingElement.name.name === componentNode.payload.name) {
               console.log('componentNode', componentNode.payload.name)
-              console.log(ids, currentHierarchyIds)
-              console.log(indexes, currentIndexes)
 
               if (isSuccessiveNodeFound()) {
                 currentHierarchyIds.push(nextHierarchyId)
