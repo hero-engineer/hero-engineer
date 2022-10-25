@@ -42,7 +42,7 @@ function Overlay() {
 function AddComponentButton() {
   const { hierarchyIds } = useContext(EditionContext)
   const [componentId, setComponentId] = useState('')
-  const [hierarchyPosition, setHierarchyPosition] = useState('after')
+  const [hierarchyPosition, setHierarchyPosition] = useState('before')
   const [componentsQueryResult] = useQuery({
     query: ComponentsQuery,
   })
@@ -78,6 +78,7 @@ function AddComponentButton() {
         <option value="before">Before</option>
         <option value="after">After</option>
         <option value="within">Within</option>
+        <option value="children">Children</option>
       </select>
       <button
         onClick={handleAddComponentClick}

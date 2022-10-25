@@ -1,15 +1,29 @@
 import path from 'path'
 
-import { JSXAttribute, identifier, importDeclaration, importDefaultSpecifier, jsxElement, jsxIdentifier, jsxOpeningElement, stringLiteral } from '@babel/types'
+import {
+  ImportDefaultSpecifier,
+  ImportNamespaceSpecifier,
+  ImportSpecifier,
+  JSXAttribute,
+  identifier,
+  importDeclaration,
+  importDefaultSpecifier,
+  jsxElement,
+  jsxIdentifier,
+  jsxOpeningElement,
+  stringLiteral,
+} from '@babel/types'
 import traverse from '@babel/traverse'
 
 import { FileNodeType, FunctionNodeType, HierarchyPositionType } from '../types'
 import { ecuPropName } from '../configuration'
 
 import graph from '../graph'
-import { getNodeByAddress } from '../graph/helpers'
+import { getNodesByRole } from '../graph/helpers'
 
 import areArraysEqual from '../utils/areArraysEqual'
+import areArraysEqualAtStart from '../utils/areArraysEqualAtStart'
+import possiblyAddExtension from '../utils/possiblyAddExtension'
 
 import extractIdAndIndex from './extractIdAndIndex'
 
@@ -36,134 +50,152 @@ async function insertComponentInHierarchy(
   console.log('insertComponentInHierarchy', fileNode.payload.name, componentNode.payload.name, hierarchyPosition, hierarchyIds)
 
   const { ast } = fileNode.payload
-  const importReferences: string[] = []
+  const componentNodes = getNodesByRole<FunctionNodeType>(graph, 'Function').filter(n => n.payload.isComponent)
+  const fileNodes = getNodesByRole<FileNodeType>(graph, 'File')
+  const fileAddressToImportDeclarations: Record<string, { value: string, specifiers: string[] }[]> = {}
   const [ids, indexes] = extractIdsAndIndexes(hierarchyIds)
-  const currentIndexes = [0]
   const currentHierarchyIds: string[] = []
-  const currentIncrementation = [true]
+  const currentIndexRegistry: Record<string, number> = {}
 
-  const isSuccessiveNodeFound = (nextHierarchyId: string) => currentHierarchyIds.every((x, i) => x === ids[i]) && ids[currentHierarchyIds.length] === nextHierarchyId && currentIndexes.every((x, i) => x === indexes[i])
-  const isNodeFound = () => areArraysEqual(currentHierarchyIds, ids) && areArraysEqual(currentIndexes, indexes)
+  const isSuccessiveNodeFound = (nextHierarchyId: string) => {
+    const nextHierarchyIds = [...currentHierarchyIds, nextHierarchyId]
+
+    return areArraysEqualAtStart(nextHierarchyIds, ids) && areArraysEqualAtStart(nextHierarchyIds.map(h => currentIndexRegistry[h]), indexes)
+  }
+  const isNodeFound = () => areArraysEqual(currentHierarchyIds, ids) && areArraysEqual(currentHierarchyIds.map(hierarchyId => currentIndexRegistry[hierarchyId]), indexes)
 
   console.log('ids', ids)
   console.log('indexes', indexes)
+  console.log('___start___')
 
-  function performMutation(path: any) {
+  function performMutation(x: any, previousX: any = null) {
     const inserted = jsxElement(jsxOpeningElement(jsxIdentifier(componentNode.payload.name), [], true), null, [], true)
 
     if (hierarchyPosition === 'before') {
-      path.insertBefore(inserted)
+      (previousX || x).insertBefore(inserted)
     }
     else if (hierarchyPosition === 'after') {
-      path.insertAfter(inserted)
+      (previousX || x).insertAfter(inserted)
     }
     else if (hierarchyPosition === 'within') {
-      path.node.children.unshift(inserted)
+      (previousX || x).node.children.push(inserted)
     }
+    else if (previousX && hierarchyPosition === 'children') {
+      previousX.node.children.push(inserted)
+    }
+
+    if (previousX) {
+      previousX.stop()
+    }
+
+    x.stop()
   }
 
-  traverse(ast, {
-    ImportDeclaration(path: any) {
-      importReferences.push(path.node.source.value)
-    },
-    JSXElement(path: any) {
-      if (!path.node) return
-
-      currentIncrementation[currentIncrementation.length - 1] = true
-
-      const idIndex = path.node.openingElement.attributes.findIndex((x: JSXAttribute) => x.name.name === ecuPropName)
-
-      if (idIndex !== -1) {
-        currentIncrementation[currentIncrementation.length - 1] = false
-
-        const hierarchyId = path.node.openingElement.attributes[idIndex].value.value
-
-        console.log(hierarchyId)
-
-        if (isSuccessiveNodeFound(hierarchyId)) {
-          currentHierarchyIds.push(hierarchyId)
-
-          if (isNodeFound()) {
-            console.log('SUCCESS')
-
-            performMutation(path)
-          }
+  function createTraversal(fileNode: FileNodeType, previousX: any = null) {
+    return {
+      ImportDeclaration(x: any) {
+        if (!fileAddressToImportDeclarations[fileNode.address]) {
+          fileAddressToImportDeclarations[fileNode.address] = []
         }
-      }
-      else {
-        const nextHierarchyId = ids[currentHierarchyIds.length]
 
-        if (!nextHierarchyId) return
+        fileAddressToImportDeclarations[fileNode.address].push({
+          value: x.node.source.value,
+          specifiers: x.node.specifiers.map((x: ImportSpecifier | ImportDefaultSpecifier | ImportNamespaceSpecifier) => x.local.name),
+        })
+      },
+      JSXElement(x: any) {
+        if (!x.node) return
 
-        const [componentId] = extractIdAndIndex(nextHierarchyId)
-        const componentNode = getNodeByAddress(graph, componentId)
+        const idIndex = x.node.openingElement.attributes.findIndex((x: JSXAttribute) => x.name.name === ecuPropName)
 
-        if (!componentNode) return
+        // hierarchyId found means we're at an ecu-client Component
+        if (idIndex !== -1) {
+          const hierarchyId = x.node.openingElement.attributes[idIndex].value.value
 
-        // Name matching to infer component ~ hacky but necessary
-        if (path.node.openingElement.name.name === componentNode.payload.name) {
-          console.log(componentNode.payload.name)
+          if (hierarchyId) {
+            console.log('-->', hierarchyId)
 
-          if (isSuccessiveNodeFound(nextHierarchyId)) {
-            currentHierarchyIds.push(nextHierarchyId)
+            currentIndexRegistry[hierarchyId] = currentIndexRegistry[hierarchyId] + 1 || 0
 
-            if (isNodeFound()) {
-              console.log('SUCCESS')
+            if (isSuccessiveNodeFound(hierarchyId)) {
+              currentHierarchyIds.push(hierarchyId)
 
-              performMutation(path)
+              console.log('PUSHED')
+
+              if (isNodeFound()) {
+                console.log('SUCCESS')
+
+                performMutation(x, previousX)
+
+                // console.log('currentHierarchyIds', currentHierarchyIds)
+                // console.log('currentIndexRegistry', currentIndexRegistry)
+
+                return
+              }
             }
           }
         }
+        // No hierarchyId found means we're at an imported Component node
         else {
-          currentIncrementation[currentIncrementation.length - 1] = false
-        }
-      }
+          const importDeclarations = fileAddressToImportDeclarations[fileNode.address]
 
-      console.log('currentIndexes', currentIndexes)
-      console.log('currentHierarchyIds', currentHierarchyIds)
-      console.log('currentIncrementation', currentIncrementation)
+          if (importDeclarations.length) {
+            const componentName = x.node.openingElement.name.name
+            const relativeImportDeclaration = importDeclarations.find(x => x.value.startsWith('.') && x.specifiers.includes(componentName))
 
-      if (path.node.closingElement) {
-        currentIndexes.push(0)
-        currentIncrementation.push(true)
-      }
-      else if (currentIncrementation[currentIncrementation.length - 1]) {
-        currentIndexes[currentIndexes.length - 1]++
-      }
-    },
-    JSXClosingElement() {
-      currentIndexes.pop()
-      currentIncrementation.pop()
+            if (relativeImportDeclaration) {
+              const absolutePath = possiblyAddExtension(path.join(path.dirname(fileNode.payload.path), relativeImportDeclaration.value))
 
-      if (currentIncrementation[currentIncrementation.length - 1]) {
-        currentIndexes[currentIndexes.length - 1]++
-      }
-    },
-  })
+              console.log('-->', absolutePath)
 
-  if (componentNode.payload.path !== fileNode.payload.path) {
-    const relativePathBetweenModules = path.relative(path.dirname(fileNode.payload.path), path.dirname(componentNode.payload.path))
-    let relativePath = path.join(relativePathBetweenModules, componentNode.payload.name)
+              const componentNode = componentNodes.find(n => n.payload.name === componentName && n.payload.path === absolutePath)
 
-    if (!relativePath.startsWith('.')) {
-      relativePath = `./${relativePath}`
-    }
+              if (componentNode) {
+                console.log('componentNode.payload.name', componentNode.payload.name)
 
-    if (!importReferences.includes(relativePathBetweenModules)) {
-      // TODO find how to cancel a traversal
-      let completed = false
+                const fileNode = fileNodes.find(n => n.payload.path === componentNode.payload.path)
 
-      traverse(ast, {
-        ImportDeclaration(path: any) {
-          if (!completed) {
-            path.insertBefore(importDeclaration([importDefaultSpecifier(identifier(componentNode.payload.name))], stringLiteral(relativePath)))
+                if (fileNode) {
+                  console.log('fileNode.payload.name', fileNode.payload.name)
 
-            completed = true
+                  traverse(fileNode.payload.ast, createTraversal(fileNode, x))
+                }
+              }
+            }
           }
-        },
-      })
+        }
+
+        console.log('currentHierarchyIds', currentHierarchyIds)
+        console.log('currentIndexRegistry', currentIndexRegistry)
+      },
     }
   }
+
+  traverse(ast, createTraversal(fileNode))
+
+  // if (componentNode.payload.path !== fileNode.payload.path) {
+  //   const relativePathBetweenModules = path.relative(path.dirname(fileNode.payload.path), path.dirname(componentNode.payload.path))
+  //   let relativePath = path.join(relativePathBetweenModules, componentNode.payload.name)
+
+  //   if (!relativePath.startsWith('.')) {
+  //     relativePath = `./${relativePath}`
+  //   }
+
+  //   if (!importDeclarations.includes(relativePathBetweenModules)) {
+  //     // TODO find how to cancel a traversal
+  //     let completed = false
+
+  //     traverse(ast, {
+  //       ImportDeclaration(path: any) {
+  //         if (!completed) {
+  //           path.insertBefore(importDeclaration([importDefaultSpecifier(identifier(componentNode.payload.name))], stringLiteral(relativePath)))
+
+  //           completed = true
+  //         }
+  //       },
+  //     })
+  //   }
+  // }
 
   return ast
 }

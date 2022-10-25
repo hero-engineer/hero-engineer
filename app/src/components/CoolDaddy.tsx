@@ -4,8 +4,8 @@ function CoolDaddy({
   children,
 }: any) {
   return (
-    <Div data-ecu="TQeY6Znvjs:0">
-      I'm a cool daddy look at me 
+    <Div data-ecu="RYplbhv0Mo:0">
+      I'm a cool daddy look at me
       {' '}
       {children}
     </Div>

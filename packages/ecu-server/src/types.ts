@@ -50,4 +50,5 @@ export enum HierarchyPositionType {
   before = 'before',
   after = 'after',
   within = 'within',
+  children = 'children',
 }
