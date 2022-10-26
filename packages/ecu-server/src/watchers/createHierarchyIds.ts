@@ -4,11 +4,51 @@ import { JSXAttribute, jsxAttribute, jsxIdentifier, stringLiteral } from '@babel
 import traverse from '@babel/traverse'
 import generate from '@babel/generator'
 
+import shortid from 'shortid'
+
 import { FileNodeType, FunctionNodeType, GraphType } from '../types'
 import { ecuPropName } from '../configuration'
 
 import { getNodesByRole, getNodesBySecondNeighbourg } from '../graph/helpers'
 import lintCode from '../domain/lintCode'
+
+function insertKeyProp(path: any) {
+  // Remove previous key props
+  do {
+    const idIndex = path.node.openingElement.attributes.findIndex((x: JSXAttribute) => x.name.name === 'key')
+
+    if (idIndex === -1) break
+
+    path.node.openingElement.attributes.splice(idIndex, 1)
+  } while (true)
+
+  // Add key prop
+  path.node.openingElement.attributes.push(
+    jsxAttribute(
+      jsxIdentifier('key'),
+      stringLiteral(shortid()),
+    )
+  )
+}
+
+function insertEcuProp(path: any, componentNode: FunctionNodeType, cursors: number[]) {
+  // Remove previous ecu props
+  do {
+    const idIndex = path.node.openingElement.attributes.findIndex((x: JSXAttribute) => x.name.name === ecuPropName)
+
+    if (idIndex === -1) break
+
+    path.node.openingElement.attributes.splice(idIndex, 1)
+  } while (true)
+
+  // Add ecu prop
+  path.node.openingElement.attributes.push(
+    jsxAttribute(
+      jsxIdentifier(ecuPropName),
+      stringLiteral(`${componentNode.address}:${cursors.join('_')}`),
+    )
+  )
+}
 
 async function createHierachyIds(graph: GraphType) {
   const componentNodes = getNodesByRole<FunctionNodeType>(graph, 'Function').filter(node => node.payload.isComponent)
@@ -31,24 +71,13 @@ async function createHierachyIds(graph: GraphType) {
         })
       },
       JSXElement(path: any) {
-        if (importedComponentNames.includes(path.node.openingElement.name.name)) return
+        if (importedComponentNames.includes(path.node.openingElement.name.name)) {
+          insertKeyProp(path)
 
-        // Remove previous id props
-        do {
-          const idIndex = path.node.openingElement.attributes.findIndex((x: JSXAttribute) => x.name.name === ecuPropName)
+          return
+        }
 
-          if (idIndex === -1) break
-
-          path.node.openingElement.attributes.splice(idIndex, 1)
-        } while (true)
-
-        // Add id prop
-        path.node.openingElement.attributes.push(
-          jsxAttribute(
-            jsxIdentifier(ecuPropName),
-            stringLiteral(`${componentNode.address}:${cursors.join('_')}`),
-          )
-        )
+        insertEcuProp(path, componentNode, cursors)
 
         if (path.node.closingElement) {
           cursors.push(0)

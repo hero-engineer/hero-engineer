@@ -1,7 +1,7 @@
 import { PropsWithChildren, memo } from 'react'
 
-import useHierarchyId from '../../hooks/useHierarchyId'
 import useEditionProps from '../../hooks/useEditionProps'
+import useHierarchyId from '../../hooks/useHierarchyId'
 
 type TextProps = PropsWithChildren<{
   'data-ecu': string
