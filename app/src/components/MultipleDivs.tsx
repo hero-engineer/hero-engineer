@@ -22,10 +22,12 @@ function MultipleDivs(props: any) {
       <CoolDiv />
       <CoolDiv />
       <CoolDiv />
+      <CoolDiv />
+      <CoolDiv />
+      <CoolDiv />
       <CoolDaddy>
         Darling
       </CoolDaddy>
-      <CoolDiv />
     </Div>
   )
 }

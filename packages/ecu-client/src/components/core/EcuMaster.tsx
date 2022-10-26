@@ -1,13 +1,13 @@
 import { PropsWithChildren, memo, useMemo } from 'react'
 import { Provider } from 'urql'
-import useLocalStorageState from 'use-local-storage-state'
 
 import client from '../../client'
 
 import ModeContext from '../../contexts/ModeContext'
+import HotContext from '../../contexts/HotContext'
 import EditionContext, { EditionContextType } from '../../contexts/EditionContext'
 
-import HotContext from '../../contexts/HotContext'
+import usePersistedState from '../../hooks/usePersistedState'
 
 import Router from './Router'
 import Overlay from './Overlay'
@@ -18,7 +18,7 @@ type EcuMasterProps = PropsWithChildren<{
 }>
 
 function EcuMaster({ mode = 'production', hot = null }: EcuMasterProps) {
-  const [hierarchyIds, setHierarchyIds] = useLocalStorageState<string[]>('ecu-hierarchyIds', { defaultValue: [] })
+  const [hierarchyIds, setHierarchyIds] = usePersistedState<string[]>('ecu-hierarchyIds', [])
   const editionContextValue = useMemo<EditionContextType>(() => ({ hierarchyIds, setHierarchyIds }), [hierarchyIds, setHierarchyIds])
 
   return (
