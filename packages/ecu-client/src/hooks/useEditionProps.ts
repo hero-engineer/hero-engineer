@@ -27,7 +27,7 @@ function useEditionProps(id: string) {
   const { hierarchyIds, setHierarchyIds } = useContext(EditionContext)
 
   const handleClick = useCallback((event: MouseEvent) => {
-    if (event.detail !== 2) return // Double click only
+    if (event.detail < 2) return // Double click or more only
 
     event.stopPropagation()
 

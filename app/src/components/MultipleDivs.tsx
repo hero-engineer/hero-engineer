@@ -14,17 +14,6 @@ function MultipleDivs(props: any) {
       </Div>
       <CoolDiv />
       <CoolDiv />
-      <CoolDiv />
-      <CoolDiv />
-      <CoolDiv />
-      <CoolDiv />
-      <CoolDiv />
-      <CoolDiv />
-      <CoolDiv />
-      <CoolDiv />
-      <CoolDiv />
-      <CoolDiv />
-      <CoolDiv />
       <CoolDaddy>
         Darling
       </CoolDaddy>

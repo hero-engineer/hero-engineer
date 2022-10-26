@@ -21,6 +21,8 @@ function EcuMaster({ mode = 'production', hot = null }: EcuMasterProps) {
   const [hierarchyIds, setHierarchyIds] = usePersistedState<string[]>('ecu-hierarchyIds', [])
   const editionContextValue = useMemo<EditionContextType>(() => ({ hierarchyIds, setHierarchyIds }), [hierarchyIds, setHierarchyIds])
 
+  console.log('editionContextValue.setHierarchyIds', editionContextValue.setHierarchyIds)
+
   return (
     <Provider value={client}>
       <ModeContext.Provider value={mode}>
