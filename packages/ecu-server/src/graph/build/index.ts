@@ -1,6 +1,6 @@
 import { GraphType } from '../../types'
 
-import createHierachyIds from '../../watchers/createHierarchyIds'
+import createHierachyIdsAndKeysWatcher from '../../watchers/createHierarchyIdsAndKeysWatcher'
 
 import buildFilesGraph from './buildFilesGraph'
 
@@ -9,7 +9,7 @@ async function buildGraph(graph: GraphType) {
 
   console.log('graph', Object.keys(graph.nodes).length)
 
-  await createHierachyIds(graph)
+  await createHierachyIdsAndKeysWatcher(graph)
 
   return graph
 }

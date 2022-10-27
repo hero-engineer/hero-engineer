@@ -24,6 +24,7 @@ export const typeDefs = gql`
     after
     within
     children
+    parent
   }
 
   type Query {

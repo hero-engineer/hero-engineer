@@ -80,6 +80,7 @@ function AddComponentButton() {
         <option value="after">After</option>
         <option value="within">Within</option>
         <option value="children">Children</option>
+        <option value="parent">Parent</option>
       </select>
       <button
         onClick={handleAddComponentClick}

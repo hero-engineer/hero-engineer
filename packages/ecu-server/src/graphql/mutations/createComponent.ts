@@ -19,6 +19,8 @@ type CreateComponentArgs = {
 }
 
 function createComponent(_: any, { name }: CreateComponentArgs) {
+  if (!name) return null
+
   const validatedName = capitalize(name)
   const code = createComponentTemplate(validatedName)
   const filePath = path.join(appPath, 'src', 'components', `${validatedName}.tsx`)

@@ -2,7 +2,10 @@ import { Div } from 'ecu-client'
 
 function CoolDiv(props: any) {
   return (
-    <Div data-ecu="AqsgyqmD-c:0">
+    <Div
+      key="pZXlYS0vH"
+      data-ecu="jeJ9Hss33n:0"
+    >
       Edit me I'm famous
     </Div>
   )

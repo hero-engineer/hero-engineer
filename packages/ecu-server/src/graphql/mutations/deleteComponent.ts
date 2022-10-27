@@ -7,7 +7,6 @@ import { FileNodeType } from '../../types'
 import graph from '../../graph'
 import { getNodesBySecondNeighbourg } from '../../graph/helpers'
 
-import keepLastComponentOfHierarchy from '../../domain/keepLastComponentOfHierarchyIds'
 import updateComponentHierarchy from '../../domain/updateComponentHierarchy'
 import createRemoveUnusedImportsPostTraversal from '../../domain/createRemoveUnusedImportsPostTraversal'
 import lintCode from '../../domain/lintCode'
@@ -19,8 +18,8 @@ type DeleteComponentArgs = {
 async function deleteComponent(_: any, { hierarchyIds }: DeleteComponentArgs) {
   console.log('___deleteComponent___')
 
-  const reducedHierarchyIds = keepLastComponentOfHierarchy(hierarchyIds, 2)
-  const [functionNodeId] = reducedHierarchyIds[0].split(':')
+  // const reducedHierarchyIds = keepLastComponentOfHierarchy(hierarchyIds, 2)
+  const [functionNodeId] = hierarchyIds[0].split(':')
 
   const fileNode = getNodesBySecondNeighbourg<FileNodeType>(graph, functionNodeId, 'declaresFunction')[0]
 
@@ -34,16 +33,19 @@ async function deleteComponent(_: any, { hierarchyIds }: DeleteComponentArgs) {
 
   const postTraverse = createRemoveUnusedImportsPostTraversal()
 
-  const ast = updateComponentHierarchy(fileNode, reducedHierarchyIds, mutate, postTraverse)
+  const impacted = updateComponentHierarchy(fileNode, hierarchyIds, mutate, postTraverse)
 
-  let { code } = generate(ast)
+  await Promise.all(impacted.map(async ({ fileNode, ast }) => {
+    console.log('impacted:', fileNode.payload.name)
 
-  code = await lintCode(code)
+    let { code } = generate(ast)
 
-  fs.writeFileSync(fileNode.payload.path, code, 'utf-8')
+    code = await lintCode(code)
 
-  return fileNode.payload
+    fs.writeFileSync(fileNode.payload.path, code, 'utf-8')
+  }))
 
+  return { id: 0 }
 }
 
 export default deleteComponent

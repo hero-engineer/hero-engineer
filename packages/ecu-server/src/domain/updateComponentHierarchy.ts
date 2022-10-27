@@ -23,6 +23,11 @@ import possiblyAddExtension from '../utils/possiblyAddExtension'
 
 import extractIdAndIndex from './extractIdAndIndex'
 
+type ImpactedType = {
+  fileNode: FileNodeType
+  ast: ParseResult<File>
+}
+
 function extractIdsAndIndexes(hierarchyIds: string[]): [string[], number[]] {
   const ids: string[] = []
   const indexes: number[] = []
@@ -42,7 +47,7 @@ function updateComponentHierarchy(
   hierarchyIds: string[],
   mutate: (x: any, previousX: any) => void,
   postTraverse: (ast: ParseResult<File>, importDeclaraclarationsRegistry: ImportDeclarationsRegistry) => void = () => {}
-) {
+): ImpactedType[] {
   console.log('updateComponentHierarchy', fileNode.payload.name, hierarchyIds)
 
   const { ast } = fileNode.payload
@@ -52,6 +57,7 @@ function updateComponentHierarchy(
   const [ids, indexes] = extractIdsAndIndexes(hierarchyIds)
   const currentHierarchyIds: string[] = []
   const currentIndexRegistry: Record<string, number> = {}
+  const impacted: ImpactedType[] = []
 
   const isSuccessiveNodeFound = (nextHierarchyId: string) => {
     const nextHierarchyIds = [...currentHierarchyIds, nextHierarchyId]
@@ -74,8 +80,12 @@ function updateComponentHierarchy(
     x.stop()
   }
 
-  function createTraversal(fileNode: FileNodeType, previousX: any = null) {
-    return {
+  function traverseFileNode(ast: ParseResult<File>, fileNode: FileNodeType, previousX: any = null) {
+    if (!impacted.some(x => x.fileNode.address === fileNode.address)) {
+      impacted.push({ fileNode, ast })
+    }
+
+    traverse(ast, {
       ImportDeclaration(x: any) {
         if (!importDeclarationsRegistry[fileNode.address]) {
           importDeclarationsRegistry[fileNode.address] = []
@@ -96,7 +106,7 @@ function updateComponentHierarchy(
           const hierarchyId = x.node.openingElement.attributes[idIndex].value.value
 
           if (hierarchyId) {
-            console.log('-->', hierarchyId)
+            // console.log('-->', hierarchyId)
 
             currentIndexRegistry[hierarchyId] = currentIndexRegistry[hierarchyId] + 1 || 0
 
@@ -109,11 +119,8 @@ function updateComponentHierarchy(
                 console.log('SUCCESS')
 
                 performMutation(x, previousX)
-
                 // console.log('currentHierarchyIds', currentHierarchyIds)
                 // console.log('currentIndexRegistry', currentIndexRegistry)
-
-                return
               }
             }
           }
@@ -129,19 +136,19 @@ function updateComponentHierarchy(
             if (relativeImportDeclaration) {
               const absolutePath = possiblyAddExtension(path.join(path.dirname(fileNode.payload.path), relativeImportDeclaration.value))
 
-              console.log('-->', absolutePath)
+              // console.log('-->', absolutePath)
 
               const componentNode = componentNodes.find(n => n.payload.name === componentName && n.payload.path === absolutePath)
 
               if (componentNode) {
-                console.log('componentNode.payload.name', componentNode.payload.name)
+                // console.log('componentNode.payload.name', componentNode.payload.name)
 
                 const fileNode = fileNodes.find(n => n.payload.path === componentNode.payload.path)
 
                 if (fileNode) {
-                  console.log('fileNode.payload.name', fileNode.payload.name)
+                  // console.log('fileNode.payload.name', fileNode.payload.name)
 
-                  traverse(fileNode.payload.ast, createTraversal(fileNode, x))
+                  traverseFileNode(fileNode.payload.ast, fileNode, x)
                 }
               }
             }
@@ -151,13 +158,13 @@ function updateComponentHierarchy(
         console.log('currentHierarchyIds', currentHierarchyIds)
         console.log('currentIndexRegistry', currentIndexRegistry)
       },
-    }
+    })
   }
 
-  traverse(ast, createTraversal(fileNode))
+  traverseFileNode(ast, fileNode)
   postTraverse(ast, importDeclarationsRegistry)
 
-  return ast
+  return impacted
 }
 
 export default updateComponentHierarchy

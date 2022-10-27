@@ -2,9 +2,13 @@ import fs from 'fs'
 
 import generate from '@babel/generator'
 import {
+  jsxClosingElement,
+  jsxClosingFragment,
   jsxElement,
+  jsxFragment,
   jsxIdentifier,
   jsxOpeningElement,
+  jsxOpeningFragment,
 } from '@babel/types'
 
 import { FileNodeType, HierarchyPositionType } from '../../types'
@@ -45,33 +49,70 @@ async function addComponent(_: any, { componentId, hierarchyIds, hierarchyPositi
   }
 
   function mutate(x: any, previousX: any) {
-    const inserted = jsxElement(jsxOpeningElement(jsxIdentifier(componentNode.payload.name), [], true), null, [], true)
+    try {
+      const finalX = previousX || x
 
-    if (hierarchyPosition === 'before') {
-      (previousX || x).insertBefore(inserted)
+      if (hierarchyPosition === 'before') {
+        let inserted: any = jsxElement(jsxOpeningElement(jsxIdentifier(componentNode.payload.name), [], true), null, [], true)
+
+        if (finalX.parent.type !== 'JSXElement') {
+          inserted = jsxFragment(jsxOpeningFragment(), jsxClosingFragment(), [inserted, finalX.node])
+
+          finalX.replaceWith(inserted)
+        }
+        else {
+          finalX.insertAfter(inserted)
+        }
+      }
+      else if (hierarchyPosition === 'after') {
+        let inserted: any = jsxElement(jsxOpeningElement(jsxIdentifier(componentNode.payload.name), [], true), null, [], true)
+
+        if (finalX.parent.type !== 'JSXElement') {
+          inserted = jsxFragment(jsxOpeningFragment(), jsxClosingFragment(), [finalX.node, inserted])
+
+          finalX.replaceWith(inserted)
+        }
+        else {
+          finalX.insertAfter(inserted)
+        }
+      }
+      else if (hierarchyPosition === 'within') {
+        const inserted = jsxElement(jsxOpeningElement(jsxIdentifier(componentNode.payload.name), [], true), null, [], true)
+
+        finalX.node.children.push(inserted)
+      }
+      else if (hierarchyPosition === 'children') {
+        const inserted = jsxElement(jsxOpeningElement(jsxIdentifier(componentNode.payload.name), [], true), null, [], true)
+
+        finalX.node.children.push(inserted)
+      }
+      else if (hierarchyPosition === 'parent') {
+        const identifier = jsxIdentifier(componentNode.payload.name)
+        const inserted = jsxElement(jsxOpeningElement(identifier, [], false), jsxClosingElement(identifier), [finalX.node], false)
+
+        finalX.replaceWith(inserted)
+      }
     }
-    else if (hierarchyPosition === 'after') {
-      (previousX || x).insertAfter(inserted)
-    }
-    else if (hierarchyPosition === 'within') {
-      (previousX || x).node.children.push(inserted)
-    }
-    else if (previousX && hierarchyPosition === 'children') {
-      previousX.node.children.push(inserted)
+    catch (error) {
+      console.log(error)
     }
   }
 
   const postTraverse = createAddMissingImportsPostTraversal(fileNode, componentNode)
 
-  const ast = updateComponentHierarchy(fileNode, reducedHierarchyIds, mutate, postTraverse)
+  const impacted = updateComponentHierarchy(fileNode, reducedHierarchyIds, mutate, postTraverse)
 
-  let { code } = generate(ast)
+  await Promise.all(impacted.map(async ({ fileNode, ast }) => {
+    console.log('impacted:', fileNode.payload.name)
 
-  code = await lintCode(code)
+    let { code } = generate(ast)
 
-  fs.writeFileSync(fileNode.payload.path, code, 'utf-8')
+    code = await lintCode(code)
 
-  return fileNode.payload
+    fs.writeFileSync(fileNode.payload.path, code, 'utf-8')
+  }))
+
+  return { id: 0 }
 }
 
 export default addComponent
