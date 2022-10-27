@@ -1,6 +1,13 @@
-import { MouseEvent, useCallback, useContext } from 'react'
+import { MouseEvent, Ref, useCallback, useContext } from 'react'
+import { useDrag, useDrop } from 'react-dnd'
 
 import EditionContext from '../contexts/EditionContext'
+
+import useForkedRef from './useForkedRef'
+
+type DropResult = {
+  hierarchyIds: string[]
+}
 
 const selectionStyles = {
   outline: '1px solid lightblue',
@@ -23,8 +30,33 @@ function getHierarchyIds(element: EventTarget) {
   return hierarchyIds.reverse()
 }
 
-function useEditionProps(id: string) {
+function useEditionProps<T>(id: string) {
   const { hierarchyIds, setHierarchyIds } = useContext(EditionContext)
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: 'Node',
+    item: { hierarchyIds },
+    end: (item, monitor) => {
+      const dropResult = monitor.getDropResult<DropResult>()
+
+      if (item && dropResult) {
+        alert(`You dropped ${item.hierarchyIds} into ${dropResult.hierarchyIds}!`)
+      }
+    },
+    collect: monitor => ({
+      isDragging: monitor.isDragging(),
+      handlerId: monitor.getHandlerId(),
+    }),
+  }))
+  const [{ canDrop, isOver }, drop] = useDrop(() => ({
+    accept: 'Node',
+    drop: () => ({ hierarchyIds }),
+    collect: monitor => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop(),
+    }),
+  }))
+
+  const ref = useForkedRef(drag, drop) as Ref<T>
 
   const handleClick = useCallback((event: MouseEvent) => {
     if (event.detail < 2) return // Double click or more only
@@ -46,17 +78,18 @@ function useEditionProps(id: string) {
         }
       }
 
-      // console.log('nextIds', nextIds)
-
       return nextIds
     })
   }, [setHierarchyIds])
 
   return {
+    ref,
     onClick: handleClick,
     style: {
       userSelect: 'none' as any,
       ...(hierarchyIds[hierarchyIds.length - 1] === id ? selectionStyles : {}),
+      ...(isDragging ? { opacity: 0.5 } : {}),
+      ...(canDrop && isOver ? { backgroundColor: 'lightgreen' } : {}),
     },
   }
 }

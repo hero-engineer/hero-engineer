@@ -1,5 +1,7 @@
 import { PropsWithChildren, memo, useMemo } from 'react'
 import { Provider } from 'urql'
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 
 import client from '../../client'
 
@@ -23,15 +25,17 @@ function EcuMaster({ mode = 'production', hot = null }: EcuMasterProps) {
 
   return (
     <Provider value={client}>
-      <ModeContext.Provider value={mode}>
-        <HotContext.Provider value={hot}>
-          <EditionContext.Provider value={editionContextValue}>
-            <Router>
-              <Overlay />
-            </Router>
-          </EditionContext.Provider>
-        </HotContext.Provider>
-      </ModeContext.Provider>
+      <DndProvider backend={HTML5Backend}>
+        <ModeContext.Provider value={mode}>
+          <HotContext.Provider value={hot}>
+            <EditionContext.Provider value={editionContextValue}>
+              <Router>
+                <Overlay />
+              </Router>
+            </EditionContext.Provider>
+          </HotContext.Provider>
+        </ModeContext.Provider>
+      </DndProvider>
     </Provider>
   )
 }

@@ -1,5 +1,6 @@
 import { Div } from 'ecu-client'
 
+import CoolDiv from './CoolDiv'
 import CoolDaddy from './CoolDaddy'
 
 function MultipleDivs(props: any) {
@@ -8,7 +9,12 @@ function MultipleDivs(props: any) {
       <Div data-ecu="PtC5gWCdd5:0_0">
         Dear component
       </Div>
-      
+      <CoolDiv />
+      <CoolDiv />
+      <CoolDiv />
+      <CoolDiv />
+      <CoolDiv />
+      <CoolDiv />
       <Div data-ecu="PtC5gWCdd5:0_1">
         Hello
       </Div>

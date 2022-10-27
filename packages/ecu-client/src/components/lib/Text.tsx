@@ -11,7 +11,7 @@ type TextProps = PropsWithChildren<{
 // TODO use a preprocessor before production build to replace Text with a regular Text
 function Text({ 'data-ecu': ecuId, className, children }: TextProps) {
   const hierarchyId = useHierarchyId(ecuId)
-  const editionProps = useEditionProps(hierarchyId)
+  const editionProps = useEditionProps<HTMLSpanElement>(hierarchyId)
 
   return (
     <span

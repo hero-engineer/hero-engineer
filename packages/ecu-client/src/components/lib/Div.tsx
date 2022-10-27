@@ -11,7 +11,7 @@ type DivProps = PropsWithChildren<{
 // TODO use a preprocessor before production build to replace Div with a regular Div
 function Div({ 'data-ecu': ecuId, className, children }: DivProps) {
   const hierarchyId = useHierarchyId(ecuId)
-  const editionProps = useEditionProps(hierarchyId)
+  const editionProps = useEditionProps<HTMLDivElement>(hierarchyId)
 
   return (
     <div
