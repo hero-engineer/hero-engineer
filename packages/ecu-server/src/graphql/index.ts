@@ -4,6 +4,7 @@ import getComponent from './queries/getComponent'
 import getComponents from './queries/getComponents'
 import createComponent from './mutations/createComponent'
 import addComponent from './mutations/addComponent'
+import deleteComponent from './mutations/deleteComponent'
 
 export const typeDefs = gql`
   type File {
@@ -33,6 +34,7 @@ export const typeDefs = gql`
   type Mutation {
     createComponent(name: String!): Component
     addComponent(componentId: String!, hierarchyIds: [String!]!, hierarchyPosition: ComponentHierarchyPosition!): File
+    deleteComponent(hierarchyIds: [String!]!): File
   }
 `
 
@@ -44,5 +46,6 @@ export const resolvers = {
   Mutation: {
     createComponent,
     addComponent,
+    deleteComponent,
   },
 }

@@ -36,3 +36,11 @@ export const AddComponentMutation = `
     }
   }
 `
+
+export const DeleteComponentMutation = `
+  mutation ($hierarchyIds: [String!]!) {
+    deleteComponent (hierarchyIds: $hierarchyIds) {
+      id
+    }
+  }
+`

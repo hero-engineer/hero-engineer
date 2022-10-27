@@ -1,47 +1,26 @@
 import fs from 'fs'
 
 import generate from '@babel/generator'
+import {
+  jsxElement,
+  jsxIdentifier,
+  jsxOpeningElement,
+} from '@babel/types'
 
 import { FileNodeType, HierarchyPositionType } from '../../types'
 
 import graph from '../../graph'
 import { getNodeById, getNodesBySecondNeighbourg } from '../../graph/helpers'
 
-import insertComponentInHierarchy from '../../domain/insertComponentInHierarchy'
-import extractIdAndIndex from '../../domain/extractIdAndIndex'
+import keepLastComponentOfHierarchy from '../../domain/keepLastComponentOfHierarchyIds'
+import updateComponentHierarchy from '../../domain/updateComponentHierarchy'
+import createAddMissingImportsPostTraversal from '../../domain/createAddMissingImportsPostTraversal'
 import lintCode from '../../domain/lintCode'
 
 type AddComponentArgs = {
   componentId: string
   hierarchyIds: string[]
   hierarchyPosition: HierarchyPositionType
-}
-
-function keepLastComponentOfHierarchy(hierarchyIds: string[], n: number) {
-  const array = [...hierarchyIds].reverse()
-  const ids: string[] = [array.shift() as string]
-  let counter = 1
-
-  array.forEach(hierarchyId => {
-    if (counter > n) return
-
-    const [lastComponentId] = extractIdAndIndex(ids[ids.length - 1])
-    const [componentId] = extractIdAndIndex(hierarchyId)
-
-    if (extractIdAndIndex(lastComponentId)[0] !== extractIdAndIndex(componentId)[0]) {
-      counter++
-
-      if (counter > n) return
-    }
-
-    ids.push(hierarchyId)
-  })
-
-  return ids.reverse()
-}
-
-function reduceHierarchy(hierarchyIds: string[], hierarchyPosition: HierarchyPositionType) {
-  return keepLastComponentOfHierarchy(hierarchyIds, hierarchyPosition === 'within' ? 1 : 2)
 }
 
 async function addComponent(_: any, { componentId, hierarchyIds, hierarchyPosition }: AddComponentArgs) {
@@ -53,7 +32,7 @@ async function addComponent(_: any, { componentId, hierarchyIds, hierarchyPositi
     throw new Error(`Component with id ${componentId} not found`)
   }
 
-  const reducedHierarchyIds = reduceHierarchy(hierarchyIds, hierarchyPosition)
+  const reducedHierarchyIds = keepLastComponentOfHierarchy(hierarchyIds, hierarchyPosition === 'within' ? 1 : 2)
 
   console.log('hierarchyIds', hierarchyIds)
   console.log('reducedHierarchy', reducedHierarchyIds)
@@ -65,7 +44,26 @@ async function addComponent(_: any, { componentId, hierarchyIds, hierarchyPositi
     throw new Error(`File for Function with id ${functionNodeId} not found`)
   }
 
-  const ast = await insertComponentInHierarchy(fileNode, componentNode, hierarchyPosition, reducedHierarchyIds)
+  function mutate(x: any, previousX: any) {
+    const inserted = jsxElement(jsxOpeningElement(jsxIdentifier(componentNode.payload.name), [], true), null, [], true)
+
+    if (hierarchyPosition === 'before') {
+      (previousX || x).insertBefore(inserted)
+    }
+    else if (hierarchyPosition === 'after') {
+      (previousX || x).insertAfter(inserted)
+    }
+    else if (hierarchyPosition === 'within') {
+      (previousX || x).node.children.push(inserted)
+    }
+    else if (previousX && hierarchyPosition === 'children') {
+      previousX.node.children.push(inserted)
+    }
+  }
+
+  const postTraverse = createAddMissingImportsPostTraversal(fileNode, componentNode)
+
+  const ast = updateComponentHierarchy(fileNode, reducedHierarchyIds, mutate, postTraverse)
 
   let { code } = generate(ast)
 

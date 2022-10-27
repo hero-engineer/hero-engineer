@@ -52,3 +52,5 @@ export enum HierarchyPositionType {
   within = 'within',
   children = 'children',
 }
+
+export type ImportDeclarationsRegistry = Record<string, { value: string, specifiers: string[] }[]>

@@ -1,21 +1,17 @@
 import path from 'path'
 
 import {
+  File,
   ImportDefaultSpecifier,
   ImportNamespaceSpecifier,
   ImportSpecifier,
   JSXAttribute,
-  identifier,
-  importDeclaration,
-  importDefaultSpecifier,
-  jsxElement,
-  jsxIdentifier,
-  jsxOpeningElement,
-  stringLiteral,
 } from '@babel/types'
 import traverse from '@babel/traverse'
 
-import { FileNodeType, FunctionNodeType, HierarchyPositionType } from '../types'
+import { ParseResult } from '@babel/parser'
+
+import { FileNodeType, FunctionNodeType, ImportDeclarationsRegistry } from '../types'
 import { ecuPropName } from '../configuration'
 
 import graph from '../graph'
@@ -41,18 +37,18 @@ function extractIdsAndIndexes(hierarchyIds: string[]): [string[], number[]] {
   return [ids, indexes]
 }
 
-async function insertComponentInHierarchy(
+function updateComponentHierarchy(
   fileNode: FileNodeType,
-  componentNode: FunctionNodeType,
-  hierarchyPosition: HierarchyPositionType,
   hierarchyIds: string[],
+  mutate: (x: any, previousX: any) => void,
+  postTraverse: (ast: ParseResult<File>, importDeclaraclarationsRegistry: ImportDeclarationsRegistry) => void = () => {}
 ) {
-  console.log('insertComponentInHierarchy', fileNode.payload.name, componentNode.payload.name, hierarchyPosition, hierarchyIds)
+  console.log('updateComponentHierarchy', fileNode.payload.name, hierarchyIds)
 
   const { ast } = fileNode.payload
   const componentNodes = getNodesByRole<FunctionNodeType>(graph, 'Function').filter(n => n.payload.isComponent)
   const fileNodes = getNodesByRole<FileNodeType>(graph, 'File')
-  const fileAddressToImportDeclarations: Record<string, { value: string, specifiers: string[] }[]> = {}
+  const importDeclarationsRegistry: ImportDeclarationsRegistry = {}
   const [ids, indexes] = extractIdsAndIndexes(hierarchyIds)
   const currentHierarchyIds: string[] = []
   const currentIndexRegistry: Record<string, number> = {}
@@ -69,20 +65,7 @@ async function insertComponentInHierarchy(
   console.log('___start___')
 
   function performMutation(x: any, previousX: any = null) {
-    const inserted = jsxElement(jsxOpeningElement(jsxIdentifier(componentNode.payload.name), [], true), null, [], true)
-
-    if (hierarchyPosition === 'before') {
-      (previousX || x).insertBefore(inserted)
-    }
-    else if (hierarchyPosition === 'after') {
-      (previousX || x).insertAfter(inserted)
-    }
-    else if (hierarchyPosition === 'within') {
-      (previousX || x).node.children.push(inserted)
-    }
-    else if (previousX && hierarchyPosition === 'children') {
-      previousX.node.children.push(inserted)
-    }
+    mutate(x, previousX)
 
     if (previousX) {
       previousX.stop()
@@ -94,11 +77,11 @@ async function insertComponentInHierarchy(
   function createTraversal(fileNode: FileNodeType, previousX: any = null) {
     return {
       ImportDeclaration(x: any) {
-        if (!fileAddressToImportDeclarations[fileNode.address]) {
-          fileAddressToImportDeclarations[fileNode.address] = []
+        if (!importDeclarationsRegistry[fileNode.address]) {
+          importDeclarationsRegistry[fileNode.address] = []
         }
 
-        fileAddressToImportDeclarations[fileNode.address].push({
+        importDeclarationsRegistry[fileNode.address].push({
           value: x.node.source.value,
           specifiers: x.node.specifiers.map((x: ImportSpecifier | ImportDefaultSpecifier | ImportNamespaceSpecifier) => x.local.name),
         })
@@ -137,7 +120,7 @@ async function insertComponentInHierarchy(
         }
         // No hierarchyId found means we're at an imported Component node
         else {
-          const importDeclarations = fileAddressToImportDeclarations[fileNode.address]
+          const importDeclarations = importDeclarationsRegistry[fileNode.address]
 
           if (importDeclarations.length) {
             const componentName = x.node.openingElement.name.name
@@ -172,32 +155,9 @@ async function insertComponentInHierarchy(
   }
 
   traverse(ast, createTraversal(fileNode))
-
-  // if (componentNode.payload.path !== fileNode.payload.path) {
-  //   const relativePathBetweenModules = path.relative(path.dirname(fileNode.payload.path), path.dirname(componentNode.payload.path))
-  //   let relativePath = path.join(relativePathBetweenModules, componentNode.payload.name)
-
-  //   if (!relativePath.startsWith('.')) {
-  //     relativePath = `./${relativePath}`
-  //   }
-
-  //   if (!importDeclarations.includes(relativePathBetweenModules)) {
-  //     // TODO find how to cancel a traversal
-  //     let completed = false
-
-  //     traverse(ast, {
-  //       ImportDeclaration(path: any) {
-  //         if (!completed) {
-  //           path.insertBefore(importDeclaration([importDefaultSpecifier(identifier(componentNode.payload.name))], stringLiteral(relativePath)))
-
-  //           completed = true
-  //         }
-  //       },
-  //     })
-  //   }
-  // }
+  postTraverse(ast, importDeclarationsRegistry)
 
   return ast
 }
 
-export default insertComponentInHierarchy
+export default updateComponentHierarchy

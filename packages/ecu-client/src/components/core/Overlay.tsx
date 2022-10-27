@@ -2,7 +2,7 @@ import { memo, useContext, useState } from 'react'
 import { useMutation, useQuery } from 'urql'
 import { Link, useNavigate } from 'react-router-dom'
 
-import { AddComponentMutation, ComponentsQuery, CreateComponentMutation } from '../../queries'
+import { AddComponentMutation, ComponentsQuery, CreateComponentMutation, DeleteComponentMutation } from '../../queries'
 
 import EditionContext from '../../contexts/EditionContext'
 
@@ -35,6 +35,7 @@ function Overlay() {
         Components
       </Link>
       <AddComponentButton />
+      <DeleteComponentButton />
     </div>
   )
 }
@@ -86,6 +87,27 @@ function AddComponentButton() {
         disabled={!(componentId && hierarchyIds.length)}
       >
         Add component
+      </button>
+    </div>
+  )
+}
+
+function DeleteComponentButton() {
+  const { hierarchyIds } = useContext(EditionContext)
+  const [, deleteComponent] = useMutation(DeleteComponentMutation)
+
+  function handleDeleteComponentClick() {
+    deleteComponent({ hierarchyIds })
+  }
+
+  return (
+    <div>
+      <button
+        onClick={handleDeleteComponentClick}
+        type="button"
+        disabled={!hierarchyIds.length}
+      >
+        Delete component
       </button>
     </div>
   )
