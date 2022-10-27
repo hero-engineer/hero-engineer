@@ -1,4 +1,4 @@
-import { MouseEvent, Ref, useCallback, useContext } from 'react'
+import { MouseEvent, Ref, useCallback, useContext, useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 
 import EditionContext from '../contexts/EditionContext'
@@ -13,7 +13,7 @@ const selectionStyles = {
   outline: '1px solid lightblue',
 }
 
-function getHierarchyIds(element: EventTarget) {
+function getHierarchyIds(element: EventTarget | HTMLElement) {
   const hierarchyIds = []
 
   let currentElement = element as HTMLElement | null
@@ -30,11 +30,13 @@ function getHierarchyIds(element: EventTarget) {
   return hierarchyIds.reverse()
 }
 
-function useEditionProps<T>(id: string) {
+function useEditionProps<T>(hierarchyId: string) {
+  const rootRef = useRef<T>(null)
   const { hierarchyIds, setHierarchyIds } = useContext(EditionContext)
+  // const [hasDropped, setHasDropped] = useState(false)
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'Node',
-    item: { hierarchyIds },
+    item: () => ({ hierarchyIds: getHierarchyIds(rootRef.current as HTMLElement) }),
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult<DropResult>()
 
@@ -47,16 +49,22 @@ function useEditionProps<T>(id: string) {
       handlerId: monitor.getHandlerId(),
     }),
   }))
-  const [{ canDrop, isOver }, drop] = useDrop(() => ({
+  const [{ canDrop, isOverCurrent }, drop] = useDrop(() => ({
     accept: 'Node',
-    drop: () => ({ hierarchyIds }),
+    drop: (_item, monitor) => {
+      const didDrop = monitor.didDrop()
+
+      if (didDrop) return
+
+      return { hierarchyIds: getHierarchyIds(rootRef.current as HTMLElement) }
+    },
     collect: monitor => ({
-      isOver: monitor.isOver(),
+      isOverCurrent: monitor.isOver({ shallow: true }),
       canDrop: monitor.canDrop(),
     }),
   }))
 
-  const ref = useForkedRef(drag, drop) as Ref<T>
+  const ref = useForkedRef(rootRef, useForkedRef(drag, drop)) as Ref<T>
 
   const handleClick = useCallback((event: MouseEvent) => {
     if (event.detail < 2) return // Double click or more only
@@ -87,9 +95,9 @@ function useEditionProps<T>(id: string) {
     onClick: handleClick,
     style: {
       userSelect: 'none' as any,
-      ...(hierarchyIds[hierarchyIds.length - 1] === id ? selectionStyles : {}),
+      ...(hierarchyIds[hierarchyIds.length - 1] === hierarchyId ? selectionStyles : {}),
       ...(isDragging ? { opacity: 0.5 } : {}),
-      ...(canDrop && isOver ? { backgroundColor: 'lightgreen' } : {}),
+      ...(canDrop && isOverCurrent ? { backgroundColor: 'lightgreen' } : {}),
     },
   }
 }
