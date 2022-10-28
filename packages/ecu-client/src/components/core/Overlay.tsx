@@ -1,6 +1,6 @@
 import { memo, useContext, useState } from 'react'
 import { useMutation, useQuery } from 'urql'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import { AddComponentMutation, ComponentsQuery, CreateComponentMutation, DeleteComponentMutation } from '../../queries'
 
@@ -41,6 +41,8 @@ function Overlay() {
 }
 
 function AddComponentButton() {
+  const { id } = useParams()
+  console.log('id', useParams())
   const { hierarchyIds } = useContext(EditionContext)
   const [componentId, setComponentId] = useState('')
   const [hierarchyPosition, setHierarchyPosition] = useState('before')
@@ -53,8 +55,15 @@ function AddComponentButton() {
   if (componentsQueryResult.error) return null
 
   function handleAddComponentClick() {
-    addComponent({ componentId, hierarchyIds, hierarchyPosition })
+    addComponent({
+      sourceComponentId: id,
+      targetComponentId: componentId,
+      hierarchyIds,
+      hierarchyPosition,
+    })
   }
+
+  if (!id) return null
 
   return (
     <div>
@@ -94,12 +103,18 @@ function AddComponentButton() {
 }
 
 function DeleteComponentButton() {
+  const { id } = useParams()
   const { hierarchyIds } = useContext(EditionContext)
   const [, deleteComponent] = useMutation(DeleteComponentMutation)
 
   function handleDeleteComponentClick() {
-    deleteComponent({ hierarchyIds })
+    deleteComponent({
+      sourceComponentId: id,
+      hierarchyIds,
+    })
   }
+
+  if (!id) return null
 
   return (
     <div>

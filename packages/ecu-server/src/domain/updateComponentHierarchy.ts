@@ -26,6 +26,7 @@ import extractIdAndIndex from './extractIdAndIndex'
 type ImpactedType = {
   fileNode: FileNodeType
   ast: ParseResult<File>
+  importDeclarationsRegistry: ImportDeclarationsRegistry
 }
 
 function extractIdsAndIndexes(hierarchyIds: string[]): [string[], number[]] {
@@ -46,14 +47,12 @@ function updateComponentHierarchy(
   fileNode: FileNodeType,
   hierarchyIds: string[],
   mutate: (x: any, previousX: any) => void,
-  postTraverse: (ast: ParseResult<File>, importDeclaraclarationsRegistry: ImportDeclarationsRegistry) => void = () => {}
 ): ImpactedType[] {
   console.log('updateComponentHierarchy', fileNode.payload.name, hierarchyIds)
 
   const { ast } = fileNode.payload
   const componentNodes = getNodesByRole<FunctionNodeType>(graph, 'Function').filter(n => n.payload.isComponent)
   const fileNodes = getNodesByRole<FileNodeType>(graph, 'File')
-  const importDeclarationsRegistry: ImportDeclarationsRegistry = {}
   const [ids, indexes] = extractIdsAndIndexes(hierarchyIds)
   const currentHierarchyIds: string[] = []
   const currentIndexRegistry: Record<string, number> = {}
@@ -81,8 +80,10 @@ function updateComponentHierarchy(
   }
 
   function traverseFileNode(ast: ParseResult<File>, fileNode: FileNodeType, previousX: any = null) {
+    const importDeclarationsRegistry: ImportDeclarationsRegistry = {}
+
     if (!impacted.some(x => x.fileNode.address === fileNode.address)) {
-      impacted.push({ fileNode, ast })
+      impacted.push({ fileNode, ast, importDeclarationsRegistry })
     }
 
     traverse(ast, {
@@ -106,7 +107,7 @@ function updateComponentHierarchy(
           const hierarchyId = x.node.openingElement.attributes[idIndex].value.value
 
           if (hierarchyId) {
-            // console.log('-->', hierarchyId)
+            console.log('-->', hierarchyId)
 
             currentIndexRegistry[hierarchyId] = currentIndexRegistry[hierarchyId] + 1 || 0
 
@@ -146,7 +147,7 @@ function updateComponentHierarchy(
                 const fileNode = fileNodes.find(n => n.payload.path === componentNode.payload.path)
 
                 if (fileNode) {
-                  // console.log('fileNode.payload.name', fileNode.payload.name)
+                  console.log('-->', fileNode.payload.name)
 
                   traverseFileNode(fileNode.payload.ast, fileNode, x)
                 }
@@ -162,7 +163,6 @@ function updateComponentHierarchy(
   }
 
   traverseFileNode(ast, fileNode)
-  postTraverse(ast, importDeclarationsRegistry)
 
   return impacted
 }

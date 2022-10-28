@@ -1,4 +1,4 @@
-import { PropsWithChildren, memo, useMemo } from 'react'
+import { PropsWithChildren, memo, useEffect, useMemo } from 'react'
 import { Provider } from 'urql'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -12,7 +12,6 @@ import EditionContext, { EditionContextType } from '../../contexts/EditionContex
 import usePersistedState from '../../hooks/usePersistedState'
 
 import Router from './Router'
-import Overlay from './Overlay'
 
 type EcuMasterProps = PropsWithChildren<{
   mode?: string
@@ -23,15 +22,21 @@ function EcuMaster({ mode = 'production', hot = null }: EcuMasterProps) {
   const [hierarchyIds, setHierarchyIds] = usePersistedState<string[]>('ecu-hierarchyIds', [])
   const editionContextValue = useMemo<EditionContextType>(() => ({ hierarchyIds, setHierarchyIds }), [hierarchyIds, setHierarchyIds])
 
+  useEffect(() => {
+    if (hot) {
+      hot.on('vite:beforeUpdate', () => {
+        console.log('vite:beforeUpdate')
+      })
+    }
+  }, [hot])
+
   return (
     <Provider value={client}>
       <DndProvider backend={HTML5Backend}>
         <ModeContext.Provider value={mode}>
           <HotContext.Provider value={hot}>
             <EditionContext.Provider value={editionContextValue}>
-              <Router>
-                <Overlay />
-              </Router>
+              <Router />
             </EditionContext.Provider>
           </HotContext.Provider>
         </ModeContext.Provider>

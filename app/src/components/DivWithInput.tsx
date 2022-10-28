@@ -8,20 +8,20 @@ function DivWithInput(props: any) {
 
   return (
     <Div
-      key="645lZzl8u5"
-      data-ecu="WbeVv_5CWF:0"
+      key="2WLN892WFs"
+      data-ecu="SiO9EYpq_w:0"
     >
       <Div
-        key="5R8PJ6N3rz"
-        data-ecu="WbeVv_5CWF:0_0"
+        key="2y56JvYc7I"
+        data-ecu="SiO9EYpq_w:0_0"
       >
         Edit me I'm famous
       </Div>
-      <CoolDiv key="R6O5MiJb-I" />
+      <CoolDiv key="7de7S98s5J" />
       <input
         value={name}
         onChange={event => setName(event.target.value)}
-        key="tpHGFQvUbx"
+        key="eC-xTwNcZt"
       />
     </Div>
   )

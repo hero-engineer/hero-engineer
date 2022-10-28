@@ -1,11 +1,13 @@
 import { Div } from 'ecu-client'
 
 function App() {
+  console.log('__rendering App')
+
   return (
     <Div
       className="App"
-      key="Ktf6mazjMb"
-      data-ecu="fV7iUDEIi0:0"
+      key="sdH2N8APe-"
+      data-ecu="OzMzM1kRmE:0"
     >
       Edit me I'm famous!
     </Div>

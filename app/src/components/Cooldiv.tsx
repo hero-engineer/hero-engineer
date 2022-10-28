@@ -1,10 +1,12 @@
 import { Div } from 'ecu-client'
 
 function CoolDiv(props: any) {
+  console.log('__rendering CoolDiv')
+
   return (
     <Div
-      key="pZXlYS0vH"
-      data-ecu="jeJ9Hss33n:0"
+      key="jubC1thEY"
+      data-ecu="VtxidFYQt4:0"
     >
       Edit me I'm famous
     </Div>

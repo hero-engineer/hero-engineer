@@ -4,33 +4,38 @@ import CoolDiv from './CoolDiv'
 import CoolDaddy from './CoolDaddy'
 
 function MultipleDivs(props: any) {
+  console.log('__rendering MultipleDivs')
+
   return (
     <>
+      <>
+        <>
+          <CoolDiv key="QsFXqaL8Q" />
+          <CoolDiv key="PV2CIX_RGl" />
+        </>
+        <CoolDiv key="FlFGR1lY1-" />
+      </>
       <Div
-        key="7TXhXm-0fxE"
-        data-ecu="y1EwJ-WCGF:0"
+        key="_Ie_OmKd10"
+        data-ecu="4i8RUnflxL:0"
       >
         <Div
-          key="3an3ISklfLo"
-          data-ecu="y1EwJ-WCGF:0_0"
+          key="1udXRh6igG"
+          data-ecu="4i8RUnflxL:0_0"
         >
           Dear component
         </Div>
-        <CoolDaddy key="DFH_LqvIU45">
-          <Div
-            key="75KZGTMFmUj"
-            data-ecu="y1EwJ-WCGF:0_1"
-          >
-            Hello
-          </Div>
-        </CoolDaddy>
-        <CoolDaddy key="p5HrcokEY06">
+        <CoolDiv key="viiJgdoXF2" />
+        <Div
+          key="3cchQJ18G0"
+          data-ecu="4i8RUnflxL:0_1"
+        >
+          Hello
+        </Div>
+        <CoolDaddy key="u1yBgyuP8P">
           Darling
-
         </CoolDaddy>
-        <CoolDiv key="8Fsg0A3v4ZT" />
       </Div>
-      <CoolDiv key="cVt0qokIGLu" />
     </>
   )
 }

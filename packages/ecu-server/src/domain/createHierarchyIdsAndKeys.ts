@@ -28,7 +28,7 @@ function insertPropFactory(key: string, getValue: () => string) {
   }
 }
 
-async function createHierarchyIdsAndKeys(ast: ParseResult<File>, componentNode: FunctionNodeType) {
+function createHierarchyIdsAndKeys(ast: ParseResult<File>, componentNode: FunctionNodeType) {
   const cursors = [0]
   const importedEcuComponentNames: string[] = []
 

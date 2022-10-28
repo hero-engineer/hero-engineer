@@ -1,37 +1,76 @@
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { RefObject, useCallback, useContext, useEffect, useState } from 'react'
 
 import HotContext from '../contexts/HotContext'
 
-type HierarchyRegistryType = Record<string, number>
+function getHierarchyId(targetElement: HTMLElement, targetId: string) {
+  const hierarchyIdsRegistry: Record<string, number> = {}
 
-function createHierarchyId(registry: HierarchyRegistryType, prefix: string) {
-  console.log('registry', prefix, registry)
+  let currentElement = targetElement
 
-  if (!registry[prefix]) registry[prefix] = 0
+  while (currentElement) {
+    const id = currentElement.getAttribute('data-ecu')
 
-  return `${prefix}:${registry[prefix]++}`
+    if (!id) break
+
+    currentElement = currentElement.parentElement as HTMLElement
+  }
+
+  function traverse(element: HTMLElement) {
+    console.log('traverse', element)
+    const id = element.getAttribute('data-ecu')
+
+    if (id) {
+      if (typeof hierarchyIdsRegistry[id] === 'undefined') hierarchyIdsRegistry[id] = 0
+      else hierarchyIdsRegistry[id]++
+    }
+
+    if (element === targetElement) return true
+
+    for (const child of element.children) {
+      const found = traverse(child as HTMLElement)
+
+      if (found) return true
+    }
+
+    return false
+  }
+
+  console.log('currentElement', currentElement)
+
+  const found = traverse(currentElement)
+
+  console.log('hierarchyIdsRegistry', hierarchyIdsRegistry)
+
+  return found ? `${targetId}:${hierarchyIdsRegistry[targetId]}` : targetId
 }
 
-function createUseHierarchyId() {
-  const registry: HierarchyRegistryType = {}
+function useHierarchyId<T>(id: string, ref: RefObject<T>) {
+  const hot = useContext(HotContext)
+  const [hierarchyId, setHierarchyId] = useState('')
 
-  return (id: string) => {
-    const hot = useContext(HotContext)
-    const [refresh, setRefresh] = useState(false)
+  const updateHierarchyId = useCallback(() => {
+    if (!ref?.current) return
 
-    useEffect(() => {
-      if (hot) {
-        hot.on('vite:beforeUpdate', () => {
-          console.log('deleting registry', id)
-          delete registry[id]
-          setRefresh(x => !x)
-        })
-      }
-    }, [hot, id])
+    console.log('ref.current', ref.current)
+
+    setHierarchyId(getHierarchyId(ref.current as any as HTMLElement, id))
+  }, [id, ref])
+
+  useEffect(() => {
+    updateHierarchyId()
+  }, [updateHierarchyId])
+
+  useEffect(() => {
+    if (hot) {
+      hot.on('vite:beforeUpdate', () => {
+        console.log('updating registry')
+        updateHierarchyId()
+      })
+    }
+  }, [hot, updateHierarchyId])
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    return useMemo(() => createHierarchyId(registry, id), [id, refresh])
-  }
+  return hierarchyId
 }
 
-export default createUseHierarchyId()
+export default useHierarchyId

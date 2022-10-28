@@ -34,8 +34,8 @@ export const typeDefs = gql`
 
   type Mutation {
     createComponent(name: String!): Component
-    addComponent(componentId: String!, hierarchyIds: [String!]!, hierarchyPosition: ComponentHierarchyPosition!): File
-    deleteComponent(hierarchyIds: [String!]!): File
+    addComponent(sourceComponentId: String!, targetComponentId: String!, hierarchyIds: [String!]!, hierarchyPosition: ComponentHierarchyPosition!): File
+    deleteComponent(sourceComponentId: String!, hierarchyIds: [String!]!): File
   }
 `
 

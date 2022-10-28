@@ -30,16 +30,16 @@ export const CreateComponentMutation = `
 `
 
 export const AddComponentMutation = `
-  mutation ($componentId: String!, $hierarchyIds: [String!]!, $hierarchyPosition: ComponentHierarchyPosition!) {
-    addComponent (componentId: $componentId, hierarchyIds: $hierarchyIds, hierarchyPosition: $hierarchyPosition) {
+  mutation ($sourceComponentId: String!, $targetComponentId: String!, $hierarchyIds: [String!]!, $hierarchyPosition: ComponentHierarchyPosition!) {
+    addComponent (sourceComponentId: $sourceComponentId, targetComponentId: $targetComponentId, hierarchyIds: $hierarchyIds, hierarchyPosition: $hierarchyPosition) {
       id
     }
   }
 `
 
 export const DeleteComponentMutation = `
-  mutation ($hierarchyIds: [String!]!) {
-    deleteComponent (hierarchyIds: $hierarchyIds) {
+  mutation ($sourceComponentId: String!, $hierarchyIds: [String!]!) {
+    deleteComponent (sourceComponentId: $sourceComponentId, hierarchyIds: $hierarchyIds) {
       id
     }
   }

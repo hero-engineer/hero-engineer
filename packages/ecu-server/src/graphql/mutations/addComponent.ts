@@ -1,7 +1,12 @@
 import fs from 'fs'
+import path from 'path'
 
 import generate from '@babel/generator'
 import {
+  File,
+  identifier,
+  importDeclaration,
+  importDefaultSpecifier,
   jsxClosingElement,
   jsxClosingFragment,
   jsxElement,
@@ -9,43 +14,51 @@ import {
   jsxIdentifier,
   jsxOpeningElement,
   jsxOpeningFragment,
+  stringLiteral,
 } from '@babel/types'
 
-import { FileNodeType, HierarchyPositionType } from '../../types'
+import traverse from '@babel/traverse'
+
+import { ParseResult } from '@babel/parser'
+
+import { FileNodeType, FunctionNodeType, HierarchyPositionType, ImportDeclarationsRegistry } from '../../types'
 
 import graph from '../../graph'
-import { getNodeById, getNodesBySecondNeighbourg } from '../../graph/helpers'
+import { getNodeById, getNodesByFirstNeighbourg, getNodesBySecondNeighbourg } from '../../graph/helpers'
 
-import keepLastComponentOfHierarchy from '../../domain/keepLastComponentOfHierarchyIds'
 import updateComponentHierarchy from '../../domain/updateComponentHierarchy'
-import createAddMissingImportsPostTraversal from '../../domain/createAddMissingImportsPostTraversal'
 import lintCode from '../../domain/lintCode'
+import createHierarchyIdsAndKeys from '../../domain/createHierarchyIdsAndKeys'
 
 type AddComponentArgs = {
-  componentId: string
+  sourceComponentId: string
+  targetComponentId: string
   hierarchyIds: string[]
   hierarchyPosition: HierarchyPositionType
 }
 
-async function addComponent(_: any, { componentId, hierarchyIds, hierarchyPosition }: AddComponentArgs) {
+async function addComponent(_: any, { sourceComponentId, targetComponentId, hierarchyIds, hierarchyPosition }: AddComponentArgs) {
   console.log('___addComponent___')
 
-  const componentNode = getNodeById(graph, componentId)
+  const sourceComponentNode = getNodeById(graph, sourceComponentId)
 
-  if (!componentNode) {
-    throw new Error(`Component with id ${componentId} not found`)
+  if (!sourceComponentNode) {
+    throw new Error(`Component with id ${sourceComponentId} not found`)
   }
 
-  const reducedHierarchyIds = keepLastComponentOfHierarchy(hierarchyIds, hierarchyPosition === 'within' ? 1 : 2)
+  const targetComponentNode = getNodeById(graph, targetComponentId)
+
+  if (!targetComponentNode) {
+    throw new Error(`Component with id ${targetComponentId} not found`)
+  }
 
   console.log('hierarchyIds', hierarchyIds)
-  console.log('reducedHierarchy', reducedHierarchyIds)
+  // console.log('reducedHierarchy', reducedHierarchyIds)
 
-  const [functionNodeId] = reducedHierarchyIds[0].split(':')
-  const fileNode = getNodesBySecondNeighbourg<FileNodeType>(graph, functionNodeId, 'declaresFunction')[0]
+  const fileNode = getNodesBySecondNeighbourg<FileNodeType>(graph, sourceComponentNode.address, 'declaresFunction')[0]
 
   if (!fileNode) {
-    throw new Error(`File for Function with id ${functionNodeId} not found`)
+    throw new Error(`File for Function with id ${sourceComponentId} not found`)
   }
 
   function mutate(x: any, previousX: any) {
@@ -53,7 +66,7 @@ async function addComponent(_: any, { componentId, hierarchyIds, hierarchyPositi
       const finalX = previousX || x
 
       if (hierarchyPosition === 'before') {
-        let inserted: any = jsxElement(jsxOpeningElement(jsxIdentifier(componentNode.payload.name), [], true), null, [], true)
+        let inserted: any = jsxElement(jsxOpeningElement(jsxIdentifier(targetComponentNode.payload.name), [], true), null, [], true)
 
         if (finalX.parent.type !== 'JSXElement') {
           inserted = jsxFragment(jsxOpeningFragment(), jsxClosingFragment(), [inserted, finalX.node])
@@ -65,7 +78,7 @@ async function addComponent(_: any, { componentId, hierarchyIds, hierarchyPositi
         }
       }
       else if (hierarchyPosition === 'after') {
-        let inserted: any = jsxElement(jsxOpeningElement(jsxIdentifier(componentNode.payload.name), [], true), null, [], true)
+        let inserted: any = jsxElement(jsxOpeningElement(jsxIdentifier(targetComponentNode.payload.name), [], true), null, [], true)
 
         if (finalX.parent.type !== 'JSXElement') {
           inserted = jsxFragment(jsxOpeningFragment(), jsxClosingFragment(), [finalX.node, inserted])
@@ -77,17 +90,17 @@ async function addComponent(_: any, { componentId, hierarchyIds, hierarchyPositi
         }
       }
       else if (hierarchyPosition === 'within') {
-        const inserted = jsxElement(jsxOpeningElement(jsxIdentifier(componentNode.payload.name), [], true), null, [], true)
+        const inserted = jsxElement(jsxOpeningElement(jsxIdentifier(targetComponentNode.payload.name), [], true), null, [], true)
 
         finalX.node.children.push(inserted)
       }
       else if (hierarchyPosition === 'children') {
-        const inserted = jsxElement(jsxOpeningElement(jsxIdentifier(componentNode.payload.name), [], true), null, [], true)
+        const inserted = jsxElement(jsxOpeningElement(jsxIdentifier(targetComponentNode.payload.name), [], true), null, [], true)
 
         finalX.node.children.push(inserted)
       }
       else if (hierarchyPosition === 'parent') {
-        const identifier = jsxIdentifier(componentNode.payload.name)
+        const identifier = jsxIdentifier(targetComponentNode.payload.name)
         const inserted = jsxElement(jsxOpeningElement(identifier, [], false), jsxClosingElement(identifier), [finalX.node], false)
 
         finalX.replaceWith(inserted)
@@ -98,12 +111,45 @@ async function addComponent(_: any, { componentId, hierarchyIds, hierarchyPositi
     }
   }
 
-  const postTraverse = createAddMissingImportsPostTraversal(fileNode, componentNode)
+  function postTraverse(fileNode: FileNodeType, ast: ParseResult<File>, importDeclarationsRegistry: ImportDeclarationsRegistry) {
+    if (targetComponentNode.payload.path !== fileNode.payload.path) {
+      const importDeclarations = importDeclarationsRegistry[fileNode.address]
 
-  const impacted = updateComponentHierarchy(fileNode, reducedHierarchyIds, mutate, postTraverse)
+      if (!importDeclarations.length) return
 
-  await Promise.all(impacted.map(async ({ fileNode, ast }) => {
+      const relativePathBetweenModules = path.relative(path.dirname(fileNode.payload.path), path.dirname(targetComponentNode.payload.path))
+      let relativePath = path.join(relativePathBetweenModules, targetComponentNode.payload.name)
+
+      if (!relativePath.startsWith('.')) {
+        relativePath = `./${relativePath}`
+      }
+
+      if (!importDeclarations.some(x => x.value === relativePathBetweenModules && x.specifiers.some(s => s === targetComponentNode.payload.name))) {
+        traverse(ast, {
+          ImportDeclaration(path: any) {
+            path.insertBefore(importDeclaration([importDefaultSpecifier(identifier(targetComponentNode.payload.name))], stringLiteral(relativePath)))
+
+            path.stop()
+          },
+        })
+      }
+    }
+  }
+
+  const impacted = updateComponentHierarchy(fileNode, hierarchyIds, mutate)
+
+  await Promise.all(impacted.map(async ({ fileNode, ast, importDeclarationsRegistry }) => {
     console.log('impacted:', fileNode.payload.name)
+
+    postTraverse(fileNode, ast, importDeclarationsRegistry)
+
+    const componentNode = getNodesByFirstNeighbourg<FunctionNodeType>(graph, fileNode.address, 'declaresFunction')[0]
+
+    if (!componentNode) {
+      throw new Error(`Component for File with id ${fileNode.address} not found`)
+    }
+
+    createHierarchyIdsAndKeys(ast, componentNode)
 
     let { code } = generate(ast)
 
@@ -111,6 +157,9 @@ async function addComponent(_: any, { componentId, hierarchyIds, hierarchyPositi
 
     fs.writeFileSync(fileNode.payload.path, code, 'utf-8')
   }))
+  .catch(error => {
+    console.error(error)
+  })
 
   return { id: 0 }
 }

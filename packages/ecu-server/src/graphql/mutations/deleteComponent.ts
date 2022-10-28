@@ -1,42 +1,71 @@
 import fs from 'fs'
 
+import {
+  File,
+  ImportDefaultSpecifier,
+  ImportNamespaceSpecifier,
+  ImportSpecifier,
+} from '@babel/types'
+import { ParseResult } from '@babel/parser'
+import traverse from '@babel/traverse'
 import generate from '@babel/generator'
 
 import { FileNodeType } from '../../types'
 
 import graph from '../../graph'
-import { getNodesBySecondNeighbourg } from '../../graph/helpers'
+import { getNodeById, getNodesBySecondNeighbourg } from '../../graph/helpers'
 
 import updateComponentHierarchy from '../../domain/updateComponentHierarchy'
-import createRemoveUnusedImportsPostTraversal from '../../domain/createRemoveUnusedImportsPostTraversal'
 import lintCode from '../../domain/lintCode'
 
 type DeleteComponentArgs = {
+  sourceComponentId: string
   hierarchyIds: string[]
 }
 
-async function deleteComponent(_: any, { hierarchyIds }: DeleteComponentArgs) {
+async function deleteComponent(_: any, { sourceComponentId, hierarchyIds }: DeleteComponentArgs) {
   console.log('___deleteComponent___')
 
-  // const reducedHierarchyIds = keepLastComponentOfHierarchy(hierarchyIds, 2)
-  const [functionNodeId] = hierarchyIds[0].split(':')
+  const componentNode = getNodeById(graph, sourceComponentId)
 
-  const fileNode = getNodesBySecondNeighbourg<FileNodeType>(graph, functionNodeId, 'declaresFunction')[0]
+  if (!componentNode) {
+    throw new Error(`File for Function with id ${sourceComponentId} not found`)
+  }
+
+  const fileNode = getNodesBySecondNeighbourg<FileNodeType>(graph, componentNode.address, 'declaresFunction')[0]
 
   if (!fileNode) {
-    throw new Error(`File for Function with id ${functionNodeId} not found`)
+    throw new Error(`File for Function with id ${sourceComponentId} not found`)
   }
 
   function mutate(x: any, previousX: any) {
     (previousX || x).remove()
   }
 
-  const postTraverse = createRemoveUnusedImportsPostTraversal()
+  function postTraverse(ast: ParseResult<File>) {
+    const identifierNames: string[] = []
 
-  const impacted = updateComponentHierarchy(fileNode, hierarchyIds, mutate, postTraverse)
+    traverse(ast, {
+      JSXIdentifier(path: any) {
+        identifierNames.push(path.node.name)
+      },
+    })
+
+    traverse(ast, {
+      ImportDeclaration(path: any) {
+        if (path.node.specifiers.some((s: ImportSpecifier | ImportDefaultSpecifier | ImportNamespaceSpecifier) => identifierNames.includes(s.local.name))) return
+
+        path.remove()
+      },
+    })
+  }
+
+  const impacted = updateComponentHierarchy(fileNode, hierarchyIds, mutate)
 
   await Promise.all(impacted.map(async ({ fileNode, ast }) => {
     console.log('impacted:', fileNode.payload.name)
+
+    postTraverse(ast)
 
     let { code } = generate(ast)
 

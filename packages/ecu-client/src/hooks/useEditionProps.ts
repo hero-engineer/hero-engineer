@@ -4,6 +4,7 @@ import { useDrag, useDrop } from 'react-dnd'
 import EditionContext from '../contexts/EditionContext'
 
 import useForkedRef from './useForkedRef'
+import useHierarchyId from './useHierarchyId'
 
 type DropResult = {
   hierarchyIds: string[]
@@ -19,7 +20,7 @@ function getHierarchyIds(element: EventTarget | HTMLElement) {
   let currentElement = element as HTMLElement | null
 
   while (currentElement) {
-    const id = currentElement.getAttribute('data-ecu')
+    const id = currentElement.getAttribute('data-ecu-hierarchy')
 
     if (!id) break
 
@@ -30,8 +31,9 @@ function getHierarchyIds(element: EventTarget | HTMLElement) {
   return hierarchyIds.reverse()
 }
 
-function useEditionProps<T>(hierarchyId: string) {
+function useEditionProps<T>(id: string) {
   const rootRef = useRef<T>(null)
+  const hierarchyId = useHierarchyId(id, rootRef)
   const { hierarchyIds, setHierarchyIds } = useContext(EditionContext)
   // const [hasDropped, setHasDropped] = useState(false)
   const [{ isDragging }, drag] = useDrag(() => ({
@@ -92,6 +94,7 @@ function useEditionProps<T>(hierarchyId: string) {
 
   return {
     ref,
+    hierarchyId,
     onClick: handleClick,
     style: {
       userSelect: 'none' as any,
