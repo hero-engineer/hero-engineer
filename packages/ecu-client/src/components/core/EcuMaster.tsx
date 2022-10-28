@@ -1,4 +1,4 @@
-import { PropsWithChildren, memo, useEffect, useMemo } from 'react'
+import { PropsWithChildren, memo, useMemo, useState } from 'react'
 import { Provider } from 'urql'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -7,7 +7,7 @@ import client from '../../client'
 
 import ModeContext from '../../contexts/ModeContext'
 import HotContext from '../../contexts/HotContext'
-import EditionContext, { EditionContextType } from '../../contexts/EditionContext'
+import EditionContext, { DragHierarchyPositionType, EditionContextType } from '../../contexts/EditionContext'
 
 import usePersistedState from '../../hooks/usePersistedState'
 
@@ -20,15 +20,8 @@ type EcuMasterProps = PropsWithChildren<{
 
 function EcuMaster({ mode = 'production', hot = null }: EcuMasterProps) {
   const [hierarchyIds, setHierarchyIds] = usePersistedState<string[]>('ecu-hierarchyIds', [])
-  const editionContextValue = useMemo<EditionContextType>(() => ({ hierarchyIds, setHierarchyIds }), [hierarchyIds, setHierarchyIds])
-
-  useEffect(() => {
-    if (hot) {
-      hot.on('vite:beforeUpdate', () => {
-        console.log('vite:beforeUpdate')
-      })
-    }
-  }, [hot])
+  const [dragHierarchyPosition, setDragHierarchyPosition] = useState<DragHierarchyPositionType>(null)
+  const editionContextValue = useMemo<EditionContextType>(() => ({ hierarchyIds, setHierarchyIds, dragHierarchyPosition, setDragHierarchyPosition }), [hierarchyIds, setHierarchyIds, dragHierarchyPosition])
 
   return (
     <Provider value={client}>

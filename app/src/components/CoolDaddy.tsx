@@ -1,7 +1,5 @@
 import { Div } from 'ecu-client'
 
-import CoolDiv from './CoolDiv'
-
 function CoolDaddy({
   children,
 }: any) {
@@ -9,7 +7,7 @@ function CoolDaddy({
 
   return (
     <Div
-      key="chcuCg9kcW"
+      key="ly2Qd0L-AG"
       data-ecu="7nnNSltGVS:0"
     >
       I'm a cool daddy look at me

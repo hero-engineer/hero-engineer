@@ -1,6 +1,8 @@
 import { MouseEvent, Ref, useCallback, useContext, useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 
+import classes from '../css/edition.module.css'
+
 import EditionContext from '../contexts/EditionContext'
 
 import useForkedRef from './useForkedRef'
@@ -8,10 +10,6 @@ import useHierarchyId from './useHierarchyId'
 
 type DropResult = {
   hierarchyIds: string[]
-}
-
-const selectionStyles = {
-  outline: '1px solid lightblue',
 }
 
 function getHierarchyIds(element: EventTarget | HTMLElement) {
@@ -31,11 +29,11 @@ function getHierarchyIds(element: EventTarget | HTMLElement) {
   return hierarchyIds.reverse()
 }
 
-function useEditionProps<T>(id: string) {
+function useEditionProps<T>(id: string, className = '') {
   const rootRef = useRef<T>(null)
   const hierarchyId = useHierarchyId(id, rootRef)
-  const { hierarchyIds, setHierarchyIds } = useContext(EditionContext)
-  // const [hasDropped, setHasDropped] = useState(false)
+  const { hierarchyIds, setHierarchyIds, dragHierarchyPosition, setDragHierarchyPosition } = useContext(EditionContext)
+
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'Node',
     item: () => ({ hierarchyIds: getHierarchyIds(rootRef.current as HTMLElement) }),
@@ -43,14 +41,15 @@ function useEditionProps<T>(id: string) {
       const dropResult = monitor.getDropResult<DropResult>()
 
       if (item && dropResult) {
-        alert(`You dropped ${item.hierarchyIds} into ${dropResult.hierarchyIds}!`)
+        alert(`You dropped ${item.hierarchyIds} into ${dropResult.hierarchyIds}! ${dragHierarchyPosition}`)
       }
     },
     collect: monitor => ({
       isDragging: monitor.isDragging(),
       handlerId: monitor.getHandlerId(),
     }),
-  }))
+  }), [dragHierarchyPosition])
+
   const [{ canDrop, isOverCurrent }, drop] = useDrop(() => ({
     accept: 'Node',
     drop: (_item, monitor) => {
@@ -64,7 +63,18 @@ function useEditionProps<T>(id: string) {
       isOverCurrent: monitor.isOver({ shallow: true }),
       canDrop: monitor.canDrop(),
     }),
-  }))
+    hover: (_item: any, monitor) => {
+      const mouse = monitor.getClientOffset()
+
+      if (!mouse) return
+
+      const rect = (rootRef.current as HTMLElement)?.getBoundingClientRect()
+
+      if (!rect) return
+
+      setDragHierarchyPosition(mouse.y - rect.top < rect.height / 3 ? 'before' : mouse.y - rect.top > 2 * rect.height / 3 ? 'after' : 'within')
+    },
+  }), [setDragHierarchyPosition])
 
   const ref = useForkedRef(rootRef, useForkedRef(drag, drop)) as Ref<T>
 
@@ -92,16 +102,39 @@ function useEditionProps<T>(id: string) {
     })
   }, [setHierarchyIds])
 
+  const generateClassName = useCallback(() => {
+    let klassName = className
+
+    if (hierarchyIds[hierarchyIds.length - 1] === hierarchyId) {
+      klassName += ` ${classes.ecuSelected}`
+    }
+
+    if (isDragging) {
+      klassName += ` ${classes.ecuDragDragging}`
+    }
+
+    if (canDrop && isOverCurrent) {
+      klassName += ` ${classes.ecuDragOver}`
+
+      if (dragHierarchyPosition === 'before') {
+        klassName += ` ${classes.ecuDragBefore}`
+      }
+      else if (dragHierarchyPosition === 'after') {
+        klassName += ` ${classes.ecuDragAfter}`
+      }
+      else if (dragHierarchyPosition === 'within') {
+        klassName += ` ${classes.ecuDragWithin}`
+      }
+    }
+
+    return klassName.trim()
+  }, [className, hierarchyIds, hierarchyId, isDragging, canDrop, isOverCurrent, dragHierarchyPosition])
+
   return {
     ref,
     hierarchyId,
     onClick: handleClick,
-    style: {
-      userSelect: 'none' as any,
-      ...(hierarchyIds[hierarchyIds.length - 1] === hierarchyId ? selectionStyles : {}),
-      ...(isDragging ? { opacity: 0.5 } : {}),
-      ...(canDrop && isOverCurrent ? { backgroundColor: 'lightgreen' } : {}),
-    },
+    className: generateClassName(),
   }
 }
 

@@ -10,16 +10,21 @@ type DivProps = PropsWithChildren<{
 
 // TODO use a preprocessor before production build to replace Div with a regular Div
 function DivRef({ 'data-ecu': ecuId, className, children }: DivProps, ref: Ref<any>) {
-  const { ref: editionRef, hierarchyId, ...editionProps } = useEditionProps<HTMLDivElement>(ecuId)
+  const {
+    ref: editionRef,
+    className: editionClassName,
+    hierarchyId,
+    onClick,
+  } = useEditionProps<HTMLDivElement>(ecuId, className)
   const finalRef = useForkedRef(ref, editionRef)
 
   return (
     <div
       ref={finalRef}
-      className={className}
+      className={editionClassName}
       data-ecu={ecuId}
       data-ecu-hierarchy={hierarchyId}
-      {...editionProps}
+      onClick={onClick}
     >
       {children}
     </div>
