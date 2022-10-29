@@ -17,7 +17,6 @@ import DragAndDropContext, { DragAndDropContextType, DragAndDropType } from '../
 import usePersistedState from '../../hooks/usePersistedState'
 
 import Router from './Router'
-import DragAndDropEndModal from './DragAndDropEndModal'
 
 type EcuMasterProps = PropsWithChildren<{
   mode?: string
@@ -41,7 +40,6 @@ function EcuMaster({ mode = 'production', hot = null }: EcuMasterProps) {
               <EditionContext.Provider value={editionContextValue}>
                 <DragAndDropContext.Provider value={dragAndDropContextValue}>
                   <Router />
-                  <DragAndDropEndModal />
                 </DragAndDropContext.Provider>
               </EditionContext.Provider>
             </HotContext.Provider>

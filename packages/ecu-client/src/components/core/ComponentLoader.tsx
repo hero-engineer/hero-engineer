@@ -1,6 +1,6 @@
 import { Suspense, lazy, memo } from 'react'
 
-function ComponentEditor({ component }: any) {
+function ComponentLoader({ component }: any) {
   const Component = lazy(() => import(/* @vite-ignore */ /* webpackIgnore: true */ component.payload.path))
 
   return (
@@ -10,4 +10,4 @@ function ComponentEditor({ component }: any) {
   )
 }
 
-export default memo(ComponentEditor)
+export default memo(ComponentLoader)

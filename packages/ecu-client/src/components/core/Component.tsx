@@ -5,7 +5,8 @@ import { Div, H2, P } from 'honorable'
 
 import { ComponentQuery } from '../../queries'
 
-import ComponentEditor from './ComponentEditor'
+import ComponentLoader from './ComponentLoader'
+import DragAndDropEndModal from './DragAndDropEndModal'
 
 function Component() {
   const { id } = useParams()
@@ -33,8 +34,9 @@ function Component() {
       <H2 mt={2}>{component.payload.name}</H2>
       <P>{component.payload.relativePath}</P>
       <Div mt={2}>
-        <ComponentEditor component={component} />
+        <ComponentLoader component={component} />
       </Div>
+      <DragAndDropEndModal />
     </>
   )
 }
