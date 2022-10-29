@@ -15,17 +15,14 @@ function MultipleDivs(props: any) {
             <CoolDiv />
             <CoolDiv />
           </>
-          <>
-            <CoolDiv />
-            <CoolDiv />
-          </>
+          <CoolDiv />
         </>
       </>
-      <Div data-ecu="XCMFz3-v44:0">
-        <Div data-ecu="XCMFz3-v44:0_0">
+      <Div data-ecu="7Uu1Bmr60c:0">
+        <Div data-ecu="7Uu1Bmr60c:0_0">
           Dear component
         </Div>
-        <Div data-ecu="XCMFz3-v44:0_1">
+        <Div data-ecu="7Uu1Bmr60c:0_1">
           Hello
         </Div>
         <CoolDiv />
