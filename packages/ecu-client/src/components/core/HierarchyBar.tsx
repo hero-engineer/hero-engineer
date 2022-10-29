@@ -1,6 +1,7 @@
 import { memo, useContext } from 'react'
 import { useParams } from 'react-router-dom'
 import { useQuery } from 'urql'
+import { Div } from 'honorable'
 
 import EditionContext from '../../contexts/EditionContext'
 
@@ -32,7 +33,18 @@ function HierarchyBar() {
   console.log('hierarchyIds', hierarchyIds)
   console.log('hierarchyQueryResult', hierarchyQueryResult.data.hierarchy)
 
-  return null
+  return (
+    <Div
+      xflex="x4"
+      gap={0.5}
+    >
+      {(hierarchyQueryResult.data.hierarchy as any[]).map(({ label, componentId }, i) => (
+        <Div key={i}>
+          {label}
+        </Div>
+      ))}
+    </Div>
+  )
 }
 
 export default memo(HierarchyBar)
