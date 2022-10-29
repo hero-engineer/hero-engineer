@@ -64,6 +64,7 @@ async function deleteComponent(_: any, { sourceComponentId, hierarchyIds }: Dele
     console.log('impacted:', fileNode.payload.name)
 
     postTraverse(ast)
+
     const regenerated = await regenerate(fileNode, ast)
 
     if (regenerated) {
