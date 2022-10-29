@@ -1,22 +1,23 @@
-import { FileNodeType, FunctionNodeType, GraphType } from '../types'
+import { FileNodeType, FunctionNodeType } from '../types'
 
-import { getNodesByRole, getNodesBySecondNeighbourg } from '../graph/helpers'
+import { getNodesByRole, getNodesBySecondNeighbourg } from '../graph'
 
 import createHierarchyIdsAndKeys from '../domain/createDataEcuAttributes'
 import regenerate from '../domain/regenerate'
 
-async function createDataEcuAttributesWatcher(graph: GraphType) {
-  const componentNodes = getNodesByRole<FunctionNodeType>(graph, 'Function').filter(node => node.payload.isComponent)
+async function createDataEcuAttributesWatcher() {
+  const componentNodes = getNodesByRole<FunctionNodeType>('Function').filter(node => node.payload.isComponent)
 
   await Promise.all(componentNodes.map(async componentNode => {
-    const fileNode = getNodesBySecondNeighbourg<FileNodeType>(graph, componentNode.address, 'declaresFunction')[0]
+    const fileNode = getNodesBySecondNeighbourg<FileNodeType>(componentNode.address, 'declaresFunction')[0]
 
     if (!fileNode) return
 
     const { ast } = fileNode.payload
 
     createHierarchyIdsAndKeys(componentNode, ast)
-    regenerate(fileNode, ast)
+
+    await regenerate(fileNode, ast)
   }))
 }
 

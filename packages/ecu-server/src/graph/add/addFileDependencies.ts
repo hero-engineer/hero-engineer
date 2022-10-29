@@ -4,13 +4,15 @@ import traverse from '@babel/traverse'
 import shortId from 'shortid'
 
 import { appPath } from '../../configuration'
-import { FileNodeType, FunctionNodeType, GraphType } from '../../types'
+import { FileNodeType } from '../../types'
 
-import { addEdge, addNode, getNodesByRole } from '../helpers'
+import { addEdge, addNode, getNodesByRole } from '..'
+import createFunctionNode from '../models/createFunctionNode'
 
-function addFileDependencies(graph: GraphType, fileNode: FileNodeType) {
-  const fileNodes = getNodesByRole(graph, 'File')
+function addFileDependencies(fileNode: FileNodeType) {
   const { ast } = fileNode.payload
+  const fileNodes = getNodesByRole('File')
+
   /* ---
     IMPORTS
   --- */
@@ -25,11 +27,11 @@ function addFileDependencies(graph: GraphType, fileNode: FileNodeType) {
         const dependency = fileNodes.find(n => n.payload.relativePath === relativePath)
 
         if (dependency) {
-          addEdge(graph, [fileNode.address, 'importsFile', dependency.address])
+          addEdge([fileNode.address, 'importsFile', dependency.address])
         }
       }
       else {
-        addEdge(graph, [fileNode.address, 'importsModule', value])
+        addEdge([fileNode.address, 'importsModule', value])
       }
     },
   })
@@ -40,7 +42,7 @@ function addFileDependencies(graph: GraphType, fileNode: FileNodeType) {
 
   traverse(ast, {
     FunctionDeclaration(path) {
-      const functionNode: FunctionNodeType = {
+      const functionNode = createFunctionNode({
         address: shortId(),
         role: 'Function',
         state: null,
@@ -51,7 +53,7 @@ function addFileDependencies(graph: GraphType, fileNode: FileNodeType) {
           relativePath: fileNode.payload.relativePath,
           exportType: 'none',
         },
-      }
+      })
 
       let isWithinReturnStatement = false
 
@@ -68,8 +70,8 @@ function addFileDependencies(graph: GraphType, fileNode: FileNodeType) {
         },
       }, path.scope, path)
 
-      addNode(graph, functionNode)
-      addEdge(graph, [fileNode.address, 'declaresFunction', functionNode.address])
+      addNode(functionNode)
+      addEdge([fileNode.address, 'declaresFunction', functionNode.address])
     },
   })
 
@@ -99,7 +101,7 @@ function addFileDependencies(graph: GraphType, fileNode: FileNodeType) {
         }
       }
 
-      const functionNode = getNodesByRole(graph, 'Function').find(n => n.payload.name === name && n.payload.path === fileNode.payload.path)
+      const functionNode = getNodesByRole('Function').find(n => n.payload.name === name && n.payload.path === fileNode.payload.path)
 
       if (functionNode) {
         functionNode.payload.exportType = type === 'ExportDefaultDeclaration' ? 'default' : 'named'

@@ -21,6 +21,7 @@
     "apollo-server": "^3.10.3",
     "ecu-particule": "^4.0.1",
     "eslint": "^8.26.0",
+    "folder-hash": "^4.0.2",
     "lodash": "^4.17.21",
     "shortid": "^2.2.16"
   },
@@ -29,6 +30,7 @@
     "@types/babel__generator": "^7.6.4",
     "@types/babel__traverse": "^7.18.2",
     "@types/eslint": "^8.4.8",
+    "@types/folder-hash": "^4.0.2",
     "@types/lodash": "^4.14.186",
     "@types/shortid": "^0.0.29",
     "nodemon": "^2.0.20",

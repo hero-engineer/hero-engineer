@@ -6,10 +6,10 @@ import { appPath } from '../../configuration'
 
 import createComponentTemplate from '../../templates/Component'
 
-import graph from '../../graph'
-import { getNodesByFirstNeighbourg } from '../../graph/helpers'
+import { getNodesByFirstNeighbourg } from '../../graph'
 import addFile from '../../graph/add/addFile'
 import addFileDependencies from '../../graph/add/addFileDependencies'
+import updateGraphHash from '../../graph/hash/updateGraphHash'
 
 import createDataEcuAttributes from '../../domain/createDataEcuAttributes'
 import regenerate from '../../domain/regenerate'
@@ -29,15 +29,16 @@ async function createComponent(_: any, { name }: CreateComponentArgs): Promise<F
 
   fs.writeFileSync(filePath, code, 'utf-8')
 
-  const fileNode = addFile(graph, filePath)
+  const fileNode = addFile(filePath)
 
-  addFileDependencies(graph, fileNode)
+  addFileDependencies(fileNode)
 
-  const componentNode = getNodesByFirstNeighbourg<FunctionNodeType>(graph, fileNode.address, 'declaresFunction')[0]
+  const componentNode = getNodesByFirstNeighbourg<FunctionNodeType>(fileNode.address, 'declaresFunction')[0]
 
   const ast = createDataEcuAttributes(componentNode, fileNode.payload.ast)
 
   await regenerate(fileNode, ast)
+  await updateGraphHash()
 
   return componentNode
 }

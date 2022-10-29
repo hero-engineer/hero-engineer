@@ -1,17 +1,27 @@
-import { GraphType } from '../../types'
-
 import createDataEcuAttributesWatcher from '../../watchers/createDataEcuAttributesWatcher'
+
+import { deleteGraph } from '..'
+import { getGraph } from '../getset'
+import getAppHash from '../hash/getAppHash'
+
+import updateGraphHash from '../hash/updateGraphHash'
 
 import buildFilesGraph from './buildFilesGraph'
 
-async function buildGraph(graph: GraphType) {
-  buildFilesGraph(graph)
+async function buildGraph() {
+  const hash = await getAppHash()
 
-  await createDataEcuAttributesWatcher(graph)
+  if (getGraph().hash !== hash) {
+    console.log('App hash has changed, rebuilding graph')
 
-  console.log('graph', Object.keys(graph.nodes).length)
+    deleteGraph()
+    buildFilesGraph()
 
-  return graph
+    await createDataEcuAttributesWatcher()
+    await updateGraphHash()
+  }
+
+  console.log('graph', Object.keys(getGraph().nodes).length)
 }
 
 export default buildGraph

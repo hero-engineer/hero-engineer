@@ -2,11 +2,10 @@ import { ApolloServer } from 'apollo-server'
 
 import { resolvers, typeDefs } from './graphql'
 
-import graph from './graph'
 import buildGraph from './graph/build'
 
 async function main() {
-  await buildGraph(graph)
+  await buildGraph()
 
   const server = new ApolloServer({
     typeDefs,

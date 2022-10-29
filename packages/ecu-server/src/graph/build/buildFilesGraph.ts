@@ -1,30 +1,29 @@
 import fs from 'fs'
 import path from 'path'
 
-import { GraphType } from '../../types'
 import { appPath } from '../../configuration'
 
 import addFile from '../add/addFile'
 import addFileDependencies from '../add/addFileDependencies'
-import { getNodesByRole } from '../helpers'
+import { getNodesByRole } from '..'
 
-function buildFilesGraph(graph: GraphType) {
-  traverseDirectories(graph, appPath)
+function buildFilesGraph() {
+  traverseDirectories(appPath)
 
-  getNodesByRole(graph, 'File').forEach(fileNode => {
-    addFileDependencies(graph, fileNode)
+  getNodesByRole('File').forEach(fileNode => {
+    addFileDependencies(fileNode)
   })
 }
 
-function traverseDirectories(graph: GraphType, rootPath: string) {
+function traverseDirectories(rootPath: string) {
   fs.readdirSync(rootPath).forEach(fileName => {
     const filePath = path.join(rootPath, fileName)
 
     if (fs.statSync(filePath).isDirectory() && fileName !== 'node_modules') {
-      traverseDirectories(graph, filePath)
+      traverseDirectories(filePath)
     }
     else if (fileName.endsWith('.ts') || fileName.endsWith('.tsx')) {
-      addFile(graph, filePath)
+      addFile(filePath)
     }
   })
 }

@@ -14,8 +14,7 @@ import { ParseResult } from '@babel/parser'
 import { FileNodeType, FunctionNodeType, ImportDeclarationsRegistry } from '../types'
 import { ecuPropName } from '../configuration'
 
-import graph from '../graph'
-import { getNodesByRole } from '../graph/helpers'
+import { getNodesByRole } from '../graph'
 
 import areArraysEqual from '../utils/areArraysEqual'
 import areArraysEqualAtStart from '../utils/areArraysEqualAtStart'
@@ -37,8 +36,8 @@ function updateComponentHierarchy(
   console.log('updateComponentHierarchy', fileNode.payload.name, hierarchyIds)
 
   const { ast } = fileNode.payload
-  const componentNodes = getNodesByRole<FunctionNodeType>(graph, 'Function').filter(n => n.payload.isComponent)
-  const fileNodes = getNodesByRole<FileNodeType>(graph, 'File')
+  const componentNodes = getNodesByRole<FunctionNodeType>('Function').filter(n => n.payload.isComponent)
+  const fileNodes = getNodesByRole<FileNodeType>('File')
   const [ids, indexes] = extractIdsAndIndexes(hierarchyIds)
   const currentHierarchyIds: string[] = []
   const currentIndexRegistry: Record<string, number> = {}

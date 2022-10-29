@@ -11,9 +11,7 @@ import traverse from '@babel/traverse'
 import { ecuPropName } from '../configuration'
 import { FileNodeType, FunctionNodeType, ImportDeclarationsRegistry } from '../types'
 
-import graph from '../graph'
-import { getNodeByAddress, getNodesByRole, getNodesBySecondNeighbourg } from '../graph/helpers'
-
+import { getNodeByAddress, getNodesByRole, getNodesBySecondNeighbourg } from '../graph'
 import areArraysEqual from '../utils/areArraysEqual'
 import areArraysEqualAtStart from '../utils/areArraysEqualAtStart'
 import possiblyAddExtension from '../utils/possiblyAddExtension'
@@ -37,7 +35,7 @@ function getComponentHierarchy(sourceComponentId: string, hierarchyIds: string[]
     return []
   }
 
-  const componentNode = getNodeByAddress<FunctionNodeType>(graph, sourceComponentId)
+  const componentNode = getNodeByAddress<FunctionNodeType>(sourceComponentId)
 
   if (!componentNode) {
     console.log(`Component node with id ${sourceComponentId} not found`)
@@ -45,7 +43,7 @@ function getComponentHierarchy(sourceComponentId: string, hierarchyIds: string[]
     return []
   }
 
-  const fileNode = getNodesBySecondNeighbourg<FileNodeType>(graph, componentNode.address, 'declaresFunction')[0]
+  const fileNode = getNodesBySecondNeighbourg<FileNodeType>(componentNode.address, 'declaresFunction')[0]
 
   if (!fileNode) {
     console.log(`Function for component node with id ${sourceComponentId} not found`)
@@ -54,8 +52,8 @@ function getComponentHierarchy(sourceComponentId: string, hierarchyIds: string[]
   }
 
   const hierarchy: HierarchyItem[] = [] // retval
-  const fileNodes = getNodesByRole<FileNodeType>(graph, 'File')
-  const componentNodes = getNodesByRole<FunctionNodeType>(graph, 'Function').filter(n => n.payload.isComponent)
+  const fileNodes = getNodesByRole<FileNodeType>('File')
+  const componentNodes = getNodesByRole<FunctionNodeType>('Function').filter(n => n.payload.isComponent)
   const [ids, indexes] = extractIdsAndIndexes(hierarchyIds)
   const currentHierarchyIds: string[] = []
   const lastingIndexRegistry: IndexRegistry = {}

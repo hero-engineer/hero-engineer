@@ -1,10 +1,9 @@
 import { FunctionNodeType } from '../../types'
 
-import graph from '../../graph'
-import { getNodesByRole } from '../../graph/helpers'
+import { getNodesByRole } from '../../graph'
 
 function getComponents() {
-  return getNodesByRole<FunctionNodeType>(graph, 'Function').filter(node => node.payload.isComponent)
+  return getNodesByRole<FunctionNodeType>('Function').filter(node => node.payload.isComponent)
 }
 
 export default getComponents

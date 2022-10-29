@@ -13,7 +13,7 @@ async function regenerate(fileNode: FileNodeType, ast: ParseResult<File>) {
 
   code = await lintCode(code)
 
-  if (code === fileNode.payload.text) return false
+  if (code === fileNode.payload.code) return false
 
   fs.writeFileSync(fileNode.payload.path, code, 'utf-8')
 

@@ -1,21 +1,19 @@
-import fs from 'fs'
 import path from 'path'
 
-import { parse } from '@babel/parser'
 import shortId from 'shortid'
 
 import { appPath } from '../../configuration'
-import { FileNodeType, GraphType } from '../../types'
 
-import { addNode } from '../helpers'
+import { addNode } from '..'
+import createFileNode from '../models/createFileNode'
 
-function addFile(graph: GraphType, filePath: string) {
+function addFile(filePath: string) {
   const relativePath = path.relative(appPath, filePath)
   const nameArray = path.basename(filePath).split('.')
   const extension = nameArray.pop() || ''
   const name = nameArray.join('.')
 
-  const fileNode: FileNodeType = {
+  const fileNode = createFileNode({
     address: shortId(),
     role: 'File',
     state: null,
@@ -24,22 +22,10 @@ function addFile(graph: GraphType, filePath: string) {
       extension,
       path: filePath,
       relativePath,
-      get text() {
-        return fs.readFileSync(filePath, 'utf8')
-      },
-      get ast() {
-        return parse(
-          this.text,
-          {
-            sourceType: 'module',
-            plugins: ['jsx', 'typescript'],
-          }
-        )
-      },
     },
-  }
+  })
 
-  addNode(graph, fileNode)
+  addNode(fileNode)
 
   return fileNode
 }

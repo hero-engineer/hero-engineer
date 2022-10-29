@@ -21,8 +21,8 @@ import { ParseResult } from '@babel/parser'
 
 import { FileNodeType, FunctionNodeType, HierarchyPositionType, ImportDeclarationsRegistry } from '../../types'
 
-import graph from '../../graph'
-import { getNodeById, getNodesByFirstNeighbourg, getNodesBySecondNeighbourg } from '../../graph/helpers'
+import { getNodeByAddress, getNodesByFirstNeighbourg, getNodesBySecondNeighbourg } from '../../graph'
+import updateGraphHash from '../../graph/hash/updateGraphHash'
 
 import updateComponentHierarchy from '../../domain/updateComponentHierarchy'
 import createHierarchyIdsAndKeys from '../../domain/createDataEcuAttributes'
@@ -38,13 +38,13 @@ type AddComponentArgs = {
 async function addComponent(_: any, { sourceComponentId, targetComponentId, hierarchyIds, hierarchyPosition }: AddComponentArgs): Promise<FunctionNodeType | null> {
   console.log('___addComponent___')
 
-  const sourceComponentNode = getNodeById(graph, sourceComponentId)
+  const sourceComponentNode = getNodeByAddress(sourceComponentId)
 
   if (!sourceComponentNode) {
     throw new Error(`Component with id ${sourceComponentId} not found`)
   }
 
-  const targetComponentNode = getNodeById(graph, targetComponentId)
+  const targetComponentNode = getNodeByAddress(targetComponentId)
 
   if (!targetComponentNode) {
     throw new Error(`Component with id ${targetComponentId} not found`)
@@ -53,7 +53,7 @@ async function addComponent(_: any, { sourceComponentId, targetComponentId, hier
   console.log('hierarchyIds', hierarchyIds)
   // console.log('reducedHierarchy', reducedHierarchyIds)
 
-  const fileNode = getNodesBySecondNeighbourg<FileNodeType>(graph, sourceComponentNode.address, 'declaresFunction')[0]
+  const fileNode = getNodesBySecondNeighbourg<FileNodeType>(sourceComponentNode.address, 'declaresFunction')[0]
 
   if (!fileNode) {
     throw new Error(`File for Function with id ${sourceComponentId} not found`)
@@ -142,7 +142,7 @@ async function addComponent(_: any, { sourceComponentId, targetComponentId, hier
 
     postTraverse(fileNode, ast, importDeclarationsRegistry)
 
-    const componentNode = getNodesByFirstNeighbourg<FunctionNodeType>(graph, fileNode.address, 'declaresFunction')[0]
+    const componentNode = getNodesByFirstNeighbourg<FunctionNodeType>(fileNode.address, 'declaresFunction')[0]
 
     if (!componentNode) return
 
@@ -157,6 +157,8 @@ async function addComponent(_: any, { sourceComponentId, targetComponentId, hier
   .catch(error => {
     console.error(error)
   })
+
+  await updateGraphHash()
 
   return impactedComponentNode
 }

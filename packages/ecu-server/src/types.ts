@@ -17,6 +17,7 @@ export type GraphNodeType = Particule
 export type GraphEdgeType = [GraphNodeType['address'], GraphNodeType['address'], GraphNodeType['address']]
 
 export type GraphType = {
+  hash: string
   nodes: Record<string, GraphNodeType>
   edges: Array<GraphEdgeType>
 }
@@ -28,7 +29,7 @@ export type FileNodePayloadType = {
   extension: string
   path: string
   relativePath: string
-  text: string
+  code: string
   ast: ParseResult<File>
 }
 

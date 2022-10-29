@@ -9,8 +9,8 @@ import traverse from '@babel/traverse'
 
 import { FileNodeType, FunctionNodeType } from '../../types'
 
-import graph from '../../graph'
-import { getNodeById, getNodesByFirstNeighbourg, getNodesBySecondNeighbourg } from '../../graph/helpers'
+import { getNodeByAddress, getNodesByFirstNeighbourg, getNodesBySecondNeighbourg } from '../../graph'
+import updateGraphHash from '../../graph/hash/updateGraphHash'
 
 import updateComponentHierarchy from '../../domain/updateComponentHierarchy'
 import regenerate from '../../domain/regenerate'
@@ -23,13 +23,13 @@ type DeleteComponentArgs = {
 async function deleteComponent(_: any, { sourceComponentId, hierarchyIds }: DeleteComponentArgs): Promise<FunctionNodeType | null> {
   console.log('___deleteComponent___')
 
-  const componentNode = getNodeById(graph, sourceComponentId)
+  const componentNode = getNodeByAddress(sourceComponentId)
 
   if (!componentNode) {
     throw new Error(`File for Function with id ${sourceComponentId} not found`)
   }
 
-  const fileNode = getNodesBySecondNeighbourg<FileNodeType>(graph, componentNode.address, 'declaresFunction')[0]
+  const fileNode = getNodesBySecondNeighbourg<FileNodeType>(componentNode.address, 'declaresFunction')[0]
 
   if (!fileNode) {
     throw new Error(`File for Function with id ${sourceComponentId} not found`)
@@ -67,9 +67,11 @@ async function deleteComponent(_: any, { sourceComponentId, hierarchyIds }: Dele
     const regenerated = await regenerate(fileNode, ast)
 
     if (regenerated) {
-      impactedComponentNode = getNodesByFirstNeighbourg<FunctionNodeType>(graph, fileNode.address, 'declaresFunction')[0] || null
+      impactedComponentNode = getNodesByFirstNeighbourg<FunctionNodeType>(fileNode.address, 'declaresFunction')[0] || null
     }
   }))
+
+  await updateGraphHash()
 
   return impactedComponentNode
 }
