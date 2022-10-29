@@ -33,12 +33,14 @@ function HierarchyBar() {
   console.log('hierarchyIds', hierarchyIds)
   console.log('hierarchyQueryResult', hierarchyQueryResult.data.hierarchy)
 
+  const { hierarchy } = hierarchyQueryResult.data
+
   return (
     <Div
       xflex="x4"
       gap={0.5}
     >
-      {(hierarchyQueryResult.data.hierarchy as any[]).map(({ label, componentId }, i) => (
+      {(hierarchy as any[]).map(({ label, componentId }, i) => (
         <Div key={i}>
           {label}
         </Div>

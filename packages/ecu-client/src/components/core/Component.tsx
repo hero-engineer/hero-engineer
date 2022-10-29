@@ -26,12 +26,14 @@ function Component() {
     return null
   }
 
+  const { component } = componentQueryResult.data
+
   return (
     <>
-      <H2 mt={2}>{componentQueryResult.data.component.name}</H2>
-      <P>{componentQueryResult.data.component.file.relativePath}</P>
+      <H2 mt={2}>{component.payload.name}</H2>
+      <P>{component.payload.relativePath}</P>
       <Div mt={2}>
-        <ComponentEditor component={componentQueryResult.data.component} />
+        <ComponentEditor component={component} />
       </Div>
     </>
   )

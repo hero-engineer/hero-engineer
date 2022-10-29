@@ -1,7 +1,5 @@
-import fs from 'fs'
 import path from 'path'
 
-import generate from '@babel/generator'
 import {
   File,
   identifier,
@@ -27,8 +25,8 @@ import graph from '../../graph'
 import { getNodeById, getNodesByFirstNeighbourg, getNodesBySecondNeighbourg } from '../../graph/helpers'
 
 import updateComponentHierarchy from '../../domain/updateComponentHierarchy'
-import lintCode from '../../domain/lintCode'
-import createHierarchyIdsAndKeys from '../../domain/createHierarchyIdsAndKeys'
+import createHierarchyIdsAndKeys from '../../domain/createDataEcuAttributes'
+import regenerate from '../../domain/regenerate'
 
 type AddComponentArgs = {
   sourceComponentId: string
@@ -37,7 +35,7 @@ type AddComponentArgs = {
   hierarchyPosition: HierarchyPositionType
 }
 
-async function addComponent(_: any, { sourceComponentId, targetComponentId, hierarchyIds, hierarchyPosition }: AddComponentArgs) {
+async function addComponent(_: any, { sourceComponentId, targetComponentId, hierarchyIds, hierarchyPosition }: AddComponentArgs): Promise<FunctionNodeType | null> {
   console.log('___addComponent___')
 
   const sourceComponentNode = getNodeById(graph, sourceComponentId)
@@ -137,6 +135,7 @@ async function addComponent(_: any, { sourceComponentId, targetComponentId, hier
   }
 
   const impacted = updateComponentHierarchy(fileNode, hierarchyIds, mutate)
+  let impactedComponentNode: FunctionNodeType | null = null
 
   await Promise.all(impacted.map(async ({ fileNode, ast, importDeclarationsRegistry }) => {
     console.log('impacted:', fileNode.payload.name)
@@ -145,23 +144,21 @@ async function addComponent(_: any, { sourceComponentId, targetComponentId, hier
 
     const componentNode = getNodesByFirstNeighbourg<FunctionNodeType>(graph, fileNode.address, 'declaresFunction')[0]
 
-    if (!componentNode) {
-      throw new Error(`Component for File with id ${fileNode.address} not found`)
+    if (!componentNode) return
+
+    createHierarchyIdsAndKeys(componentNode, ast)
+
+    const regenerated = await regenerate(fileNode, ast)
+
+    if (regenerated) {
+      impactedComponentNode = componentNode
     }
-
-    createHierarchyIdsAndKeys(ast, componentNode)
-
-    let { code } = generate(ast)
-
-    code = await lintCode(code)
-
-    fs.writeFileSync(fileNode.payload.path, code, 'utf-8')
   }))
   .catch(error => {
     console.error(error)
   })
 
-  return { id: 0 }
+  return impactedComponentNode
 }
 
 export default addComponent

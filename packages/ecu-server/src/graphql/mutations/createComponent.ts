@@ -11,14 +11,16 @@ import { getNodesByFirstNeighbourg } from '../../graph/helpers'
 import addFile from '../../graph/add/addFile'
 import addFileDependencies from '../../graph/add/addFileDependencies'
 
-import nodeWithId from '../../utils/nodeWithId'
+import createDataEcuAttributes from '../../domain/createDataEcuAttributes'
+import regenerate from '../../domain/regenerate'
+
 import capitalize from '../../utils/capitalize'
 
 type CreateComponentArgs = {
   name: string
 }
 
-function createComponent(_: any, { name }: CreateComponentArgs) {
+async function createComponent(_: any, { name }: CreateComponentArgs): Promise<FunctionNodeType | null> {
   if (!name) return null
 
   const validatedName = capitalize(name)
@@ -33,7 +35,11 @@ function createComponent(_: any, { name }: CreateComponentArgs) {
 
   const componentNode = getNodesByFirstNeighbourg<FunctionNodeType>(graph, fileNode.address, 'declaresFunction')[0]
 
-  return nodeWithId(componentNode, { file: nodeWithId(fileNode) })
+  const ast = createDataEcuAttributes(componentNode, fileNode.payload.ast)
+
+  await regenerate(fileNode, ast)
+
+  return componentNode
 }
 
 export default createComponent

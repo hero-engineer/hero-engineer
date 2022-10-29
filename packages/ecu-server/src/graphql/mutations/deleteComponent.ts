@@ -8,22 +8,21 @@ import {
 } from '@babel/types'
 import { ParseResult } from '@babel/parser'
 import traverse from '@babel/traverse'
-import generate from '@babel/generator'
 
-import { FileNodeType } from '../../types'
+import { FileNodeType, FunctionNodeType } from '../../types'
 
 import graph from '../../graph'
-import { getNodeById, getNodesBySecondNeighbourg } from '../../graph/helpers'
+import { getNodeById, getNodesByFirstNeighbourg, getNodesBySecondNeighbourg } from '../../graph/helpers'
 
 import updateComponentHierarchy from '../../domain/updateComponentHierarchy'
-import lintCode from '../../domain/lintCode'
+import regenerate from '../../domain/regenerate'
 
 type DeleteComponentArgs = {
   sourceComponentId: string
   hierarchyIds: string[]
 }
 
-async function deleteComponent(_: any, { sourceComponentId, hierarchyIds }: DeleteComponentArgs) {
+async function deleteComponent(_: any, { sourceComponentId, hierarchyIds }: DeleteComponentArgs): Promise<FunctionNodeType | null> {
   console.log('___deleteComponent___')
 
   const componentNode = getNodeById(graph, sourceComponentId)
@@ -61,20 +60,20 @@ async function deleteComponent(_: any, { sourceComponentId, hierarchyIds }: Dele
   }
 
   const impacted = updateComponentHierarchy(fileNode, hierarchyIds, mutate)
+  let impactedComponentNode: FunctionNodeType | null = null
 
   await Promise.all(impacted.map(async ({ fileNode, ast }) => {
     console.log('impacted:', fileNode.payload.name)
 
     postTraverse(ast)
+    const regenerated = await regenerate(fileNode, ast)
 
-    let { code } = generate(ast)
-
-    code = await lintCode(code)
-
-    fs.writeFileSync(fileNode.payload.path, code, 'utf-8')
+    if (regenerated) {
+      impactedComponentNode = getNodesByFirstNeighbourg<FunctionNodeType>(graph, fileNode.address, 'declaresFunction')[0] || null
+    }
   }))
 
-  return { id: 0 }
+  return impactedComponentNode
 }
 
 export default deleteComponent

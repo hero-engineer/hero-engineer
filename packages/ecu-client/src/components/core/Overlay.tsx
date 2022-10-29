@@ -17,7 +17,7 @@ function Overlay() {
   function handleCreateComponentClick() {
     createComponent({ name: componentName })
     .then(result => {
-      navigate(`/__ecu__/component/${result.data.createComponent.id}`)
+      navigate(`/__ecu__/component/${result.data.createComponent.address}`)
     })
   }
 
@@ -85,10 +85,10 @@ function AddComponentButton() {
         </MenuItem>
         {componentsQueryResult.data.components.map((component: any) => (
           <MenuItem
-            key={component.id}
-            value={component.id}
+            key={component.address}
+            value={component.address}
           >
-            {component.name}
+            {component.payload.name}
           </MenuItem>
         ))}
       </Select>

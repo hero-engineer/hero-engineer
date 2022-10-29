@@ -28,11 +28,10 @@ function insertPropFactory(key: string, getValue: () => string) {
   }
 }
 
-function createHierarchyIdsAndKeys(ast: ParseResult<File>, componentNode: FunctionNodeType) {
+function createDataEcuAttributes(componentNode: FunctionNodeType, ast: ParseResult<File>) {
   const cursors = [0]
   const importedEcuComponentNames: string[] = []
 
-  const insertKeyProp = insertPropFactory('key', () => shortid())
   const insertEcuProp = insertPropFactory(ecuPropName, () => `${componentNode.address}:${cursors.join('_')}`)
 
   traverse(ast, {
@@ -42,8 +41,6 @@ function createHierarchyIdsAndKeys(ast: ParseResult<File>, componentNode: Functi
       }
     },
     JSXElement(path: any) {
-      insertKeyProp(path)
-
       if (!importedEcuComponentNames.includes(path.node.openingElement.name.name)) return
 
       insertEcuProp(path)
@@ -64,4 +61,4 @@ function createHierarchyIdsAndKeys(ast: ParseResult<File>, componentNode: Functi
   return ast
 }
 
-export default createHierarchyIdsAndKeys
+export default createDataEcuAttributes

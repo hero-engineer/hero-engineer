@@ -17,14 +17,16 @@ function Components() {
     return null
   }
 
+  const { components } = componentsQueryResult.data
+
   return (
     <>
       <H2 mt={2}>Components</H2>
       <Ul mt={2}>
-        {componentsQueryResult.data.components.map((component: any) => (
-          <Li key={component.id}>
-            <Link to={`/__ecu__/component/${component.id}`}>
-              {component.name}
+        {components.map((component: any) => (
+          <Li key={component.address}>
+            <Link to={`/__ecu__/component/${component.address}`}>
+              {component.payload.name}
             </Link>
           </Li>
         ))}

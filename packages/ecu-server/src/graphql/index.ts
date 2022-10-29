@@ -8,19 +8,14 @@ import addComponent from './mutations/addComponent'
 import deleteComponent from './mutations/deleteComponent'
 
 export const typeDefs = gql`
-  type File {
-    id: String!
-    path: String!
-    relativePath: String!
+
+  enum ExportType {
+    default
+    named
+    none
   }
 
-  type Component {
-    id: String!
-    name: String!
-    file: File!
-  }
-
-  enum ComponentHierarchyPosition {
+  enum HierarchyPosition {
     before
     after
     within
@@ -28,23 +23,52 @@ export const typeDefs = gql`
     parent
   }
 
+  type FileNodePayload {
+    name: String!
+    extension: String!
+    path: String!
+    relativePath: String!
+    text: String!
+  }
+
+  type FileNode {
+    address: String!
+    role: String!
+    payload: FileNodePayload
+  }
+
+  type FunctionNodePayload {
+    name: String!
+    path: String!
+    relativePath: String!
+    exportType: ExportType!
+    isComponent: Boolean!
+  }
+
+  type FunctionNode {
+    address: String!
+    role: String!
+    payload: FunctionNodePayload
+  }
+
   type HierarchyItem {
-    label: String
+    label: String!
     hierarchyId: String
     componentId: String
   }
 
   type Query {
-    component(id: String!): Component
-    components: [Component]
+    component(id: String!): FunctionNode
+    components: [FunctionNode]
     hierarchy(sourceComponentId: String!, hierarchyIds: [String!]!): [HierarchyItem]
   }
 
   type Mutation {
-    createComponent(name: String!): Component
-    addComponent(sourceComponentId: String!, targetComponentId: String!, hierarchyIds: [String!]!, hierarchyPosition: ComponentHierarchyPosition!): File
-    deleteComponent(sourceComponentId: String!, hierarchyIds: [String!]!): File
+    createComponent(name: String!): FunctionNode
+    addComponent(sourceComponentId: String!, targetComponentId: String!, hierarchyIds: [String!]!, hierarchyPosition: HierarchyPosition!): FunctionNode
+    deleteComponent(sourceComponentId: String!, hierarchyIds: [String!]!): FunctionNode
   }
+
 `
 
 export const resolvers = {

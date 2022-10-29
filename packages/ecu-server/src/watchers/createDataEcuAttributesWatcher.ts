@@ -1,15 +1,11 @@
-import fs from 'fs'
-
-import generate from '@babel/generator'
-
 import { FileNodeType, FunctionNodeType, GraphType } from '../types'
 
 import { getNodesByRole, getNodesBySecondNeighbourg } from '../graph/helpers'
 
-import createHierarchyIdsAndKeys from '../domain/createHierarchyIdsAndKeys'
-import lintCode from '../domain/lintCode'
+import createHierarchyIdsAndKeys from '../domain/createDataEcuAttributes'
+import regenerate from '../domain/regenerate'
 
-async function createHierachyIdsAndKeysWatcher(graph: GraphType) {
+async function createDataEcuAttributesWatcher(graph: GraphType) {
   const componentNodes = getNodesByRole<FunctionNodeType>(graph, 'Function').filter(node => node.payload.isComponent)
 
   await Promise.all(componentNodes.map(async componentNode => {
@@ -19,14 +15,9 @@ async function createHierachyIdsAndKeysWatcher(graph: GraphType) {
 
     const { ast } = fileNode.payload
 
-    createHierarchyIdsAndKeys(ast, componentNode)
-
-    let { code } = generate(ast)
-
-    code = await lintCode(code)
-
-    fs.writeFileSync(fileNode.payload.path, code, 'utf-8')
+    createHierarchyIdsAndKeys(componentNode, ast)
+    regenerate(fileNode, ast)
   }))
 }
 
-export default createHierachyIdsAndKeysWatcher
+export default createDataEcuAttributesWatcher

@@ -10,36 +10,32 @@ function MultipleDivs(props: any) {
     <>
       <>
         <>
-          <CoolDiv key="UWh03w-Dp3W" />
-          <CoolDiv key="-3TmLj5KGkG" />
+          <CoolDiv />
+          <CoolDiv />
         </>
         <>
-          <CoolDiv key="4zLqQhf2VaR" />
-          <CoolDiv key="1eaGZicrCcA" />
+          <>
+            <CoolDiv />
+            <CoolDiv />
+          </>
+          <>
+            <CoolDiv />
+            <CoolDiv />
+          </>
         </>
       </>
-      <Div
-        data-ecu-hierarchy="RqcE9GFK_5:0"
-        key="pMEUvUgZBu3"
-        data-ecu="ejVVI24Nn5:0"
-      >
-        <Div
-          data-ecu-hierarchy="RqcE9GFK_5:0_0"
-          key="_TbivKCGiVk"
-          data-ecu="ejVVI24Nn5:0_0"
-        >
+      <Div data-ecu="_ZMiltqDzS:0">
+        <Div data-ecu="_ZMiltqDzS:0_0">
           Dear component
         </Div>
-        <Div
-          data-ecu-hierarchy="RqcE9GFK_5:0_1"
-          key="Jtr6nsDFWTb"
-          data-ecu="ejVVI24Nn5:0_1"
-        >
+        <Div data-ecu="_ZMiltqDzS:0_1">
           Hello
         </Div>
-        <CoolDaddy key="3eZ9ZvnvH24">
+        <CoolDiv />
+        <CoolDaddy>
           Darling
 
+          <CoolDiv />
         </CoolDaddy>
       </Div>
     </>
