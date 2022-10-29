@@ -1,6 +1,5 @@
 import { File, JSXAttribute, jsxAttribute, jsxIdentifier, stringLiteral } from '@babel/types'
 import traverse from '@babel/traverse'
-import shortid from 'shortid'
 
 import { ParseResult } from '@babel/parser'
 
