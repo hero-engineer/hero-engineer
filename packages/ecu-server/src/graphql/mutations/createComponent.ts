@@ -27,7 +27,7 @@ async function createComponent(_: any, { name }: CreateComponentArgs): Promise<F
   const code = createComponentTemplate(validatedName)
   const filePath = path.join(appPath, 'src', 'components', `${validatedName}.tsx`)
 
-  fs.writeFileSync(filePath, code, 'utf-8')
+  fs.writeFileSync(filePath, code, 'utf8')
 
   const fileNode = addFile(filePath)
 

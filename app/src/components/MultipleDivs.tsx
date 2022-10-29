@@ -9,13 +9,14 @@ function MultipleDivs(props: any) {
   return (
     <>
       <CoolDiv />
-      <Div data-ecu="qfSXyoREqi:0">
-        <Div data-ecu="qfSXyoREqi:0_0">
+      <Div data-ecu="LsItTGm1Rv:0">
+        <Div data-ecu="LsItTGm1Rv:0_0">
           Dear component
         </Div>
-        <Div data-ecu="qfSXyoREqi:0_1">
+        <Div data-ecu="LsItTGm1Rv:0_1">
           Hello
         </Div>
+        <CoolDiv />
         
         <CoolDaddy>
           Darling

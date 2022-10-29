@@ -6,11 +6,13 @@ import { Button, Div, MenuItem, Select } from 'honorable'
 import { AddComponentMutation, ComponentsQuery } from '../../queries'
 import EditionContext from '../../contexts/EditionContext'
 
+import { HierarchyPosition } from '../../types'
+
 function AddComponentButton() {
   const { id } = useParams()
   const { hierarchyIds } = useContext(EditionContext)
   const [componentId, setComponentId] = useState('')
-  const [hierarchyPosition, setHierarchyPosition] = useState('before')
+  const [hierarchyPosition, setHierarchyPosition] = useState<HierarchyPosition>('before')
   const [componentsQueryResult] = useQuery({
     query: ComponentsQuery,
   })

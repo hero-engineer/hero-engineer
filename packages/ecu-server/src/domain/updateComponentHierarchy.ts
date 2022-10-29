@@ -8,7 +8,6 @@ import {
   JSXAttribute,
 } from '@babel/types'
 import traverse from '@babel/traverse'
-
 import { ParseResult } from '@babel/parser'
 
 import { FileNodeType, FunctionNodeType, ImportDeclarationsRegistry } from '../types'
@@ -35,24 +34,32 @@ function updateComponentHierarchy(
 ): ImpactedType[] {
   console.log('updateComponentHierarchy', fileNode.payload.name, hierarchyIds)
 
-  const { ast } = fileNode.payload
+  if (!hierarchyIds.length) {
+    console.log('No hierarchy')
+
+    return []
+  }
+
+  const impacted: ImpactedType[] = [] // retval
   const componentNodes = getNodesByRole<FunctionNodeType>('Function').filter(n => n.payload.isComponent)
   const fileNodes = getNodesByRole<FileNodeType>('File')
   const [ids, indexes] = extractIdsAndIndexes(hierarchyIds)
-  const currentHierarchyIds: string[] = []
-  const currentIndexRegistry: Record<string, number> = {}
-  const impacted: ImpactedType[] = []
-
-  const isSuccessiveNodeFound = (nextHierarchyId: string) => {
-    const nextHierarchyIds = [...currentHierarchyIds, nextHierarchyId]
-
-    return areArraysEqualAtStart(nextHierarchyIds, ids) && areArraysEqualAtStart(nextHierarchyIds.map(h => currentIndexRegistry[h]), indexes)
-  }
-  const isNodeFound = () => areArraysEqual(currentHierarchyIds, ids) && areArraysEqual(currentHierarchyIds.map(hierarchyId => currentIndexRegistry[hierarchyId]), indexes)
+  const lastingHierarchyIds: string[] = []
+  const lastingIndexRegistry: Record<string, number> = {}
 
   console.log('ids', ids)
   console.log('indexes', indexes)
   console.log('___start___')
+
+  function isSuccessiveNodeFound(nextHierarchyId: string) {
+    const nextHierarchyIds = [...lastingHierarchyIds, nextHierarchyId]
+
+    return areArraysEqualAtStart(nextHierarchyIds, ids) && areArraysEqualAtStart(nextHierarchyIds.map(h => lastingIndexRegistry[h]), indexes)
+  }
+
+  function isNodeFound() {
+    return areArraysEqual(lastingHierarchyIds, ids) && areArraysEqual(lastingHierarchyIds.map(hierarchyId => lastingIndexRegistry[hierarchyId]), indexes)
+  }
 
   function performMutation(x: any, previousX: any = null) {
     mutate(x, previousX)
@@ -64,7 +71,8 @@ function updateComponentHierarchy(
     x.stop()
   }
 
-  function traverseFileNode(ast: ParseResult<File>, fileNode: FileNodeType, previousX: any = null) {
+  function traverseFileNode(fileNode: FileNodeType, previousX: any = null) {
+    const { ast } = fileNode.payload
     const importDeclarationsRegistry: ImportDeclarationsRegistry = {}
 
     if (!impacted.some(x => x.fileNode.address === fileNode.address)) {
@@ -94,10 +102,10 @@ function updateComponentHierarchy(
           if (hierarchyId) {
             console.log('-->', hierarchyId)
 
-            currentIndexRegistry[hierarchyId] = currentIndexRegistry[hierarchyId] + 1 || 0
+            lastingIndexRegistry[hierarchyId] = lastingIndexRegistry[hierarchyId] + 1 || 0
 
             if (isSuccessiveNodeFound(hierarchyId)) {
-              currentHierarchyIds.push(hierarchyId)
+              lastingHierarchyIds.push(hierarchyId)
 
               console.log('PUSHED')
 
@@ -134,20 +142,20 @@ function updateComponentHierarchy(
                 if (fileNode) {
                   console.log('-->', fileNode.payload.name)
 
-                  traverseFileNode(fileNode.payload.ast, fileNode, x)
+                  traverseFileNode(fileNode, x)
                 }
               }
             }
           }
         }
 
-        console.log('currentHierarchyIds', currentHierarchyIds)
-        console.log('currentIndexRegistry', currentIndexRegistry)
+        // console.log('currentHierarchyIds', currentHierarchyIds)
+        // console.log('currentIndexRegistry', currentIndexRegistry)
       },
     })
   }
 
-  traverseFileNode(ast, fileNode)
+  traverseFileNode(fileNode)
 
   return impacted
 }

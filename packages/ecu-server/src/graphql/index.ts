@@ -6,6 +6,7 @@ import getHierarchy from './queries/getHierarchy'
 import createComponent from './mutations/createComponent'
 import addComponent from './mutations/addComponent'
 import deleteComponent from './mutations/deleteComponent'
+import moveComponent from './mutations/moveComponent'
 
 export const typeDefs = gql`
 
@@ -67,6 +68,7 @@ export const typeDefs = gql`
     createComponent(name: String!): FunctionNode
     addComponent(sourceComponentId: String!, targetComponentId: String!, hierarchyIds: [String!]!, hierarchyPosition: HierarchyPosition!): FunctionNode
     deleteComponent(sourceComponentId: String!, hierarchyIds: [String!]!): FunctionNode
+    moveComponent(sourceComponentId: String!, sourceHierarchyIds: [String!]!, ttargetHierarchyIds: [String!]!, hierarchyPosition: HierarchyPosition!): [FunctionNode]
   }
 
 `
@@ -81,5 +83,6 @@ export const resolvers = {
     createComponent,
     addComponent,
     deleteComponent,
+    moveComponent,
   },
 }

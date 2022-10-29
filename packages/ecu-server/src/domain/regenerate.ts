@@ -15,7 +15,7 @@ async function regenerate(fileNode: FileNodeType, ast: ParseResult<File>) {
 
   if (code === fileNode.payload.code) return false
 
-  fs.writeFileSync(fileNode.payload.path, code, 'utf-8')
+  fs.writeFileSync(fileNode.payload.path, code, 'utf8')
 
   return true
 }
