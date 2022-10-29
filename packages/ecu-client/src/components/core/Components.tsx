@@ -19,8 +19,8 @@ function Components() {
 
   return (
     <>
-      <H2>Components</H2>
-      <Ul>
+      <H2 mt={2}>Components</H2>
+      <Ul mt={2}>
         {componentsQueryResult.data.components.map((component: any) => (
           <Li key={component.id}>
             <Link to={`/__ecu__/component/${component.id}`}>

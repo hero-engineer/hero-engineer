@@ -32,7 +32,7 @@ function getHierarchyIds(element: EventTarget | HTMLElement) {
 function useEditionProps<T>(id: string, className = '') {
   const rootRef = useRef<T>(null)
   const hierarchyId = useHierarchyId(id, rootRef)
-  const { hierarchyIds, setHierarchyIds, dragHierarchyPosition, setDragHierarchyPosition } = useContext(EditionContext)
+  const { hierarchyIds, setHierarchyIds } = useContext(EditionContext)
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'Node',
@@ -41,14 +41,14 @@ function useEditionProps<T>(id: string, className = '') {
       const dropResult = monitor.getDropResult<DropResult>()
 
       if (item && dropResult) {
-        alert(`You dropped ${item.hierarchyIds} into ${dropResult.hierarchyIds}! ${dragHierarchyPosition}`)
+        alert(`You dropped ${item.hierarchyIds} into ${dropResult.hierarchyIds}!`)
       }
     },
     collect: monitor => ({
       isDragging: monitor.isDragging(),
       handlerId: monitor.getHandlerId(),
     }),
-  }), [dragHierarchyPosition])
+  }), [])
 
   const [{ canDrop, isOverCurrent }, drop] = useDrop(() => ({
     accept: 'Node',
@@ -63,18 +63,7 @@ function useEditionProps<T>(id: string, className = '') {
       isOverCurrent: monitor.isOver({ shallow: true }),
       canDrop: monitor.canDrop(),
     }),
-    hover: (_item: any, monitor) => {
-      const mouse = monitor.getClientOffset()
-
-      if (!mouse) return
-
-      const rect = (rootRef.current as HTMLElement)?.getBoundingClientRect()
-
-      if (!rect) return
-
-      setDragHierarchyPosition(mouse.y - rect.top < rect.height / 3 ? 'before' : mouse.y - rect.top > 2 * rect.height / 3 ? 'after' : 'within')
-    },
-  }), [setDragHierarchyPosition])
+  }), [])
 
   const ref = useForkedRef(rootRef, useForkedRef(drag, drop)) as Ref<T>
 
@@ -110,25 +99,15 @@ function useEditionProps<T>(id: string, className = '') {
     }
 
     if (isDragging) {
-      klassName += ' ecu-drag-dragging'
+      klassName += ' ecu-drag'
     }
 
     if (canDrop && isOverCurrent) {
-      klassName += ' ecu-drag-over'
-
-      if (dragHierarchyPosition === 'before') {
-        klassName += ' ecu-drag-before'
-      }
-      else if (dragHierarchyPosition === 'after') {
-        klassName += ' ecu-drag-after'
-      }
-      else if (dragHierarchyPosition === 'within') {
-        klassName += ' ecu-drag-within'
-      }
+      klassName += ' ecu-drop'
     }
 
     return klassName.trim()
-  }, [className, hierarchyIds, hierarchyId, isDragging, canDrop, isOverCurrent, dragHierarchyPosition])
+  }, [className, hierarchyIds, hierarchyId, isDragging, canDrop, isOverCurrent])
 
   return {
     ref,

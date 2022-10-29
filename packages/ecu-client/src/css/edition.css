@@ -1,24 +1,11 @@
 .ecu-selected {
-  border: 1px solid lightblue;
+  outline: 1px solid lightblue;
 }
 
-.ecu-drag-over {
-  background-color: lightblue;
-}
-
-.ecu-drag-dragging {
+.ecu-drag {
   opacity: 0.5;
 }
 
-.ecu-drag-after::after,
-.ecu-drag-before::before {
-  content: "";
-  display: block;
-  width: '100%';
-  height: 16px;
-  background-color: gold;
-}
-
-.ecu-drag-within {
-  background-color: gold;
+.ecu-drop {
+  outline: 1px solid deepskyblue;
 }

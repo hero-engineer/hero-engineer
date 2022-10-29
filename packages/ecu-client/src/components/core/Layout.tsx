@@ -6,9 +6,17 @@ import Overlay from './Overlay'
 
 function Layout() {
   return (
-    <Div p={1}>
+    <Div
+      xflex="y2s"
+      overflowY="auto"
+      width="100vw"
+      height="100vh"
+      p={1}
+    >
+      <H1>
+        Ecu
+      </H1>
       <Overlay />
-      <H1>Ecu</H1>
       <Outlet />
     </Div>
   )
