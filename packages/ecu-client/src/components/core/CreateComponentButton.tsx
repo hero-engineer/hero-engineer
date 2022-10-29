@@ -1,37 +1,58 @@
-import { memo, useState } from 'react'
+import { memo, useCallback, useState } from 'react'
 import { useMutation } from 'urql'
 import { useNavigate } from 'react-router-dom'
-import { Button, Div, Input } from 'honorable'
+import { Button, Div, H2, Input, Modal } from 'honorable'
+import { AiOutlinePlus } from 'react-icons/ai'
 
 import { CreateComponentMutation } from '../../queries'
 
 function CreateComponentButton() {
-  const [componentName, setComponentName] = useState('')
+  const [name, setName] = useState('')
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [, createComponent] = useMutation(CreateComponentMutation)
   const navigate = useNavigate()
 
-  function handleCreateComponentClick() {
-    createComponent({ name: componentName })
-      .then(result => {
-        navigate(`/__ecu__/component/${result.data.createComponent.address}`)
-      })
-  }
+  const handleCreateComponentClick = useCallback(async () => {
+    if (!name) return
+
+    const results = await createComponent({ name })
+
+    navigate(`/__ecu__/component/${results.data.createComponent.address}`)
+  }, [name, createComponent, navigate])
 
   return (
-    <Div
-      xflex="x4"
-      gap={1}
-    >
-      <Input
-        value={componentName}
-        onChange={e => setComponentName(e.target.value)}
-      />
+    <>
       <Button
-        onClick={handleCreateComponentClick}
+        onClick={() => setIsModalOpen(true)}
       >
-        Create component
+        <AiOutlinePlus />
       </Button>
-    </Div>
+      <Modal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      >
+        <H2>Create component</H2>
+        <Input
+          width="100%"
+          value={name}
+          onChange={e => setName(e.target.value)}
+          placeholder="Component name"
+          mt={2}
+        />
+        <Div
+          xflex="x6"
+          gap={0.5}
+          mt={2}
+        >
+          <Button onClick={() => setIsModalOpen(false)}>
+            Cancel
+          </Button>
+          <Button onClick={handleCreateComponentClick}>
+            Create
+          </Button>
+        </Div>
+      </Modal>
+    </>
   )
 }
 

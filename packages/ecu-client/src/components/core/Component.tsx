@@ -1,7 +1,7 @@
 import { memo } from 'react'
 import { useQuery } from 'urql'
 import { useParams } from 'react-router-dom'
-import { Div, H2, P } from 'honorable'
+import { Div, P } from 'honorable'
 
 import { ComponentQuery } from '../../queries'
 
@@ -31,7 +31,7 @@ function Component() {
 
   return (
     <>
-      <H2 mt={2}>{component.payload.name}</H2>
+      <P fontWeight="bold">{component.payload.name}</P>
       <P>{component.payload.relativePath}</P>
       <Div mt={2}>
         <ComponentLoader component={component} />

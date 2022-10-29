@@ -1,28 +1,32 @@
 import { memo } from 'react'
-import { Link } from 'react-router-dom'
-import { Div } from 'honorable'
+import { Div, P } from 'honorable'
 
-import HierarchyBar from './HierarchyBar'
-import CreateComponentButton from './CreateComponentButton'
+import ComponentsLinkButton from './ComponentsLinkButton'
 import AddComponentButton from './AddComponentButton'
+import CreateComponentButton from './CreateComponentButton'
 import DeleteComponentButton from './DeleteComponentButton'
+import HierarchyBar from './HierarchyBar'
 
 function Overlay() {
   return (
-    <>
+    <Div
+      p={0.5}
+      backgroundColor="background-light"
+    >
       <Div
         xflex="x4"
-        gap={1}
+        gap={0.5}
       >
-        <Link to="/__ecu__/components">
-          Components
-        </Link>
+        <P fontWeight="bold">
+          Ecu
+        </P>
+        <ComponentsLinkButton />
         <CreateComponentButton />
-        <AddComponentButton />
         <DeleteComponentButton />
+        <AddComponentButton />
       </Div>
       <HierarchyBar />
-    </>
+    </Div>
   )
 }
 

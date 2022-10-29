@@ -21,7 +21,7 @@ function Components() {
 
   return (
     <>
-      <H2 mt={2}>Components</H2>
+      <H2>Components</H2>
       <Ul mt={2}>
         {components.map((component: any) => (
           <Li key={component.address}>

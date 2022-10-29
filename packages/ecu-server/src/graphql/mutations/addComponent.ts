@@ -14,9 +14,7 @@ import {
   jsxOpeningFragment,
   stringLiteral,
 } from '@babel/types'
-
 import traverse from '@babel/traverse'
-
 import { ParseResult } from '@babel/parser'
 
 import { FileNodeType, FunctionNodeType, HierarchyPositionType, ImportDeclarationsRegistry } from '../../types'
@@ -49,9 +47,6 @@ async function addComponent(_: any, { sourceComponentId, targetComponentId, hier
   if (!targetComponentNode) {
     throw new Error(`Component with id ${targetComponentId} not found`)
   }
-
-  console.log('hierarchyIds', hierarchyIds)
-  // console.log('reducedHierarchy', reducedHierarchyIds)
 
   const fileNode = getNodesBySecondNeighbourg<FileNodeType>(sourceComponentNode.address, 'DeclaresFunction')[0]
 

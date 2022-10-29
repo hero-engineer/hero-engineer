@@ -41,7 +41,7 @@ function AddComponentButton() {
   return (
     <Div
       xflex="x4"
-      gap={1}
+      gap={0.5}
     >
       <Select
         value={componentId}

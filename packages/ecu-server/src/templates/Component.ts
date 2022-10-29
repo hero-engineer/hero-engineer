@@ -8,4 +8,5 @@ function ${name}(props: any) {
   )
 }
 
-export default ${name}`
+export default ${name}
+`

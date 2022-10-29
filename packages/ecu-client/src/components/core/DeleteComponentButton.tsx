@@ -1,7 +1,8 @@
-import { memo, useContext } from 'react'
+import { memo, useCallback, useContext } from 'react'
 import { useMutation } from 'urql'
 import { useParams } from 'react-router-dom'
 import { Button } from 'honorable'
+import { TbTrash } from 'react-icons/tb'
 
 import { DeleteComponentMutation } from '../../queries'
 import EditionContext from '../../contexts/EditionContext'
@@ -11,12 +12,12 @@ function DeleteComponentButton() {
   const { hierarchyIds } = useContext(EditionContext)
   const [, deleteComponent] = useMutation(DeleteComponentMutation)
 
-  function handleDeleteComponentClick() {
+  const handleDeleteComponentClick = useCallback(() => {
     deleteComponent({
       sourceComponentId: id,
       hierarchyIds,
     })
-  }
+  }, [deleteComponent, id, hierarchyIds])
 
   if (!id) {
     return null
@@ -27,7 +28,7 @@ function DeleteComponentButton() {
       onClick={handleDeleteComponentClick}
       disabled={!hierarchyIds.length}
     >
-      Delete component
+      <TbTrash />
     </Button>
   )
 }
