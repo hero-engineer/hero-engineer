@@ -9,27 +9,30 @@ function MultipleDivs(props: any) {
   return (
     <>
       <>
-        <CoolDiv key="6Mkvtp8DP" />
-        <CoolDiv key="QGRGWie0KH" />
+        <CoolDiv key="AQ66KFAsn" />
+        <>
+          <CoolDiv key="z9gvYbD7EC" />
+          <CoolDiv key="o0_Bh23Rwk" />
+        </>
       </>
       <Div
-        key="B20KWNcS0S"
+        key="UNA7ZLVtlU"
         data-ecu="4i8RUnflxL:0"
       >
         <Div
-          key="ngepqp_20p"
+          key="YlGUNkTn4M"
           data-ecu="4i8RUnflxL:0_0"
         >
           Dear component
         </Div>
         
         <Div
-          key="Xia-1kTWUk"
+          key="pdYaKURhar"
           data-ecu="4i8RUnflxL:0_1"
         >
           Hello
         </Div>
-        <CoolDaddy key="gIgaujIRrP">
+        <CoolDaddy key="Elw_TU-ML7">
           Darling
           
         </CoolDaddy>

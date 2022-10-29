@@ -1,7 +1,7 @@
+import '../css/edition.css'
+
 import { MouseEvent, Ref, useCallback, useContext, useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
-
-import classes from '../css/edition.module.css'
 
 import EditionContext from '../contexts/EditionContext'
 
@@ -106,24 +106,24 @@ function useEditionProps<T>(id: string, className = '') {
     let klassName = className
 
     if (hierarchyIds[hierarchyIds.length - 1] === hierarchyId) {
-      klassName += ` ${classes.ecuSelected}`
+      klassName += ' ecu-selected'
     }
 
     if (isDragging) {
-      klassName += ` ${classes.ecuDragDragging}`
+      klassName += ' ecu-drag-dragging'
     }
 
     if (canDrop && isOverCurrent) {
-      klassName += ` ${classes.ecuDragOver}`
+      klassName += ' ecu-drag-over'
 
       if (dragHierarchyPosition === 'before') {
-        klassName += ` ${classes.ecuDragBefore}`
+        klassName += ' ecu-drag-before'
       }
       else if (dragHierarchyPosition === 'after') {
-        klassName += ` ${classes.ecuDragAfter}`
+        klassName += ' ecu-drag-after'
       }
       else if (dragHierarchyPosition === 'within') {
-        klassName += ` ${classes.ecuDragWithin}`
+        klassName += ' ecu-drag-within'
       }
     }
 
