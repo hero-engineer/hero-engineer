@@ -1,6 +1,7 @@
 import { memo } from 'react'
 import { Div, P } from 'honorable'
 
+import ViewAppButton from './ViewAppButton'
 import ComponentsLinkButton from './ComponentsLinkButton'
 import AddComponentButton from './AddComponentButton'
 import CreateComponentButton from './CreateComponentButton'
@@ -24,6 +25,8 @@ function Overlay() {
         <CreateComponentButton />
         <DeleteComponentButton />
         <AddComponentButton />
+        <Div flexGrow={1} />
+        <ViewAppButton />
       </Div>
       <HierarchyBar />
     </Div>

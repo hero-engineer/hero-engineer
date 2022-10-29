@@ -2,6 +2,7 @@ import { memo, useContext, useState } from 'react'
 import { useMutation, useQuery } from 'urql'
 import { useParams } from 'react-router-dom'
 import { Button, Div, MenuItem, Select } from 'honorable'
+import { TbRowInsertBottom } from 'react-icons/tb'
 
 import { AddComponentMutation, ComponentsQuery } from '../../queries'
 import EditionContext from '../../contexts/EditionContext'
@@ -83,7 +84,7 @@ function AddComponentButton() {
         onClick={handleAddComponentClick}
         disabled={!(componentId && hierarchyIds.length)}
       >
-        Add component
+        <TbRowInsertBottom />
       </Button>
     </Div>
   )
