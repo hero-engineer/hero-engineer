@@ -6,6 +6,7 @@ import { MdOutlineExitToApp } from 'react-icons/md'
 function ViewAppButton() {
   return (
     <Button
+      ghost
       as={Link}
       to="/"
     >

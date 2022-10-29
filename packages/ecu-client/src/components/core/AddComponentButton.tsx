@@ -81,6 +81,7 @@ function AddComponentButton() {
         </MenuItem>
       </Select>
       <Button
+        ghost
         onClick={handleAddComponentClick}
         disabled={!(componentAddress && hierarchyIds.length)}
       >

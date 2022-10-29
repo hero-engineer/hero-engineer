@@ -25,6 +25,7 @@ function DeleteComponentButton() {
 
   return (
     <Button
+      ghost
       onClick={handleDeleteComponentClick}
       disabled={!hierarchyIds.length}
     >

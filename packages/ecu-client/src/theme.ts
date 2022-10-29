@@ -140,27 +140,20 @@ export default mergeTheme(defaultTheme, {
       borderRadius: borderRadii[borderRadius as keyof typeof borderRadii],
     },
   ],
-  // Button: {
-  //   Root: [
-  //     {
-  //       backgroundColor: 'transparent',
-  //       border: '1px solid primary',
-  //       color: 'primary',
-  //       transition: 'all 150ms ease',
-  //       _hover: { backgroundColor: 'transparent', transform: 'scale(1.04)' },
-  //       _active: { backgroundColor: 'transparent', transform: 'scale(1)' },
-  //     },
-  //     ({ gradient }: any) => typeof gradient === 'string' && {
-  //       border: 'none',
-  //       color: 'white',
-  //       background: gradient,
-  //     },
-  //     ({ danger }: any) => danger && ({
-  //       border: '1px solid red.500',
-  //       color: 'red.500',
-  //     }),
-  //   ],
-  // },
+  Button: {
+    Root: [
+      ({ ghost }: any) => ghost && {
+        paddingLeft: 8,
+        paddingRight: 8,
+        borderRadius: 0,
+        color: 'text',
+        backgroundColor: 'transparent',
+        ':hover': {
+          backgroundColor: 'transparency(primary, 80)',
+        },
+      },
+    ],
+  },
   // IconButton: {
   //   Root: [
   //     ({ large }: any) => large && {

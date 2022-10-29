@@ -23,6 +23,7 @@ function CreateComponentButton() {
   return (
     <>
       <Button
+        ghost
         onClick={() => setIsModalOpen(true)}
       >
         <AiOutlinePlus />

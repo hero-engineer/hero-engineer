@@ -6,6 +6,7 @@ import { CgComponents } from 'react-icons/cg'
 function ComponentsLinkButton() {
   return (
     <Button
+      ghost
       as={Link}
       to="/__ecu__/components"
     >
