@@ -14,7 +14,7 @@ function DeleteComponentButton() {
 
   const handleDeleteComponentClick = useCallback(() => {
     deleteComponent({
-      sourceComponentId: id,
+      sourceComponentAddress: id,
       hierarchyIds,
     })
   }, [deleteComponent, id, hierarchyIds])

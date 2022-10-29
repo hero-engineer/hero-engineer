@@ -12,7 +12,7 @@ import { HierarchyPosition } from '../../types'
 function AddComponentButton() {
   const { id } = useParams()
   const { hierarchyIds } = useContext(EditionContext)
-  const [componentId, setComponentId] = useState('')
+  const [componentAddress, setComponentId] = useState('')
   const [hierarchyPosition, setHierarchyPosition] = useState<HierarchyPosition>('before')
   const [componentsQueryResult] = useQuery({
     query: ComponentsQuery,
@@ -28,8 +28,8 @@ function AddComponentButton() {
 
   function handleAddComponentClick() {
     addComponent({
-      sourceComponentId: id,
-      targetComponentId: componentId,
+      sourceComponentAddress: id,
+      targetComponentAddress: componentAddress,
       hierarchyIds,
       hierarchyPosition,
     })
@@ -45,7 +45,7 @@ function AddComponentButton() {
       gap={0.5}
     >
       <Select
-        value={componentId}
+        value={componentAddress}
         onChange={event => setComponentId(event.target.value)}
       >
         <MenuItem value="">
@@ -82,7 +82,7 @@ function AddComponentButton() {
       </Select>
       <Button
         onClick={handleAddComponentClick}
-        disabled={!(componentId && hierarchyIds.length)}
+        disabled={!(componentAddress && hierarchyIds.length)}
       >
         <TbRowInsertBottom />
       </Button>

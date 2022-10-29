@@ -27,31 +27,31 @@ import createHierarchyIdsAndKeys from '../../domain/createDataEcuAttributes'
 import regenerate from '../../domain/regenerate'
 
 type AddComponentArgs = {
-  sourceComponentId: string
-  targetComponentId: string
+  sourceComponentAddress: string
+  targetComponentAddress: string
   hierarchyIds: string[]
   hierarchyPosition: HierarchyPositionType
 }
 
-async function addComponent(_: any, { sourceComponentId, targetComponentId, hierarchyIds, hierarchyPosition }: AddComponentArgs): Promise<FunctionNodeType | null> {
+async function addComponent(_: any, { sourceComponentAddress, targetComponentAddress, hierarchyIds, hierarchyPosition }: AddComponentArgs): Promise<FunctionNodeType | null> {
   console.log('___addComponent___')
 
-  const sourceComponentNode = getNodeByAddress(sourceComponentId)
+  const sourceComponentNode = getNodeByAddress(sourceComponentAddress)
 
   if (!sourceComponentNode) {
-    throw new Error(`Component with id ${sourceComponentId} not found`)
+    throw new Error(`Component with id ${sourceComponentAddress} not found`)
   }
 
-  const targetComponentNode = getNodeByAddress(targetComponentId)
+  const targetComponentNode = getNodeByAddress(targetComponentAddress)
 
   if (!targetComponentNode) {
-    throw new Error(`Component with id ${targetComponentId} not found`)
+    throw new Error(`Component with id ${targetComponentAddress} not found`)
   }
 
   const fileNode = getNodesBySecondNeighbourg<FileNodeType>(sourceComponentNode.address, 'DeclaresFunction')[0]
 
   if (!fileNode) {
-    throw new Error(`File for Function with id ${sourceComponentId} not found`)
+    throw new Error(`File for Function with id ${sourceComponentAddress} not found`)
   }
 
   function mutate(x: any, previousX: any) {

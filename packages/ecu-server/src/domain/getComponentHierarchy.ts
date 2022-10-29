@@ -26,7 +26,7 @@ type HierarchyItem = {
   componentAddress?: string
 }
 
-function getComponentHierarchy(sourceComponentId: string, hierarchyIds: string[]) {
+function getComponentHierarchy(sourceComponentAddress: string, hierarchyIds: string[]) {
   console.log('getComponentHierarchy')
 
   if (!hierarchyIds.length) {
@@ -35,10 +35,10 @@ function getComponentHierarchy(sourceComponentId: string, hierarchyIds: string[]
     return []
   }
 
-  const componentNode = getNodeByAddress<FunctionNodeType>(sourceComponentId)
+  const componentNode = getNodeByAddress<FunctionNodeType>(sourceComponentAddress)
 
   if (!componentNode) {
-    console.log(`Component node with id ${sourceComponentId} not found`)
+    console.log(`Component node with id ${sourceComponentAddress} not found`)
 
     return []
   }
@@ -46,7 +46,7 @@ function getComponentHierarchy(sourceComponentId: string, hierarchyIds: string[]
   const fileNode = getNodesBySecondNeighbourg<FileNodeType>(componentNode.address, 'DeclaresFunction')[0]
 
   if (!fileNode) {
-    console.log(`Function for component node with id ${sourceComponentId} not found`)
+    console.log(`Function for component node with id ${sourceComponentAddress} not found`)
 
     return []
   }
@@ -117,11 +117,11 @@ function getComponentHierarchy(sourceComponentId: string, hierarchyIds: string[]
           if (hierarchyId) {
             console.log('-->', hierarchyId)
 
-            const [componentId] = extractIdAndIndex(hierarchyId)
+            const [componentAddress] = extractIdAndIndex(hierarchyId)
 
-            // console.log('componentId', componentId)
+            // console.log('componentAddress', componentAddress)
 
-            indexRegistry[indexRegistry.length - 1][componentId] = indexRegistry[indexRegistry.length - 1][componentId] + 1 || 0
+            indexRegistry[indexRegistry.length - 1][componentAddress] = indexRegistry[indexRegistry.length - 1][componentAddress] + 1 || 0
             lastingIndexRegistry[hierarchyId] = lastingIndexRegistry[hierarchyId] + 1 || 0
             shouldPushIndex = true
 
@@ -130,7 +130,7 @@ function getComponentHierarchy(sourceComponentId: string, hierarchyIds: string[]
             if (isSuccessiveNodeFound(hierarchyId)) {
               lastingHierarchyIds.push(hierarchyId)
               hierarchy.push({
-                label: `${x.node.openingElement.name.name}[${indexRegistry[indexRegistry.length - 1][componentId]}]`,
+                label: `${x.node.openingElement.name.name}[${indexRegistry[indexRegistry.length - 1][componentAddress]}]`,
                 hierarchyId: `${hierarchyId}:${lastingIndexRegistry[hierarchyId]}`,
               })
 

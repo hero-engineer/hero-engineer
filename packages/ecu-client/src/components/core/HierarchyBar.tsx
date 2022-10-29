@@ -14,9 +14,10 @@ function HierarchyBar() {
     query: HierarchyQuery,
     variables: {
       hierarchyIds,
-      sourceComponentId: id,
+      sourceComponentAddress: id,
     },
     pause: !id,
+    requestPolicy: 'network-only',
   })
   const navigate = useNavigate()
 

@@ -8,6 +8,7 @@ import { ComponentsQuery } from '../../queries'
 function Components() {
   const [componentsQueryResult] = useQuery({
     query: ComponentsQuery,
+    requestPolicy: 'network-only',
   })
 
   if (componentsQueryResult.fetching) {

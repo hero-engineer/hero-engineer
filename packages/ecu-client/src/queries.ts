@@ -1,6 +1,6 @@
 export const HierarchyQuery = `
-  query ($sourceComponentId: String!, $hierarchyIds: [String!]!) {
-    hierarchy (sourceComponentId: $sourceComponentId, hierarchyIds: $hierarchyIds) {
+  query ($sourceComponentAddress: String!, $hierarchyIds: [String!]!) {
+    hierarchy (sourceComponentAddress: $sourceComponentAddress, hierarchyIds: $hierarchyIds) {
       label
       hierarchyId
       componentAddress
@@ -43,16 +43,16 @@ export const CreateComponentMutation = `
 `
 
 export const AddComponentMutation = `
-  mutation ($sourceComponentId: String!, $targetComponentId: String!, $hierarchyIds: [String!]!, $hierarchyPosition: HierarchyPosition!) {
-    addComponent (sourceComponentId: $sourceComponentId, targetComponentId: $targetComponentId, hierarchyIds: $hierarchyIds, hierarchyPosition: $hierarchyPosition) {
+  mutation ($sourceComponentAddress: String!, $targetComponentAddress: String!, $hierarchyIds: [String!]!, $hierarchyPosition: HierarchyPosition!) {
+    addComponent (sourceComponentAddress: $sourceComponentAddress, targetComponentAddress: $targetComponentAddress, hierarchyIds: $hierarchyIds, hierarchyPosition: $hierarchyPosition) {
       address
     }
   }
 `
 
 export const DeleteComponentMutation = `
-  mutation ($sourceComponentId: String!, $hierarchyIds: [String!]!) {
-    deleteComponent (sourceComponentId: $sourceComponentId, hierarchyIds: $hierarchyIds) {
+  mutation ($sourceComponentAddress: String!, $hierarchyIds: [String!]!) {
+    deleteComponent (sourceComponentAddress: $sourceComponentAddress, hierarchyIds: $hierarchyIds) {
       address
     }
   }

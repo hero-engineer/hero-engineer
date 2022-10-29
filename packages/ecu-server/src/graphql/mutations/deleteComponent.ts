@@ -16,23 +16,23 @@ import updateComponentHierarchy from '../../domain/updateComponentHierarchy'
 import regenerate from '../../domain/regenerate'
 
 type DeleteComponentArgs = {
-  sourceComponentId: string
+  sourceComponentAddress: string
   hierarchyIds: string[]
 }
 
-async function deleteComponent(_: any, { sourceComponentId, hierarchyIds }: DeleteComponentArgs): Promise<FunctionNodeType | null> {
+async function deleteComponent(_: any, { sourceComponentAddress, hierarchyIds }: DeleteComponentArgs): Promise<FunctionNodeType | null> {
   console.log('___deleteComponent___')
 
-  const componentNode = getNodeByAddress(sourceComponentId)
+  const componentNode = getNodeByAddress(sourceComponentAddress)
 
   if (!componentNode) {
-    throw new Error(`File for Function with id ${sourceComponentId} not found`)
+    throw new Error(`File for Function with id ${sourceComponentAddress} not found`)
   }
 
   const fileNode = getNodesBySecondNeighbourg<FileNodeType>(componentNode.address, 'DeclaresFunction')[0]
 
   if (!fileNode) {
-    throw new Error(`File for Function with id ${sourceComponentId} not found`)
+    throw new Error(`File for Function with id ${sourceComponentAddress} not found`)
   }
 
   function mutate(x: any, previousX: any) {

@@ -61,14 +61,14 @@ export const typeDefs = gql`
   type Query {
     component(id: String!): FunctionNode
     components: [FunctionNode]
-    hierarchy(sourceComponentId: String!, hierarchyIds: [String!]!): [HierarchyItem]
+    hierarchy(sourceComponentAddress: String!, hierarchyIds: [String!]!): [HierarchyItem]
   }
 
   type Mutation {
     createComponent(name: String!): FunctionNode
-    addComponent(sourceComponentId: String!, targetComponentId: String!, hierarchyIds: [String!]!, hierarchyPosition: HierarchyPosition!): FunctionNode
-    deleteComponent(sourceComponentId: String!, hierarchyIds: [String!]!): FunctionNode
-    moveComponent(sourceComponentId: String!, sourceHierarchyIds: [String!]!, ttargetHierarchyIds: [String!]!, hierarchyPosition: HierarchyPosition!): [FunctionNode]
+    addComponent(sourceComponentAddress: String!, targetComponentAddress: String!, hierarchyIds: [String!]!, hierarchyPosition: HierarchyPosition!): FunctionNode
+    deleteComponent(sourceComponentAddress: String!, hierarchyIds: [String!]!): FunctionNode
+    moveComponent(sourceComponentAddress: String!, sourceHierarchyIds: [String!]!, ttargetHierarchyIds: [String!]!, hierarchyPosition: HierarchyPosition!): [FunctionNode]
   }
 
 `

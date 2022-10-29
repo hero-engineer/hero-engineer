@@ -29,25 +29,25 @@ import createHierarchyIdsAndKeys from '../../domain/createDataEcuAttributes'
 import regenerate from '../../domain/regenerate'
 
 type MoveComponentArgs = {
-  sourceComponentId: string
+  sourceComponentAddress: string
   sourceHierarchyIds: string[]
   targetHierarchyIds: string[]
   hierarchyPosition: HierarchyPositionType
 }
 
-async function moveComponent(_: any, { sourceComponentId, sourceHierarchyIds, targetHierarchyIds, hierarchyPosition }: MoveComponentArgs): Promise<FunctionNodeType | null> {
+async function moveComponent(_: any, { sourceComponentAddress, sourceHierarchyIds, targetHierarchyIds, hierarchyPosition }: MoveComponentArgs): Promise<FunctionNodeType | null> {
   console.log('___moveComponent___')
 
-  const sourceComponentNode = getNodeByAddress(sourceComponentId)
+  const sourceComponentNode = getNodeByAddress(sourceComponentAddress)
 
   if (!sourceComponentNode) {
-    throw new Error(`Component with id ${sourceComponentId} not found`)
+    throw new Error(`Component with id ${sourceComponentAddress} not found`)
   }
 
   const fileNode = getNodesBySecondNeighbourg<FileNodeType>(sourceComponentNode.address, 'DeclaresFunction')[0]
 
   if (!fileNode) {
-    throw new Error(`File for Function with id ${sourceComponentId} not found`)
+    throw new Error(`File for Function with id ${sourceComponentAddress} not found`)
   }
 
   console.log('sourceHierarchyIds', sourceHierarchyIds)
