@@ -4,6 +4,7 @@ import { MouseEvent, Ref, useCallback, useContext, useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 
 import EditionContext from '../contexts/EditionContext'
+import DragAndDropContext from '../contexts/DragAndDropContext'
 
 import useForkedRef from './useForkedRef'
 import useHierarchyId from './useHierarchyId'
@@ -33,6 +34,7 @@ function useEditionProps<T>(id: string, className = '') {
   const rootRef = useRef<T>(null)
   const hierarchyId = useHierarchyId(id, rootRef)
   const { hierarchyIds, setHierarchyIds } = useContext(EditionContext)
+  const { setDragAndDrop } = useContext(DragAndDropContext)
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'Node',
@@ -41,14 +43,17 @@ function useEditionProps<T>(id: string, className = '') {
       const dropResult = monitor.getDropResult<DropResult>()
 
       if (item && dropResult) {
-        alert(`You dropped ${item.hierarchyIds} into ${dropResult.hierarchyIds}!`)
+        setDragAndDrop({
+          sourceHierarchyIds: item.hierarchyIds,
+          targetHierarchyIds: dropResult.hierarchyIds,
+        })
       }
     },
     collect: monitor => ({
       isDragging: monitor.isDragging(),
       handlerId: monitor.getHandlerId(),
     }),
-  }), [])
+  }), [setDragAndDrop])
 
   const [{ canDrop, isOverCurrent }, drop] = useDrop(() => ({
     accept: 'Node',
