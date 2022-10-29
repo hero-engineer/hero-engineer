@@ -1,4 +1,4 @@
-import { GraphEdgeType, GraphNodeType, GraphType } from '../types'
+import { GraphEdgeType, GraphNodeType } from '../types'
 
 import { getGraph, setGraph } from './getset'
 
