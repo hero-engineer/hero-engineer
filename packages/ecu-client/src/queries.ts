@@ -3,7 +3,7 @@ export const HierarchyQuery = `
     hierarchy (sourceComponentId: $sourceComponentId, hierarchyIds: $hierarchyIds) {
       label
       hierarchyId
-      componentId
+      componentAddress
     }
   }
 `

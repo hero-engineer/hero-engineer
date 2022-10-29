@@ -11,7 +11,7 @@ import traverse from '@babel/traverse'
 import { ecuPropName } from '../configuration'
 import { FileNodeType, FunctionNodeType, ImportDeclarationsRegistry } from '../types'
 
-import { getNodeByAddress, getNodesByRole, getNodesBySecondNeighbourg } from '../graph'
+import { getNodeByAddress, getNodesByFirstNeighbourg, getNodesByRole, getNodesBySecondNeighbourg } from '../graph'
 import areArraysEqual from '../utils/areArraysEqual'
 import areArraysEqualAtStart from '../utils/areArraysEqualAtStart'
 import possiblyAddExtension from '../utils/possiblyAddExtension'
@@ -23,7 +23,7 @@ type IndexRegistry = Record<string, number>
 type HierarchyItem = {
   label: string
   hierarchyId?: string
-  componentId?: string
+  componentAddress?: string
 }
 
 function getComponentHierarchy(sourceComponentId: string, hierarchyIds: string[]) {
@@ -75,7 +75,15 @@ function getComponentHierarchy(sourceComponentId: string, hierarchyIds: string[]
   function traverseFileNode(fileNode: FileNodeType, index = 0, stop = () => {}, succeed = () => {}) {
     console.log('---->', fileNode.payload.name)
 
-    const label = `${fileNode.payload.name}[${index}]`
+    const componentNode = getNodesByFirstNeighbourg<FunctionNodeType>(fileNode.address, 'DeclaresFunction')[0]
+
+    if (!componentNode) {
+      console.log(`No component node found in file ${fileNode.address}`)
+
+      return
+    }
+
+    const label = `${componentNode.payload.name}[${index}]`
     const indexRegistry: IndexRegistry[] = [{}]
     const importDeclarationsRegistry: ImportDeclarationsRegistry = {}
     let shouldContinue = true
@@ -83,7 +91,7 @@ function getComponentHierarchy(sourceComponentId: string, hierarchyIds: string[]
 
     hierarchy.push({
       label,
-      componentId: fileNode.address,
+      componentAddress: componentNode.address,
     })
 
     traverse(fileNode.payload.ast, {

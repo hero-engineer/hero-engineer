@@ -55,7 +55,7 @@ export const typeDefs = gql`
   type HierarchyItem {
     label: String!
     hierarchyId: String
-    componentId: String
+    componentAddress: String
   }
 
   type Query {

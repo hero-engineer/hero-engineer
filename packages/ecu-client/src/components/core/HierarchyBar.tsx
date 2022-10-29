@@ -16,25 +16,27 @@ function HierarchyBar() {
       hierarchyIds,
       sourceComponentId: id,
     },
-    pause: !(hierarchyIds.length && id),
+    pause: !id,
   })
   const navigate = useNavigate()
 
   const handleClick = useCallback((hierarchy: any[], index: number) => {
-    if (hierarchy[index].componentId) {
-      navigate(`/__ecu__/component/${hierarchy[index].componentId}`)
-    }
-    else {
-      const nextHierarchyIds: string[] = []
+    if (hierarchy[index].componentAddress) {
+      setHierarchyIds([])
+      navigate(`/__ecu__/component/${hierarchy[index].componentAddress}`)
 
-      for (let i = 0; i <= index; i++) {
-        if (hierarchy[i].hierarchyId) {
-          nextHierarchyIds.push(hierarchy[i].hierarchyId)
-        }
+      return
+    }
+
+    const nextHierarchyIds: string[] = []
+
+    for (let i = 0; i <= index; i++) {
+      if (hierarchy[i].hierarchyId) {
+        nextHierarchyIds.push(hierarchy[i].hierarchyId)
       }
-
-      setHierarchyIds(nextHierarchyIds)
     }
+
+    setHierarchyIds(nextHierarchyIds)
   }, [navigate, setHierarchyIds])
 
   if (!id) {
@@ -45,6 +47,9 @@ function HierarchyBar() {
     return null
   }
   if (hierarchyQueryResult.error) {
+    return null
+  }
+  if (!hierarchyQueryResult.data) {
     return null
   }
 
