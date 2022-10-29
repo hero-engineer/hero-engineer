@@ -16,7 +16,6 @@ function getHierarchyId(targetElement: HTMLElement, targetId: string) {
   }
 
   function traverse(element: HTMLElement) {
-    console.log('traverse', element)
     const id = element.getAttribute('data-ecu')
 
     if (id) {
@@ -35,11 +34,7 @@ function getHierarchyId(targetElement: HTMLElement, targetId: string) {
     return false
   }
 
-  console.log('currentElement', currentElement)
-
   const found = traverse(currentElement)
-
-  console.log('hierarchyIdsRegistry', hierarchyIdsRegistry)
 
   return found ? `${targetId}:${hierarchyIdsRegistry[targetId]}` : targetId
 }
@@ -51,8 +46,6 @@ function useHierarchyId<T>(id: string, ref: RefObject<T>) {
   const updateHierarchyId = useCallback(() => {
     if (!ref?.current) return
 
-    console.log('ref.current', ref.current)
-
     setHierarchyId(getHierarchyId(ref.current as any as HTMLElement, id))
   }, [id, ref])
 
@@ -63,13 +56,11 @@ function useHierarchyId<T>(id: string, ref: RefObject<T>) {
   useEffect(() => {
     if (hot) {
       hot.on('vite:beforeUpdate', () => {
-        console.log('updating registry')
         updateHierarchyId()
       })
     }
   }, [hot, updateHierarchyId])
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   return hierarchyId
 }
 

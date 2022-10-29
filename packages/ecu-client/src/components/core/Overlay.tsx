@@ -1,6 +1,7 @@
 import { memo, useContext, useState } from 'react'
 import { useMutation, useQuery } from 'urql'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Button, Div, Input, MenuItem, Select } from 'honorable'
 
 import { AddComponentMutation, ComponentsQuery, CreateComponentMutation, DeleteComponentMutation } from '../../queries'
 
@@ -14,35 +15,35 @@ function Overlay() {
   function handleCreateComponentClick() {
     createComponent({ name: componentName })
     .then(result => {
-      console.log('result', result)
       navigate(`/__ecu__/component/${result.data.createComponent.id}`)
     })
   }
 
   return (
-    <div>
-      <input
-        value={componentName}
-        onChange={e => setComponentName(e.target.value)}
-      />
-      <button
-        onClick={handleCreateComponentClick}
-        type="button"
-      >
-        Create component
-      </button>
+    <Div
+      xflex="x4"
+      gap={1}
+    >
       <Link to="/__ecu__/components">
         Components
       </Link>
+      <Input
+        value={componentName}
+        onChange={e => setComponentName(e.target.value)}
+      />
+      <Button
+        onClick={handleCreateComponentClick}
+      >
+        Create component
+      </Button>
       <AddComponentButton />
       <DeleteComponentButton />
-    </div>
+    </Div>
   )
 }
 
 function AddComponentButton() {
   const { id } = useParams()
-  console.log('id', useParams())
   const { hierarchyIds } = useContext(EditionContext)
   const [componentId, setComponentId] = useState('')
   const [hierarchyPosition, setHierarchyPosition] = useState('before')
@@ -66,39 +67,53 @@ function AddComponentButton() {
   if (!id) return null
 
   return (
-    <div>
-      <select
+    <Div
+      xflex="x4"
+      gap={1}
+    >
+      <Select
         value={componentId}
         onChange={event => setComponentId(event.target.value)}
       >
-        <option value="">Select a component</option>
+        <MenuItem value="">
+          Select a component
+        </MenuItem>
         {componentsQueryResult.data.components.map((component: any) => (
-          <option
+          <MenuItem
             key={component.id}
             value={component.id}
           >
             {component.name}
-          </option>
+          </MenuItem>
         ))}
-      </select>
-      <select
+      </Select>
+      <Select
         value={hierarchyPosition}
         onChange={event => setHierarchyPosition(event.target.value)}
       >
-        <option value="before">Before</option>
-        <option value="after">After</option>
-        <option value="within">Within</option>
-        <option value="children">Children</option>
-        <option value="parent">Parent</option>
-      </select>
-      <button
+        <MenuItem value="before">
+          Before
+        </MenuItem>
+        <MenuItem value="after">
+          After
+        </MenuItem>
+        <MenuItem value="within">
+          Within
+        </MenuItem>
+        <MenuItem value="children">
+          Children
+        </MenuItem>
+        <MenuItem value="parent">
+          Parent
+        </MenuItem>
+      </Select>
+      <Button
         onClick={handleAddComponentClick}
-        type="button"
         disabled={!(componentId && hierarchyIds.length)}
       >
         Add component
-      </button>
-    </div>
+      </Button>
+    </Div>
   )
 }
 
@@ -117,15 +132,12 @@ function DeleteComponentButton() {
   if (!id) return null
 
   return (
-    <div>
-      <button
-        onClick={handleDeleteComponentClick}
-        type="button"
-        disabled={!hierarchyIds.length}
-      >
-        Delete component
-      </button>
-    </div>
+    <Button
+      onClick={handleDeleteComponentClick}
+      disabled={!hierarchyIds.length}
+    >
+      Delete component
+    </Button>
   )
 }
 

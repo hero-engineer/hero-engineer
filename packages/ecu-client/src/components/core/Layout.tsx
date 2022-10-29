@@ -1,15 +1,16 @@
 import { memo } from 'react'
 import { Outlet } from 'react-router-dom'
+import { Div, H1 } from 'honorable'
 
 import Overlay from './Overlay'
 
 function Layout() {
   return (
-    <div>
+    <Div p={1}>
       <Overlay />
-      <h1>Ecu</h1>
+      <H1>Ecu</H1>
       <Outlet />
-    </div>
+    </Div>
   )
 }
 

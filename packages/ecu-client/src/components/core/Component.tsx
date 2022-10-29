@@ -1,6 +1,7 @@
 import { memo } from 'react'
 import { useQuery } from 'urql'
 import { useParams } from 'react-router-dom'
+import { H2, P } from 'honorable'
 
 import { ComponentQuery } from '../../queries'
 
@@ -27,8 +28,8 @@ function Component() {
 
   return (
     <>
-      <h2>{componentQueryResult.data.component.name}</h2>
-      <p>{componentQueryResult.data.component.file.relativePath}</p>
+      <H2>{componentQueryResult.data.component.name}</H2>
+      <P>{componentQueryResult.data.component.file.relativePath}</P>
       <ComponentEditor component={componentQueryResult.data.component} />
     </>
   )
