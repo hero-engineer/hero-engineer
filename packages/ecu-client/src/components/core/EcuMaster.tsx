@@ -23,7 +23,7 @@ type EcuMasterProps = PropsWithChildren<{
   hot?: any
 }>
 
-function EcuMaster({ mode = 'production', hot = null }: EcuMasterProps) {
+function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps) {
   const [hierarchyIds, setHierarchyIds] = usePersistedState<string[]>('ecu-hierarchyIds', [])
   const editionContextValue = useMemo<EditionContextType>(() => ({ hierarchyIds, setHierarchyIds }), [hierarchyIds, setHierarchyIds])
 
@@ -39,7 +39,9 @@ function EcuMaster({ mode = 'production', hot = null }: EcuMasterProps) {
             <HotContext.Provider value={hot}>
               <EditionContext.Provider value={editionContextValue}>
                 <DragAndDropContext.Provider value={dragAndDropContextValue}>
-                  <Router />
+                  <Router>
+                    {children}
+                  </Router>
                 </DragAndDropContext.Provider>
               </EditionContext.Provider>
             </HotContext.Provider>

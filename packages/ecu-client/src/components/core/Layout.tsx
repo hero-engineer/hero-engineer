@@ -16,8 +16,7 @@ function Layout() {
       <Div
         xflex="y2s"
         overflowY="auto"
-        pt={0.5}
-        px={0.5}
+        p={0.5}
       >
         <Outlet />
       </Div>

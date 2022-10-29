@@ -8,7 +8,6 @@ import Layout from './Layout'
 function Router({ children }: any) {
   return (
     <BrowserRouter>
-      {children}
       <Routes>
         <Route
           path="/__ecu__"
@@ -23,6 +22,10 @@ function Router({ children }: any) {
             element={<Component />}
           />
         </Route>
+        <Route
+          path="*"
+          element={children}
+        />
       </Routes>
     </BrowserRouter>
   )
