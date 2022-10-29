@@ -59,6 +59,10 @@ function HierarchyBar() {
 
   const { hierarchy } = hierarchyQueryResult.data
 
+  if (!hierarchy.length) {
+    return null
+  }
+
   return (
     <Div
       xflex="x4"
