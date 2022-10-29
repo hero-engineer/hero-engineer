@@ -7,6 +7,8 @@ import { AddComponentMutation, ComponentsQuery, CreateComponentMutation, DeleteC
 
 import EditionContext from '../../contexts/EditionContext'
 
+import HierarchyBar from './HierarchyBar'
+
 function Overlay() {
   const [componentName, setComponentName] = useState('')
   const [, createComponent] = useMutation(CreateComponentMutation)
@@ -20,25 +22,28 @@ function Overlay() {
   }
 
   return (
-    <Div
-      xflex="x4"
-      gap={1}
-    >
-      <Link to="/__ecu__/components">
-        Components
-      </Link>
-      <Input
-        value={componentName}
-        onChange={e => setComponentName(e.target.value)}
-      />
-      <Button
-        onClick={handleCreateComponentClick}
+    <>
+      <HierarchyBar />
+      <Div
+        xflex="x4"
+        gap={1}
       >
-        Create component
-      </Button>
-      <AddComponentButton />
-      <DeleteComponentButton />
-    </Div>
+        <Link to="/__ecu__/components">
+          Components
+        </Link>
+        <Input
+          value={componentName}
+          onChange={e => setComponentName(e.target.value)}
+        />
+        <Button
+          onClick={handleCreateComponentClick}
+        >
+          Create component
+        </Button>
+        <AddComponentButton />
+        <DeleteComponentButton />
+      </Div>
+    </>
   )
 }
 

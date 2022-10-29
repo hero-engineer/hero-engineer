@@ -1,7 +1,6 @@
 import path from 'path'
 
 import {
-  File,
   ImportDefaultSpecifier,
   ImportNamespaceSpecifier,
   ImportSpecifier,
@@ -9,13 +8,11 @@ import {
 } from '@babel/types'
 import traverse from '@babel/traverse'
 
-import { ParseResult } from '@babel/parser'
-
-import { FileNodeType, FunctionNodeType, ImportDeclarationsRegistry } from '../types'
 import { ecuPropName } from '../configuration'
+import { FileNodeType, FunctionNodeType, ImportDeclarationsRegistry } from '../types'
 
 import graph from '../graph'
-import { getNodesByRole } from '../graph/helpers'
+import { getNodeByAddress, getNodesByRole, getNodesBySecondNeighbourg } from '../graph/helpers'
 
 import areArraysEqual from '../utils/areArraysEqual'
 import areArraysEqualAtStart from '../utils/areArraysEqualAtStart'
@@ -23,26 +20,37 @@ import possiblyAddExtension from '../utils/possiblyAddExtension'
 
 import extractIdsAndIndexes from './extractIdsAndIndexes'
 
-type ImpactedType = {
-  fileNode: FileNodeType
-  ast: ParseResult<File>
-  importDeclarationsRegistry: ImportDeclarationsRegistry
-}
+function getComponentHierarchy(sourceComponentId: string, hierarchyIds: string[]) {
+  console.log('getComponentHierarchy')
 
-function updateComponentHierarchy(
-  fileNode: FileNodeType,
-  hierarchyIds: string[],
-  mutate: (x: any, previousX: any) => void,
-): ImpactedType[] {
-  console.log('updateComponentHierarchy', fileNode.payload.name, hierarchyIds)
+  if (!hierarchyIds.length) {
+    console.log('No hierarchy')
 
-  const { ast } = fileNode.payload
-  const componentNodes = getNodesByRole<FunctionNodeType>(graph, 'Function').filter(n => n.payload.isComponent)
+    return []
+  }
+
+  const componentNode = getNodeByAddress<FunctionNodeType>(graph, sourceComponentId)
+
+  if (!componentNode) {
+    console.log(`Component node with id ${sourceComponentId} not found`)
+
+    return []
+  }
+
+  const fileNode = getNodesBySecondNeighbourg<FileNodeType>(graph, componentNode.address, 'declaresFunction')[0]
+
+  if (!fileNode) {
+    console.log(`Function for component node with id ${sourceComponentId} not found`)
+
+    return []
+  }
+
+  const hierarchy: string[] = [] // retval
   const fileNodes = getNodesByRole<FileNodeType>(graph, 'File')
+  const componentNodes = getNodesByRole<FunctionNodeType>(graph, 'Function').filter(n => n.payload.isComponent)
   const [ids, indexes] = extractIdsAndIndexes(hierarchyIds)
   const currentHierarchyIds: string[] = []
   const currentIndexRegistry: Record<string, number> = {}
-  const impacted: ImpactedType[] = []
 
   const isSuccessiveNodeFound = (nextHierarchyId: string) => {
     const nextHierarchyIds = [...currentHierarchyIds, nextHierarchyId]
@@ -55,24 +63,12 @@ function updateComponentHierarchy(
   console.log('indexes', indexes)
   console.log('___start___')
 
-  function performMutation(x: any, previousX: any = null) {
-    mutate(x, previousX)
+  function traverseFileNode(fileNode: FileNodeType, previousX?: any) {
+    hierarchy.push(fileNode.payload.name)
 
-    if (previousX) {
-      previousX.stop()
-    }
-
-    x.stop()
-  }
-
-  function traverseFileNode(ast: ParseResult<File>, fileNode: FileNodeType, previousX: any = null) {
     const importDeclarationsRegistry: ImportDeclarationsRegistry = {}
 
-    if (!impacted.some(x => x.fileNode.address === fileNode.address)) {
-      impacted.push({ fileNode, ast, importDeclarationsRegistry })
-    }
-
-    traverse(ast, {
+    traverse(fileNode.payload.ast, {
       ImportDeclaration(x: any) {
         if (!importDeclarationsRegistry[fileNode.address]) {
           importDeclarationsRegistry[fileNode.address] = []
@@ -99,13 +95,18 @@ function updateComponentHierarchy(
 
             if (isSuccessiveNodeFound(hierarchyId)) {
               currentHierarchyIds.push(hierarchyId)
+              hierarchy.push(`${x.node.openingElement.name.name}[${currentIndexRegistry[hierarchyId]}]`)
 
               console.log('PUSHED')
 
               if (isNodeFound()) {
                 console.log('SUCCESS')
 
-                performMutation(x, previousX)
+                x.stop()
+
+                if (previousX) {
+                  previousX.stop()
+                }
                 // console.log('currentHierarchyIds', currentHierarchyIds)
                 // console.log('currentIndexRegistry', currentIndexRegistry)
               }
@@ -135,7 +136,7 @@ function updateComponentHierarchy(
                 if (fileNode) {
                   console.log('-->', fileNode.payload.name)
 
-                  traverseFileNode(fileNode.payload.ast, fileNode, x)
+                  traverseFileNode(fileNode, x)
                 }
               }
             }
@@ -148,9 +149,9 @@ function updateComponentHierarchy(
     })
   }
 
-  traverseFileNode(ast, fileNode)
+  traverseFileNode(fileNode)
 
-  return impacted
+  return hierarchy
 }
 
-export default updateComponentHierarchy
+export default getComponentHierarchy

@@ -2,6 +2,7 @@ import { gql } from 'apollo-server'
 
 import getComponent from './queries/getComponent'
 import getComponents from './queries/getComponents'
+import getHierarchy from './queries/getHierarchy'
 import createComponent from './mutations/createComponent'
 import addComponent from './mutations/addComponent'
 import deleteComponent from './mutations/deleteComponent'
@@ -30,6 +31,7 @@ export const typeDefs = gql`
   type Query {
     component(id: String!): Component
     components: [Component]
+    hierarchy(sourceComponentId: String!, hierarchyIds: [String!]!): [String]
   }
 
   type Mutation {
@@ -43,6 +45,7 @@ export const resolvers = {
   Query: {
     component: getComponent,
     components: getComponents,
+    hierarchy: getHierarchy,
   },
   Mutation: {
     createComponent,

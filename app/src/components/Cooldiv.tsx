@@ -5,8 +5,8 @@ function CoolDiv(props: any) {
 
   return (
     <Div
-      key="MUNiXV1nZ1"
-      data-ecu="EJElelU6aj:0"
+      key="9rsCX5tu5X"
+      data-ecu="Qoog2yLP4d:0"
     >
       Edit me I'm famous
     </Div>

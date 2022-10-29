@@ -1,7 +1,7 @@
 import { GraphEdgeType, GraphNodeType, GraphType } from '../types'
 
-export function getNodeByAddress(graph: GraphType, address: string) {
-  return graph.nodes[address]
+export function getNodeByAddress<T extends GraphNodeType>(graph: GraphType, address: string) {
+  return graph.nodes[address] as T
 }
 
 export function addNode(graph: GraphType, node: GraphNodeType) {
