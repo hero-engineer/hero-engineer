@@ -7,8 +7,9 @@ function CoolDaddy({
 
   return (
     <Div
-      key="zCKkmMfwC"
-      data-ecu="LjYdPD5Vi5:0"
+      data-ecu-hierarchy="vYjiWt9R4t:0"
+      key="KOE7hec2m"
+      data-ecu="cPNjJUMNPv:0"
     >
       I'm a cool daddy look at me
       {' '}

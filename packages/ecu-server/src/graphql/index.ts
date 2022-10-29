@@ -28,10 +28,16 @@ export const typeDefs = gql`
     parent
   }
 
+  type HierarchyItem {
+    label: String
+    hierarchyId: String
+    componentId: String
+  }
+
   type Query {
     component(id: String!): Component
     components: [Component]
-    hierarchy(sourceComponentId: String!, hierarchyIds: [String!]!): [String]
+    hierarchy(sourceComponentId: String!, hierarchyIds: [String!]!): [HierarchyItem]
   }
 
   type Mutation {

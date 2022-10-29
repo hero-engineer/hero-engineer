@@ -18,7 +18,15 @@ import areArraysEqual from '../utils/areArraysEqual'
 import areArraysEqualAtStart from '../utils/areArraysEqualAtStart'
 import possiblyAddExtension from '../utils/possiblyAddExtension'
 
+import extractIdAndIndex from './extractIdAndIndex'
 import extractIdsAndIndexes from './extractIdsAndIndexes'
+
+type IndexRegistry = Record<string, number>
+type HierarchyItem = {
+  label: string
+  hierarchyId?: string
+  componentId?: string
+}
 
 function getComponentHierarchy(sourceComponentId: string, hierarchyIds: string[]) {
   console.log('getComponentHierarchy')
@@ -45,28 +53,39 @@ function getComponentHierarchy(sourceComponentId: string, hierarchyIds: string[]
     return []
   }
 
-  const hierarchy: string[] = [] // retval
+  const hierarchy: HierarchyItem[] = [] // retval
   const fileNodes = getNodesByRole<FileNodeType>(graph, 'File')
   const componentNodes = getNodesByRole<FunctionNodeType>(graph, 'Function').filter(n => n.payload.isComponent)
   const [ids, indexes] = extractIdsAndIndexes(hierarchyIds)
   const currentHierarchyIds: string[] = []
-  const currentIndexRegistry: Record<string, number> = {}
+  const lastingIndexRegistry: IndexRegistry = {}
 
   const isSuccessiveNodeFound = (nextHierarchyId: string) => {
     const nextHierarchyIds = [...currentHierarchyIds, nextHierarchyId]
 
-    return areArraysEqualAtStart(nextHierarchyIds, ids) && areArraysEqualAtStart(nextHierarchyIds.map(h => currentIndexRegistry[h]), indexes)
+    return areArraysEqualAtStart(nextHierarchyIds, ids) && areArraysEqualAtStart(nextHierarchyIds.map(h => lastingIndexRegistry[h]), indexes)
   }
-  const isNodeFound = () => areArraysEqual(currentHierarchyIds, ids) && areArraysEqual(currentHierarchyIds.map(hierarchyId => currentIndexRegistry[hierarchyId]), indexes)
+  const isNodeFound = () => areArraysEqual(currentHierarchyIds, ids) && areArraysEqual(currentHierarchyIds.map(hierarchyId => lastingIndexRegistry[hierarchyId]), indexes)
 
   console.log('ids', ids)
   console.log('indexes', indexes)
   console.log('___start___')
 
-  function traverseFileNode(fileNode: FileNodeType, previousX?: any) {
-    hierarchy.push(fileNode.payload.name)
+  function traverseFileNode(fileNode: FileNodeType, index: number, stop = () => {}, setSuccess = () => {}) {
+    console.log('---->', fileNode.payload.name)
+
+    const label = `${fileNode.payload.name}[${index}]`
+    const indexRegistry: IndexRegistry[] = [{}]
+
+    hierarchy.push({
+      label,
+      componentId: fileNode.address,
+    })
 
     const importDeclarationsRegistry: ImportDeclarationsRegistry = {}
+
+    let shouldContinue = true
+    let shouldPushIndex = true
 
     traverse(fileNode.payload.ast, {
       ImportDeclaration(x: any) {
@@ -91,24 +110,33 @@ function getComponentHierarchy(sourceComponentId: string, hierarchyIds: string[]
           if (hierarchyId) {
             console.log('-->', hierarchyId)
 
-            currentIndexRegistry[hierarchyId] = currentIndexRegistry[hierarchyId] + 1 || 0
+            const [componentId] = extractIdAndIndex(hierarchyId)
+
+            console.log('componentId', componentId)
+
+            indexRegistry[indexRegistry.length - 1][componentId] = indexRegistry[indexRegistry.length - 1][componentId] + 1 || 0
+            lastingIndexRegistry[hierarchyId] = lastingIndexRegistry[hierarchyId] + 1 || 0
+            shouldPushIndex = true
+
+            console.log('JSXElement indexRegistry', indexRegistry)
 
             if (isSuccessiveNodeFound(hierarchyId)) {
               currentHierarchyIds.push(hierarchyId)
-              hierarchy.push(`${x.node.openingElement.name.name}[${currentIndexRegistry[hierarchyId]}]`)
+              hierarchy.push({
+                label: `${x.node.openingElement.name.name}[${indexRegistry[indexRegistry.length - 1][componentId]}]`,
+                hierarchyId: `${hierarchyId}:${lastingIndexRegistry[hierarchyId]}`,
+              })
 
               console.log('PUSHED')
 
               if (isNodeFound()) {
                 console.log('SUCCESS')
 
-                x.stop()
+                shouldContinue = false
+                setSuccess()
 
-                if (previousX) {
-                  previousX.stop()
-                }
-                // console.log('currentHierarchyIds', currentHierarchyIds)
-                // console.log('currentIndexRegistry', currentIndexRegistry)
+                x.stop()
+                stop()
               }
             }
           }
@@ -124,32 +152,72 @@ function getComponentHierarchy(sourceComponentId: string, hierarchyIds: string[]
             if (relativeImportDeclaration) {
               const absolutePath = possiblyAddExtension(path.join(path.dirname(fileNode.payload.path), relativeImportDeclaration.value))
 
-              // console.log('-->', absolutePath)
+              console.log('-->', absolutePath)
 
               const componentNode = componentNodes.find(n => n.payload.name === componentName && n.payload.path === absolutePath)
 
               if (componentNode) {
-                // console.log('componentNode.payload.name', componentNode.payload.name)
+                console.log('componentNode.payload.name', componentNode.payload.name)
 
                 const fileNode = fileNodes.find(n => n.payload.path === componentNode.payload.path)
 
                 if (fileNode) {
                   console.log('-->', fileNode.payload.name)
 
-                  traverseFileNode(fileNode, x)
+                  indexRegistry[indexRegistry.length - 1][fileNode.payload.name] = indexRegistry[indexRegistry.length - 1][fileNode.payload.name] + 1 || 0
+                  console.log('JSXElement indexRegistry', indexRegistry)
+
+                  shouldPushIndex = false
+
+                  traverseFileNode(
+                    fileNode,
+                    indexRegistry[indexRegistry.length - 1][fileNode.payload.name],
+                    () => {
+                      x.stop()
+                      stop()
+                    },
+                    () => {
+                      shouldContinue = false
+                    }
+                  )
                 }
               }
             }
           }
         }
 
-        console.log('currentHierarchyIds', currentHierarchyIds)
-        console.log('currentIndexRegistry', currentIndexRegistry)
+        if (!x.node.selfClosing && shouldPushIndex) {
+          indexRegistry.push({})
+        }
+
+        console.log('JSXElement post indexRegistry', indexRegistry)
+      },
+      JSXClosingElement() {
+        // Prevent fragments from interering with indexing
+        if (indexRegistry.length > 1) {
+          indexRegistry.pop()
+        }
+
+        console.log('JSXClosingElement indexRegistry', indexRegistry)
       },
     })
+
+    // If no success, remove inserted element from hierarchy
+    if (shouldContinue) {
+      for (let i = hierarchy.length - 1; i >= 0; i--) {
+        const popped = hierarchy.pop()
+
+        // console.log('popped', popped)
+        if (popped?.label === label) break
+      }
+    }
+
+    console.log('<----', fileNode.payload.name)
+    console.log('indexRegistry', indexRegistry)
+    console.log('hierarchy', hierarchy)
   }
 
-  traverseFileNode(fileNode)
+  traverseFileNode(fileNode, 0)
 
   return hierarchy
 }
