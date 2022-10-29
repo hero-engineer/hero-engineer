@@ -53,7 +53,7 @@ async function addComponent(_: any, { sourceComponentId, targetComponentId, hier
   console.log('hierarchyIds', hierarchyIds)
   // console.log('reducedHierarchy', reducedHierarchyIds)
 
-  const fileNode = getNodesBySecondNeighbourg<FileNodeType>(sourceComponentNode.address, 'declaresFunction')[0]
+  const fileNode = getNodesBySecondNeighbourg<FileNodeType>(sourceComponentNode.address, 'DeclaresFunction')[0]
 
   if (!fileNode) {
     throw new Error(`File for Function with id ${sourceComponentId} not found`)
@@ -142,7 +142,7 @@ async function addComponent(_: any, { sourceComponentId, targetComponentId, hier
 
     postTraverse(fileNode, ast, importDeclarationsRegistry)
 
-    const componentNode = getNodesByFirstNeighbourg<FunctionNodeType>(fileNode.address, 'declaresFunction')[0]
+    const componentNode = getNodesByFirstNeighbourg<FunctionNodeType>(fileNode.address, 'DeclaresFunction')[0]
 
     if (!componentNode) return
 

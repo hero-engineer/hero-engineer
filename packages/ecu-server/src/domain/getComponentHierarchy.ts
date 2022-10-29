@@ -43,7 +43,7 @@ function getComponentHierarchy(sourceComponentId: string, hierarchyIds: string[]
     return []
   }
 
-  const fileNode = getNodesBySecondNeighbourg<FileNodeType>(componentNode.address, 'declaresFunction')[0]
+  const fileNode = getNodesBySecondNeighbourg<FileNodeType>(componentNode.address, 'DeclaresFunction')[0]
 
   if (!fileNode) {
     console.log(`Function for component node with id ${sourceComponentId} not found`)

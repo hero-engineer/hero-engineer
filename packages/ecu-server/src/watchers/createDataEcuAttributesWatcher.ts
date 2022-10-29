@@ -9,7 +9,7 @@ async function createDataEcuAttributesWatcher() {
   const componentNodes = getNodesByRole<FunctionNodeType>('Function').filter(node => node.payload.isComponent)
 
   await Promise.all(componentNodes.map(async componentNode => {
-    const fileNode = getNodesBySecondNeighbourg<FileNodeType>(componentNode.address, 'declaresFunction')[0]
+    const fileNode = getNodesBySecondNeighbourg<FileNodeType>(componentNode.address, 'DeclaresFunction')[0]
 
     if (!fileNode) return
 

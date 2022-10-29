@@ -29,7 +29,7 @@ async function deleteComponent(_: any, { sourceComponentId, hierarchyIds }: Dele
     throw new Error(`File for Function with id ${sourceComponentId} not found`)
   }
 
-  const fileNode = getNodesBySecondNeighbourg<FileNodeType>(componentNode.address, 'declaresFunction')[0]
+  const fileNode = getNodesBySecondNeighbourg<FileNodeType>(componentNode.address, 'DeclaresFunction')[0]
 
   if (!fileNode) {
     throw new Error(`File for Function with id ${sourceComponentId} not found`)
@@ -67,7 +67,7 @@ async function deleteComponent(_: any, { sourceComponentId, hierarchyIds }: Dele
     const regenerated = await regenerate(fileNode, ast)
 
     if (regenerated) {
-      impactedComponentNode = getNodesByFirstNeighbourg<FunctionNodeType>(fileNode.address, 'declaresFunction')[0] || null
+      impactedComponentNode = getNodesByFirstNeighbourg<FunctionNodeType>(fileNode.address, 'DeclaresFunction')[0] || null
     }
   }))
 

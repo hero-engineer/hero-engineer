@@ -33,7 +33,7 @@ async function createComponent(_: any, { name }: CreateComponentArgs): Promise<F
 
   addFileDependencies(fileNode)
 
-  const componentNode = getNodesByFirstNeighbourg<FunctionNodeType>(fileNode.address, 'declaresFunction')[0]
+  const componentNode = getNodesByFirstNeighbourg<FunctionNodeType>(fileNode.address, 'DeclaresFunction')[0]
 
   const ast = createDataEcuAttributes(componentNode, fileNode.payload.ast)
 

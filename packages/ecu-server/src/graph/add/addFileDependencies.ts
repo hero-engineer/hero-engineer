@@ -27,11 +27,11 @@ function addFileDependencies(fileNode: FileNodeType) {
         const dependency = fileNodes.find(n => n.payload.relativePath === relativePath)
 
         if (dependency) {
-          addEdge([fileNode.address, 'importsFile', dependency.address])
+          addEdge([fileNode.address, 'ImportsFile', dependency.address])
         }
       }
       else {
-        addEdge([fileNode.address, 'importsModule', value])
+        addEdge([fileNode.address, 'ImportsModule', value])
       }
     },
   })
@@ -71,7 +71,7 @@ function addFileDependencies(fileNode: FileNodeType) {
       }, path.scope, path)
 
       addNode(functionNode)
-      addEdge([fileNode.address, 'declaresFunction', functionNode.address])
+      addEdge([fileNode.address, 'DeclaresFunction', functionNode.address])
     },
   })
 
