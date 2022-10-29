@@ -1,5 +1,0 @@
-export declare const ComponentsQuery = "\n  query {\n    components {\n      id\n      name\n    }\n  }\n";
-export declare const ComponentQuery = "\n  query ($id: String!){\n    component (id: $id) {\n      id\n      name\n      file {\n        id\n        path\n        relativePath\n      }\n    }\n  }\n";
-export declare const CreateComponentMutation = "\n  mutation ($name: String!) {\n    createComponent (name: $name) {\n      id\n    }\n  }\n";
-export declare const AddComponentMutation = "\n  mutation ($sourceComponentId: String!, $targetComponentId: String!, $hierarchyIds: [String!]!, $hierarchyPosition: ComponentHierarchyPosition!) {\n    addComponent (sourceComponentId: $sourceComponentId, targetComponentId: $targetComponentId, hierarchyIds: $hierarchyIds, hierarchyPosition: $hierarchyPosition) {\n      id\n    }\n  }\n";
-export declare const DeleteComponentMutation = "\n  mutation ($sourceComponentId: String!, $hierarchyIds: [String!]!) {\n    deleteComponent (sourceComponentId: $sourceComponentId, hierarchyIds: $hierarchyIds) {\n      id\n    }\n  }\n";

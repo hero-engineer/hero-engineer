@@ -22,3 +22,4 @@ node_modules
 *.sw?
 
 vite.config.ts.timestamp*
+dist
