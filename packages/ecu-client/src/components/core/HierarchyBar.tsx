@@ -1,5 +1,5 @@
-import { memo, useContext } from 'react'
-import { useParams } from 'react-router-dom'
+import { memo, useCallback, useContext } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useQuery } from 'urql'
 import { Div } from 'honorable'
 
@@ -9,7 +9,7 @@ import { HierarchyQuery } from '../../queries'
 
 function HierarchyBar() {
   const { id = '' } = useParams()
-  const { hierarchyIds } = useContext(EditionContext)
+  const { hierarchyIds, setHierarchyIds } = useContext(EditionContext)
   const [hierarchyQueryResult] = useQuery({
     query: HierarchyQuery,
     variables: {
@@ -18,6 +18,24 @@ function HierarchyBar() {
     },
     pause: !(hierarchyIds.length && id),
   })
+  const navigate = useNavigate()
+
+  const handleClick = useCallback((hierarchy: any[], index: number) => {
+    if (hierarchy[index].componentId) {
+      navigate(`/__ecu__/component/${hierarchy[index].componentId}`)
+    }
+    else {
+      const nextHierarchyIds: string[] = []
+
+      for (let i = 0; i <= index; i++) {
+        if (hierarchy[i].hierarchyId) {
+          nextHierarchyIds.push(hierarchy[i].hierarchyId)
+        }
+      }
+
+      setHierarchyIds(nextHierarchyIds)
+    }
+  }, [navigate, setHierarchyIds])
 
   if (!id) {
     return null
@@ -40,8 +58,11 @@ function HierarchyBar() {
       xflex="x4"
       gap={0.5}
     >
-      {(hierarchy as any[]).map(({ label, componentId }, i) => (
-        <Div key={i}>
+      {(hierarchy as any[]).map(({ label }, i, a) => (
+        <Div
+          key={i}
+          onClick={() => handleClick(a, i)}
+        >
           {label}
         </Div>
       ))}
