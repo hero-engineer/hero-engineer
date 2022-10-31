@@ -19,10 +19,10 @@ import traverse from '@babel/traverse'
 
 import { ParseResult } from '@babel/parser'
 
-import { FileNodeType, FunctionNodeType, HierarchyPositionType, ImportDeclarationsRegistry } from '../../types'
+import { FileNodeType, FunctionNodeType, HierarchyPositionType, HistoryMutationReturnType, ImportDeclarationsRegistry } from '../../types'
 
 import { getNodeByAddress, getNodesByFirstNeighbourg, getNodesBySecondNeighbourg } from '../../graph'
-import updateGraphHash from '../../graph/hash/updateGraphHash'
+import updateKKGraphHash from '../../graph/hash/updateGraphHash'
 
 import updateComponentHierarchy from '../../domain/updateComponentHierarchy'
 import createHierarchyIdsAndKeys from '../../domain/createDataEcuAttributes'
@@ -35,7 +35,7 @@ type MoveComponentArgs = {
   hierarchyPosition: HierarchyPositionType
 }
 
-async function moveComponent(_: any, { sourceComponentAddress, sourceHierarchyIds, targetHierarchyIds, hierarchyPosition }: MoveComponentArgs): Promise<FunctionNodeType | null> {
+async function moveComponent(_: any, { sourceComponentAddress, sourceHierarchyIds, targetHierarchyIds, hierarchyPosition }: MoveComponentArgs): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
   console.log('___moveComponent___')
 
   const sourceComponentNode = getNodeByAddress(sourceComponentAddress)
@@ -152,10 +152,11 @@ async function moveComponent(_: any, { sourceComponentAddress, sourceHierarchyId
   //   console.error(error)
   // })
 
-  await updateGraphHash()
-
-  return null
-  // return impactedComponentNode
+  return {
+    returnValue: null,
+    impactedFileNodes: [],
+    description: `Move component ${sourceComponentNode.payload.name}`,
+  }
 }
 
 export default moveComponent

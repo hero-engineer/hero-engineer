@@ -10,7 +10,19 @@ function MultipleDivs(props: any) {
     <>
       <CoolDiv />
       <>
-        <CoolDiv />
+        <>
+          <>
+            <CoolDiv />
+            <>
+              <>
+                <CoolDiv />
+                <CoolDiv />
+              </>
+              <CoolDiv />
+            </>
+          </>
+          <CoolDiv />
+        </>
         <Div data-ecu="LsItTGm1Rv:0">
           <Div data-ecu="LsItTGm1Rv:0_0">
             Dear component

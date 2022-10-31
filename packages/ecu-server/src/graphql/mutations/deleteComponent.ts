@@ -7,10 +7,9 @@ import {
 import { ParseResult } from '@babel/parser'
 import traverse from '@babel/traverse'
 
-import { FileNodeType, FunctionNodeType } from '../../types'
+import { FileNodeType, FunctionNodeType, HistoryMutationReturnType } from '../../types'
 
 import { getNodeByAddress, getNodesByFirstNeighbourg, getNodesBySecondNeighbourg } from '../../graph'
-import updateGraphHash from '../../graph/hash/updateGraphHash'
 
 import updateComponentHierarchy from '../../domain/updateComponentHierarchy'
 import regenerate from '../../domain/regenerate'
@@ -20,7 +19,7 @@ type DeleteComponentArgs = {
   hierarchyIds: string[]
 }
 
-async function deleteComponent(_: any, { sourceComponentAddress, hierarchyIds }: DeleteComponentArgs): Promise<FunctionNodeType | null> {
+async function deleteComponent(_: any, { sourceComponentAddress, hierarchyIds }: DeleteComponentArgs): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
   console.log('___deleteComponent___')
 
   const componentNode = getNodeByAddress(sourceComponentAddress)
@@ -58,6 +57,7 @@ async function deleteComponent(_: any, { sourceComponentAddress, hierarchyIds }:
   }
 
   const impacted = updateComponentHierarchy(fileNode, hierarchyIds, mutate)
+  let impactedFileNode: FileNodeType | null = null
   let impactedComponentNode: FunctionNodeType | null = null
 
   await Promise.all(impacted.map(async ({ fileNode, ast }) => {
@@ -68,13 +68,19 @@ async function deleteComponent(_: any, { sourceComponentAddress, hierarchyIds }:
     const regenerated = await regenerate(fileNode, ast)
 
     if (regenerated) {
+      impactedFileNode = fileNode
       impactedComponentNode = getNodesByFirstNeighbourg<FunctionNodeType>(fileNode.address, 'DeclaresFunction')[0] || null
     }
   }))
+  .catch(error => {
+    console.error(error)
+  })
 
-  await updateGraphHash()
-
-  return impactedComponentNode
+  return {
+    returnValue: impactedComponentNode,
+    impactedFileNodes: impactedFileNode ? [impactedFileNode] : [],
+    description: `Delete component ${componentNode.payload.name} in ${componentNode.payload.name}`,
+  }
 }
 
 export default deleteComponent

@@ -17,10 +17,9 @@ import {
 import traverse from '@babel/traverse'
 import { ParseResult } from '@babel/parser'
 
-import { FileNodeType, FunctionNodeType, HierarchyPositionType, ImportDeclarationsRegistry } from '../../types'
+import { FileNodeType, FunctionNodeType, HierarchyPositionType, HistoryMutationReturnType, ImportDeclarationsRegistry } from '../../types'
 
 import { getNodeByAddress, getNodesByFirstNeighbourg, getNodesBySecondNeighbourg } from '../../graph'
-import updateGraphHash from '../../graph/hash/updateGraphHash'
 
 import updateComponentHierarchy from '../../domain/updateComponentHierarchy'
 import createHierarchyIdsAndKeys from '../../domain/createDataEcuAttributes'
@@ -33,7 +32,7 @@ type AddComponentArgs = {
   hierarchyPosition: HierarchyPositionType
 }
 
-async function addComponent(_: any, { sourceComponentAddress, targetComponentAddress, hierarchyIds, hierarchyPosition }: AddComponentArgs): Promise<FunctionNodeType | null> {
+async function addComponent(_: any, { sourceComponentAddress, targetComponentAddress, hierarchyIds, hierarchyPosition }: AddComponentArgs): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
   console.log('___addComponent___')
 
   const sourceComponentNode = getNodeByAddress(sourceComponentAddress)
@@ -130,6 +129,7 @@ async function addComponent(_: any, { sourceComponentAddress, targetComponentAdd
   }
 
   const impacted = updateComponentHierarchy(fileNode, hierarchyIds, mutate)
+  let impactedFileNode: FileNodeType | null = null
   let impactedComponentNode: FunctionNodeType | null = null
 
   await Promise.all(impacted.map(async ({ fileNode, ast, importDeclarationsRegistry }) => {
@@ -146,6 +146,7 @@ async function addComponent(_: any, { sourceComponentAddress, targetComponentAdd
     const regenerated = await regenerate(fileNode, ast)
 
     if (regenerated) {
+      impactedFileNode = fileNode
       impactedComponentNode = componentNode
     }
   }))
@@ -153,9 +154,11 @@ async function addComponent(_: any, { sourceComponentAddress, targetComponentAdd
     console.error(error)
   })
 
-  await updateGraphHash()
-
-  return impactedComponentNode
+  return {
+    returnValue: impactedComponentNode,
+    impactedFileNodes: impactedFileNode ? [impactedFileNode] : [],
+    description: `Add component ${targetComponentNode.payload.name} to ${sourceComponentNode.payload.name}`,
+  }
 }
 
 export default addComponent
