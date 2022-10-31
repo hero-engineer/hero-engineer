@@ -5,10 +5,10 @@ function DualCoolDiv(props: any) {
 
   return (
     <>
-      <Div data-ecu="u6JjJoGHkF:0">
+      <Div data-ecu="SbSystU3Nk:0">
         Edit me I'm famous 1
       </Div>
-      <Div data-ecu="u6JjJoGHkF:1">
+      <Div data-ecu="SbSystU3Nk:1">
         Edit me I'm famous 2
       </Div>
     </>

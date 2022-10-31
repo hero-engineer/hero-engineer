@@ -85,6 +85,7 @@ function getComponentHierarchy(sourceComponentAddress: string, hierarchyIds: str
     hierarchy.push({
       label,
       componentAddress: componentNode.address,
+      componentName: componentNode.payload.name,
     })
 
     traverse(fileNode.payload.ast, {
@@ -124,6 +125,7 @@ function getComponentHierarchy(sourceComponentAddress: string, hierarchyIds: str
               lastingHierarchyIds.push(hierarchyId)
               hierarchy.push({
                 label: `${x.node.openingElement.name.name}[${indexRegistries[indexRegistries.length - 1][componentAddress]}]`,
+                componentName: x.node.openingElement.name.name,
                 hierarchyId: `${hierarchyId}:${lastingIndexRegistry[hierarchyId]}`,
               })
 

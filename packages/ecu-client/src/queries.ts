@@ -2,8 +2,9 @@ export const HierarchyQuery = `
   query ($sourceComponentAddress: String!, $hierarchyIds: [String!]!) {
     hierarchy (sourceComponentAddress: $sourceComponentAddress, hierarchyIds: $hierarchyIds) {
       label
-      hierarchyId
+      componentName
       componentAddress
+      hierarchyId
     }
   }
 `

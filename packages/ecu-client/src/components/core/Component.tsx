@@ -10,6 +10,7 @@ import DragAndDropEndModal from './DragAndDropEndModal'
 
 function Component() {
   const { id } = useParams()
+
   const [componentQueryResult] = useQuery({
     query: ComponentQuery,
     variables: {

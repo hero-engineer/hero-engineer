@@ -16,6 +16,7 @@ function DragAndDropEndModal() {
   const { id = '' } = useParams()
   const { dragAndDrop, setDragAndDrop } = useContext(DragAndDropContext)
   const [hierarchyPosition, setHierarchyPosition] = useState<HierarchyPosition>('before')
+
   const [, moveComponent] = useMutation(MoveComponentMutation)
 
   const clearDragAndDrop = useCallback(() => {

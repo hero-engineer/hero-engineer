@@ -14,6 +14,7 @@ function AddComponentButton() {
   const { hierarchyIds } = useContext(HierarchyIdsContext)
   const [componentAddress, setComponentId] = useState('')
   const [hierarchyPosition, setHierarchyPosition] = useState<HierarchyPosition>('before')
+
   const [componentsQueryResult] = useQuery({
     query: ComponentsQuery,
   })

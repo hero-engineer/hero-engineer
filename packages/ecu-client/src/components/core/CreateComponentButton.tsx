@@ -9,8 +9,9 @@ import { CreateComponentMutation } from '../../queries'
 function CreateComponentButton() {
   const [name, setName] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [, createComponent] = useMutation(CreateComponentMutation)
   const navigate = useNavigate()
+
+  const [, createComponent] = useMutation(CreateComponentMutation)
 
   const handleCreateComponentClick = useCallback(async () => {
     if (!name) return
