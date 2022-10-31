@@ -22,7 +22,7 @@ import { FileNodeType, FunctionNodeType, HierarchyPositionType, HistoryMutationR
 import { getNodeByAddress, getNodesByFirstNeighbourg, getNodesBySecondNeighbourg } from '../../graph'
 
 import updateComponentHierarchy from '../../domain/updateComponentHierarchy'
-import createHierarchyIdsAndKeys from '../../domain/createDataEcuAttributes'
+import createDataEcuAttributes from '../../domain/createDataEcuAttributes'
 import regenerate from '../../domain/regenerate'
 
 type AddComponentArgs = {
@@ -141,7 +141,7 @@ async function addComponent(_: any, { sourceComponentAddress, targetComponentAdd
 
     if (!componentNode) return
 
-    createHierarchyIdsAndKeys(componentNode, ast)
+    createDataEcuAttributes(componentNode, ast)
 
     const regenerated = await regenerate(fileNode, ast)
 

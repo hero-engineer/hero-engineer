@@ -6,7 +6,7 @@ function CoolDaddy({
   console.log('__rendering CoolDaddy')
 
   return (
-    <Div data-ecu="3rx2wk9rEY:0">
+    <Div data-ecu="p6yvfRKiro:0">
       I'm a cool daddy look at me
       {' '}
       {children}

@@ -12,6 +12,7 @@ import { FileNodeType, FunctionNodeType, HistoryMutationReturnType } from '../..
 import { getNodeByAddress, getNodesByFirstNeighbourg, getNodesBySecondNeighbourg } from '../../graph'
 
 import updateComponentHierarchy from '../../domain/updateComponentHierarchy'
+import createDataEcuAttributes from '../../domain/createDataEcuAttributes'
 import regenerate from '../../domain/regenerate'
 
 type DeleteComponentArgs = {
@@ -64,6 +65,7 @@ async function deleteComponent(_: any, { sourceComponentAddress, hierarchyIds }:
     console.log('impacted:', fileNode.payload.name)
 
     postTraverse(ast)
+    createDataEcuAttributes(componentNode, ast)
 
     const regenerated = await regenerate(fileNode, ast)
 
