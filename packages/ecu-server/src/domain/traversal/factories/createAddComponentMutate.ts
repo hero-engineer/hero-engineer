@@ -8,7 +8,7 @@ import {
   jsxOpeningFragment,
 } from '@babel/types'
 
-import { FunctionNodeType, HierarchyPositionType, MutateType } from '../types'
+import { FunctionNodeType, HierarchyPositionType, MutateType } from '../../../types'
 
 function createAddComponentMutate(componentNode: FunctionNodeType, hierarchyPosition: HierarchyPositionType): MutateType {
   return (x: any, previousX: any) => {

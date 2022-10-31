@@ -1,4 +1,4 @@
-import getComponentHierarchy from '../../domain/getComponentHierarchy'
+import getComponentHierarchy from '../../domain/traversal/getComponentHierarchy'
 
 type GetComponentArgs = {
   sourceComponentAddress: string

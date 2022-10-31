@@ -8,18 +8,19 @@ import {
 } from '@babel/types'
 import traverse from '@babel/traverse'
 
-import { ecuPropName } from '../configuration'
-import { FileNodeType, FunctionNodeType, ImportDeclarationsRegistry, IndexRegistryType } from '../types'
+import { ecuPropName } from '../../configuration'
+import { FileNodeType, FunctionNodeType, HierarchyItemType, ImportDeclarationsRegistry, IndexRegistryType } from '../../types'
 
-import { getNodeByAddress, getNodesByFirstNeighbourg, getNodesByRole, getNodesBySecondNeighbourg } from '../graph'
-import areArraysEqual from '../utils/areArraysEqual'
-import areArraysEqualAtStart from '../utils/areArraysEqualAtStart'
-import possiblyAddExtension from '../utils/possiblyAddExtension'
+import { getNodeByAddress, getNodesByFirstNeighbourg, getNodesByRole, getNodesBySecondNeighbourg } from '../../graph'
+import areArraysEqual from '../../utils/areArraysEqual'
+import areArraysEqualAtStart from '../../utils/areArraysEqualAtStart'
+import possiblyAddExtension from '../../utils/possiblyAddExtension'
 
-import extractIdsAndIndexes from './extractIdsAndIndexes'
+import extractIdAndIndex from '../utils/extractIdAndIndex'
+import extractIdsAndIndexes from '../utils/extractIdsAndIndexes'
 
-function getComponentHierarchyCursors(sourceComponentAddress: string, hierarchyIds: string[]): number[] {
-  console.log('getComponentHierarchyCursors')
+function getComponentHierarchy(sourceComponentAddress: string, hierarchyIds: string[]): HierarchyItemType[] {
+  console.log('getComponentHierarchy')
 
   if (!hierarchyIds.length) {
     console.log('No hierarchy')
@@ -43,7 +44,7 @@ function getComponentHierarchyCursors(sourceComponentAddress: string, hierarchyI
     return []
   }
 
-  const cursors: number[] = [0] // retval
+  const hierarchy: HierarchyItemType[] = [] // retval
   const fileNodes = getNodesByRole<FileNodeType>('File')
   const componentNodes = getNodesByRole<FunctionNodeType>('Function').filter(n => n.payload.isComponent)
   const [ids, indexes] = extractIdsAndIndexes(hierarchyIds)
@@ -64,7 +65,7 @@ function getComponentHierarchyCursors(sourceComponentAddress: string, hierarchyI
     return areArraysEqual(lastingHierarchyIds, ids) && areArraysEqual(lastingHierarchyIds.map(hierarchyId => lastingIndexRegistry[hierarchyId]), indexes)
   }
 
-  function traverseFileNode(fileNode: FileNodeType, stop = () => {}) {
+  function traverseFileNode(fileNode: FileNodeType, index = 0, stop = () => {}) {
     console.log('---->', fileNode.payload.name)
 
     const componentNode = getNodesByFirstNeighbourg<FunctionNodeType>(fileNode.address, 'DeclaresFunction')[0]
@@ -75,8 +76,17 @@ function getComponentHierarchyCursors(sourceComponentAddress: string, hierarchyI
       return
     }
 
+    const label = `${componentNode.payload.name}[${index}]`
+    const indexRegistries: IndexRegistryType[] = [{}]
     const importDeclarationsRegistry: ImportDeclarationsRegistry = {}
+    let shouldContinue = true
     let shouldPushIndex = true
+
+    hierarchy.push({
+      label,
+      componentAddress: componentNode.address,
+      componentName: componentNode.payload.name,
+    })
 
     traverse(fileNode.payload.ast, {
       ImportDeclaration(x: any) {
@@ -101,16 +111,30 @@ function getComponentHierarchyCursors(sourceComponentAddress: string, hierarchyI
           if (hierarchyId) {
             console.log('-->', hierarchyId)
 
+            const [componentAddress] = extractIdAndIndex(hierarchyId)
+
+            // console.log('componentAddress', componentAddress)
+
+            indexRegistries[indexRegistries.length - 1][componentAddress] = indexRegistries[indexRegistries.length - 1][componentAddress] + 1 || 0
             lastingIndexRegistry[hierarchyId] = lastingIndexRegistry[hierarchyId] + 1 || 0
             shouldPushIndex = true
 
+            // console.log('JSXElement indexRegistries', indexRegistries)
+
             if (isSuccessiveNodeFound(hierarchyId)) {
               lastingHierarchyIds.push(hierarchyId)
+              hierarchy.push({
+                label: `${x.node.openingElement.name.name}[${indexRegistries[indexRegistries.length - 1][componentAddress]}]`,
+                componentName: x.node.openingElement.name.name,
+                hierarchyId: `${hierarchyId}:${lastingIndexRegistry[hierarchyId]}`,
+              })
 
               console.log('PUSHED')
 
               if (isNodeFound()) {
                 console.log('SUCCESS')
+
+                shouldContinue = false
 
                 x.stop()
                 stop()
@@ -141,11 +165,17 @@ function getComponentHierarchyCursors(sourceComponentAddress: string, hierarchyI
                 if (fileNode) {
                   console.log('-->', fileNode.payload.name)
 
+                  indexRegistries[indexRegistries.length - 1][fileNode.payload.name] = indexRegistries[indexRegistries.length - 1][fileNode.payload.name] + 1 || 0
+                  // console.log('JSXElement indexRegistries', indexRegistries)
+
                   shouldPushIndex = false
 
                   traverseFileNode(
                     fileNode,
+                    indexRegistries[indexRegistries.length - 1][fileNode.payload.name],
                     () => {
+                      shouldContinue = false
+
                       x.stop()
                       stop()
                     }
@@ -157,27 +187,39 @@ function getComponentHierarchyCursors(sourceComponentAddress: string, hierarchyI
         }
 
         if (!x.node.selfClosing && shouldPushIndex) {
-          cursors.push(0)
+          indexRegistries.push({})
         }
+
+        // console.log('JSXElement post indexRegistries', indexRegistries)
       },
       JSXClosingElement() {
         // Prevent fragments from interering with indexing
-        if (cursors.length > 1) {
-          cursors.pop()
+        if (indexRegistries.length > 1) {
+          indexRegistries.pop()
         }
 
-        cursors[cursors.length - 1]++
+        // console.log('JSXClosingElement indexRegistries', indexRegistries)
       },
     })
 
+    // If no success, remove inserted element from hierarchy
+    if (shouldContinue) {
+      for (let i = hierarchy.length - 1; i >= 0; i--) {
+        const popped = hierarchy.pop()
+
+        // console.log('popped', popped)
+        if (popped?.label === label) break
+      }
+    }
+
     // console.log('<----', fileNode.payload.name)
-    // console.log('indexRegistry', indexRegistry)
+    // console.log('indexRegistries', indexRegistries)
     // console.log('hierarchy', hierarchy)
   }
 
   traverseFileNode(fileNode)
 
-  return cursors
+  return hierarchy
 }
 
-export default getComponentHierarchyCursors
+export default getComponentHierarchy

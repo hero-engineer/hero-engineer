@@ -6,14 +6,14 @@ import compareCursors from '../../utils/compareCursors'
 
 import composeHistoryMutation from '../../history/composeHistoryMutation'
 
-import getComponentHierarchyCursors from '../../domain/getComponentHierarchyCursors'
-import createAddComponentMutate from '../../domain/createAddComponentMutate'
-import createAddComponentPostTraverse from '../../domain/createAddComponentPostTraverse'
-import createDeleteComponentMutate from '../../domain/createDeleteComponentMutate'
-import createDeleteComponentPostTraverse from '../../domain/createDeleteComponentPostTraverse'
-import updateComponentHierarchy from '../../domain/updateComponentHierarchy'
-import processImpactedFileNodes from '../../domain/processImpactedFileNodes'
-import getComponentHierarchy from '../../domain/getComponentHierarchy'
+import getComponentHierarchyCursors from '../../domain/traversal/getComponentHierarchyCursors'
+import updateComponentHierarchy from '../../domain/traversal/updateComponentHierarchy'
+import processImpactedFileNodes from '../../domain/traversal/processImpactedFileNodes'
+import getComponentHierarchy from '../../domain/traversal/getComponentHierarchy'
+import createAddComponentMutate from '../../domain/traversal/factories/createAddComponentMutate'
+import createAddComponentPostTraverse from '../../domain/traversal/factories/createAddComponentPostTraverse'
+import createDeleteComponentMutate from '../../domain/traversal/factories/createDeleteComponentMutate'
+import createDeleteComponentPostTraverse from '../../domain/traversal/factories/createDeleteComponentPostTraverse'
 
 type MoveComponentArgs = {
   sourceComponentAddress: string

@@ -7,7 +7,7 @@ import {
 import { ParseResult } from '@babel/parser'
 import traverse from '@babel/traverse'
 
-import { FileNodeType, PostTraverseType } from '../types'
+import { FileNodeType, PostTraverseType } from '../../../types'
 
 function createDeleteComponentPostTraverse(): PostTraverseType {
   return (_fileNode: FileNodeType, ast: ParseResult<File>) => {

@@ -10,7 +10,7 @@ import {
 import traverse from '@babel/traverse'
 import { ParseResult } from '@babel/parser'
 
-import { FileNodeType, FunctionNodeType, ImportDeclarationsRegistry, PostTraverseType } from '../types'
+import { FileNodeType, FunctionNodeType, ImportDeclarationsRegistry, PostTraverseType } from '../../../types'
 
 function createAddComponentPostTraverse(componentNode: FunctionNodeType): PostTraverseType {
   return (fileNode: FileNodeType, ast: ParseResult<File>, importDeclarationsRegistry: ImportDeclarationsRegistry) => {

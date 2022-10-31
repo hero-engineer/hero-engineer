@@ -1,4 +1,4 @@
-import { MutateType } from '../types'
+import { MutateType } from '../../../types'
 
 function createDeleteComponentMutate(): MutateType {
   return (x: any, previousX: any) => {

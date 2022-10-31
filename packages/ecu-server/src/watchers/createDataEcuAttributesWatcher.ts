@@ -2,8 +2,8 @@ import { FileNodeType, FunctionNodeType } from '../types'
 
 import { getNodesByRole, getNodesBySecondNeighbourg } from '../graph'
 
-import createHierarchyIdsAndKeys from '../domain/createDataEcuAttributes'
 import regenerate from '../domain/regenerate'
+import createHierarchyIdsAndKeys from '../domain/traversal/createDataEcuAttributes'
 
 async function createDataEcuAttributesWatcher() {
   const componentNodes = getNodesByRole<FunctionNodeType>('Function').filter(node => node.payload.isComponent)

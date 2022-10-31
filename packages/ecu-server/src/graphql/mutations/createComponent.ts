@@ -12,7 +12,7 @@ import { getNodesByFirstNeighbourg } from '../../graph'
 import addFile from '../../graph/add/addFile'
 import addFileDependencies from '../../graph/add/addFileDependencies'
 
-import createDataEcuAttributes from '../../domain/createDataEcuAttributes'
+import createDataEcuAttributes from '../../domain/traversal/createDataEcuAttributes'
 import regenerate from '../../domain/regenerate'
 
 import capitalize from '../../utils/capitalize'

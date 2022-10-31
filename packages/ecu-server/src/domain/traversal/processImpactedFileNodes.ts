@@ -1,9 +1,10 @@
-import { FileNodeType, FunctionNodeType, ImpactedType, PostTraverseType } from '../types'
+import { FileNodeType, FunctionNodeType, ImpactedType, PostTraverseType } from '../../types'
 
-import { getNodesByFirstNeighbourg } from '../graph'
+import { getNodesByFirstNeighbourg } from '../../graph'
+
+import regenerate from '../regenerate'
 
 import createDataEcuAttributes from './createDataEcuAttributes'
-import regenerate from './regenerate'
 
 async function processImpactedFileNodes(impacted: ImpactedType[], postTraverse: PostTraverseType, refreshDataEcuAttributes = true) {
   let impactedFileNode: FileNodeType | null = null

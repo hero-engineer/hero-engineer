@@ -8,16 +8,16 @@ import {
 } from '@babel/types'
 import traverse from '@babel/traverse'
 
-import { FileNodeType, FunctionNodeType, ImpactedType, ImportDeclarationsRegistry, IndexRegistryType, MutateType } from '../types'
-import { ecuPropName } from '../configuration'
+import { FileNodeType, FunctionNodeType, ImpactedType, ImportDeclarationsRegistry, IndexRegistryType, MutateType } from '../../types'
+import { ecuPropName } from '../../configuration'
 
-import { getNodesByRole } from '../graph'
+import { getNodesByRole } from '../../graph'
 
-import areArraysEqual from '../utils/areArraysEqual'
-import areArraysEqualAtStart from '../utils/areArraysEqualAtStart'
-import possiblyAddExtension from '../utils/possiblyAddExtension'
+import areArraysEqual from '../../utils/areArraysEqual'
+import areArraysEqualAtStart from '../../utils/areArraysEqualAtStart'
+import possiblyAddExtension from '../../utils/possiblyAddExtension'
 
-import extractIdsAndIndexes from './extractIdsAndIndexes'
+import extractIdsAndIndexes from '../utils/extractIdsAndIndexes'
 
 function updateComponentHierarchy(
   fileNode: FileNodeType,

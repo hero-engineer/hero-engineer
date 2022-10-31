@@ -4,10 +4,10 @@ import { getNodeByAddress, getNodesBySecondNeighbourg } from '../../graph'
 
 import composeHistoryMutation from '../../history/composeHistoryMutation'
 
-import updateComponentHierarchy from '../../domain/updateComponentHierarchy'
-import createDeleteComponentMutate from '../../domain/createDeleteComponentMutate'
-import createDeleteComponentPostTraverse from '../../domain/createDeleteComponentPostTraverse'
-import processImpactedFileNodes from '../../domain/processImpactedFileNodes'
+import updateComponentHierarchy from '../../domain/traversal/updateComponentHierarchy'
+import processImpactedFileNodes from '../../domain/traversal/processImpactedFileNodes'
+import createDeleteComponentMutate from '../../domain/traversal/factories/createDeleteComponentMutate'
+import createDeleteComponentPostTraverse from '../../domain/traversal/factories/createDeleteComponentPostTraverse'
 
 type DeleteComponentArgs = {
   sourceComponentAddress: string

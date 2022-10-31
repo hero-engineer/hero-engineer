@@ -2,8 +2,8 @@ import { File, JSXAttribute, jsxAttribute, jsxIdentifier, stringLiteral } from '
 import traverse from '@babel/traverse'
 import { ParseResult } from '@babel/parser'
 
-import { FunctionNodeType } from '../types'
-import { ecuPropName } from '../configuration'
+import { FunctionNodeType } from '../../types'
+import { ecuPropName } from '../../configuration'
 
 function insertPropFactory(key: string, getValue: () => string) {
   return (path: any) => {
