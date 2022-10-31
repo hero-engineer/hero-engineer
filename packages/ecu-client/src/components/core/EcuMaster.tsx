@@ -11,7 +11,7 @@ import theme from '../../theme'
 
 import ModeContext from '../../contexts/ModeContext'
 import HotContext from '../../contexts/HotContext'
-import EditionContext, { EditionContextType } from '../../contexts/EditionContext'
+import HierarchyIdsContext, { HierarchyIdsContextType } from '../../contexts/HierarchyIdsContext'
 import DragAndDropContext, { DragAndDropContextType, DragAndDropType } from '../../contexts/DragAndDropContext'
 
 import usePersistedState from '../../hooks/usePersistedState'
@@ -25,7 +25,7 @@ type EcuMasterProps = PropsWithChildren<{
 
 function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps) {
   const [hierarchyIds, setHierarchyIds] = usePersistedState<string[]>('ecu-hierarchyIds', [])
-  const editionContextValue = useMemo<EditionContextType>(() => ({ hierarchyIds, setHierarchyIds }), [hierarchyIds, setHierarchyIds])
+  const HierarchyIdsContextValue = useMemo<HierarchyIdsContextType>(() => ({ hierarchyIds, setHierarchyIds }), [hierarchyIds, setHierarchyIds])
 
   const [dragAndDrop, setDragAndDrop] = useState<DragAndDropType>({ sourceHierarchyIds: [], targetHierarchyIds: [] })
   const dragAndDropContextValue = useMemo<DragAndDropContextType>(() => ({ dragAndDrop, setDragAndDrop }), [dragAndDrop])
@@ -37,13 +37,13 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
           <CssBaseline />
           <ModeContext.Provider value={mode}>
             <HotContext.Provider value={hot}>
-              <EditionContext.Provider value={editionContextValue}>
+              <HierarchyIdsContext.Provider value={HierarchyIdsContextValue}>
                 <DragAndDropContext.Provider value={dragAndDropContextValue}>
                   <Router>
                     {children}
                   </Router>
                 </DragAndDropContext.Provider>
-              </EditionContext.Provider>
+              </HierarchyIdsContext.Provider>
             </HotContext.Provider>
           </ModeContext.Provider>
         </ThemeProvider>

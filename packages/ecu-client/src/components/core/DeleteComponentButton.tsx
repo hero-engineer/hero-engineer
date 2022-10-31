@@ -5,11 +5,11 @@ import { Button } from 'honorable'
 import { TbTrash } from 'react-icons/tb'
 
 import { DeleteComponentMutation } from '../../queries'
-import EditionContext from '../../contexts/EditionContext'
+import HierarchyIdsContext from '../../contexts/HierarchyIdsContext'
 
 function DeleteComponentButton() {
   const { id } = useParams()
-  const { hierarchyIds } = useContext(EditionContext)
+  const { hierarchyIds } = useContext(HierarchyIdsContext)
   const [, deleteComponent] = useMutation(DeleteComponentMutation)
 
   const handleDeleteComponentClick = useCallback(() => {

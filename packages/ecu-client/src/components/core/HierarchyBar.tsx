@@ -3,13 +3,13 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useQuery } from 'urql'
 import { Div } from 'honorable'
 
-import EditionContext from '../../contexts/EditionContext'
+import HierarchyIdsContext from '../../contexts/HierarchyIdsContext'
 
 import { HierarchyQuery } from '../../queries'
 
 function HierarchyBar() {
   const { id = '' } = useParams()
-  const { hierarchyIds, setHierarchyIds } = useContext(EditionContext)
+  const { hierarchyIds, setHierarchyIds } = useContext(HierarchyIdsContext)
   const [hierarchyQueryResult] = useQuery({
     query: HierarchyQuery,
     variables: {

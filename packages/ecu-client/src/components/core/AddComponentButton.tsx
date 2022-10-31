@@ -5,13 +5,13 @@ import { Button, Div, MenuItem, Select } from 'honorable'
 import { TbRowInsertBottom } from 'react-icons/tb'
 
 import { AddComponentMutation, ComponentsQuery } from '../../queries'
-import EditionContext from '../../contexts/EditionContext'
+import HierarchyIdsContext from '../../contexts/HierarchyIdsContext'
 
 import { HierarchyPosition } from '../../types'
 
 function AddComponentButton() {
   const { id } = useParams()
-  const { hierarchyIds } = useContext(EditionContext)
+  const { hierarchyIds } = useContext(HierarchyIdsContext)
   const [componentAddress, setComponentId] = useState('')
   const [hierarchyPosition, setHierarchyPosition] = useState<HierarchyPosition>('before')
   const [componentsQueryResult] = useQuery({

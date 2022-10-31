@@ -1,11 +1,11 @@
 import { Dispatch, SetStateAction, createContext } from 'react'
 
-export type EditionContextType = {
+export type HierarchyIdsContextType = {
   hierarchyIds: string[]
   setHierarchyIds: Dispatch<SetStateAction<string[]>>
 }
 
-export default createContext<EditionContextType>({
+export default createContext<HierarchyIdsContextType>({
   hierarchyIds: [],
   setHierarchyIds: () => {},
 })

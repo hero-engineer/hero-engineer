@@ -3,7 +3,7 @@ import '../css/edition.css'
 import { MouseEvent, Ref, useCallback, useContext, useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 
-import EditionContext from '../contexts/EditionContext'
+import HierarchyIdsContext from '../contexts/HierarchyIdsContext'
 import DragAndDropContext from '../contexts/DragAndDropContext'
 
 import useForkedRef from './useForkedRef'
@@ -33,7 +33,7 @@ function getHierarchyIds(element: EventTarget | HTMLElement) {
 function useEditionProps<T>(id: string, className = '') {
   const rootRef = useRef<T>(null)
   const hierarchyId = useHierarchyId(id, rootRef)
-  const { hierarchyIds, setHierarchyIds } = useContext(EditionContext)
+  const { hierarchyIds, setHierarchyIds } = useContext(HierarchyIdsContext)
   const { setDragAndDrop } = useContext(DragAndDropContext)
 
   const [{ isDragging }, drag] = useDrag(() => ({
