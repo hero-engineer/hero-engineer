@@ -6,6 +6,8 @@ import { appPath } from '../../configuration'
 
 import createComponentTemplate from '../../templates/Component'
 
+import composeHistoryMutation from '../../history/composeHistoryMutation'
+
 import { getNodesByFirstNeighbourg } from '../../graph'
 import addFile from '../../graph/add/addFile'
 import addFileDependencies from '../../graph/add/addFileDependencies'
@@ -47,4 +49,4 @@ async function createComponent(_: any, { name }: CreateComponentArgs): Promise<H
   }
 }
 
-export default createComponent
+export default composeHistoryMutation(createComponent)

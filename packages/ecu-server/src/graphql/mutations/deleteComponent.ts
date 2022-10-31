@@ -2,6 +2,8 @@ import { FileNodeType, FunctionNodeType, HistoryMutationReturnType } from '../..
 
 import { getNodeByAddress, getNodesBySecondNeighbourg } from '../../graph'
 
+import composeHistoryMutation from '../../history/composeHistoryMutation'
+
 import updateComponentHierarchy from '../../domain/updateComponentHierarchy'
 import createDeleteComponentMutate from '../../domain/createDeleteComponentMutate'
 import createDeleteComponentPostTraverse from '../../domain/createDeleteComponentPostTraverse'
@@ -40,4 +42,4 @@ async function deleteComponent(_: any, { sourceComponentAddress, hierarchyIds }:
   }
 }
 
-export default deleteComponent
+export default composeHistoryMutation(deleteComponent)

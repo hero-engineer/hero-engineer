@@ -2,6 +2,8 @@ import { FileNodeType, FunctionNodeType, HierarchyPositionType, HistoryMutationR
 
 import { getNodeByAddress, getNodesBySecondNeighbourg } from '../../graph'
 
+import composeHistoryMutation from '../../history/composeHistoryMutation'
+
 import updateComponentHierarchy from '../../domain/updateComponentHierarchy'
 import createAddComponentMutate from '../../domain/createAddComponentMutate'
 import createAddComponentPostTraverse from '../../domain/createAddComponentPostTraverse'
@@ -48,4 +50,4 @@ async function addComponent(_: any, { sourceComponentAddress, targetComponentAdd
   }
 }
 
-export default addComponent
+export default composeHistoryMutation(addComponent)

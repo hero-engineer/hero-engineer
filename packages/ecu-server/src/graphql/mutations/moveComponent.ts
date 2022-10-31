@@ -4,6 +4,8 @@ import { getNodeByAddress, getNodesBySecondNeighbourg } from '../../graph'
 
 import compareCursors from '../../utils/compareCursors'
 
+import composeHistoryMutation from '../../history/composeHistoryMutation'
+
 import getComponentHierarchyCursors from '../../domain/getComponentHierarchyCursors'
 import createAddComponentMutate from '../../domain/createAddComponentMutate'
 import createAddComponentPostTraverse from '../../domain/createAddComponentPostTraverse'
@@ -54,4 +56,4 @@ async function moveComponent(_: any, { sourceComponentAddress, sourceHierarchyId
   }
 }
 
-export default moveComponent
+export default composeHistoryMutation(moveComponent)

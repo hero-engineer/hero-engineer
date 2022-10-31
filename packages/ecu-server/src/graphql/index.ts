@@ -1,7 +1,5 @@
 import { gql } from 'apollo-server'
 
-import composeHistoryMutation from '../history/composeHistoryMutation'
-
 import getComponent from './queries/getComponent'
 import getComponents from './queries/getComponents'
 import getHierarchy from './queries/getHierarchy'
@@ -82,9 +80,9 @@ export const resolvers = {
     hierarchy: getHierarchy,
   },
   Mutation: {
-    createComponent: composeHistoryMutation(createComponent),
-    addComponent: composeHistoryMutation(addComponent),
-    deleteComponent: composeHistoryMutation(deleteComponent),
-    moveComponent: composeHistoryMutation(moveComponent),
+    createComponent,
+    addComponent,
+    deleteComponent,
+    moveComponent,
   },
 }
