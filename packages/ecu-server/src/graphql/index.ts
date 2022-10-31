@@ -70,7 +70,7 @@ export const typeDefs = gql`
     createComponent(name: String!): FunctionNode
     addComponent(sourceComponentAddress: String!, targetComponentAddress: String!, hierarchyIds: [String!]!, hierarchyPosition: HierarchyPosition!): FunctionNode
     deleteComponent(sourceComponentAddress: String!, hierarchyIds: [String!]!): FunctionNode
-    moveComponent(sourceComponentAddress: String!, sourceHierarchyIds: [String!]!, ttargetHierarchyIds: [String!]!, hierarchyPosition: HierarchyPosition!): [FunctionNode]
+    moveComponent(sourceComponentAddress: String!, sourceHierarchyIds: [String!]!, targetHierarchyIds: [String!]!, hierarchyPosition: HierarchyPosition!): [FunctionNode]
   }
 
 `

@@ -1,16 +1,14 @@
 import path from 'path'
 
 import {
-  File,
   ImportDefaultSpecifier,
   ImportNamespaceSpecifier,
   ImportSpecifier,
   JSXAttribute,
 } from '@babel/types'
 import traverse from '@babel/traverse'
-import { ParseResult } from '@babel/parser'
 
-import { FileNodeType, FunctionNodeType, ImportDeclarationsRegistry } from '../types'
+import { FileNodeType, FunctionNodeType, ImpactedType, ImportDeclarationsRegistry, MutateType } from '../types'
 import { ecuPropName } from '../configuration'
 
 import { getNodesByRole } from '../graph'
@@ -21,16 +19,10 @@ import possiblyAddExtension from '../utils/possiblyAddExtension'
 
 import extractIdsAndIndexes from './extractIdsAndIndexes'
 
-type ImpactedType = {
-  fileNode: FileNodeType
-  ast: ParseResult<File>
-  importDeclarationsRegistry: ImportDeclarationsRegistry
-}
-
 function updateComponentHierarchy(
   fileNode: FileNodeType,
   hierarchyIds: string[],
-  mutate: (x: any, previousX: any) => void,
+  mutate: MutateType,
 ): ImpactedType[] {
   console.log('updateComponentHierarchy', fileNode.payload.name, hierarchyIds)
 

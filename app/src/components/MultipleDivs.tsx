@@ -10,6 +10,7 @@ function MultipleDivs(props: any) {
     <>
       <CoolDiv />
       <CoolDiv />
+      
       <Div data-ecu="E6QYcM6ieL:0">
         <Div data-ecu="E6QYcM6ieL:0_0">
           Dear component

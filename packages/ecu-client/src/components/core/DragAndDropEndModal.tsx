@@ -1,15 +1,23 @@
 import { useCallback, useContext, useState } from 'react'
+import { useMutation } from 'urql'
 import { Button, Div, H2, Modal } from 'honorable'
+
+import { useParams } from 'react-router-dom'
 
 import DragAndDropContext from '../../contexts/DragAndDropContext'
 import { HierarchyPosition } from '../../types'
 import { hierarchyPositions } from '../../constants'
 
+import { MoveComponentMutation } from '../../queries'
+
 import capitalize from '../utils/capitalize'
 
 function DragAndDropEndModal() {
+  const { id = '' } = useParams()
   const { dragAndDrop, setDragAndDrop } = useContext(DragAndDropContext)
   const [hierarchyPosition, setHierarchyPosition] = useState<HierarchyPosition>('before')
+  const [, moveComponent] = useMutation(MoveComponentMutation)
+
   const clearDragAndDrop = useCallback(() => {
     setHierarchyPosition('before')
     setDragAndDrop({
@@ -18,11 +26,20 @@ function DragAndDropEndModal() {
     })
   }, [setDragAndDrop])
 
-  const submitDragAndDrop = useCallback(() => {
+  const submitDragAndDrop = useCallback(async () => {
+    await moveComponent({
+      sourceComponentAddress: id,
+      sourceHierarchyIds: dragAndDrop.sourceHierarchyIds,
+      targetHierarchyIds: dragAndDrop.targetHierarchyIds,
+      hierarchyPosition,
+    })
 
-  }, [])
+    clearDragAndDrop()
+  }, [moveComponent, id, dragAndDrop, hierarchyPosition, clearDragAndDrop])
 
-  console.log('hierarchyPosition', hierarchyPosition)
+  if (!id) {
+    return null
+  }
 
   return (
     <Modal

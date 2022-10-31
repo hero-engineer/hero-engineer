@@ -57,3 +57,11 @@ export const DeleteComponentMutation = `
     }
   }
 `
+
+export const MoveComponentMutation = `
+  mutation ($sourceComponentAddress: String!, $sourceHierarchyIds: [String!]!, $targetHierarchyIds: [String!]!, $hierarchyPosition: HierarchyPosition!) {
+    moveComponent (sourceComponentAddress: $sourceComponentAddress, sourceHierarchyIds: $sourceHierarchyIds, targetHierarchyIds: $targetHierarchyIds, hierarchyPosition: $hierarchyPosition) {
+      address
+    }
+  }
+`

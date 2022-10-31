@@ -1,19 +1,11 @@
-import {
-  File,
-  ImportDefaultSpecifier,
-  ImportNamespaceSpecifier,
-  ImportSpecifier,
-} from '@babel/types'
-import { ParseResult } from '@babel/parser'
-import traverse from '@babel/traverse'
-
 import { FileNodeType, FunctionNodeType, HistoryMutationReturnType } from '../../types'
 
-import { getNodeByAddress, getNodesByFirstNeighbourg, getNodesBySecondNeighbourg } from '../../graph'
+import { getNodeByAddress, getNodesBySecondNeighbourg } from '../../graph'
 
 import updateComponentHierarchy from '../../domain/updateComponentHierarchy'
-import createDataEcuAttributes from '../../domain/createDataEcuAttributes'
-import regenerate from '../../domain/regenerate'
+import createDeleteComponentMutate from '../../domain/createDeleteComponentMutate'
+import createDeleteComponentPostTraverse from '../../domain/createDeleteComponentPostTraverse'
+import processImpactedFileNodes from '../../domain/processImpactedFileNodes'
 
 type DeleteComponentArgs = {
   sourceComponentAddress: string
@@ -35,48 +27,11 @@ async function deleteComponent(_: any, { sourceComponentAddress, hierarchyIds }:
     throw new Error(`File for Function with id ${sourceComponentAddress} not found`)
   }
 
-  function mutate(x: any, previousX: any) {
-    (previousX || x).remove()
-  }
-
-  function postTraverse(ast: ParseResult<File>) {
-    const identifierNames: string[] = []
-
-    traverse(ast, {
-      JSXIdentifier(path: any) {
-        identifierNames.push(path.node.name)
-      },
-    })
-
-    traverse(ast, {
-      ImportDeclaration(path: any) {
-        if (path.node.specifiers.some((s: ImportSpecifier | ImportDefaultSpecifier | ImportNamespaceSpecifier) => identifierNames.includes(s.local.name))) return
-
-        path.remove()
-      },
-    })
-  }
-
+  const mutate = createDeleteComponentMutate()
+  const postTraverse = createDeleteComponentPostTraverse()
   const impacted = updateComponentHierarchy(fileNode, hierarchyIds, mutate)
-  let impactedFileNode: FileNodeType | null = null
-  let impactedComponentNode: FunctionNodeType | null = null
 
-  await Promise.all(impacted.map(async ({ fileNode, ast }) => {
-    console.log('impacted:', fileNode.payload.name)
-
-    postTraverse(ast)
-    createDataEcuAttributes(componentNode, ast)
-
-    const regenerated = await regenerate(fileNode, ast)
-
-    if (regenerated) {
-      impactedFileNode = fileNode
-      impactedComponentNode = getNodesByFirstNeighbourg<FunctionNodeType>(fileNode.address, 'DeclaresFunction')[0] || null
-    }
-  }))
-  .catch(error => {
-    console.error(error)
-  })
+  const { impactedFileNode, impactedComponentNode } = await processImpactedFileNodes(impacted, postTraverse)
 
   return {
     returnValue: impactedComponentNode,

@@ -1,32 +1,16 @@
-import path from 'path'
+import { FileNodeType, FunctionNodeType, HierarchyPositionType, HistoryMutationReturnType } from '../../types'
 
-import {
-  File,
-  identifier,
-  importDeclaration,
-  importDefaultSpecifier,
-  jsxClosingElement,
-  jsxClosingFragment,
-  jsxElement,
-  jsxFragment,
-  jsxIdentifier,
-  jsxOpeningElement,
-  jsxOpeningFragment,
-  stringLiteral,
-} from '@babel/types'
+import { getNodeByAddress, getNodesBySecondNeighbourg } from '../../graph'
 
-import traverse from '@babel/traverse'
+import compareCursors from '../../utils/compareCursors'
 
-import { ParseResult } from '@babel/parser'
-
-import { FileNodeType, FunctionNodeType, HierarchyPositionType, HistoryMutationReturnType, ImportDeclarationsRegistry } from '../../types'
-
-import { getNodeByAddress, getNodesByFirstNeighbourg, getNodesBySecondNeighbourg } from '../../graph'
-import updateKKGraphHash from '../../graph/hash/updateGraphHash'
-
+import getComponentHierarchyCursors from '../../domain/getComponentHierarchyCursors'
+import createAddComponentMutate from '../../domain/createAddComponentMutate'
+import createAddComponentPostTraverse from '../../domain/createAddComponentPostTraverse'
+import createDeleteComponentMutate from '../../domain/createDeleteComponentMutate'
+import createDeleteComponentPostTraverse from '../../domain/createDeleteComponentPostTraverse'
 import updateComponentHierarchy from '../../domain/updateComponentHierarchy'
-import createHierarchyIdsAndKeys from '../../domain/createDataEcuAttributes'
-import regenerate from '../../domain/regenerate'
+import processImpactedFileNodes from '../../domain/processImpactedFileNodes'
 
 type MoveComponentArgs = {
   sourceComponentAddress: string
@@ -53,104 +37,15 @@ async function moveComponent(_: any, { sourceComponentAddress, sourceHierarchyId
   console.log('sourceHierarchyIds', sourceHierarchyIds)
   console.log('targetHierarchyIds', targetHierarchyIds)
 
-  function mutate(x: any, previousX: any) {
-    // try {
-    //   const finalX = previousX || x
+  const sourceCursors = getComponentHierarchyCursors(sourceComponentAddress, sourceHierarchyIds)
+  const targetCursors = getComponentHierarchyCursors(sourceComponentAddress, targetHierarchyIds)
 
-    //   if (hierarchyPosition === 'before') {
-    //     let inserted: any = jsxElement(jsxOpeningElement(jsxIdentifier(targetComponentNode.payload.name), [], true), null, [], true)
+  console.log('sourceCursors', sourceCursors)
+  console.log('targetCursors', targetCursors)
 
-    //     if (finalX.parent.type !== 'JSXElement') {
-    //       inserted = jsxFragment(jsxOpeningFragment(), jsxClosingFragment(), [inserted, finalX.node])
+  const isSourceFirst = compareCursors(sourceCursors, targetCursors)
 
-    //       finalX.replaceWith(inserted)
-    //     }
-    //     else {
-    //       finalX.insertAfter(inserted)
-    //     }
-    //   }
-    //   else if (hierarchyPosition === 'after') {
-    //     let inserted: any = jsxElement(jsxOpeningElement(jsxIdentifier(targetComponentNode.payload.name), [], true), null, [], true)
-
-    //     if (finalX.parent.type !== 'JSXElement') {
-    //       inserted = jsxFragment(jsxOpeningFragment(), jsxClosingFragment(), [finalX.node, inserted])
-
-    //       finalX.replaceWith(inserted)
-    //     }
-    //     else {
-    //       finalX.insertAfter(inserted)
-    //     }
-    //   }
-    //   else if (hierarchyPosition === 'within') {
-    //     const inserted = jsxElement(jsxOpeningElement(jsxIdentifier(targetComponentNode.payload.name), [], true), null, [], true)
-
-    //     finalX.node.children.push(inserted)
-    //   }
-    //   else if (hierarchyPosition === 'children') {
-    //     const inserted = jsxElement(jsxOpeningElement(jsxIdentifier(targetComponentNode.payload.name), [], true), null, [], true)
-
-    //     finalX.node.children.push(inserted)
-    //   }
-    //   else if (hierarchyPosition === 'parent') {
-    //     const identifier = jsxIdentifier(targetComponentNode.payload.name)
-    //     const inserted = jsxElement(jsxOpeningElement(identifier, [], false), jsxClosingElement(identifier), [finalX.node], false)
-
-    //     finalX.replaceWith(inserted)
-    //   }
-    // }
-    // catch (error) {
-    //   console.log(error)
-    // }
-  }
-
-  function postTraverse(fileNode: FileNodeType, ast: ParseResult<File>, importDeclarationsRegistry: ImportDeclarationsRegistry) {
-    // if (targetComponentNode.payload.path !== fileNode.payload.path) {
-    //   const importDeclarations = importDeclarationsRegistry[fileNode.address]
-
-    //   if (!importDeclarations.length) return
-
-    //   const relativePathBetweenModules = path.relative(path.dirname(fileNode.payload.path), path.dirname(targetComponentNode.payload.path))
-    //   let relativePath = path.join(relativePathBetweenModules, targetComponentNode.payload.name)
-
-    //   if (!relativePath.startsWith('.')) {
-    //     relativePath = `./${relativePath}`
-    //   }
-
-    //   if (!importDeclarations.some(x => x.value === relativePathBetweenModules && x.specifiers.some(s => s === targetComponentNode.payload.name))) {
-    //     traverse(ast, {
-    //       ImportDeclaration(path: any) {
-    //         path.insertBefore(importDeclaration([importDefaultSpecifier(identifier(targetComponentNode.payload.name))], stringLiteral(relativePath)))
-
-    //         path.stop()
-    //       },
-    //     })
-    //   }
-    // }
-  }
-
-  // const impacted = updateComponentHierarchy(fileNode, hierarchyIds, mutate)
-  // let impactedComponentNode: FunctionNodeType | null = null
-
-  // await Promise.all(impacted.map(async ({ fileNode, ast, importDeclarationsRegistry }) => {
-  //   console.log('impacted:', fileNode.payload.name)
-
-  //   postTraverse(fileNode, ast, importDeclarationsRegistry)
-
-  //   const componentNode = getNodesByFirstNeighbourg<FunctionNodeType>(fileNode.address, 'DeclaresFunction')[0]
-
-  //   if (!componentNode) return
-
-  //   createHierarchyIdsAndKeys(componentNode, ast)
-
-  //   const regenerated = await regenerate(fileNode, ast)
-
-  //   if (regenerated) {
-  //     impactedComponentNode = componentNode
-  //   }
-  // }))
-  // .catch(error => {
-  //   console.error(error)
-  // })
+  console.log('isSourceFirst', isSourceFirst)
 
   return {
     returnValue: null,

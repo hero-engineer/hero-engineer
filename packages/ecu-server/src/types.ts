@@ -60,3 +60,13 @@ export type HistoryMutationReturnType<T> = {
   impactedFileNodes: FileNodeType[]
   description: string
 }
+
+export type ImpactedType = {
+  fileNode: FileNodeType
+  ast: ParseResult<File>
+  importDeclarationsRegistry: ImportDeclarationsRegistry
+}
+
+export type MutateType = (x: any, previousX: any) => void
+
+export type PostTraverseType = (fileNode: FileNodeType, ast: ParseResult<File>, importDeclarationsRegistry: ImportDeclarationsRegistry) => void

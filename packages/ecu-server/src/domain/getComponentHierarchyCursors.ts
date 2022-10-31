@@ -16,18 +16,12 @@ import areArraysEqual from '../utils/areArraysEqual'
 import areArraysEqualAtStart from '../utils/areArraysEqualAtStart'
 import possiblyAddExtension from '../utils/possiblyAddExtension'
 
-import extractIdAndIndex from './extractIdAndIndex'
 import extractIdsAndIndexes from './extractIdsAndIndexes'
 
 type IndexRegistry = Record<string, number>
-type HierarchyItem = {
-  label: string
-  hierarchyId?: string
-  componentAddress?: string
-}
 
-function getComponentHierarchy(sourceComponentAddress: string, hierarchyIds: string[]) {
-  console.log('getComponentHierarchy')
+function getComponentHierarchyCursors(sourceComponentAddress: string, hierarchyIds: string[]): number[] {
+  console.log('getComponentHierarchyCursors')
 
   if (!hierarchyIds.length) {
     console.log('No hierarchy')
@@ -51,7 +45,7 @@ function getComponentHierarchy(sourceComponentAddress: string, hierarchyIds: str
     return []
   }
 
-  const hierarchy: HierarchyItem[] = [] // retval
+  const cursors: number[] = [0] // retval
   const fileNodes = getNodesByRole<FileNodeType>('File')
   const componentNodes = getNodesByRole<FunctionNodeType>('Function').filter(n => n.payload.isComponent)
   const [ids, indexes] = extractIdsAndIndexes(hierarchyIds)
@@ -72,7 +66,7 @@ function getComponentHierarchy(sourceComponentAddress: string, hierarchyIds: str
     return areArraysEqual(lastingHierarchyIds, ids) && areArraysEqual(lastingHierarchyIds.map(hierarchyId => lastingIndexRegistry[hierarchyId]), indexes)
   }
 
-  function traverseFileNode(fileNode: FileNodeType, index = 0, stop = () => {}) {
+  function traverseFileNode(fileNode: FileNodeType, stop = () => {}) {
     console.log('---->', fileNode.payload.name)
 
     const componentNode = getNodesByFirstNeighbourg<FunctionNodeType>(fileNode.address, 'DeclaresFunction')[0]
@@ -83,16 +77,8 @@ function getComponentHierarchy(sourceComponentAddress: string, hierarchyIds: str
       return
     }
 
-    const label = `${componentNode.payload.name}[${index}]`
-    const indexRegistry: IndexRegistry[] = [{}]
     const importDeclarationsRegistry: ImportDeclarationsRegistry = {}
-    let shouldContinue = true
     let shouldPushIndex = true
-
-    hierarchy.push({
-      label,
-      componentAddress: componentNode.address,
-    })
 
     traverse(fileNode.payload.ast, {
       ImportDeclaration(x: any) {
@@ -117,29 +103,16 @@ function getComponentHierarchy(sourceComponentAddress: string, hierarchyIds: str
           if (hierarchyId) {
             console.log('-->', hierarchyId)
 
-            const [componentAddress] = extractIdAndIndex(hierarchyId)
-
-            // console.log('componentAddress', componentAddress)
-
-            indexRegistry[indexRegistry.length - 1][componentAddress] = indexRegistry[indexRegistry.length - 1][componentAddress] + 1 || 0
             lastingIndexRegistry[hierarchyId] = lastingIndexRegistry[hierarchyId] + 1 || 0
             shouldPushIndex = true
 
-            // console.log('JSXElement indexRegistry', indexRegistry)
-
             if (isSuccessiveNodeFound(hierarchyId)) {
               lastingHierarchyIds.push(hierarchyId)
-              hierarchy.push({
-                label: `${x.node.openingElement.name.name}[${indexRegistry[indexRegistry.length - 1][componentAddress]}]`,
-                hierarchyId: `${hierarchyId}:${lastingIndexRegistry[hierarchyId]}`,
-              })
 
               console.log('PUSHED')
 
               if (isNodeFound()) {
                 console.log('SUCCESS')
-
-                shouldContinue = false
 
                 x.stop()
                 stop()
@@ -170,17 +143,11 @@ function getComponentHierarchy(sourceComponentAddress: string, hierarchyIds: str
                 if (fileNode) {
                   console.log('-->', fileNode.payload.name)
 
-                  indexRegistry[indexRegistry.length - 1][fileNode.payload.name] = indexRegistry[indexRegistry.length - 1][fileNode.payload.name] + 1 || 0
-                  // console.log('JSXElement indexRegistry', indexRegistry)
-
                   shouldPushIndex = false
 
                   traverseFileNode(
                     fileNode,
-                    indexRegistry[indexRegistry.length - 1][fileNode.payload.name],
                     () => {
-                      shouldContinue = false
-
                       x.stop()
                       stop()
                     }
@@ -192,30 +159,18 @@ function getComponentHierarchy(sourceComponentAddress: string, hierarchyIds: str
         }
 
         if (!x.node.selfClosing && shouldPushIndex) {
-          indexRegistry.push({})
+          cursors.push(0)
         }
-
-        // console.log('JSXElement post indexRegistry', indexRegistry)
       },
       JSXClosingElement() {
         // Prevent fragments from interering with indexing
-        if (indexRegistry.length > 1) {
-          indexRegistry.pop()
+        if (cursors.length > 1) {
+          cursors.pop()
         }
 
-        // console.log('JSXClosingElement indexRegistry', indexRegistry)
+        cursors[cursors.length - 1]++
       },
     })
-
-    // If no success, remove inserted element from hierarchy
-    if (shouldContinue) {
-      for (let i = hierarchy.length - 1; i >= 0; i--) {
-        const popped = hierarchy.pop()
-
-        // console.log('popped', popped)
-        if (popped?.label === label) break
-      }
-    }
 
     // console.log('<----', fileNode.payload.name)
     // console.log('indexRegistry', indexRegistry)
@@ -224,7 +179,7 @@ function getComponentHierarchy(sourceComponentAddress: string, hierarchyIds: str
 
   traverseFileNode(fileNode)
 
-  return hierarchy
+  return cursors
 }
 
-export default getComponentHierarchy
+export default getComponentHierarchyCursors
