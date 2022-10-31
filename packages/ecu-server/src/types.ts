@@ -70,3 +70,11 @@ export type ImpactedType = {
 export type MutateType = (x: any, previousX: any) => void
 
 export type PostTraverseType = (fileNode: FileNodeType, ast: ParseResult<File>, importDeclarationsRegistry: ImportDeclarationsRegistry) => void
+
+export type IndexRegistryType = Record<string, number>
+
+export type HierarchyItemType = {
+  label: string
+  hierarchyId?: string
+  componentAddress?: string
+}

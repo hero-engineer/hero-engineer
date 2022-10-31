@@ -4,7 +4,7 @@ import CoolDiv from './CoolDiv'
 
 function MultipleCoolDivs(props: any) {
   return (
-    <Div data-ecu="-bgmmeEu3q:0">
+    <Div data-ecu="pyCjIHPlPp:0">
       <CoolDiv />
       <CoolDiv />
       <CoolDiv />

@@ -9,7 +9,7 @@ import {
 import traverse from '@babel/traverse'
 
 import { ecuPropName } from '../configuration'
-import { FileNodeType, FunctionNodeType, ImportDeclarationsRegistry } from '../types'
+import { FileNodeType, FunctionNodeType, ImportDeclarationsRegistry, IndexRegistryType } from '../types'
 
 import { getNodeByAddress, getNodesByFirstNeighbourg, getNodesByRole, getNodesBySecondNeighbourg } from '../graph'
 import areArraysEqual from '../utils/areArraysEqual'
@@ -17,8 +17,6 @@ import areArraysEqualAtStart from '../utils/areArraysEqualAtStart'
 import possiblyAddExtension from '../utils/possiblyAddExtension'
 
 import extractIdsAndIndexes from './extractIdsAndIndexes'
-
-type IndexRegistry = Record<string, number>
 
 function getComponentHierarchyCursors(sourceComponentAddress: string, hierarchyIds: string[]): number[] {
   console.log('getComponentHierarchyCursors')
@@ -50,7 +48,7 @@ function getComponentHierarchyCursors(sourceComponentAddress: string, hierarchyI
   const componentNodes = getNodesByRole<FunctionNodeType>('Function').filter(n => n.payload.isComponent)
   const [ids, indexes] = extractIdsAndIndexes(hierarchyIds)
   const lastingHierarchyIds: string[] = []
-  const lastingIndexRegistry: IndexRegistry = {}
+  const lastingIndexRegistry: IndexRegistryType = {}
 
   console.log('ids', ids)
   console.log('indexes', indexes)

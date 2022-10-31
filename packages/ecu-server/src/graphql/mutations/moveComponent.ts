@@ -1,4 +1,4 @@
-import { FileNodeType, FunctionNodeType, HierarchyPositionType, HistoryMutationReturnType } from '../../types'
+import { FileNodeType, FunctionNodeType, HierarchyItemType, HierarchyPositionType, HistoryMutationReturnType } from '../../types'
 
 import { getNodeByAddress, getNodesBySecondNeighbourg } from '../../graph'
 
@@ -13,6 +13,7 @@ import createDeleteComponentMutate from '../../domain/createDeleteComponentMutat
 import createDeleteComponentPostTraverse from '../../domain/createDeleteComponentPostTraverse'
 import updateComponentHierarchy from '../../domain/updateComponentHierarchy'
 import processImpactedFileNodes from '../../domain/processImpactedFileNodes'
+import getComponentHierarchy from '../../domain/getComponentHierarchy'
 
 type MoveComponentArgs = {
   sourceComponentAddress: string
@@ -20,6 +21,15 @@ type MoveComponentArgs = {
   targetHierarchyIds: string[]
   hierarchyPosition: HierarchyPositionType
 }
+
+// function extractInserted(hierarchy: HierarchyItemType[]) {
+//   const stack = [...hierarchy]
+
+//   while (stack.length) {
+//     const item = stack.pop()
+
+//   }
+// }
 
 async function moveComponent(_: any, { sourceComponentAddress, sourceHierarchyIds, targetHierarchyIds, hierarchyPosition }: MoveComponentArgs): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
   console.log('___moveComponent___')
@@ -42,12 +52,22 @@ async function moveComponent(_: any, { sourceComponentAddress, sourceHierarchyId
   const sourceCursors = getComponentHierarchyCursors(sourceComponentAddress, sourceHierarchyIds)
   const targetCursors = getComponentHierarchyCursors(sourceComponentAddress, targetHierarchyIds)
 
+  // const
   console.log('sourceCursors', sourceCursors)
   console.log('targetCursors', targetCursors)
 
   const isSourceFirst = compareCursors(sourceCursors, targetCursors)
 
   console.log('isSourceFirst', isSourceFirst)
+
+  const sourceHierarchy = getComponentHierarchy(sourceComponentAddress, sourceHierarchyIds)
+
+  // const insertedComponentAddress = extractInserted(sourceHierarchy)
+  // const componeNodeToInsert = //
+
+  const deleteMutate = createDeleteComponentMutate()
+  const deletePostTraverse = createDeleteComponentPostTraverse()
+  // const addMutate = createAddComponentMutate(sourceComponentNode, hierarchyPosition)
 
   return {
     returnValue: null,

@@ -8,7 +8,7 @@ import {
 } from '@babel/types'
 import traverse from '@babel/traverse'
 
-import { FileNodeType, FunctionNodeType, ImpactedType, ImportDeclarationsRegistry, MutateType } from '../types'
+import { FileNodeType, FunctionNodeType, ImpactedType, ImportDeclarationsRegistry, IndexRegistryType, MutateType } from '../types'
 import { ecuPropName } from '../configuration'
 
 import { getNodesByRole } from '../graph'
@@ -37,7 +37,7 @@ function updateComponentHierarchy(
   const fileNodes = getNodesByRole<FileNodeType>('File')
   const [ids, indexes] = extractIdsAndIndexes(hierarchyIds)
   const lastingHierarchyIds: string[] = []
-  const lastingIndexRegistry: Record<string, number> = {}
+  const lastingIndexRegistry: IndexRegistryType = {}
 
   console.log('ids', ids)
   console.log('indexes', indexes)
