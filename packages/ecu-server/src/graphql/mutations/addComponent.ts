@@ -60,7 +60,7 @@ async function addComponent(_: any, { sourceComponentAddress, targetComponentAdd
       if (hierarchyPosition === 'before') {
         let inserted: any = jsxElement(jsxOpeningElement(jsxIdentifier(targetComponentNode.payload.name), [], true), null, [], true)
 
-        if (finalX.parent.type !== 'JSXElement') {
+        if (finalX.parent.type !== 'JSXElement' && finalX.parent.type !== 'JSXFragment') {
           inserted = jsxFragment(jsxOpeningFragment(), jsxClosingFragment(), [inserted, finalX.node])
 
           finalX.replaceWith(inserted)
@@ -72,7 +72,7 @@ async function addComponent(_: any, { sourceComponentAddress, targetComponentAdd
       else if (hierarchyPosition === 'after') {
         let inserted: any = jsxElement(jsxOpeningElement(jsxIdentifier(targetComponentNode.payload.name), [], true), null, [], true)
 
-        if (finalX.parent.type !== 'JSXElement') {
+        if (finalX.parent.type !== 'JSXElement' && finalX.parent.type !== 'JSXFragment') {
           inserted = jsxFragment(jsxOpeningFragment(), jsxClosingFragment(), [finalX.node, inserted])
 
           finalX.replaceWith(inserted)
