@@ -1,5 +1,7 @@
 import { Div } from 'ecu-client'
 
+import DualCoolDiv from './DualCoolDiv'
+
 function CoolDiv(props: any) {
   console.log('__rendering CoolDiv')
 

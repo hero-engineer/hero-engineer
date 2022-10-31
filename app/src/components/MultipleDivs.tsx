@@ -1,8 +1,8 @@
 import { Div } from 'ecu-client'
 
+import DualCoolDiv from './DualCoolDiv'
 import CoolDiv from './CoolDiv'
 import CoolDaddy from './CoolDaddy'
-import DualCoolDiv from './DualCoolDiv'
 
 function MultipleDivs(props: any) {
   console.log('__rendering MultipleDivs')
@@ -12,6 +12,7 @@ function MultipleDivs(props: any) {
       <CoolDiv />
       <DualCoolDiv />
       <CoolDiv />
+      <DualCoolDiv />
       <Div data-ecu="iOAD93LOMP3:0">
         <Div data-ecu="iOAD93LOMP3:0_0">
           Dear component
