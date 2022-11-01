@@ -4,7 +4,7 @@ import { getNodesByFirstNeighbourg } from '../../graph'
 
 import regenerate from '../regenerate'
 
-import createDataEcuAttributes from './createDataEcuAttributes'
+import updateDataEcuAttributes from './updateDataEcuAttributes'
 
 async function processImpactedFileNodes(impacted: ImpactedType[], postTraverse: PostTraverseType, refreshDataEcuAttributes = true) {
   let impactedFileNode: FileNodeType | null = null
@@ -20,7 +20,7 @@ async function processImpactedFileNodes(impacted: ImpactedType[], postTraverse: 
     if (!componentNode) return
 
     if (refreshDataEcuAttributes) {
-      createDataEcuAttributes(componentNode, ast)
+      updateDataEcuAttributes(componentNode, ast)
     }
 
     const regenerated = await regenerate(fileNode, ast)

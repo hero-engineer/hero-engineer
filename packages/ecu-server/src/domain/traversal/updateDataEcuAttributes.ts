@@ -26,7 +26,7 @@ function insertPropFactory(key: string, getValue: () => string) {
   }
 }
 
-function createDataEcuAttributes(componentNode: FunctionNodeType, ast: ParseResult<File>) {
+function updateDataEcuAttributes(componentNode: FunctionNodeType, ast: ParseResult<File>) {
   const cursors = [0]
   const importedEcuComponentNames: string[] = []
 
@@ -59,4 +59,4 @@ function createDataEcuAttributes(componentNode: FunctionNodeType, ast: ParseResu
   return ast
 }
 
-export default createDataEcuAttributes
+export default updateDataEcuAttributes

@@ -12,7 +12,7 @@ import { getNodesByFirstNeighbourg } from '../../graph'
 import addFile from '../../graph/add/addFile'
 import addFileDependencies from '../../graph/add/addFileDependencies'
 
-import createDataEcuAttributes from '../../domain/traversal/createDataEcuAttributes'
+import updateDataEcuAttributes from '../../domain/traversal/updateDataEcuAttributes'
 import regenerate from '../../domain/regenerate'
 
 import capitalize from '../../utils/capitalize'
@@ -38,7 +38,7 @@ async function createComponent(_: any, { name }: CreateComponentArgs): Promise<H
 
   const componentNode = getNodesByFirstNeighbourg<FunctionNodeType>(fileNode.address, 'DeclaresFunction')[0]
 
-  const ast = createDataEcuAttributes(componentNode, fileNode.payload.ast)
+  const ast = updateDataEcuAttributes(componentNode, fileNode.payload.ast)
 
   await regenerate(fileNode, ast)
 

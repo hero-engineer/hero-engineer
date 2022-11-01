@@ -63,6 +63,7 @@ function updateComponentHierarchy(
     x.stop()
   }
 
+  // TODO use stop and stop using previousX
   function traverseFileNode(fileNode: FileNodeType, previousX: any = null) {
     const { ast } = fileNode.payload
     const importDeclarationsRegistry: ImportDeclarationsRegistry = {}
@@ -105,6 +106,7 @@ function updateComponentHierarchy(
                 console.log('SUCCESS')
 
                 performMutation(x, previousX)
+
                 // console.log('currentHierarchyIds', currentHierarchyIds)
                 // console.log('currentIndexRegistry', currentIndexRegistry)
               }
