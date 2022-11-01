@@ -1,12 +1,22 @@
-import { memo, useCallback, useContext, useEffect } from 'react'
+import { Fragment, memo, useCallback, useContext, useEffect, useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useQuery } from 'urql'
 import { Div } from 'honorable'
+import { MdChevronRight } from 'react-icons/md'
+
+import { HierarchyItemType } from '../../types'
 
 import HierarchyIdsContext from '../../contexts/HierarchyIdsContext'
 import HierarchyContext from '../../contexts/HierarchyContext'
 
 import { HierarchyQuery } from '../../queries'
+
+type HierarchyQueryReturnType = {
+  hierarchy: {
+    hierarchy: HierarchyItemType[],
+    componentRootLimitedIds: string[],
+  }
+}
 
 // import areArraysEqual from '../../utils/areArraysEqual'
 
@@ -21,13 +31,12 @@ import { HierarchyQuery } from '../../queries'
 //   return ref.current
 // }
 
-function getMaxHierarchyDepth(hierarchy: any[], hierarchyIds: string[]) {
+function getMaxHierarchyDepth(hierarchy: HierarchyItemType[], hierarchyIds: string[]) {
+  if (!hierarchy) return 0
+
   let maxDepth = 0
 
-  console.log('hierarchyIds', hierarchyIds)
-
   for (let i = 0; i < hierarchy.length; i++) {
-    console.log('hierarchy[i]', hierarchy[i])
     const { hierarchyId } = hierarchy[i]
 
     if (!hierarchyId) maxDepth++
@@ -41,13 +50,24 @@ function getMaxHierarchyDepth(hierarchy: any[], hierarchyIds: string[]) {
   return maxDepth
 }
 
+function getActualHierarchy(hierarchy: HierarchyItemType[] | undefined, hierarchyDepth: number, maxHierarchyDepth: number) {
+  if (!hierarchy) return []
+
+  const actualHierarchy = [...hierarchy]
+
+  for (let i = hierarchyDepth; i < maxHierarchyDepth; i++) {
+    actualHierarchy.pop()
+  }
+
+  return actualHierarchy
+}
+
 function HierarchyBar() {
   const { id = '' } = useParams()
-  const { hierarchyIds, setHierarchyIds, setComponentRootLimitedIds } = useContext(HierarchyIdsContext)
-  const { setHierarchy, setMaxHierarchyDepth, maxHierarchyDepth } = useContext(HierarchyContext)
-  const navigate = useNavigate()
+  const { hierarchyIds, setHierarchyIds, componentRootLimitedIds, setComponentRootLimitedIds } = useContext(HierarchyIdsContext)
+  const { setHierarchy, hierarchyDepth, setHierarchyDepth, maxHierarchyDepth, setMaxHierarchyDepth } = useContext(HierarchyContext)
 
-  const [hierarchyQueryResult] = useQuery({
+  const [hierarchyQueryResult] = useQuery<HierarchyQueryReturnType>({
     query: HierarchyQuery,
     variables: {
       hierarchyIds,
@@ -57,10 +77,11 @@ function HierarchyBar() {
     requestPolicy: 'network-only',
   })
 
-  const handleClick = useCallback((hierarchy: any[], index: number) => {
-    if (hierarchy[index].componentAddress) {
-      setHierarchyIds([])
-      navigate(`/__ecu__/component/${hierarchy[index].componentAddress}`)
+  const actualHierarchy = useMemo(() => getActualHierarchy(hierarchyQueryResult.data?.hierarchy?.hierarchy, hierarchyDepth, maxHierarchyDepth), [hierarchyQueryResult.data?.hierarchy?.hierarchy, hierarchyDepth, maxHierarchyDepth])
+
+  const handleClick = useCallback((index: number) => {
+    if (actualHierarchy[index].componentAddress) {
+      setHierarchyDepth(actualHierarchy.length - index - 1)
 
       return
     }
@@ -68,16 +89,16 @@ function HierarchyBar() {
     const nextHierarchyIds: string[] = []
 
     for (let i = 0; i <= index; i++) {
-      if (hierarchy[i].hierarchyId) {
-        nextHierarchyIds.push(hierarchy[i].hierarchyId)
+      if (actualHierarchy[i].hierarchyId) {
+        nextHierarchyIds.push(actualHierarchy[i].hierarchyId as string)
       }
     }
 
     setHierarchyIds(nextHierarchyIds)
-  }, [navigate, setHierarchyIds])
+  }, [actualHierarchy, setHierarchyDepth, setHierarchyIds])
 
   useEffect(() => {
-    if (!hierarchyQueryResult.data) return
+    if (!hierarchyQueryResult.data?.hierarchy) return
 
     const { hierarchy, componentRootLimitedIds } = hierarchyQueryResult.data.hierarchy
 
@@ -85,6 +106,13 @@ function HierarchyBar() {
     setMaxHierarchyDepth(getMaxHierarchyDepth(hierarchy, hierarchyIds))
     setComponentRootLimitedIds(componentRootLimitedIds)
   }, [hierarchyQueryResult.data, setHierarchy, setMaxHierarchyDepth, setComponentRootLimitedIds, hierarchyIds])
+
+  // Prevent hierarchy depth overflow
+  useEffect(() => {
+    if (hierarchyDepth > maxHierarchyDepth) {
+      setHierarchyDepth(maxHierarchyDepth)
+    }
+  }, [hierarchyDepth, maxHierarchyDepth, setHierarchyDepth])
 
   if (!id) {
     return null
@@ -96,12 +124,9 @@ function HierarchyBar() {
   if (hierarchyQueryResult.error) {
     return null
   }
-  if (!hierarchyQueryResult.data) {
+  if (!hierarchyQueryResult.data?.hierarchy) {
     return null
   }
-
-  // console.log('hierarchyIds', hierarchyIds)
-  // console.log('hierarchyQueryResult', hierarchyQueryResult.data.hierarchy)
 
   const { hierarchy } = hierarchyQueryResult.data.hierarchy
 
@@ -109,21 +134,28 @@ function HierarchyBar() {
     return null
   }
 
-  console.log('maxHierarchyDepth', maxHierarchyDepth)
+  console.log('hierarchyIds', hierarchyIds)
+  console.log('hierarchyDepth', hierarchyDepth, '/', maxHierarchyDepth)
+  console.log('componentRootLimitedIds', componentRootLimitedIds)
+  console.log('-->', actualHierarchy)
 
   return (
     <Div
       xflex="x4"
-      gap={0.5}
-      py={0.5}
+      fontSize={12}
+      borderBottom="1px solid border"
+      gap={0.25}
+      p={0.5}
     >
-      {(hierarchy as any[]).map(({ label }, i, a) => (
-        <Div
-          key={i}
-          onClick={() => handleClick(a, i)}
-        >
-          {label}
-        </Div>
+      {actualHierarchy.map(({ label }, i, a) => (
+        <Fragment key={i}>
+          <Div onClick={() => handleClick(i)}>
+            {label}
+          </Div>
+          {i < a.length - 1 && (
+            <MdChevronRight />
+          )}
+        </Fragment>
       ))}
     </Div>
   )

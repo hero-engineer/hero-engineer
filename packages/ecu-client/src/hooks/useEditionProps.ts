@@ -1,7 +1,9 @@
 import '../css/edition.css'
 
-import { MouseEvent, Ref, useCallback, useContext, useRef, useState } from 'react'
+import { MouseEvent, Ref, useCallback, useContext, useMemo, useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
+
+import { HierarchyItemType } from '../types'
 
 import HierarchyIdsContext from '../contexts/HierarchyIdsContext'
 import HierarchyContext from '../contexts/HierarchyContext'
@@ -34,12 +36,18 @@ function getHierarchyIds(element: EventTarget | HTMLElement) {
   return hierarchyIds.reverse()
 }
 
+function getActualHierarchy(hierarchy: HierarchyItemType[], hierarchyDepth: number) {
+  return hierarchy.slice(1, hierarchyDepth + 1)
+}
+
 function useEditionProps<T>(id: string, className = '') {
   const rootRef = useRef<T>(null)
   const hierarchyId = useHierarchyId(id, rootRef)
   const { hierarchyIds, setHierarchyIds } = useContext(HierarchyIdsContext)
   const { hierarchy, hierarchyDepth, setHierarchyDepth, maxHierarchyDepth } = useContext(HierarchyContext)
   const { setDragAndDrop } = useContext(DragAndDropContext)
+
+  const actualHierarchy = useMemo(() => getActualHierarchy(hierarchy, hierarchyDepth), [hierarchy, hierarchyDepth])
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'Node',
@@ -82,12 +90,6 @@ function useEditionProps<T>(id: string, className = '') {
 
     event.stopPropagation()
 
-    if (hierarchyDepth < maxHierarchyDepth) {
-      setHierarchyDepth(x => x + 1)
-
-      return
-    }
-
     const ids = getHierarchyIds(event.target)
     const nextIds: string[] = []
 
@@ -103,10 +105,14 @@ function useEditionProps<T>(id: string, className = '') {
 
     setHierarchyIds(nextIds)
     setHierarchyDepth(x => areArraysEqual(hierarchyIds, nextIds) ? x + 1 : 0)
-  }, [hierarchyIds, setHierarchyIds, hierarchyDepth, setHierarchyDepth, maxHierarchyDepth])
+  }, [hierarchyIds, setHierarchyIds, setHierarchyDepth])
 
   const generateClassName = useCallback(() => {
     let klassName = className
+
+    if (actualHierarchy.length === 0) {
+      klassName += ' ecu-selected-root'
+    }
 
     if (hierarchyIds[hierarchyIds.length - 1] === hierarchyId) {
       klassName += ' ecu-selected'
@@ -121,7 +127,7 @@ function useEditionProps<T>(id: string, className = '') {
     }
 
     return klassName.trim()
-  }, [className, hierarchyIds, hierarchyId, isDragging, canDrop, isOverCurrent])
+  }, [className, actualHierarchy, hierarchyIds, hierarchyId, isDragging, canDrop, isOverCurrent])
 
   return {
     ref,
