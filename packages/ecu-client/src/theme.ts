@@ -149,7 +149,13 @@ export default mergeTheme(defaultTheme, {
         color: 'text',
         backgroundColor: 'transparent',
         ':hover': {
-          backgroundColor: 'transparency(primary, 80)',
+          backgroundColor: 'darken(background-light, 5)',
+        },
+        ':active': {
+          backgroundColor: 'darken(background-light, 10)',
+        },
+        ':disabled': {
+          backgroundColor: 'darken(background-light, 15)',
         },
       },
     ],

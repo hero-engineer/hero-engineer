@@ -9,7 +9,7 @@ import { DeleteComponentMutation } from '../../queries'
 import HierarchyIdsContext from '../../contexts/HierarchyIdsContext'
 import HierarchyContext from '../../contexts/HierarchyContext'
 
-function DeleteComponentButton() {
+function DeleteComponentButton(props: any) {
   const { id } = useParams()
   const { hierarchyIds } = useContext(HierarchyIdsContext)
   const { hierarchy } = useContext(HierarchyContext)
@@ -48,6 +48,7 @@ function DeleteComponentButton() {
         ghost
         onClick={handleDeleteComponentClick}
         disabled={!hierarchyIds.length}
+        {...props}
       >
         <TbTrash />
       </Button>

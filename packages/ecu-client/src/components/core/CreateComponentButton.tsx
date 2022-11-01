@@ -6,7 +6,7 @@ import { AiOutlinePlus } from 'react-icons/ai'
 
 import { CreateComponentMutation } from '../../queries'
 
-function CreateComponentButton() {
+function CreateComponentButton(props: any) {
   const [name, setName] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const navigate = useNavigate()
@@ -26,6 +26,7 @@ function CreateComponentButton() {
       <Button
         ghost
         onClick={() => setIsModalOpen(true)}
+        {...props}
       >
         <AiOutlinePlus />
       </Button>

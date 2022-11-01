@@ -10,23 +10,25 @@ import HierarchyBar from './HierarchyBar'
 
 function Overlay() {
   return (
-    <Div
-      p={0.5}
-      backgroundColor="background-light"
-    >
+    <Div backgroundColor="background-light">
       <Div
-        xflex="x4"
-        gap={0.5}
+        xflex="x4s"
+        borderBottom="1px solid border"
       >
-        <P fontWeight="bold">
+        <P
+          xflex="x5"
+          fontWeight="bold"
+          borderRight="1px solid border"
+          px={0.5}
+        >
           Ecu
         </P>
-        <ComponentsLinkButton />
-        <CreateComponentButton />
-        <DeleteComponentButton />
+        <ComponentsLinkButton borderRight="1px solid border" />
+        <CreateComponentButton borderRight="1px solid border" />
+        <DeleteComponentButton borderRight="1px solid border" />
         <AddComponentButton />
         <Div flexGrow={1} />
-        <ViewAppButton />
+        <ViewAppButton borderLeft="1px solid border" />
       </Div>
       <HierarchyBar />
     </Div>

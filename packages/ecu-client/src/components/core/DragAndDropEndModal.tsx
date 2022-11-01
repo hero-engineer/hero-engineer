@@ -10,7 +10,7 @@ import { hierarchyPositions } from '../../constants'
 
 import { MoveComponentMutation } from '../../queries'
 
-import capitalize from '../utils/capitalize'
+import capitalize from '../../utils/capitalize'
 
 function DragAndDropEndModal() {
   const { id = '' } = useParams()
