@@ -10,7 +10,7 @@ import { HierarchyQuery } from '../../queries'
 
 function HierarchyBar() {
   const { id = '' } = useParams()
-  const { hierarchyIds, setHierarchyIds } = useContext(HierarchyIdsContext)
+  const { hierarchyIds, setHierarchyIds, setComponentRootHierarchyIds } = useContext(HierarchyIdsContext)
   const { setHierarchy } = useContext(HierarchyContext)
   const navigate = useNavigate()
 
@@ -45,10 +45,12 @@ function HierarchyBar() {
 
   useEffect(() => {
     if (!hierarchyQueryResult.data) return
-    if (!Array.isArray(hierarchyQueryResult.data.hierarchy)) return
 
-    setHierarchy(hierarchyQueryResult.data.hierarchy)
-  }, [hierarchyQueryResult.data, setHierarchy])
+    const { hierarchy, rootComponentHierarchyIds } = hierarchyQueryResult.data.hierarchy
+
+    setHierarchy(hierarchy)
+    setComponentRootHierarchyIds(rootComponentHierarchyIds)
+  }, [hierarchyQueryResult.data, setHierarchy, setComponentRootHierarchyIds])
 
   if (!id) {
     return null
@@ -67,7 +69,7 @@ function HierarchyBar() {
   console.log('hierarchyIds', hierarchyIds)
   console.log('hierarchyQueryResult', hierarchyQueryResult.data.hierarchy)
 
-  const { hierarchy } = hierarchyQueryResult.data
+  const { hierarchy } = hierarchyQueryResult.data.hierarchy
 
   if (!hierarchy.length) {
     return null

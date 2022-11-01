@@ -28,7 +28,8 @@ type EcuMasterProps = PropsWithChildren<{
 
 function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps) {
   const [hierarchyIds, setHierarchyIds] = usePersistedState<string[]>('ecu-hierarchyIds', [])
-  const HierarchyIdsContextValue = useMemo<HierarchyIdsContextType>(() => ({ hierarchyIds, setHierarchyIds }), [hierarchyIds, setHierarchyIds])
+  const [componentRootHierarchyIds, setComponentRootHierarchyIds] = usePersistedState<string[][]>('ecu-component-root-hierarchy-ids', [])
+  const HierarchyIdsContextValue = useMemo<HierarchyIdsContextType>(() => ({ hierarchyIds, setHierarchyIds, componentRootHierarchyIds, setComponentRootHierarchyIds }), [hierarchyIds, setHierarchyIds, componentRootHierarchyIds, setComponentRootHierarchyIds])
 
   const [hierarchy, setHierarchy] = useState<HierarchyItemType[]>([])
   const HierarchyContextValue = useMemo<HierarchyContextType>(() => ({ hierarchy, setHierarchy }), [hierarchy])

@@ -59,10 +59,16 @@ export const typeDefs = gql`
     hierarchyId: String
   }
 
+
+  type HierarchyReturnValue {
+    hierarchy: [HierarchyItem]!
+    componentRootHierarchyIds: [String]!
+  }
+
   type Query {
     component(id: String!): FunctionNode
     components: [FunctionNode]
-    hierarchy(sourceComponentAddress: String!, hierarchyIds: [String!]!): [HierarchyItem]
+    hierarchy(sourceComponentAddress: String!, hierarchyIds: [String!]!): HierarchyReturnValue
   }
 
   type Mutation {

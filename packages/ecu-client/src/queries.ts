@@ -1,10 +1,13 @@
 export const HierarchyQuery = `
   query ($sourceComponentAddress: String!, $hierarchyIds: [String!]!) {
     hierarchy (sourceComponentAddress: $sourceComponentAddress, hierarchyIds: $hierarchyIds) {
-      label
-      componentName
-      componentAddress
-      hierarchyId
+      hierarchy {
+        label
+        componentName
+        componentAddress
+        hierarchyId
+      }
+      componentRootHierarchyIds
     }
   }
 `
