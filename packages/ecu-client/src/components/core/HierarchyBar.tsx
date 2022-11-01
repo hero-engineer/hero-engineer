@@ -77,7 +77,7 @@ function HierarchyBar() {
     <Div
       xflex="x4"
       gap={0.5}
-      mt={0.5}
+      py={0.5}
     >
       {(hierarchy as any[]).map(({ label }, i, a) => (
         <Div
