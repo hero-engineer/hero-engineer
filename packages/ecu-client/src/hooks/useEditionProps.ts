@@ -1,10 +1,13 @@
 import '../css/edition.css'
 
-import { MouseEvent, Ref, useCallback, useContext, useRef } from 'react'
+import { MouseEvent, Ref, useCallback, useContext, useRef, useState } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 
 import HierarchyIdsContext from '../contexts/HierarchyIdsContext'
+import HierarchyContext from '../contexts/HierarchyContext'
 import DragAndDropContext from '../contexts/DragAndDropContext'
+
+import areArraysEqual from '../utils/areArraysEqual'
 
 import useForkedRef from './useForkedRef'
 import useHierarchyId from './useHierarchyId'
@@ -24,6 +27,7 @@ function getHierarchyIds(element: EventTarget | HTMLElement) {
     if (!id) break
 
     hierarchyIds.push(id)
+
     currentElement = currentElement.parentElement
   }
 
@@ -34,6 +38,7 @@ function useEditionProps<T>(id: string, className = '') {
   const rootRef = useRef<T>(null)
   const hierarchyId = useHierarchyId(id, rootRef)
   const { hierarchyIds, setHierarchyIds } = useContext(HierarchyIdsContext)
+  const { hierarchy, hierarchyDepth, setHierarchyDepth, maxHierarchyDepth } = useContext(HierarchyContext)
   const { setDragAndDrop } = useContext(DragAndDropContext)
 
   const [{ isDragging }, drag] = useDrag(() => ({
@@ -77,24 +82,28 @@ function useEditionProps<T>(id: string, className = '') {
 
     event.stopPropagation()
 
+    if (hierarchyDepth < maxHierarchyDepth) {
+      setHierarchyDepth(x => x + 1)
+
+      return
+    }
+
     const ids = getHierarchyIds(event.target)
+    const nextIds: string[] = []
 
-    setHierarchyIds(x => {
-      const nextIds = []
+    for (let i = 0; i < ids.length; i++) {
+      const id = ids[i]
 
-      for (let i = 0; i < ids.length; i++) {
-        const id = ids[i]
+      nextIds.push(id)
 
-        nextIds.push(id)
-
-        if (x[i] !== id) {
-          break
-        }
+      if (hierarchyIds[i] !== id) {
+        break
       }
+    }
 
-      return nextIds
-    })
-  }, [setHierarchyIds])
+    setHierarchyIds(nextIds)
+    setHierarchyDepth(x => areArraysEqual(hierarchyIds, nextIds) ? x + 1 : 0)
+  }, [hierarchyIds, setHierarchyIds, hierarchyDepth, setHierarchyDepth, maxHierarchyDepth])
 
   const generateClassName = useCallback(() => {
     let klassName = className

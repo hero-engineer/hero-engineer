@@ -1,5 +1,5 @@
 import getComponentHierarchy from '../../domain/traversal/getComponentHierarchy'
-import getComponentRootHierarchyIds from '../../domain/traversal/getComponentRootHierarchyIds'
+import getComponentRootLimitedIds from '../../domain/traversal/getComponentRootLimitedIds'
 
 type GetComponentArgs = {
   sourceComponentAddress: string
@@ -17,11 +17,11 @@ function getHierarchy(_: any, { sourceComponentAddress, hierarchyIds }: GetCompo
     throw new Error('Invalid hierarchy')
   }
 
-  const componentRootHierarchyIds = getComponentRootHierarchyIds(lastComponentAddress)
+  const componentRootLimitedIds = getComponentRootLimitedIds(lastComponentAddress)
 
   return {
     hierarchy,
-    componentRootHierarchyIds,
+    componentRootLimitedIds,
   }
 }
 

@@ -8,10 +8,43 @@ import HierarchyContext from '../../contexts/HierarchyContext'
 
 import { HierarchyQuery } from '../../queries'
 
+// import areArraysEqual from '../../utils/areArraysEqual'
+
+// function usePreviousWithDeps<T>(value: T, deps: any[]) {
+//   const ref = useRef<T>()
+
+//   useEffect(() => {
+//     ref.current = value
+//   // eslint-disable-next-line react-hooks/exhaustive-deps
+//   }, deps)
+
+//   return ref.current
+// }
+
+function getMaxHierarchyDepth(hierarchy: any[], hierarchyIds: string[]) {
+  let maxDepth = 0
+
+  console.log('hierarchyIds', hierarchyIds)
+
+  for (let i = 0; i < hierarchy.length; i++) {
+    console.log('hierarchy[i]', hierarchy[i])
+    const { hierarchyId } = hierarchy[i]
+
+    if (!hierarchyId) maxDepth++
+    else {
+      if (hierarchyId === hierarchyIds[hierarchyIds.length - 1]) break
+
+      maxDepth = 0
+    }
+  }
+
+  return maxDepth
+}
+
 function HierarchyBar() {
   const { id = '' } = useParams()
-  const { hierarchyIds, setHierarchyIds, setComponentRootHierarchyIds } = useContext(HierarchyIdsContext)
-  const { setHierarchy } = useContext(HierarchyContext)
+  const { hierarchyIds, setHierarchyIds, setComponentRootLimitedIds } = useContext(HierarchyIdsContext)
+  const { setHierarchy, setMaxHierarchyDepth, maxHierarchyDepth } = useContext(HierarchyContext)
   const navigate = useNavigate()
 
   const [hierarchyQueryResult] = useQuery({
@@ -46,11 +79,12 @@ function HierarchyBar() {
   useEffect(() => {
     if (!hierarchyQueryResult.data) return
 
-    const { hierarchy, rootComponentHierarchyIds } = hierarchyQueryResult.data.hierarchy
+    const { hierarchy, componentRootLimitedIds } = hierarchyQueryResult.data.hierarchy
 
     setHierarchy(hierarchy)
-    setComponentRootHierarchyIds(rootComponentHierarchyIds)
-  }, [hierarchyQueryResult.data, setHierarchy, setComponentRootHierarchyIds])
+    setMaxHierarchyDepth(getMaxHierarchyDepth(hierarchy, hierarchyIds))
+    setComponentRootLimitedIds(componentRootLimitedIds)
+  }, [hierarchyQueryResult.data, setHierarchy, setMaxHierarchyDepth, setComponentRootLimitedIds, hierarchyIds])
 
   if (!id) {
     return null
@@ -66,14 +100,16 @@ function HierarchyBar() {
     return null
   }
 
-  console.log('hierarchyIds', hierarchyIds)
-  console.log('hierarchyQueryResult', hierarchyQueryResult.data.hierarchy)
+  // console.log('hierarchyIds', hierarchyIds)
+  // console.log('hierarchyQueryResult', hierarchyQueryResult.data.hierarchy)
 
   const { hierarchy } = hierarchyQueryResult.data.hierarchy
 
   if (!hierarchy.length) {
     return null
   }
+
+  console.log('maxHierarchyDepth', maxHierarchyDepth)
 
   return (
     <Div

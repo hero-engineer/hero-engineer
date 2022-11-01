@@ -7,7 +7,7 @@ export const HierarchyQuery = `
         componentAddress
         hierarchyId
       }
-      componentRootHierarchyIds
+      componentRootLimitedIds
     }
   }
 `

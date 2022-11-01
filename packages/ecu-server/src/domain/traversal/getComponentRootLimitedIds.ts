@@ -14,8 +14,8 @@ import { FileNodeType, FunctionNodeType, ImportDeclarationsRegistry } from '../.
 import { getNodeByAddress, getNodesByFirstNeighbourg, getNodesByRole, getNodesBySecondNeighbourg } from '../../graph'
 import possiblyAddExtension from '../../utils/possiblyAddExtension'
 
-function getComponentRootHierarchyIds(sourceComponentAddress: string): string[] {
-  console.log('getComponentRootHierarchyIds')
+function getComponentRootLimitedIds(sourceComponentAddress: string): string[] {
+  console.log('getComponentRootLimitedIds')
 
   const componentNode = getNodeByAddress<FunctionNodeType>(sourceComponentAddress)
 
@@ -127,4 +127,4 @@ function getComponentRootHierarchyIds(sourceComponentAddress: string): string[] 
   return hierarchyIds
 }
 
-export default getComponentRootHierarchyIds
+export default getComponentRootLimitedIds
