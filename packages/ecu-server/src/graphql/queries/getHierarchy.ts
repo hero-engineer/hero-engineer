@@ -14,7 +14,10 @@ function getHierarchy(_: any, { sourceComponentAddress, hierarchyIds }: GetCompo
   const lastComponentAddress = [...hierarchy].reverse().find(x => x.componentAddress)?.componentAddress
 
   if (!lastComponentAddress) {
-    throw new Error('Invalid hierarchy')
+    return {
+      hierarchy,
+      componentRootLimitedIds: [],
+    }
   }
 
   const componentRootLimitedIds = getComponentRootLimitedIds(lastComponentAddress)
