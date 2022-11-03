@@ -8,18 +8,21 @@ import {
 } from '@babel/types'
 import traverse from '@babel/traverse'
 
-import { FileNodeType, FunctionNodeType, ImpactedType, ImportDeclarationsRegistry, IndexRegistryType, MutateType } from '../../types'
+import { FileNodeType, FunctionNodeType, ImpactedType, ImportDeclarationsRegistry, IndexRegistryType } from '../../types'
 import { ecuPropName } from '../../configuration'
 
-import { getNodesByRole, getNodesBySecondNeighbourg } from '../../graph'
+import { getNodesByFirstNeighbourg, getNodesByRole, getNodesBySecondNeighbourg } from '../../graph'
 
 import areArraysEqual from '../../utils/areArraysEqual'
 import areArraysEqualAtStart from '../../utils/areArraysEqualAtStart'
 import possiblyAddExtension from '../../utils/possiblyAddExtension'
 
+import extractIdAndIndex from '../utils/extractIdAndIndex'
 import extractIdsAndIndexes from '../utils/extractIdsAndIndexes'
 
 type TraverseComponentConfigType = {
+  onTraverseFile?: (fileNode: FileNodeType, index: number) => () => void
+  onHierarchyPush?: (x: any, hierarchyId: string, index: number) => void
   onSuccess?: (x: any) => void
 }
 
@@ -41,42 +44,36 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], con
   }
 
   const {
+    onTraverseFile = () => () => {},
+    onHierarchyPush = () => {},
     onSuccess = () => {},
   } = config
 
   const impacted: ImpactedType[] = [] // retval
   const componentNodes = getNodesByRole<FunctionNodeType>('Function').filter(n => n.payload.isComponent)
   const fileNodes = getNodesByRole<FileNodeType>('File')
-  const [ids, indexes] = extractIdsAndIndexes(hierarchyIds)
+  const [, indexes] = extractIdsAndIndexes(hierarchyIds)
   const lastingHierarchyIds: string[] = []
   const lastingIndexRegistry: IndexRegistryType = {}
   const importDeclarationsRegistry: ImportDeclarationsRegistry = {}
 
-  console.log('ids', ids)
-  console.log('indexes', indexes)
+  // console.log('ids', ids)
+  // console.log('indexes', indexes)
 
-  function isSuccessiveNodeFound(nextHierarchyId: string) {
-    const nextHierarchyIds = [...lastingHierarchyIds, nextHierarchyId]
+  function isSuccessiveNodeFound(nextLimitedHierarchyId: string, nextIndex: number) {
+    const nextHierarchyIds = [...lastingHierarchyIds, `${nextLimitedHierarchyId}:${nextIndex}`] // TODO use util fn
 
-    if (areArraysEqualAtStart(nextHierarchyIds, ids)) {
-      console.log('x', indexes, nextHierarchyIds.map(h => lastingIndexRegistry[h]))
-    }
-
-    return areArraysEqualAtStart(nextHierarchyIds, ids) && areArraysEqualAtStart(nextHierarchyIds.map(h => lastingIndexRegistry[h]), indexes)
+    return areArraysEqualAtStart(nextHierarchyIds, hierarchyIds) && lastingIndexRegistry[nextLimitedHierarchyId] === indexes[nextHierarchyIds.length - 1]
   }
 
   function isFinalNodeFound() {
-    return areArraysEqual(lastingHierarchyIds, ids) && areArraysEqual(lastingHierarchyIds.map(hierarchyId => lastingIndexRegistry[hierarchyId]), indexes)
+    const lastingHierarchyIdsIndexes = lastingHierarchyIds.map(hierarchyId => extractIdAndIndex(hierarchyId)[1])
+
+    return areArraysEqual(lastingHierarchyIds, hierarchyIds) && areArraysEqual(lastingHierarchyIdsIndexes, indexes)
   }
 
-  function traverseFile(fileNode: FileNodeType, previousX: any = null, stop = () => {}) {
-    const { ast } = fileNode.payload
-
-    if (!impacted.some(x => x.fileNode.address === fileNode.address)) {
-      impacted.push({ fileNode, ast, importDeclarationsRegistry })
-    }
-
-    const traverser = {
+  function traverseFileNodesToFindImportDeclarations(fileNode: FileNodeType) {
+    traverse(fileNode.payload.ast, {
       // Build the importDeclarationsRegistry for the file
       ImportDeclaration(x: any) {
         if (!importDeclarationsRegistry[fileNode.address]) {
@@ -88,92 +85,142 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], con
           specifiers: x.node.specifiers.map((x: ImportSpecifier | ImportDefaultSpecifier | ImportNamespaceSpecifier) => x.local.name),
         })
       },
-      JSXElement(x: any) {
-        console.log('___', x.node.openingElement.name.name)
-        const idIndex = x.node.openingElement.attributes.findIndex((x: JSXAttribute) => x.name.name === ecuPropName)
+    })
 
-        // hierarchyId found means we're at an ecu-client Component
-        if (idIndex !== -1) {
-          const hierarchyId = x.node.openingElement.attributes[idIndex].value.value
+    const importedFileNodes = getNodesByFirstNeighbourg<FileNodeType>(fileNode.address, 'ImportsFile')
 
-          if (hierarchyId) {
-            lastingIndexRegistry[hierarchyId] = lastingIndexRegistry[hierarchyId] + 1 || 0
+    importedFileNodes.forEach(fileNode => {
+      if (importDeclarationsRegistry[fileNode.address]) return
 
-            console.log('-->', x.node.openingElement.name.name, hierarchyId, lastingIndexRegistry[hierarchyId])
+      traverseFileNodesToFindImportDeclarations(fileNode)
+    })
+  }
 
-            if (isSuccessiveNodeFound(hierarchyId)) {
-              lastingHierarchyIds.push(hierarchyId)
+  function traverseFileNode(fileNode: FileNodeType, previousFileNode: FileNodeType | null = null, previousX: any = null, index = 0, stop = () => {}) {
+    console.log('-> traverseFileNode', fileNode.payload.name)
 
-              console.log('PUSHED')
+    const onContinue = onTraverseFile(fileNode, index)
 
-              if (isFinalNodeFound()) {
-                console.log('SUCCESS')
+    const { ast } = fileNode.payload
+    const indexRegistries: IndexRegistryType[] = [{}]
+    let shouldContinue = true
+    let shouldPushIndex = true
 
-                onSuccess(x)
-                x.stop()
-                stop()
+    if (!impacted.some(x => x.fileNode.address === fileNode.address)) {
+      impacted.push({ fileNode, ast, importDeclarationsRegistry })
+    }
+
+    function createTraverser(currentFileNode: FileNodeType) {
+      const importDeclarations = importDeclarationsRegistry[currentFileNode.address] || []
+
+      return {
+        JSXElement(x: any) {
+          console.log('--> JSXElement', x.node.openingElement.name.name)
+
+          const idIndex = x.node.openingElement.attributes.findIndex((x: JSXAttribute) => x.name.name === ecuPropName)
+
+          // hierarchyId found means we're at an ecu-client Component
+          if (idIndex !== -1) {
+            const limitedHierarchyId = x.node.openingElement.attributes[idIndex].value.value
+
+            if (limitedHierarchyId) {
+              console.log('--->', x.node.openingElement.name.name, limitedHierarchyId, lastingIndexRegistry[limitedHierarchyId])
+
+              const [componentAddress] = extractIdAndIndex(limitedHierarchyId)
+
+              indexRegistries[indexRegistries.length - 1][componentAddress] = indexRegistries[indexRegistries.length - 1][componentAddress] + 1 || 0
+              lastingIndexRegistry[limitedHierarchyId] = lastingIndexRegistry[limitedHierarchyId] + 1 || 0
+              shouldPushIndex = true
+
+              if (isSuccessiveNodeFound(limitedHierarchyId, lastingIndexRegistry[limitedHierarchyId])) {
+                const hierarchyId = `${limitedHierarchyId}:${lastingIndexRegistry[limitedHierarchyId]}`
+
+                lastingHierarchyIds.push(hierarchyId)
+
+                console.log('PUSHED')
+
+                onHierarchyPush(x, hierarchyId, indexRegistries[indexRegistries.length - 1][componentAddress])
+
+                if (isFinalNodeFound()) {
+                  console.log('SUCCESS')
+
+                  shouldContinue = false
+
+                  onSuccess(x)
+                  x.stop()
+                  stop()
+                }
               }
             }
           }
-        }
-        // No hierarchyId found means we're at an imported Component node
-        else {
-          const importDeclarations = importDeclarationsRegistry[fileNode.address]
-
-          // console.log('fileNode.address', fileNode.address)
-          // console.log('importDeclarations', importDeclarations)
-          if (importDeclarations.length) {
+          // No hierarchyId found means we're at an imported Component node
+          else if (importDeclarations.length) {
             const componentName = x.node.openingElement.name.name
             const relativeImportDeclaration = importDeclarations.find(x => x.value.startsWith('.') && x.specifiers.includes(componentName))
 
             if (relativeImportDeclaration) {
-              const absolutePath = possiblyAddExtension(path.join(path.dirname(fileNode.payload.path), relativeImportDeclaration.value))
+              const absolutePath = possiblyAddExtension(path.join(path.dirname(currentFileNode.payload.path), relativeImportDeclaration.value))
               const componentNode = componentNodes.find(n => n.payload.name === componentName && n.payload.path === absolutePath)
 
               if (componentNode) {
-                const fileNode = fileNodes.find(n => n.payload.path === componentNode.payload.path)
+                const nextFileNode = fileNodes.find(n => n.payload.path === componentNode.payload.path)
 
-                if (fileNode) {
-                  console.log('-->', fileNode.payload.name)
+                if (nextFileNode) {
+                  console.log('--->', nextFileNode.payload.name)
 
-                  // console.log('x.get', x.get('children'))
+                  indexRegistries[indexRegistries.length - 1][nextFileNode.payload.name] = indexRegistries[indexRegistries.length - 1][nextFileNode.payload.name] + 1 || 0
+                  shouldPushIndex = false
 
-                  traverseFile(
-                    fileNode,
+                  traverseFileNode(
+                    nextFileNode,
+                    currentFileNode,
                     x,
+                    indexRegistries[indexRegistries.length - 1][nextFileNode.payload.name],
                     () => {
+                      shouldContinue = false
+
                       x.stop()
                       stop()
                     },
                   )
 
-                  // console.log('skipping')
-                  // x.skip()
+                  console.log('SKIPPING')
+
+                  x.skip()
                 }
               }
             }
           }
-        }
 
-        // console.log('<--')
-        // console.log('lastingHierarchyIds', lastingHierarchyIds)
-        // console.log('lastingIndexRegistry', lastingIndexRegistry)
-      },
-      JSXExpressionContainer(x: any) {
-        if (!(x.node.expression.type === 'Identifier' && x.node.expression.name === 'children')) return
-        console.log('previousX', !!previousX)
-        if (!previousX) return
+          if (!x.node.selfClosing && shouldPushIndex) {
+            indexRegistries.push({})
+          }
+        },
+        JSXClosingElement() {
+          // Prevent fragments from interering with indexing
+          if (indexRegistries.length > 1) {
+            indexRegistries.pop()
+          }
+        },
+        JSXExpressionContainer(x: any) {
+          if (!(x.node.expression.type === 'Identifier' && x.node.expression.name === 'children')) return
+          if (!(previousX && previousFileNode)) return
 
-        console.log('START Traversing children of', previousX.node.openingElement.name.name)
-        previousX.traverse(traverser)
-        console.log('END traversing children of', previousX.node.openingElement.name.name)
-      },
+          // If children is found, traverse children with new traverser
+          previousX.traverse(createTraverser(previousFileNode))
+        },
+      }
     }
 
-    traverse(ast, traverser)
+    traverse(ast, createTraverser(fileNode))
+
+    if (shouldContinue) {
+      onContinue()
+    }
   }
 
-  traverseFile(fileNode)
+  traverseFileNodesToFindImportDeclarations(fileNode)
+  traverseFileNode(fileNode)
 
   return impacted
 }

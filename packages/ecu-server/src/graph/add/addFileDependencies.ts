@@ -8,6 +8,7 @@ import { FileNodeType } from '../../types'
 
 import { addEdge, addNode, getNodesByRole } from '..'
 import createFunctionNode from '../models/createFunctionNode'
+import possiblyAddExtension from '../../utils/possiblyAddExtension'
 
 function addFileDependencies(fileNode: FileNodeType) {
   const { ast } = fileNode.payload
@@ -22,8 +23,7 @@ function addFileDependencies(fileNode: FileNodeType) {
       const { value } = node.source
 
       if (value.startsWith('.')) {
-        const absolutePath = path.join(path.dirname(fileNode.payload.path), value)
-        const relativePath = path.relative(appPath, absolutePath)
+        const relativePath = possiblyAddExtension(path.relative(appPath, path.join(path.dirname(fileNode.payload.path), value)))
         const dependency = fileNodes.find(n => n.payload.relativePath === relativePath)
 
         if (dependency) {
