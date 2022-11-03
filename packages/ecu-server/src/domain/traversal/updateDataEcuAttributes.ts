@@ -50,7 +50,9 @@ function updateDataEcuAttributes(componentNode: FunctionNodeType, ast: ParseResu
         cursors[cursors.length - 1]++
       }
     },
-    JSXClosingElement() {
+    JSXClosingElement(path: any) {
+      if (!importedEcuComponentNames.includes(path.node.name.name)) return
+
       cursors.pop()
       cursors[cursors.length - 1]++
     },
