@@ -17,9 +17,9 @@ import areArraysEqual from '../../utils/areArraysEqual'
 import areArraysEqualAtStart from '../../utils/areArraysEqualAtStart'
 import possiblyAddExtension from '../../utils/possiblyAddExtension'
 
+import createHierarchyId from '../utils/createHierarchyId'
 import extractIdAndIndex from '../utils/extractIdAndIndex'
 import extractIdsAndIndexes from '../utils/extractIdsAndIndexes'
-import createHierarchyId from '../utils/createHierarchyId'
 
 type TraverseComponentConfigType = {
   onTraverseFile?: (fileNode: FileNodeType, index: number) => () => void

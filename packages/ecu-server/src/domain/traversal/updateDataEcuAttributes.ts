@@ -5,6 +5,8 @@ import { ParseResult } from '@babel/parser'
 import { FunctionNodeType } from '../../types'
 import { ecuPropName } from '../../configuration'
 
+import createHierarchyId from '../utils/createHierarchyId'
+
 function insertPropFactory(key: string, getValue: () => string) {
   return (path: any) => {
     // Remove previous key props
@@ -30,7 +32,7 @@ function updateDataEcuAttributes(componentNode: FunctionNodeType, ast: ParseResu
   const cursors = [0]
   const importedEcuComponentNames: string[] = []
 
-  const insertEcuProp = insertPropFactory(ecuPropName, () => `${componentNode.address}:${cursors.join('_')}`)
+  const insertEcuProp = insertPropFactory(ecuPropName, () => createHierarchyId(componentNode.address, cursors.join('_')))
 
   traverse(ast, {
     ImportDeclaration(path: any) {

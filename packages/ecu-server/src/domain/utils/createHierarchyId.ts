@@ -1,4 +1,4 @@
-function createHierarchyId(limitedHierarchyId: string, index: number) {
+function createHierarchyId(limitedHierarchyId: string, index: number | string) {
   return `${limitedHierarchyId}:${index}`
 }
 
