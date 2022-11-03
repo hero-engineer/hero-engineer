@@ -19,6 +19,7 @@ import possiblyAddExtension from '../../utils/possiblyAddExtension'
 
 import extractIdAndIndex from '../utils/extractIdAndIndex'
 import extractIdsAndIndexes from '../utils/extractIdsAndIndexes'
+import createHierarchyId from '../utils/createHierarchyId'
 
 type TraverseComponentConfigType = {
   onTraverseFile?: (fileNode: FileNodeType, index: number) => () => void
@@ -60,8 +61,9 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], con
   // console.log('ids', ids)
   // console.log('indexes', indexes)
 
-  function isSuccessiveNodeFound(nextLimitedHierarchyId: string, nextIndex: number) {
-    const nextHierarchyIds = [...lastingHierarchyIds, `${nextLimitedHierarchyId}:${nextIndex}`] // TODO use util fn
+  function isSuccessiveNodeFound(nextHierarchyId: string) {
+    const nextHierarchyIds = [...lastingHierarchyIds, nextHierarchyId]
+    const [nextLimitedHierarchyId] = extractIdAndIndex(nextHierarchyId)
 
     return areArraysEqualAtStart(nextHierarchyIds, hierarchyIds) && lastingIndexRegistry[nextLimitedHierarchyId] === indexes[nextHierarchyIds.length - 1]
   }
@@ -124,17 +126,17 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], con
             const limitedHierarchyId = x.node.openingElement.attributes[idIndex].value.value
 
             if (limitedHierarchyId) {
-              console.log('--->', x.node.openingElement.name.name, limitedHierarchyId, lastingIndexRegistry[limitedHierarchyId])
-
               const [componentAddress] = extractIdAndIndex(limitedHierarchyId)
 
               indexRegistries[indexRegistries.length - 1][componentAddress] = indexRegistries[indexRegistries.length - 1][componentAddress] + 1 || 0
               lastingIndexRegistry[limitedHierarchyId] = lastingIndexRegistry[limitedHierarchyId] + 1 || 0
               shouldPushIndex = true
 
-              if (isSuccessiveNodeFound(limitedHierarchyId, lastingIndexRegistry[limitedHierarchyId])) {
-                const hierarchyId = `${limitedHierarchyId}:${lastingIndexRegistry[limitedHierarchyId]}`
+              console.log('--->', x.node.openingElement.name.name, limitedHierarchyId, lastingIndexRegistry[limitedHierarchyId])
 
+              const hierarchyId = createHierarchyId(limitedHierarchyId, lastingIndexRegistry[limitedHierarchyId])
+
+              if (isSuccessiveNodeFound(hierarchyId)) {
                 lastingHierarchyIds.push(hierarchyId)
 
                 console.log('PUSHED')
