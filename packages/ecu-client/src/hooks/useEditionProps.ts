@@ -1,6 +1,6 @@
 import '../css/edition.css'
 
-import { MouseEvent, Ref, useCallback, useContext, useMemo, useRef } from 'react'
+import { MouseEvent, Ref, useCallback, useContext, useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 
 import { HierarchyItemType } from '../types'
@@ -8,6 +8,8 @@ import { HierarchyItemType } from '../types'
 import HierarchyIdsContext from '../contexts/HierarchyIdsContext'
 import HierarchyContext from '../contexts/HierarchyContext'
 import DragAndDropContext from '../contexts/DragAndDropContext'
+
+import areArraysEqualAtStart from '../utils/areArraysEqualAtStart'
 
 import useForkedRef from './useForkedRef'
 import useHierarchyId from './useHierarchyId'
@@ -42,7 +44,7 @@ function useEditionProps<T>(id: string, className = '') {
   const rootRef = useRef<T>(null)
   const hierarchyId = useHierarchyId(id, rootRef)
   const { hierarchyIds, setHierarchyIds, componentRootLimitedIds } = useContext(HierarchyIdsContext)
-  const { hierarchy, setComponentDelta } = useContext(HierarchyContext)
+  const { componentDelta, setComponentDelta } = useContext(HierarchyContext)
   const { setDragAndDrop } = useContext(DragAndDropContext)
 
   // const actualHierarchy = useMemo(() => getActualHierarchy(hierarchy, hierarchyDepth), [hierarchy, hierarchyDepth])
@@ -90,6 +92,12 @@ function useEditionProps<T>(id: string, className = '') {
 
     const ids = getHierarchyIds(event.target)
 
+    if (areArraysEqualAtStart(hierarchyIds, ids) && componentDelta < 0) {
+      setComponentDelta(x => x + 1)
+
+      return
+    }
+
     // TODO use setState fn
     const nextHierarchyIds: string[] = []
 
@@ -106,7 +114,7 @@ function useEditionProps<T>(id: string, className = '') {
     setHierarchyIds(nextHierarchyIds)
     setComponentDelta(x => x === 0 ? 0 : x + 1)
     // setHierarchyDepth(0)
-  }, [hierarchyIds, setHierarchyIds, setComponentDelta])
+  }, [hierarchyIds, setHierarchyIds, componentDelta, setComponentDelta])
 
   const generateClassName = useCallback(() => {
     let klassName = className
