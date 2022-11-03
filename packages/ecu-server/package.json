@@ -19,10 +19,8 @@
     "@babel/traverse": "^7.20.0",
     "@babel/types": "^7.20.0",
     "apollo-server": "^3.10.4",
-    "ecu-particule": "^4.0.1",
     "eslint": "^8.26.0",
     "folder-hash": "^4.0.2",
-    "lodash": "^4.17.21",
     "shortid": "^2.2.16"
   },
   "devDependencies": {

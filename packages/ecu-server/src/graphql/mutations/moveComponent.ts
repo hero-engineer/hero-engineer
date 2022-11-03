@@ -9,7 +9,7 @@ import composeHistoryMutation from '../../history/composeHistoryMutation'
 import getComponentHierarchyCursors from '../../domain/traversal/getComponentHierarchyCursors'
 import updateComponentHierarchy from '../../domain/traversal/updateComponentHierarchy'
 import processImpactedFileNodes from '../../domain/traversal/processImpactedFileNodes'
-import getComponentHierarchy from '../../domain/traversal/getComponentHierarchy'
+// import getComponentHierarchy from '../../domain/traversal/getComponentHierarchy'
 import createAddComponentMutate from '../../domain/traversal/factories/createAddComponentMutate'
 import createAddComponentPostTraverse from '../../domain/traversal/factories/createAddComponentPostTraverse'
 import createDeleteComponentMutate from '../../domain/traversal/factories/createDeleteComponentMutate'
@@ -60,7 +60,7 @@ async function moveComponent(_: any, { sourceComponentAddress, sourceHierarchyId
 
   console.log('isSourceFirst', isSourceFirst)
 
-  const sourceHierarchy = getComponentHierarchy(sourceComponentAddress, sourceHierarchyIds)
+  // const sourceHierarchy = getComponentHierarchy(sourceComponentAddress, sourceHierarchyIds) // ?
 
   // const insertedComponentAddress = extractInserted(sourceHierarchy)
   // const componeNodeToInsert = //

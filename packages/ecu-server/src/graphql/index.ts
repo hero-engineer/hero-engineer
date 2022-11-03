@@ -62,7 +62,7 @@ export const typeDefs = gql`
 
   type HierarchyReturnValue {
     hierarchy: [HierarchyItem]!
-    componentRootLimitedIds: [String]!
+    componentRootHierarchyIds: [String]!
   }
 
   type Query {

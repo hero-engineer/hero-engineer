@@ -1,4 +1,4 @@
-import { Fragment, memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { Fragment, memo, useCallback, useContext, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useQuery } from 'urql'
 import { Div } from 'honorable'
@@ -9,65 +9,13 @@ import { HierarchyItemType } from '../../types'
 import HierarchyIdsContext from '../../contexts/HierarchyIdsContext'
 import HierarchyContext from '../../contexts/HierarchyContext'
 
-import usePreviousWithDefault from '../../hooks/usePreviousWithDefault'
-
-import areArraysEqual from '../../utils/areArraysEqual'
-import countArraysStartEquality from '../../utils/countArraysStartEquality'
-
 import { HierarchyQuery } from '../../queries'
-import splitArray from '../../utils/splitArray'
 
 type HierarchyQueryReturnType = {
   hierarchy: {
     hierarchy: HierarchyItemType[],
-    componentRootLimitedIds: string[],
+    componentRootHierarchyIds: string[],
   }
-}
-
-function getMaxHierarchyDepth(hierarchy: HierarchyItemType[]) {
-  if (!hierarchy) return 0
-
-  let maxDepth = 0
-
-  for (let i = 0; i < hierarchy.length; i++) {
-    const { hierarchyId } = hierarchy[i]
-
-    if (!hierarchyId) maxDepth++
-    else {
-      if (i === hierarchy.length - 1) break
-
-      maxDepth = 0
-    }
-  }
-
-  return maxDepth
-}
-
-function splitHierarchy(hierarchy: HierarchyItemType[], cursor: number) {
-  const a = []
-  const b = []
-
-  for (let i = 0; i < hierarchy.length; i++) {
-    a.push(hierarchy[i])
-
-    if (hierarchy[i].hierarchyId && i >= cursor) break
-  }
-
-  for (let i = a.length; i < hierarchy.length; i++) {
-    b.push(hierarchy[i])
-  }
-
-  return [a, b]
-}
-
-function getHierarchyComponentRootOffset(hierarchy: HierarchyItemType[], cursor: number) {
-  let offset = 0
-
-  for (let i = 0; i < cursor; i++) {
-    if (hierarchy[i].hierarchyId) offset = hierarchy[i - 1]?.hierarchyId ? offset + 1 : 1
-  }
-
-  return offset
 }
 
 function getActualHierarchy(hierarchy: HierarchyItemType[], componentDelta: number) {
@@ -76,9 +24,8 @@ function getActualHierarchy(hierarchy: HierarchyItemType[], componentDelta: numb
 
 function HierarchyBar() {
   const { id = '' } = useParams()
-  const { hierarchyIds, setHierarchyIds, setComponentRootLimitedIds, componentRootLimitedIds } = useContext(HierarchyIdsContext)
+  const { hierarchyIds, setHierarchyIds, componentRootHierarchyIds, setComponentRootHierarchyIds } = useContext(HierarchyIdsContext)
   const { setHierarchy, componentDelta, setComponentDelta } = useContext(HierarchyContext)
-  // const [preventIncrementingHierarchyDepth, setPreventIncrementingHierarchyDepth] = useState(false)
 
   const [hierarchyQueryResult] = useQuery<HierarchyQueryReturnType>({
     query: HierarchyQuery,
@@ -90,9 +37,7 @@ function HierarchyBar() {
     requestPolicy: 'network-only',
   })
 
-  const previousHierarchyIds = usePreviousWithDefault(hierarchyIds, [])
   const actualHierarchy = useMemo(() => getActualHierarchy(hierarchyQueryResult.data?.hierarchy?.hierarchy || [], componentDelta), [hierarchyQueryResult.data?.hierarchy?.hierarchy, componentDelta])
-  const previousHierarchy = usePreviousWithDefault(actualHierarchy, actualHierarchy)
 
   const handleClick = useCallback((index: number) => {
     console.log('___handleClick', actualHierarchy.map(x => x.label), index)
@@ -113,8 +58,6 @@ function HierarchyBar() {
       const lastHierarchyId = nextHierarchyIds[nextHierarchyIds.length - 1]
       const nextComponentDelta = index - actualHierarchy.findIndex(x => x.hierarchyId === lastHierarchyId)
 
-      console.log('nextHierarchyIds', nextComponentDelta)
-
       setHierarchyIds(nextHierarchyIds)
       setComponentDelta(nextComponentDelta)
 
@@ -130,8 +73,6 @@ function HierarchyBar() {
       }
     }
 
-    console.log('nextHierarchyIds', nextHierarchyIds)
-
     setHierarchyIds(nextHierarchyIds)
     setComponentDelta(0)
   }, [actualHierarchy, setHierarchyIds, setComponentDelta])
@@ -139,22 +80,11 @@ function HierarchyBar() {
   useEffect(() => {
     if (!hierarchyQueryResult.data?.hierarchy) return
 
-    const { hierarchy, componentRootLimitedIds } = hierarchyQueryResult.data.hierarchy
-    // const nextMaxHierarchyDepth = getMaxHierarchyDepth(hierarchy)
+    const { hierarchy, componentRootHierarchyIds } = hierarchyQueryResult.data.hierarchy
 
     setHierarchy(hierarchy)
-    // setMaxHierarchyDepth(nextMaxHierarchyDepth)
-    setComponentRootLimitedIds(componentRootLimitedIds)
-  }, [hierarchyQueryResult.data, setHierarchy, setComponentRootLimitedIds])
-
-  // useEffect(() => {
-  //   // console.log('Effect', areArraysEqual(previousHierarchyIds, hierarchyIds), previousHierarchyIds, hierarchyIds)
-  //   // console.log('xxx', xxx)
-  //   // console.log('countArraysStartEquality(previousHierarchyIds, hierarchyIds)', countArraysStartEquality(previousHierarchyIds, hierarchyIds))
-  //   // setHierarchyDepth(x => areArraysEqual(previousHierarchyIds, hierarchyIds) ? Math.min(maxHierarchyDepth, x + 1) : 0)
-  // // previousHierarchyIds removed on purpose
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [hierarchyIds, maxHierarchyDepth, setHierarchyDepth])
+    setComponentRootHierarchyIds(componentRootHierarchyIds)
+  }, [hierarchyQueryResult.data, setHierarchy, setComponentRootHierarchyIds])
 
   if (!id) {
     return null
@@ -162,11 +92,6 @@ function HierarchyBar() {
   if (hierarchyQueryResult.error) {
     return null
   }
-
-  // console.log('hierarchyDepth', hierarchyDepth, '/', maxHierarchyDepth)
-  // console.log('componentRootLimitedIds', componentRootLimitedIds)
-  // // console.log('componentRootLimitedIds', componentRootLimitedIds)
-  // console.log('-->', actualHierarchy.map(x => x.label))
 
   return (
     <>
@@ -206,6 +131,13 @@ function HierarchyBar() {
           <Div key={hierarchyId}>
             {hierarchyId}
             {' -->'}
+          </Div>
+        ))}
+        {' / '}
+        {componentRootHierarchyIds.map(hierarchyId => (
+          <Div key={hierarchyId}>
+            {hierarchyId}
+            {', '}
           </Div>
         ))}
       </Div>

@@ -1,5 +1,3 @@
-import getComponentHierarchy from '../../domain/traversal/getComponentHierarchy'
-import getComponentRootLimitedIds from '../../domain/traversal/getComponentRootLimitedIds'
 import traverseComponent from '../../domain/traversal/traverseComponent'
 import { FileNodeType, FunctionNodeType, HierarchyItemType } from '../../types'
 
@@ -53,29 +51,26 @@ function getHierarchy(_: any, { sourceComponentAddress, hierarchyIds }: GetCompo
     onTraverseFile,
     onHierarchyPush,
   })
-  // const hierarchy = getComponentHierarchy(sourceComponentAddress, hierarchyIds)
 
-  // const lastComponentAddress = [...hierarchy].reverse().find(x => x.componentAddress)?.componentAddress
+  const lastComponentAddress = [...hierarchy].reverse().find(x => x.componentAddress)?.componentAddress || sourceComponentAddress
+  const componentRootHierarchyIds: string[] = []
 
-  // if (!lastComponentAddress) {
-  //   return {
-  //     hierarchy,
-  //     componentRootLimitedIds: [],
-  //   }
-  // }
+  function onBeforeHierarchyPush(x: any, hierarchyId: string) {
+    componentRootHierarchyIds.push(hierarchyId)
 
-  // const componentRootLimitedIds = getComponentRootLimitedIds(lastComponentAddress)
+    x.skip()
+  }
 
-  // return {
-  //   hierarchy,
-  //   componentRootLimitedIds,
-  // }
+  traverseComponent(lastComponentAddress, [], {
+    onBeforeHierarchyPush,
+  })
 
   console.log('hierarchy', hierarchy)
+  console.log('componentRootHierarchyIds', componentRootHierarchyIds)
 
   return {
     hierarchy,
-    componentRootLimitedIds: [],
+    componentRootHierarchyIds,
   }
 }
 

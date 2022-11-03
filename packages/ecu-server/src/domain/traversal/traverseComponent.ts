@@ -23,18 +23,13 @@ import extractIdsAndIndexes from '../utils/extractIdsAndIndexes'
 
 type TraverseComponentConfigType = {
   onTraverseFile?: (fileNode: FileNodeType, index: number) => () => void
+  onBeforeHierarchyPush?: (x: any, hierarchyId: string, index: number) => void
   onHierarchyPush?: (x: any, hierarchyId: string, index: number) => void
   onSuccess?: (x: any) => void
 }
 
 function traverseComponent(componentAddress: string, hierarchyIds: string[], config: TraverseComponentConfigType = {}): ImpactedType[] {
   console.log('traverseComponent', componentAddress, hierarchyIds)
-
-  if (!hierarchyIds.length) {
-    console.log('No hierarchy')
-
-    return []
-  }
 
   const fileNode = getNodesBySecondNeighbourg<FileNodeType>(componentAddress, 'DeclaresFunction')[0]
 
@@ -46,6 +41,7 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], con
 
   const {
     onTraverseFile = () => () => {},
+    onBeforeHierarchyPush = () => {},
     onHierarchyPush = () => {},
     onSuccess = () => {},
   } = config
@@ -135,6 +131,8 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], con
               console.log('--->', x.node.openingElement.name.name, limitedHierarchyId, lastingIndexRegistry[limitedHierarchyId])
 
               const hierarchyId = createHierarchyId(limitedHierarchyId, lastingIndexRegistry[limitedHierarchyId])
+
+              onBeforeHierarchyPush(x, hierarchyId, indexRegistries[indexRegistries.length - 1][componentAddress])
 
               if (isSuccessiveNodeFound(hierarchyId)) {
                 lastingHierarchyIds.push(hierarchyId)

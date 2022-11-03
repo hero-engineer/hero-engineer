@@ -36,14 +36,10 @@ function getHierarchyIds(element: EventTarget | HTMLElement) {
   return hierarchyIds.reverse()
 }
 
-function getActualHierarchy(hierarchy: HierarchyItemType[], hierarchyDepth: number) {
-  return hierarchy.slice(1, hierarchyDepth + 1)
-}
-
 function useEditionProps<T>(id: string, className = '') {
   const rootRef = useRef<T>(null)
   const hierarchyId = useHierarchyId(id, rootRef)
-  const { hierarchyIds, setHierarchyIds, componentRootLimitedIds } = useContext(HierarchyIdsContext)
+  const { hierarchyIds, setHierarchyIds, componentRootHierarchyIds } = useContext(HierarchyIdsContext)
   const { componentDelta, setComponentDelta } = useContext(HierarchyContext)
   const { setDragAndDrop } = useContext(DragAndDropContext)
 
@@ -98,34 +94,31 @@ function useEditionProps<T>(id: string, className = '') {
       return
     }
 
-    // TODO use setState fn
-    const nextHierarchyIds: string[] = []
+    setHierarchyIds(x => {
+      const nextHierarchyIds: string[] = []
 
-    for (let i = 0; i < ids.length; i++) {
-      const id = ids[i]
+      for (let i = 0; i < ids.length; i++) {
+        const id = ids[i]
 
-      nextHierarchyIds.push(id)
+        nextHierarchyIds.push(id)
 
-      if (hierarchyIds[i] !== id) {
-        break
+        if (x[i] !== id) {
+          break
+        }
       }
-    }
 
-    setHierarchyIds(nextHierarchyIds)
-    setComponentDelta(x => x === 0 ? 0 : x + 1)
-    // setHierarchyDepth(0)
+      return nextHierarchyIds
+    })
+
+    setComponentDelta(x => x <= 0 ? 0 : x + 1)
   }, [hierarchyIds, setHierarchyIds, componentDelta, setComponentDelta])
 
   const generateClassName = useCallback(() => {
     let klassName = className
 
-    // if (actualHierarchy.length === 0) {
-    //   klassName += ' ecu-selected-root'
-    // }
-
-    // if (componentRootLimitedIds.some(x => x === id)) {
-    //   klassName += ' ecu-selected-foo'
-    // }
+    if (componentRootHierarchyIds.some(x => x === hierarchyId)) {
+      klassName += ' ecu-selected-root'
+    }
 
     if (hierarchyIds[hierarchyIds.length - 1] === hierarchyId) {
       klassName += ' ecu-selected'
@@ -140,9 +133,7 @@ function useEditionProps<T>(id: string, className = '') {
     }
 
     return klassName.trim()
-  // TODO remove next comment
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [className, hierarchyIds, hierarchyId, componentRootLimitedIds, id, isDragging, canDrop, isOverCurrent])
+  }, [className, hierarchyIds, hierarchyId, componentRootHierarchyIds, isDragging, canDrop, isOverCurrent])
 
   return {
     ref,
