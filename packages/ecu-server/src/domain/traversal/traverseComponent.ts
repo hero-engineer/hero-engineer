@@ -22,10 +22,10 @@ import extractIdAndIndex from '../utils/extractIdAndIndex'
 import extractIdsAndIndexes from '../utils/extractIdsAndIndexes'
 
 type TraverseComponentConfigType = {
-  onTraverseFile?: (fileNode: FileNodeType, componentRootIndex: number) => () => void
-  onBeforeHierarchyPush?: (x: any, fileNode: FileNodeType, componentRootIndex: number, componentIndex: number, hierarchyId: string) => void
-  onHierarchyPush?: (x: any, fileNode: FileNodeType, componentRootIndex: number, componentIndex: number, hierarchyId: string) => void
-  onSuccess?: (x: any, fileNode: FileNodeType, componentRootIndex: number, componentIndex: number) => void
+  onTraverseFile?: (fileNode: FileNodeType, componentRootIndexes: number[]) => () => void
+  onBeforeHierarchyPush?: (x: any, fileNode: FileNodeType, componentRootIndexes: number[], componentIndex: number, hierarchyId: string) => void
+  onHierarchyPush?: (x: any, fileNode: FileNodeType, componentRootIndexes: number[], componentIndex: number, hierarchyId: string) => void
+  onSuccess?: (x: any, fileNode: FileNodeType, componentRootIndexes: number[], componentIndex: number) => void
 }
 
 function traverseComponent(componentAddress: string, hierarchyIds: string[], config: TraverseComponentConfigType = {}): ImpactedType[] {
@@ -94,10 +94,10 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], con
     })
   }
 
-  function traverseFileNode(fileNode: FileNodeType, previousFileNode: FileNodeType | null = null, previousX: any = null, componentRootIndex = 0, stop = () => {}) {
-    console.log('-> traverseFileNode', fileNode.payload.name)
+  function traverseFileNode(fileNode: FileNodeType, previousFileNode: FileNodeType | null = null, previousX: any = null, componentRootIndexes: number[] = [0], stop = () => {}) {
+    console.log('-> traverseFileNode', fileNode.payload.name, componentRootIndexes)
 
-    const onContinue = onTraverseFile(fileNode, componentRootIndex)
+    const onContinue = onTraverseFile(fileNode, componentRootIndexes)
 
     const { ast } = fileNode.payload
     const indexRegistries: IndexRegistryType[] = [{}]
@@ -123,8 +123,8 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], con
 
             if (limitedHierarchyId) {
               const [componentAddress] = extractIdAndIndex(limitedHierarchyId)
-
               const componentIndex = indexRegistries[indexRegistries.length - 1][componentAddress] = indexRegistries[indexRegistries.length - 1][componentAddress] + 1 || 0
+
               lastingIndexRegistry[limitedHierarchyId] = lastingIndexRegistry[limitedHierarchyId] + 1 || 0
               shouldPushIndex = true
 
@@ -132,21 +132,21 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], con
 
               const hierarchyId = createHierarchyId(limitedHierarchyId, lastingIndexRegistry[limitedHierarchyId])
 
-              onBeforeHierarchyPush(x, currentFileNode, componentRootIndex, componentIndex, hierarchyId)
+              onBeforeHierarchyPush(x, currentFileNode, componentRootIndexes, componentIndex, hierarchyId)
 
               if (isSuccessiveNodeFound(hierarchyId)) {
                 lastingHierarchyIds.push(hierarchyId)
 
                 console.log('PUSHED')
 
-                onHierarchyPush(x, currentFileNode, componentRootIndex, componentIndex, hierarchyId)
+                onHierarchyPush(x, currentFileNode, componentRootIndexes, componentIndex, hierarchyId)
 
                 if (isFinalNodeFound()) {
                   console.log('SUCCESS')
 
                   shouldContinue = false
 
-                  onSuccess(x, fileNode, componentRootIndex, componentIndex)
+                  onSuccess(x, fileNode, componentRootIndexes, componentIndex)
                   x.stop()
                   stop()
                 }
@@ -168,14 +168,16 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], con
                 if (nextFileNode) {
                   console.log('--->', nextFileNode.payload.name)
 
-                  indexRegistries[indexRegistries.length - 1][nextFileNode.payload.name] = indexRegistries[indexRegistries.length - 1][nextFileNode.payload.name] + 1 || 0
+                  const nextComponentRootIndex = indexRegistries[indexRegistries.length - 1][nextFileNode.address] = indexRegistries[indexRegistries.length - 1][nextFileNode.address] + 1 || 0
+
                   shouldPushIndex = false
 
+                  // console.log('JSON.stringify(indexRegistries, null, 2)', JSON.stringify(indexRegistries, null, 2))
                   traverseFileNode(
                     nextFileNode,
                     currentFileNode,
                     x,
-                    indexRegistries[indexRegistries.length - 1][nextFileNode.payload.name],
+                    [...componentRootIndexes, nextComponentRootIndex],
                     () => {
                       shouldContinue = false
 

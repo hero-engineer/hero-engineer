@@ -2,6 +2,7 @@ import traverseComponent from '../../domain/traversal/traverseComponent'
 import { FileNodeType, FunctionNodeType, HierarchyItemType } from '../../types'
 
 import { getNodesByFirstNeighbourg } from '../../graph'
+import areArraysEqual from '../../utils/areArraysEqual'
 
 type GetComponentArgs = {
   sourceComponentAddress: string
@@ -15,9 +16,10 @@ function getHierarchy(_: any, { sourceComponentAddress, hierarchyIds }: GetCompo
   const componentRootHierarchyIds: string[] = [] // retval
 
   let lastFileNode: FileNodeType | null = null
-  let lastComponentRootIndex = 0
+  let lastComponentRootIndexes: number[] = []
+  let lastComponentIndex = -1
 
-  function onTraverseFile(fileNode: FileNodeType, index: number) {
+  function onTraverseFile(fileNode: FileNodeType, _componentRootIndexes: number[]) {
     const componentNode = getNodesByFirstNeighbourg<FunctionNodeType>(fileNode.address, 'DeclaresFunction')[0]
 
     if (!componentNode) {
@@ -26,7 +28,7 @@ function getHierarchy(_: any, { sourceComponentAddress, hierarchyIds }: GetCompo
       return () => {}
     }
 
-    const label = `${componentNode.payload.name}[${index}]`
+    const label = `${componentNode.payload.name}[${_componentRootIndexes[_componentRootIndexes.length - 1]}]`
 
     hierarchy.push({
       label,
@@ -43,7 +45,7 @@ function getHierarchy(_: any, { sourceComponentAddress, hierarchyIds }: GetCompo
     }
   }
 
-  function onHierarchyPush(x: any, _fileNode: FileNodeType, _componentRootIndex: number, componentIndex: number, hierarchyId: string) {
+  function onHierarchyPush(x: any, _fileNode: FileNodeType, _componentRootIndexes: number[], componentIndex: number, hierarchyId: string) {
     hierarchy.push({
       hierarchyId,
       label: `${x.node.openingElement.name.name}[${componentIndex}]`,
@@ -51,13 +53,14 @@ function getHierarchy(_: any, { sourceComponentAddress, hierarchyIds }: GetCompo
     })
   }
 
-  function onSuccess(x: any, fileNode: FileNodeType, componentRootIndex: number) {
+  function onSuccess(_x: any, fileNode: FileNodeType, componentRootIndexes: number[], componentIndex: number) {
     lastFileNode = fileNode
-    lastComponentRootIndex = componentRootIndex
+    lastComponentRootIndexes = componentRootIndexes
+    lastComponentIndex = componentIndex
   }
 
-  function onBeforeHierarchyPush(x: any, fileNode: FileNodeType, componentRootIndex: number, _componentIndex: number, hierarchyId: string) {
-    if (fileNode.address === lastFileNode?.address && componentRootIndex === lastComponentRootIndex) {
+  function onBeforeHierarchyPush(x: any, fileNode: FileNodeType, componentRootIndexes: number[], componentIndex: number, hierarchyId: string) {
+    if (fileNode.address === lastFileNode?.address && areArraysEqual(componentRootIndexes, lastComponentRootIndexes) && componentIndex === lastComponentIndex) {
       componentRootHierarchyIds.push(hierarchyId)
 
       x.skip()
