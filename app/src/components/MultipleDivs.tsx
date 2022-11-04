@@ -10,20 +10,18 @@ function MultipleDivs(props: any) {
   return (
     <>
       <CoolDaddy>
-        <Div data-ecu="4N5vn4iGhUP:0">
+        <Div data-ecu="3A8RbidHid:0">
           Yo
         </Div>
       </CoolDaddy>
       <CoolDaddy>
         <CoolDaddy>
-          <Div data-ecu="4N5vn4iGhUP:1">
-            Yo Yo
-          </Div>
+          <CoolDiv />
         </CoolDaddy>
       </CoolDaddy>
-      <Div data-ecu="4N5vn4iGhUP:2">
+      <Div data-ecu="3A8RbidHid:1">
         <CoolDiv />
-        <Div data-ecu="4N5vn4iGhUP:2_0">
+        <Div data-ecu="3A8RbidHid:1_0">
           <CoolDaddy>
             <CoolDaddy>
               <CoolDaddy>
@@ -38,11 +36,11 @@ function MultipleDivs(props: any) {
       <DualCoolDiv />
       <CoolDiv />
       <DualCoolDiv />
-      <Div data-ecu="4N5vn4iGhUP:3">
-        <Div data-ecu="4N5vn4iGhUP:3_0">
+      <Div data-ecu="3A8RbidHid:2">
+        <Div data-ecu="3A8RbidHid:2_0">
           Dear component
         </Div>
-        <Div data-ecu="4N5vn4iGhUP:3_1">
+        <Div data-ecu="3A8RbidHid:2_1">
           Hello
         </Div>
         <CoolDiv />

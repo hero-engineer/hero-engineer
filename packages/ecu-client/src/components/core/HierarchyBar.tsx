@@ -10,7 +10,11 @@ import HierarchyIdsContext from '../../contexts/HierarchyIdsContext'
 import HierarchyContext from '../../contexts/HierarchyContext'
 
 import { HierarchyQuery } from '../../queries'
+
 import usePreviousWithDefault from '../../hooks/usePreviousWithDefault'
+
+import getActualHierarchy from '../../helpers/getActualHierarchy'
+
 import areArraysEqual from '../../utils/areArraysEqual'
 
 type HierarchyQueryReturnType = {
@@ -18,10 +22,6 @@ type HierarchyQueryReturnType = {
     hierarchy: HierarchyItemType[],
     componentRootHierarchyIds: string[],
   }
-}
-
-function getActualHierarchy(hierarchy: HierarchyItemType[], componentDelta: number) {
-  return hierarchy.slice(0, hierarchy.length + componentDelta)
 }
 
 function getHierarchyDelta(hierarchy: HierarchyItemType[]) {
@@ -72,6 +72,8 @@ function HierarchyBar() {
 
       const lastHierarchyId = nextHierarchyIds[nextHierarchyIds.length - 1]
       const nextComponentDelta = index - actualHierarchy.findIndex(x => x.hierarchyId === lastHierarchyId)
+
+      // console.log('nextComponentDelta', nextComponentDelta)
 
       setHierarchyIds(nextHierarchyIds)
       setComponentDelta(nextComponentDelta)

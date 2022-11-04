@@ -55,8 +55,8 @@ export const AddComponentMutation = `
 `
 
 export const DeleteComponentMutation = `
-  mutation ($sourceComponentAddress: String!, $hierarchyIds: [String!]!) {
-    deleteComponent (sourceComponentAddress: $sourceComponentAddress, hierarchyIds: $hierarchyIds) {
+  mutation ($sourceComponentAddress: String!, $hierarchyIds: [String!]!, $componentDelta: Int!) {
+    deleteComponent (sourceComponentAddress: $sourceComponentAddress, hierarchyIds: $hierarchyIds, componentDelta: $componentDelta) {
       address
     }
   }

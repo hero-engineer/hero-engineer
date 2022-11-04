@@ -47,16 +47,18 @@ function getHierarchy(_: any, { sourceComponentAddress, hierarchyIds }: GetCompo
   }
 
   // On DOM node traversal, add the hierarchyId to the hierarchy
-  function onHierarchyPush(x: any, _fileNode: FileNodeType, _indexRegistriesHash: string, _componentRootIndexes: number[], componentIndex: number, hierarchyId: string) {
+  function onHierarchyPush(paths: any[], _fileNode: FileNodeType, _indexRegistriesHash: string, _componentRootIndexes: number[], componentIndex: number, hierarchyId: string) {
+    const lastPath = paths[paths.length - 1]
+
     hierarchy.push({
       hierarchyId,
-      label: `${x.node.openingElement.name.name}[${componentIndex}]`,
-      componentName: x.node.openingElement.name.name,
+      label: `${lastPath.node.openingElement.name.name}[${componentIndex}]`,
+      componentName: lastPath.node.openingElement.name.name,
     })
   }
 
   // On first pass success, Retrieve the state of the root component
-  function onSuccess(_x: any, fileNode: FileNodeType, indexRegistryHash: string, componentRootIndexes: number[]) {
+  function onSuccess(_paths: any[], fileNode: FileNodeType, indexRegistryHash: string, componentRootIndexes: number[]) {
     lastFileNode = fileNode
     lastIndexRegistryHash = indexRegistryHash
     lastComponentRootIndexes = componentRootIndexes
@@ -65,11 +67,11 @@ function getHierarchy(_: any, { sourceComponentAddress, hierarchyIds }: GetCompo
   // On second pass, find componentRootHierarchyIds, which are the root DOM nodes of the last component in the Hierarchy
   // They are usefull for highlingting the root component
   // Skipping ensures only the root DOM nodes are traversed
-  function onBeforeHierarchyPush(x: any, fileNode: FileNodeType, indexRegistryHash: string, componentRootIndexes: number[], _componentIndex: number, hierarchyId: string) {
+  function onBeforeHierarchyPush(paths: any[], fileNode: FileNodeType, indexRegistryHash: string, componentRootIndexes: number[], _componentIndex: number, hierarchyId: string) {
     if (fileNode.address === lastFileNode?.address && indexRegistryHash === lastIndexRegistryHash && areArraysEqual(componentRootIndexes, lastComponentRootIndexes)) {
       componentRootHierarchyIds.push(hierarchyId)
 
-      x.skip()
+      paths[paths.length - 1].skip()
     }
   }
 
@@ -79,6 +81,8 @@ function getHierarchy(_: any, { sourceComponentAddress, hierarchyIds }: GetCompo
     onHierarchyPush,
     onSuccess,
   })
+
+  // console.log('!!!!!!!!!', lastFileNode!.payload.name, lastComponentRootIndexes)
 
   // Second pass: retrieve componentRootHierarchyIds
   traverseComponent(sourceComponentAddress, [], {

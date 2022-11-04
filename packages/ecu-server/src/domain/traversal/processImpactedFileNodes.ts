@@ -6,7 +6,12 @@ import regenerate from '../regenerate'
 
 import updateDataEcuAttributes from './updateDataEcuAttributes'
 
-async function processImpactedFileNodes(impacted: ImpactedType[], postTraverse: PostTraverseType, refreshDataEcuAttributes = true) {
+type ProcessImpactedFileNodesResolveType = {
+  impactedFileNode: FileNodeType | null
+  impactedComponentNode: FunctionNodeType | null
+}
+
+async function processImpactedFileNodes(impacted: ImpactedType[], postTraverse: PostTraverseType, refreshDataEcuAttributes = true): Promise<ProcessImpactedFileNodesResolveType> {
   let impactedFileNode: FileNodeType | null = null
   let impactedComponentNode: FunctionNodeType | null = null
 
@@ -30,11 +35,11 @@ async function processImpactedFileNodes(impacted: ImpactedType[], postTraverse: 
       impactedComponentNode = componentNode
     }
   }))
-  // .catch(error => {
-  //   console.error(error)
-  // })
 
-  return { impactedFileNode, impactedComponentNode }
+  return {
+    impactedFileNode,
+    impactedComponentNode,
+  }
 }
 
 export default processImpactedFileNodes

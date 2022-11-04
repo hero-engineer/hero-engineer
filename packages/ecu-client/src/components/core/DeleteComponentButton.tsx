@@ -9,18 +9,25 @@ import { DeleteComponentMutation } from '../../queries'
 import HierarchyIdsContext from '../../contexts/HierarchyIdsContext'
 import HierarchyContext from '../../contexts/HierarchyContext'
 
+import getActualHierarchy from '../../helpers/getActualHierarchy'
+
 function DeleteComponentButton(props: any) {
-  const { id } = useParams()
+  const { id = '' } = useParams()
   const { hierarchyIds } = useContext(HierarchyIdsContext)
-  const { hierarchy } = useContext(HierarchyContext)
+  const { hierarchy, componentDelta } = useContext(HierarchyContext)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const lastEditedComponent = useMemo(() => [...hierarchy].reverse().find(x => x.componentAddress), [hierarchy])
+  const actualHierarchy = useMemo(() => getActualHierarchy(hierarchy, componentDelta), [hierarchy, componentDelta])
   const navigate = useNavigate()
 
   const [, deleteComponent] = useMutation(DeleteComponentMutation)
 
   const handleDeleteComponentClick = useCallback(() => {
-    if (lastEditedComponent?.componentAddress !== id) {
+    const lastHierarchyItem = actualHierarchy[actualHierarchy.length - 1]
+    const previousToLastHierarchyItem = actualHierarchy[actualHierarchy.length - 2]
+    const isStillWithinComponent = lastHierarchyItem.hierarchyId?.startsWith(id) || previousToLastHierarchyItem?.hierarchyId?.startsWith(id) || previousToLastHierarchyItem?.componentAddress === id
+
+    if (!isStillWithinComponent) {
       setIsModalOpen(true)
 
       return
@@ -29,8 +36,9 @@ function DeleteComponentButton(props: any) {
     deleteComponent({
       sourceComponentAddress: id,
       hierarchyIds,
+      componentDelta,
     })
-  }, [lastEditedComponent, id, deleteComponent, hierarchyIds])
+  }, [actualHierarchy, id, deleteComponent, hierarchyIds, componentDelta])
 
   const navigateToLastEditedComponent = useCallback(() => {
     setIsModalOpen(false)

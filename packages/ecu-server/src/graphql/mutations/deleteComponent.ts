@@ -1,44 +1,47 @@
-import { FileNodeType, FunctionNodeType, HistoryMutationReturnType } from '../../types'
+import { FunctionNodeType, HistoryMutationReturnType } from '../../types'
 
-import { getNodeByAddress, getNodesBySecondNeighbourg } from '../../graph'
+import { getNodeByAddress } from '../../graph'
 
 import composeHistoryMutation from '../../history/composeHistoryMutation'
 
-import updateComponentHierarchy from '../../domain/traversal/updateComponentHierarchy'
 import processImpactedFileNodes from '../../domain/traversal/processImpactedFileNodes'
-import createDeleteComponentMutate from '../../domain/traversal/factories/createDeleteComponentMutate'
 import createDeleteComponentPostTraverse from '../../domain/traversal/factories/createDeleteComponentPostTraverse'
+import traverseComponent from '../../domain/traversal/traverseComponent'
 
 type DeleteComponentArgs = {
   sourceComponentAddress: string
   hierarchyIds: string[]
+  componentDelta: number
 }
 
-async function deleteComponent(_: any, { sourceComponentAddress, hierarchyIds }: DeleteComponentArgs): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
+async function deleteComponent(_: any, { sourceComponentAddress, hierarchyIds, componentDelta }: DeleteComponentArgs): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
   console.log('___deleteComponent___')
 
-  const componentNode = getNodeByAddress(sourceComponentAddress)
+  const componentNode = getNodeByAddress<FunctionNodeType>(sourceComponentAddress)
 
   if (!componentNode) {
-    throw new Error(`File for Function with id ${sourceComponentAddress} not found`)
+    throw new Error(`Component with id ${sourceComponentAddress} not found`)
   }
 
-  const fileNode = getNodesBySecondNeighbourg<FileNodeType>(componentNode.address, 'DeclaresFunction')[0]
-
-  if (!fileNode) {
-    throw new Error(`File for Function with id ${sourceComponentAddress} not found`)
+  if (componentDelta > 0) {
+    throw new Error('Positive componentDelta not supported')
   }
 
-  const mutate = createDeleteComponentMutate()
+  function onSuccess(paths: any[]) {
+    paths[paths.length - 1 + componentDelta].remove()
+  }
+
   const postTraverse = createDeleteComponentPostTraverse()
-  const impacted = updateComponentHierarchy(fileNode, hierarchyIds, mutate)
+  const impacted = traverseComponent(sourceComponentAddress, hierarchyIds, {
+    onSuccess,
+  })
 
   const { impactedFileNode, impactedComponentNode } = await processImpactedFileNodes(impacted, postTraverse)
 
   return {
     returnValue: impactedComponentNode,
     impactedFileNodes: impactedFileNode ? [impactedFileNode] : [],
-    description: `Delete component ${componentNode.payload.name} in ${componentNode.payload.name}`,
+    description: `Delete component ${impactedComponentNode?.payload.name} in ${componentNode.payload.name}`,
   }
 }
 

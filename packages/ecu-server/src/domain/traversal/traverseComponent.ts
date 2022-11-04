@@ -21,14 +21,14 @@ import createHierarchyId from '../utils/createHierarchyId'
 import extractIdAndIndex from '../utils/extractIdAndIndex'
 import extractIdsAndIndexes from '../utils/extractIdsAndIndexes'
 
-type TraverseComponentConfigType = {
+type TraverseComponentEventsType = {
   onTraverseFile?: (fileNode: FileNodeType, indexRegistriesHash: string, componentRootIndexes: number[]) => () => void
-  onBeforeHierarchyPush?: (x: any, fileNode: FileNodeType, indexRegistriesHash: string, componentRootIndexes: number[], componentIndex: number, hierarchyId: string) => void
-  onHierarchyPush?: (x: any, fileNode: FileNodeType, indexRegistriesHash: string, componentRootIndexes: number[], componentIndex: number, hierarchyId: string) => void
-  onSuccess?: (x: any, fileNode: FileNodeType, indexRegistriesHash: string, componentRootIndexes: number[], componentIndex: number) => void
+  onBeforeHierarchyPush?: (paths: any[], fileNode: FileNodeType, indexRegistriesHash: string, componentRootIndexes: number[], componentIndex: number, hierarchyId: string) => void
+  onHierarchyPush?: (paths: any[], fileNode: FileNodeType, indexRegistriesHash: string, componentRootIndexes: number[], componentIndex: number, hierarchyId: string) => void
+  onSuccess?: (paths: any[], fileNode: FileNodeType, indexRegistriesHash: string, componentRootIndexes: number[], componentIndex: number) => void
 }
 
-function traverseComponent(componentAddress: string, hierarchyIds: string[], config: TraverseComponentConfigType = {}): ImpactedType[] {
+function traverseComponent(componentAddress: string, hierarchyIds: string[], events: TraverseComponentEventsType = {}): ImpactedType[] {
   console.log('traverseComponent', componentAddress, hierarchyIds)
 
   const fileNode = getNodesBySecondNeighbourg<FileNodeType>(componentAddress, 'DeclaresFunction')[0]
@@ -44,7 +44,7 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], con
     onBeforeHierarchyPush = () => {},
     onHierarchyPush = () => {},
     onSuccess = () => {},
-  } = config
+  } = events
 
   const impacted: ImpactedType[] = [] // retval
   const componentNodes = getNodesByRole<FunctionNodeType>('Function').filter(n => n.payload.isComponent)
@@ -94,7 +94,7 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], con
     })
   }
 
-  function traverseFileNode(fileNode: FileNodeType, previousFileNode: FileNodeType | null = null, previousX: any = null, indexRegistriesHash = '', componentRootIndexes: number[] = [0], stop = () => {}) {
+  function traverseFileNode(fileNode: FileNodeType, previousFileNode: FileNodeType | null = null, previousXs: any[] = [], indexRegistriesHash = '', componentRootIndexes: number[] = [0], stop = () => {}) {
     console.log('-> traverseFileNode', fileNode.payload.name, componentRootIndexes)
 
     const onContinue = onTraverseFile(fileNode, indexRegistriesHash, componentRootIndexes)
@@ -115,6 +115,7 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], con
         JSXElement(x: any) {
           console.log('--> JSXElement', x.node.openingElement.name.name)
 
+          const currentXs = [...previousXs, x]
           const idIndex = x.node.openingElement.attributes.findIndex((x: JSXAttribute) => x.name.name === ecuPropName)
 
           // hierarchyId found means we're at an ecu-client Component
@@ -132,21 +133,21 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], con
 
               const hierarchyId = createHierarchyId(limitedHierarchyId, lastingIndexRegistry[limitedHierarchyId])
 
-              onBeforeHierarchyPush(x, currentFileNode, indexRegistriesHash, componentRootIndexes, componentIndex, hierarchyId)
+              onBeforeHierarchyPush(currentXs, currentFileNode, indexRegistriesHash, componentRootIndexes, componentIndex, hierarchyId)
 
               if (isSuccessiveNodeFound(hierarchyId)) {
                 lastingHierarchyIds.push(hierarchyId)
 
                 console.log('PUSHED')
 
-                onHierarchyPush(x, currentFileNode, indexRegistriesHash, componentRootIndexes, componentIndex, hierarchyId)
+                onHierarchyPush(currentXs, currentFileNode, indexRegistriesHash, componentRootIndexes, componentIndex, hierarchyId)
 
                 if (isFinalNodeFound()) {
                   console.log('SUCCESS')
 
                   shouldContinue = false
 
-                  onSuccess(x, fileNode, indexRegistriesHash, componentRootIndexes, componentIndex)
+                  onSuccess(currentXs, currentFileNode, indexRegistriesHash, componentRootIndexes, componentIndex)
                   x.stop()
                   stop()
                 }
@@ -172,11 +173,10 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], con
 
                   shouldPushIndex = false
 
-                  // console.log('JSON.stringify(indexRegistries, null, 2)', JSON.stringify(indexRegistries, null, 2))
                   traverseFileNode(
                     nextFileNode,
                     currentFileNode,
-                    x,
+                    currentXs,
                     JSON.stringify(indexRegistries),
                     [...componentRootIndexes, nextComponentRootIndex],
                     () => {
@@ -187,15 +187,19 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], con
                     },
                   )
 
-                  console.log('SKIPPING')
+                  if (!(x.shouldStop || x.removed)) {
+                    console.log('SKIPPING')
 
-                  x.skip()
+                    x.skip()
+                  }
                 }
               }
             }
           }
 
-          if (!x.node.selfClosing && shouldPushIndex) {
+          console.log('x.removed', x.removed)
+
+          if (!(x.shouldStop || x.removed) && !x.node.selfClosing && shouldPushIndex) {
             indexRegistries.push({})
           }
         },
@@ -207,6 +211,9 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], con
         },
         JSXExpressionContainer(x: any) {
           if (!(x.node.expression.type === 'Identifier' && x.node.expression.name === 'children')) return
+
+          const previousX = previousXs[previousXs.length - 1]
+
           if (!(previousX && previousFileNode)) return
 
           // If children is found, traverse children with new traverser
