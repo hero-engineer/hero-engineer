@@ -5,21 +5,17 @@ import { HierarchyItemType } from '../types'
 export type HierarchyContextType = {
   hierarchy: HierarchyItemType[]
   setHierarchy: Dispatch<SetStateAction<HierarchyItemType[]>>
-  // hierarchyDepth: number
-  // setHierarchyDepth: Dispatch<SetStateAction<number>>
-  // maxHierarchyDepth: number
-  // setMaxHierarchyDepth: Dispatch<SetStateAction<number>>
   componentDelta: number
   setComponentDelta: Dispatch<SetStateAction<number>>
+  shouldAdjustComponentDelta: boolean
+  setShouldAdjustComponentDelta: Dispatch<SetStateAction<boolean>>
 }
 
 export default createContext<HierarchyContextType>({
   hierarchy: [],
   setHierarchy: () => {},
-  // hierarchyDepth: 0,
-  // setHierarchyDepth: () => {},
-  // maxHierarchyDepth: 0,
-  // setMaxHierarchyDepth: () => {},
   componentDelta: 0,
   setComponentDelta: () => {},
+  shouldAdjustComponentDelta: false,
+  setShouldAdjustComponentDelta: () => {},
 })

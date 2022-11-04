@@ -40,7 +40,7 @@ function useEditionProps<T>(id: string, className = '') {
   const rootRef = useRef<T>(null)
   const hierarchyId = useHierarchyId(id, rootRef)
   const { hierarchyIds, setHierarchyIds, componentRootHierarchyIds } = useContext(HierarchyIdsContext)
-  const { componentDelta, setComponentDelta } = useContext(HierarchyContext)
+  const { componentDelta, setComponentDelta, setShouldAdjustComponentDelta } = useContext(HierarchyContext)
   const { setDragAndDrop } = useContext(DragAndDropContext)
 
   // const actualHierarchy = useMemo(() => getActualHierarchy(hierarchy, hierarchyDepth), [hierarchy, hierarchyDepth])
@@ -89,6 +89,7 @@ function useEditionProps<T>(id: string, className = '') {
     const ids = getHierarchyIds(event.target)
 
     if (areArraysEqualAtStart(hierarchyIds, ids) && componentDelta < 0) {
+      console.log('areArraysEqualAtStart')
       setComponentDelta(x => x + 1)
 
       return
@@ -110,8 +111,8 @@ function useEditionProps<T>(id: string, className = '') {
       return nextHierarchyIds
     })
 
-    setComponentDelta(x => x <= 0 ? 0 : x + 1)
-  }, [hierarchyIds, setHierarchyIds, componentDelta, setComponentDelta])
+    setShouldAdjustComponentDelta(true)
+  }, [hierarchyIds, setHierarchyIds, componentDelta, setComponentDelta, setShouldAdjustComponentDelta])
 
   const generateClassName = useCallback(() => {
     let klassName = className

@@ -32,10 +32,9 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
   const HierarchyIdsContextValue = useMemo<HierarchyIdsContextType>(() => ({ hierarchyIds, setHierarchyIds, componentRootHierarchyIds, setComponentRootHierarchyIds }), [hierarchyIds, setHierarchyIds, componentRootHierarchyIds, setComponentRootHierarchyIds])
 
   const [hierarchy, setHierarchy] = usePersistedState<HierarchyItemType[]>('ecu-hierarchy', [])
-  // const [hierarchyDepth, setHierarchyDepth] = usePersistedState<number>('ecu-hierarchy-depth', 0)
-  // const [maxHierarchyDepth, setMaxHierarchyDepth] = usePersistedState<number>('ecu-max-hierarchy-depth', 0)
   const [componentDelta, setComponentDelta] = usePersistedState<number>('ecu-component-delta', 0)
-  const HierarchyContextValue = useMemo<HierarchyContextType>(() => ({ hierarchy, setHierarchy, componentDelta, setComponentDelta }), [hierarchy, setHierarchy, componentDelta, setComponentDelta])
+  const [shouldAdjustComponentDelta, setShouldAdjustComponentDelta] = useState(false)
+  const HierarchyContextValue = useMemo<HierarchyContextType>(() => ({ hierarchy, setHierarchy, componentDelta, setComponentDelta, shouldAdjustComponentDelta, setShouldAdjustComponentDelta }), [hierarchy, setHierarchy, componentDelta, setComponentDelta, shouldAdjustComponentDelta])
 
   const [dragAndDrop, setDragAndDrop] = useState<DragAndDropType>({ sourceHierarchyIds: [], targetHierarchyIds: [] })
   const dragAndDropContextValue = useMemo<DragAndDropContextType>(() => ({ dragAndDrop, setDragAndDrop }), [dragAndDrop])

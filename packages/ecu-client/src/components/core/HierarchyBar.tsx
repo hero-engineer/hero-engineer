@@ -1,4 +1,4 @@
-import { Fragment, memo, useCallback, useContext, useEffect, useMemo } from 'react'
+import { Fragment, memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useQuery } from 'urql'
 import { Div } from 'honorable'
@@ -10,6 +10,8 @@ import HierarchyIdsContext from '../../contexts/HierarchyIdsContext'
 import HierarchyContext from '../../contexts/HierarchyContext'
 
 import { HierarchyQuery } from '../../queries'
+import usePreviousWithDefault from '../../hooks/usePreviousWithDefault'
+import areArraysEqual from '../../utils/areArraysEqual'
 
 type HierarchyQueryReturnType = {
   hierarchy: {
@@ -22,10 +24,21 @@ function getActualHierarchy(hierarchy: HierarchyItemType[], componentDelta: numb
   return hierarchy.slice(0, hierarchy.length + componentDelta)
 }
 
+function getHierarchyDelta(hierarchy: HierarchyItemType[]) {
+  let delta = 0
+
+  hierarchy.forEach(x => {
+    if (x.hierarchyId) delta = 0
+    else delta--
+  })
+
+  return delta
+}
+
 function HierarchyBar() {
   const { id = '' } = useParams()
   const { hierarchyIds, setHierarchyIds, componentRootHierarchyIds, setComponentRootHierarchyIds } = useContext(HierarchyIdsContext)
-  const { setHierarchy, componentDelta, setComponentDelta } = useContext(HierarchyContext)
+  const { setHierarchy, componentDelta, setComponentDelta, shouldAdjustComponentDelta, setShouldAdjustComponentDelta } = useContext(HierarchyContext)
 
   const [hierarchyQueryResult] = useQuery<HierarchyQueryReturnType>({
     query: HierarchyQuery,
@@ -37,7 +50,9 @@ function HierarchyBar() {
     requestPolicy: 'network-only',
   })
 
-  const actualHierarchy = useMemo(() => getActualHierarchy(hierarchyQueryResult.data?.hierarchy?.hierarchy || [], componentDelta), [hierarchyQueryResult.data?.hierarchy?.hierarchy, componentDelta])
+  const hierarchy = useMemo(() => hierarchyQueryResult.data?.hierarchy?.hierarchy || [], [hierarchyQueryResult.data?.hierarchy?.hierarchy])
+  const actualHierarchy = useMemo(() => getActualHierarchy(hierarchy, componentDelta), [hierarchy, componentDelta])
+  const previousHierarchy = usePreviousWithDefault(actualHierarchy, actualHierarchy)
 
   const handleClick = useCallback((index: number) => {
     console.log('___handleClick', actualHierarchy.map(x => x.label), index)
@@ -85,6 +100,37 @@ function HierarchyBar() {
     setHierarchy(hierarchy)
     setComponentRootHierarchyIds(componentRootHierarchyIds)
   }, [hierarchyQueryResult.data, setHierarchy, setComponentRootHierarchyIds])
+
+  useEffect(() => {
+    if (!shouldAdjustComponentDelta) return
+    if (areArraysEqual(previousHierarchy, actualHierarchy)) return
+
+    const commonHierarchy: HierarchyItemType[] = []
+
+    for (let i = 0; i < previousHierarchy.length; i++) {
+      if (JSON.stringify(previousHierarchy[i]) === JSON.stringify(actualHierarchy[i])) {
+        commonHierarchy.push(previousHierarchy[i])
+      }
+      else {
+        break
+      }
+    }
+
+    const workingHierarchyPart = hierarchy.slice(commonHierarchy.length, -1)
+    // const lastItem = hierarchy[hierarchy.length - 1]
+    // if (areArraysEqual(commonHierarchy, actualHierarchy)) return
+
+    console.log('commonHierarchy', commonHierarchy, workingHierarchyPart)
+
+    const nextDelta = workingHierarchyPart.length ? getHierarchyDelta(workingHierarchyPart) : 0
+
+    console.log('nextDelta', nextDelta)
+
+    setComponentDelta(nextDelta)
+    setShouldAdjustComponentDelta(false)
+    // console.log('commonHierarchy.length - actualHierarchy.length + 1', commonHierarchy.length - actualHierarchy.length + 1)
+    // setComponentDelta(commonHierarchy.length - actualHierarchy.length)
+  }, [shouldAdjustComponentDelta, hierarchy, previousHierarchy, actualHierarchy, setComponentDelta, setShouldAdjustComponentDelta])
 
   if (!id) {
     return null
@@ -135,7 +181,10 @@ function HierarchyBar() {
         ))}
         {' / '}
         {componentRootHierarchyIds.map(hierarchyId => (
-          <Div key={hierarchyId}>
+          <Div
+            key={hierarchyId}
+            color="gold"
+          >
             {hierarchyId}
             {', '}
           </Div>

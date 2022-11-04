@@ -16,10 +16,11 @@ function getHierarchy(_: any, { sourceComponentAddress, hierarchyIds }: GetCompo
   const componentRootHierarchyIds: string[] = [] // retval
 
   let lastFileNode: FileNodeType | null = null
+  let lastIndexRegistryHash = ''
   let lastComponentRootIndexes: number[] = []
   let lastComponentIndex = -1
 
-  function onTraverseFile(fileNode: FileNodeType, _componentRootIndexes: number[]) {
+  function onTraverseFile(fileNode: FileNodeType, _indexRegistriesHash: string, componentRootIndexes: number[]) {
     const componentNode = getNodesByFirstNeighbourg<FunctionNodeType>(fileNode.address, 'DeclaresFunction')[0]
 
     if (!componentNode) {
@@ -28,7 +29,7 @@ function getHierarchy(_: any, { sourceComponentAddress, hierarchyIds }: GetCompo
       return () => {}
     }
 
-    const label = `${componentNode.payload.name}[${_componentRootIndexes[_componentRootIndexes.length - 1]}]`
+    const label = `${componentNode.payload.name}[${componentRootIndexes[componentRootIndexes.length - 1]}]`
 
     hierarchy.push({
       label,
@@ -45,7 +46,7 @@ function getHierarchy(_: any, { sourceComponentAddress, hierarchyIds }: GetCompo
     }
   }
 
-  function onHierarchyPush(x: any, _fileNode: FileNodeType, _componentRootIndexes: number[], componentIndex: number, hierarchyId: string) {
+  function onHierarchyPush(x: any, _fileNode: FileNodeType, _indexRegistriesHash: string, _componentRootIndexes: number[], componentIndex: number, hierarchyId: string) {
     hierarchy.push({
       hierarchyId,
       label: `${x.node.openingElement.name.name}[${componentIndex}]`,
@@ -53,14 +54,15 @@ function getHierarchy(_: any, { sourceComponentAddress, hierarchyIds }: GetCompo
     })
   }
 
-  function onSuccess(_x: any, fileNode: FileNodeType, componentRootIndexes: number[], componentIndex: number) {
+  function onSuccess(_x: any, fileNode: FileNodeType, indexRegistryHash: string, componentRootIndexes: number[], componentIndex: number) {
     lastFileNode = fileNode
+    lastIndexRegistryHash = indexRegistryHash
     lastComponentRootIndexes = componentRootIndexes
     lastComponentIndex = componentIndex
   }
 
-  function onBeforeHierarchyPush(x: any, fileNode: FileNodeType, componentRootIndexes: number[], componentIndex: number, hierarchyId: string) {
-    if (fileNode.address === lastFileNode?.address && areArraysEqual(componentRootIndexes, lastComponentRootIndexes) && componentIndex === lastComponentIndex) {
+  function onBeforeHierarchyPush(x: any, fileNode: FileNodeType, indexRegistryHash: string, componentRootIndexes: number[], componentIndex: number, hierarchyId: string) {
+    if (fileNode.address === lastFileNode?.address && indexRegistryHash === lastIndexRegistryHash && areArraysEqual(componentRootIndexes, lastComponentRootIndexes) && componentIndex === lastComponentIndex) {
       componentRootHierarchyIds.push(hierarchyId)
 
       x.skip()
@@ -73,6 +75,8 @@ function getHierarchy(_: any, { sourceComponentAddress, hierarchyIds }: GetCompo
     onHierarchyPush,
     onSuccess,
   })
+
+  console.log('XXXX', lastFileNode!.payload.name, lastComponentRootIndexes, lastComponentIndex)
 
   // Retrieve componentRootHierarchyIds
   traverseComponent(sourceComponentAddress, [], {
