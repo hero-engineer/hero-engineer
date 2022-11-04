@@ -169,7 +169,6 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], con
                   console.log('--->', nextFileNode.payload.name)
 
                   const nextComponentRootIndex = indexRegistries[indexRegistries.length - 1][nextFileNode.address] = indexRegistries[indexRegistries.length - 1][nextFileNode.address] + 1 || 0
-                  console.log(' indexRegistries[indexRegistries.length - 1]', indexRegistries.length, indexRegistries[indexRegistries.length - 1])
 
                   shouldPushIndex = false
 

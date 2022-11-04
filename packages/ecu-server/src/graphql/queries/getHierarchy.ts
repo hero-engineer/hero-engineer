@@ -18,8 +18,8 @@ function getHierarchy(_: any, { sourceComponentAddress, hierarchyIds }: GetCompo
   let lastFileNode: FileNodeType | null = null
   let lastIndexRegistryHash = ''
   let lastComponentRootIndexes: number[] = []
-  let lastComponentIndex = -1
 
+  // On file traversal, add the component to the hierarchy
   function onTraverseFile(fileNode: FileNodeType, _indexRegistriesHash: string, componentRootIndexes: number[]) {
     const componentNode = getNodesByFirstNeighbourg<FunctionNodeType>(fileNode.address, 'DeclaresFunction')[0]
 
@@ -46,6 +46,7 @@ function getHierarchy(_: any, { sourceComponentAddress, hierarchyIds }: GetCompo
     }
   }
 
+  // On DOM node traversal, add the hierarchyId to the hierarchy
   function onHierarchyPush(x: any, _fileNode: FileNodeType, _indexRegistriesHash: string, _componentRootIndexes: number[], componentIndex: number, hierarchyId: string) {
     hierarchy.push({
       hierarchyId,
@@ -54,29 +55,32 @@ function getHierarchy(_: any, { sourceComponentAddress, hierarchyIds }: GetCompo
     })
   }
 
-  function onSuccess(_x: any, fileNode: FileNodeType, indexRegistryHash: string, componentRootIndexes: number[], componentIndex: number) {
+  // On first pass success, Retrieve the state of the root component
+  function onSuccess(_x: any, fileNode: FileNodeType, indexRegistryHash: string, componentRootIndexes: number[]) {
     lastFileNode = fileNode
     lastIndexRegistryHash = indexRegistryHash
     lastComponentRootIndexes = componentRootIndexes
-    lastComponentIndex = componentIndex
   }
 
-  function onBeforeHierarchyPush(x: any, fileNode: FileNodeType, indexRegistryHash: string, componentRootIndexes: number[], componentIndex: number, hierarchyId: string) {
-    if (fileNode.address === lastFileNode?.address && indexRegistryHash === lastIndexRegistryHash && areArraysEqual(componentRootIndexes, lastComponentRootIndexes) && componentIndex === lastComponentIndex) {
+  // On second pass, find componentRootHierarchyIds
+  // They are usefull for highlingting the root component
+  // Skipping ensures only the root DOM nodes are traversed
+  function onBeforeHierarchyPush(x: any, fileNode: FileNodeType, indexRegistryHash: string, componentRootIndexes: number[], _componentIndex: number, hierarchyId: string) {
+    if (fileNode.address === lastFileNode?.address && indexRegistryHash === lastIndexRegistryHash && areArraysEqual(componentRootIndexes, lastComponentRootIndexes)) {
       componentRootHierarchyIds.push(hierarchyId)
 
       x.skip()
     }
   }
 
-  // Retrieve hierarchy
+  // First pass: retrieve hierarchy
   traverseComponent(sourceComponentAddress, hierarchyIds, {
     onTraverseFile,
     onHierarchyPush,
     onSuccess,
   })
 
-  // Retrieve componentRootHierarchyIds
+  // Second pass: retrieve componentRootHierarchyIds
   traverseComponent(sourceComponentAddress, [], {
     onBeforeHierarchyPush,
   })
