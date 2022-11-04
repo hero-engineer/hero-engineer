@@ -76,8 +76,6 @@ function getHierarchy(_: any, { sourceComponentAddress, hierarchyIds }: GetCompo
     onSuccess,
   })
 
-  console.log('XXXX', lastFileNode!.payload.name, lastComponentRootIndexes, lastComponentIndex)
-
   // Retrieve componentRootHierarchyIds
   traverseComponent(sourceComponentAddress, [], {
     onBeforeHierarchyPush,

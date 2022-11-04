@@ -3,8 +3,6 @@ import '../css/edition.css'
 import { MouseEvent, Ref, useCallback, useContext, useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 
-import { HierarchyItemType } from '../types'
-
 import HierarchyIdsContext from '../contexts/HierarchyIdsContext'
 import HierarchyContext from '../contexts/HierarchyContext'
 import DragAndDropContext from '../contexts/DragAndDropContext'
