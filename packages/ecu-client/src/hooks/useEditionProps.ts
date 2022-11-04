@@ -116,11 +116,21 @@ function useEditionProps<T>(id: string, className = '') {
   const generateClassName = useCallback(() => {
     let klassName = className
 
-    if (componentRootHierarchyIds.some(x => x === hierarchyId)) {
+    if (componentDelta < 0 && componentRootHierarchyIds.some(x => x === hierarchyId)) {
       klassName += ' ecu-selected-root'
+
+      const index = componentRootHierarchyIds.indexOf(hierarchyId)
+
+      if (index === 0) {
+        klassName += ' ecu-selected-root-first'
+      }
+
+      if (index === componentRootHierarchyIds.length - 1) {
+        klassName += ' ecu-selected-root-last'
+      }
     }
 
-    if (hierarchyIds[hierarchyIds.length - 1] === hierarchyId) {
+    if (componentDelta >= 0 && hierarchyIds[hierarchyIds.length - 1] === hierarchyId) {
       klassName += ' ecu-selected'
     }
 
@@ -133,7 +143,7 @@ function useEditionProps<T>(id: string, className = '') {
     }
 
     return klassName.trim()
-  }, [className, hierarchyIds, hierarchyId, componentRootHierarchyIds, isDragging, canDrop, isOverCurrent])
+  }, [className, hierarchyIds, hierarchyId, componentDelta, componentRootHierarchyIds, isDragging, canDrop, isOverCurrent])
 
   return {
     ref,

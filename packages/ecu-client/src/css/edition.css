@@ -3,25 +3,16 @@
   border-right: 1px solid gold;
   margin-left: -1px;
   margin-right: -1px;
-
-  &:first-of-type {
-    border-top: 1px solid gold;
-    margin-top: -1px;
-  }
-
-  &:last-of-type {
-    border-bottom: 1px solid gold;
-    margin-bottom: -1px;
-  }
-
-  .ecu-selected-root {
-    border: none;
-    margin: 0px;
-  }
 }
 
-.ecu-selected-foo {
-  color: red;
+.ecu-selected-root-first {
+  border-top: 1px solid gold;
+  margin-top: -1px;
+}
+
+.ecu-selected-root-last {
+  border-bottom: 1px solid gold;
+  margin-bottom: -1px;
 }
 
 .ecu-selected {

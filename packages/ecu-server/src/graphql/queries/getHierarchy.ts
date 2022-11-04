@@ -12,6 +12,10 @@ function getHierarchy(_: any, { sourceComponentAddress, hierarchyIds }: GetCompo
   console.log('__getHierarchy__')
 
   const hierarchy: HierarchyItemType[] = [] // retval
+  const componentRootHierarchyIds: string[] = [] // retval
+
+  let lastFileNode: FileNodeType | null = null
+  let lastComponentRootIndex = 0
 
   function onTraverseFile(fileNode: FileNodeType, index: number) {
     const componentNode = getNodesByFirstNeighbourg<FunctionNodeType>(fileNode.address, 'DeclaresFunction')[0]
@@ -39,29 +43,36 @@ function getHierarchy(_: any, { sourceComponentAddress, hierarchyIds }: GetCompo
     }
   }
 
-  function onHierarchyPush(x: any, hierarchyId: string, index: number) {
+  function onHierarchyPush(x: any, _fileNode: FileNodeType, _componentRootIndex: number, componentIndex: number, hierarchyId: string) {
     hierarchy.push({
       hierarchyId,
-      label: `${x.node.openingElement.name.name}[${index}]`,
+      label: `${x.node.openingElement.name.name}[${componentIndex}]`,
       componentName: x.node.openingElement.name.name,
     })
   }
 
+  function onSuccess(x: any, fileNode: FileNodeType, componentRootIndex: number) {
+    lastFileNode = fileNode
+    lastComponentRootIndex = componentRootIndex
+  }
+
+  function onBeforeHierarchyPush(x: any, fileNode: FileNodeType, componentRootIndex: number, _componentIndex: number, hierarchyId: string) {
+    if (fileNode.address === lastFileNode?.address && componentRootIndex === lastComponentRootIndex) {
+      componentRootHierarchyIds.push(hierarchyId)
+
+      x.skip()
+    }
+  }
+
+  // Retrieve hierarchy
   traverseComponent(sourceComponentAddress, hierarchyIds, {
     onTraverseFile,
     onHierarchyPush,
+    onSuccess,
   })
 
-  const lastComponentAddress = [...hierarchy].reverse().find(x => x.componentAddress)?.componentAddress || sourceComponentAddress
-  const componentRootHierarchyIds: string[] = []
-
-  function onBeforeHierarchyPush(x: any, hierarchyId: string) {
-    componentRootHierarchyIds.push(hierarchyId)
-
-    x.skip()
-  }
-
-  traverseComponent(lastComponentAddress, [], {
+  // Retrieve componentRootHierarchyIds
+  traverseComponent(sourceComponentAddress, [], {
     onBeforeHierarchyPush,
   })
 
