@@ -87,7 +87,6 @@ function useEditionProps<T>(id: string, className = '') {
     const ids = getHierarchyIds(event.target)
 
     if (areArraysEqualAtStart(hierarchyIds, ids) && componentDelta < 0) {
-      console.log('areArraysEqualAtStart')
       setComponentDelta(x => x + 1)
 
       return

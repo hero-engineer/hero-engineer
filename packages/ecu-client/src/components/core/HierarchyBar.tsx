@@ -55,7 +55,7 @@ function HierarchyBar() {
   const previousHierarchy = usePreviousWithDefault(actualHierarchy, actualHierarchy)
 
   const handleClick = useCallback((index: number) => {
-    console.log('___handleClick', actualHierarchy.map(x => x.label), index)
+    // console.log('___handleClick', actualHierarchy.map(x => x.label), index)
 
     // If clicked on a Component node link, ...
     if (actualHierarchy[index].componentAddress) {
@@ -117,19 +117,10 @@ function HierarchyBar() {
     }
 
     const workingHierarchyPart = hierarchy.slice(commonHierarchy.length, -1)
-    // const lastItem = hierarchy[hierarchy.length - 1]
-    // if (areArraysEqual(commonHierarchy, actualHierarchy)) return
-
-    console.log('commonHierarchy', commonHierarchy, workingHierarchyPart)
-
     const nextDelta = workingHierarchyPart.length ? getHierarchyDelta(workingHierarchyPart) : 0
-
-    console.log('nextDelta', nextDelta)
 
     setComponentDelta(nextDelta)
     setShouldAdjustComponentDelta(false)
-    // console.log('commonHierarchy.length - actualHierarchy.length + 1', commonHierarchy.length - actualHierarchy.length + 1)
-    // setComponentDelta(commonHierarchy.length - actualHierarchy.length)
   }, [shouldAdjustComponentDelta, hierarchy, previousHierarchy, actualHierarchy, setComponentDelta, setShouldAdjustComponentDelta])
 
   if (!id) {

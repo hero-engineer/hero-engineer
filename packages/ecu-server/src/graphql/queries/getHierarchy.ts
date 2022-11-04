@@ -62,7 +62,7 @@ function getHierarchy(_: any, { sourceComponentAddress, hierarchyIds }: GetCompo
     lastComponentRootIndexes = componentRootIndexes
   }
 
-  // On second pass, find componentRootHierarchyIds
+  // On second pass, find componentRootHierarchyIds, which are the root DOM nodes of the last component in the Hierarchy
   // They are usefull for highlingting the root component
   // Skipping ensures only the root DOM nodes are traversed
   function onBeforeHierarchyPush(x: any, fileNode: FileNodeType, indexRegistryHash: string, componentRootIndexes: number[], _componentIndex: number, hierarchyId: string) {
