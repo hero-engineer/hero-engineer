@@ -20,12 +20,11 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-icons": "^4.6.0",
-    "react-router-dom": "^6.4.2",
-    "urql": "^3.0.3",
-    "use-local-storage-state": "^18.1.1"
+    "react-router-dom": "^6.4.3",
+    "urql": "^3.0.3"
   },
   "devDependencies": {
-    "@types/react": "^18.0.24",
+    "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",
     "@vitejs/plugin-react": "^2.2.0",
     "cssnano": "^5.1.14",
