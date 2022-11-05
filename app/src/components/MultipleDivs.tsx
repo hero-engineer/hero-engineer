@@ -25,14 +25,14 @@ function MultipleDivs(props: any) {
             <CoolDaddy>
               <CoolDaddy>
                 Darling
-                <CoolDiv />
+                
               </CoolDaddy>
             </CoolDaddy>
           </CoolDaddy>
         </Div>
       </Div>
       <DualCoolDiv />
-      <CoolDiv />
+      
       <DualCoolDiv />
       <Div data-ecu="A_zAyt8iJRV:2">
         <Div data-ecu="A_zAyt8iJRV:2_0">
