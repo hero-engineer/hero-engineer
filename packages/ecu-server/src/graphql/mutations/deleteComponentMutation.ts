@@ -7,6 +7,7 @@ import composeHistoryMutation from '../../history/composeHistoryMutation'
 import processImpactedFileNodes from '../../domain/traversal/processImpactedFileNodes'
 import createDeleteComponentPostTraverse from '../../domain/traversal/factories/createDeleteComponentPostTraverse'
 import traverseComponent from '../../domain/traversal/traverseComponent'
+import applyComponentDelta from '../../domain/utils/applyComponentDelta'
 
 type DeleteComponentMutationArgs = {
   sourceComponentAddress: string
@@ -28,7 +29,9 @@ async function deleteComponentMutation(_: any, { sourceComponentAddress, hierarc
   }
 
   function onSuccess(paths: any[]) {
-    paths[paths.length - 1 + componentDelta].remove()
+    const finalPath = applyComponentDelta(paths, componentDelta)
+
+    finalPath.remove()
   }
 
   const postTraverse = createDeleteComponentPostTraverse()

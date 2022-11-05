@@ -3,7 +3,7 @@ import { gql } from 'apollo-server'
 import componentQuery from './queries/componentQuery'
 import componentsQuery from './queries/componentsQuery'
 import hierarchyQuery from './queries/hierarchyQuery'
-import isHierarchyOnComponentQuery from './queries/isHierarchyOnComponentQuery'
+import hierarchyMetadataQuery from './queries/hierarchyMetadataQuery'
 import createComponentMutation from './mutations/createComponentMutation'
 import addComponentMutation from './mutations/addComponentMutation'
 import deleteComponentMutation from './mutations/deleteComponentMutation'
@@ -59,17 +59,16 @@ export const typeDefs = gql`
     hierarchyId: String
   }
 
-
-  type HierarchyReturnValue {
-    hierarchy: [HierarchyItem]!
+  type HierarchyMetadataReturnValue {
+    isHierarchyOnComponent: Boolean!
     componentRootHierarchyIds: [String]!
   }
 
   type Query {
     component(id: String!): FunctionNode
     components: [FunctionNode]
-    hierarchy(sourceComponentAddress: String!, hierarchyIds: [String!]!): HierarchyReturnValue
-    isHierarchyOnComponent(sourceComponentAddress: String!, hierarchyIds: [String!]!, componentDelta: Int!): Boolean
+    hierarchy(sourceComponentAddress: String!, hierarchyIds: [String!]!): [HierarchyItem]!
+    hierarchyMetadata(sourceComponentAddress: String!, hierarchyIds: [String!]!, componentDelta: Int!): HierarchyMetadataReturnValue
   }
 
   type Mutation {
@@ -86,7 +85,7 @@ export const resolvers = {
     component: componentQuery,
     components: componentsQuery,
     hierarchy: hierarchyQuery,
-    isHierarchyOnComponent: isHierarchyOnComponentQuery,
+    hierarchyMetadata: hierarchyMetadataQuery,
   },
   Mutation: {
     createComponent: createComponentMutation,

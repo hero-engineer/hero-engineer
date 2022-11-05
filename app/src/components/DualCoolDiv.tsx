@@ -1,16 +1,16 @@
 import { Div } from 'ecu-client'
 
+import CoolDiv from './CoolDiv'
+
 function DualCoolDiv(props: any) {
   console.log('__rendering DualCoolDiv')
 
   return (
     <>
-      <Div data-ecu="34NnU_pWNo:0">
+      <Div data-ecu="XvcE1oC52g:0">
         Edit me I'm famous 1
       </Div>
-      <Div data-ecu="34NnU_pWNo:1">
-        Edit me I'm famous 2
-      </Div>
+      <CoolDiv />
     </>
   )
 }

@@ -97,7 +97,7 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
   function traverseFileNode(fileNodes: FileNodeType[], previousPaths: any[] = [], indexRegistriesHash = '', componentRootIndexes: number[] = [0], stop = () => {}) {
     const fileNode = fileNodes[fileNodes.length - 1]
 
-    console.log('-> traverseFileNode', fileNode.payload.name, componentRootIndexes)
+    // console.log('-> traverseFileNode', fileNode.payload.name, componentRootIndexes)
 
     const onContinue = onTraverseFile(fileNodes, indexRegistriesHash, componentRootIndexes)
 
@@ -116,7 +116,7 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
 
       return {
         JSXElement(x: any) {
-          console.log('--> JSXElement', x.node.openingElement.name.name)
+          // console.log('--> JSXElement', x.node.openingElement.name.name)
 
           const currentXs = [...previousPaths, x]
           const idIndex = x.node.openingElement.attributes.findIndex((x: JSXAttribute) => x.name.name === ecuPropName)
@@ -132,7 +132,7 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
               lastingIndexRegistry[limitedHierarchyId] = lastingIndexRegistry[limitedHierarchyId] + 1 || 0
               shouldPushIndex = true
 
-              console.log('--->', x.node.openingElement.name.name, limitedHierarchyId, lastingIndexRegistry[limitedHierarchyId])
+              // console.log('--->', x.node.openingElement.name.name, limitedHierarchyId, lastingIndexRegistry[limitedHierarchyId])
 
               const hierarchyId = createHierarchyId(limitedHierarchyId, lastingIndexRegistry[limitedHierarchyId])
 
@@ -170,7 +170,7 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
                 const nextFileNode = allFileNodes.find(n => n.payload.path === componentNode.payload.path)
 
                 if (nextFileNode) {
-                  console.log('--->', nextFileNode.payload.name)
+                  // console.log('--->', nextFileNode.payload.name)
 
                   const nextComponentRootIndex = indexRegistries[indexRegistries.length - 1][nextFileNode.address] = indexRegistries[indexRegistries.length - 1][nextFileNode.address] + 1 || 0
 
