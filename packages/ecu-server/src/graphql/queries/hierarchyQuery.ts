@@ -75,7 +75,7 @@ function hierarchyQuery(_: any, { sourceComponentAddress, hierarchyIds }: Hierar
   // // Retrieve hierarchy
   try {
     const hierarchyTrees = traverseComponent(sourceComponentAddress, [])
-    console.log('Z hierarchy', JSON.stringify(formatHierarchyTrees(hierarchyTrees), null, 2))
+    console.log('Z hierarchy', JSON.stringify(hierarchyTrees, null, 2))
   }
   catch (error) {
     console.log(error)

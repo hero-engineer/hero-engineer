@@ -49,7 +49,7 @@ function hierarchyMetadataQuery(_: any, { sourceComponentAddress, hierarchyIds, 
   }
 
   traverseComponent(sourceComponentAddress, hierarchyIds, {
-    onSuccess,
+    // onSuccess,
   })
 
   // On second pass, find componentRootHierarchyIds, which are the root DOM nodes of the last component in the Hierarchy
@@ -71,7 +71,7 @@ function hierarchyMetadataQuery(_: any, { sourceComponentAddress, hierarchyIds, 
 
   // Second pass: retrieve componentRootHierarchyIds
   traverseComponent(sourceComponentAddress, [], {
-    onBeforeHierarchyPush,
+    // onBeforeHierarchyPush,
   })
 
   console.log('componentRootHierarchyIds', componentRootHierarchyIds)
