@@ -4,24 +4,24 @@ import DualCoolDiv from './DualCoolDiv'
 import CoolDiv from './CoolDiv'
 import CoolDaddy from './CoolDaddy'
 
-function MultipleDivs(props: any) {
-  console.log('__rendering MultipleDivs')
+function MultipleDivs2(props: any) {
+  console.log('__rendering MultipleDivs2')
 
   return (
     <>
-      <Div data-ecu="zKZkBpYDfe3:0">
+      {/* <Div data-ecu="9hJIfQ8kbsc:0">
         <CoolDaddy>
-          <Div data-ecu="zKZkBpYDfe3:0_0">
+          <Div data-ecu="9hJIfQ8kbsc:0_0">
             Yo
           </Div>
           <CoolDiv />
         </CoolDaddy>
-      </Div>
-      <CoolDaddy>
+       </Div>
+       <CoolDaddy>
         <CoolDaddy>
           <CoolDiv />
         </CoolDaddy>
-      </CoolDaddy>
+       </CoolDaddy> */}
       {/* <Div data-ecu="XN1uagYO1eE:0">
         <Div data-ecu="XN1uagYO1eE:0_0">
           <CoolDaddy>
@@ -33,8 +33,8 @@ function MultipleDivs(props: any) {
           </CoolDaddy>
         </Div>
        </Div> */}
-      {/* <DualCoolDiv />
-       <DualCoolDiv /> */}
+      <DualCoolDiv />
+      <DualCoolDiv />
       {/* <Div data-ecu="DZOBkQXz7K:2">
         <Div data-ecu="DZOBkQXz7K:2_0">
           Dear component
@@ -51,4 +51,4 @@ function MultipleDivs(props: any) {
     </>
   )
 }
-export default MultipleDivs
+export default MultipleDivs2

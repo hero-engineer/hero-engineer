@@ -61,7 +61,7 @@ function HierarchyBar() {
       componentDelta,
       sourceComponentAddress: id,
     },
-    pause: !id || shouldAdjustComponentDelta,
+    pause: true || !id || shouldAdjustComponentDelta,
     requestPolicy: 'network-only',
   })
 

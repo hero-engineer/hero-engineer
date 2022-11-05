@@ -79,3 +79,12 @@ export type HierarchyItemType = {
   componentAddress?: string
   hierarchyId?: string
 }
+
+export type HierarchyTreeType = {
+  label: string
+  index: number
+  onComponentAddress: string
+  componentAddress?: string
+  hierarchyId?: string
+  children: HierarchyTreeType[]
+}

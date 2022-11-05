@@ -7,8 +7,8 @@ function DualCoolDiv(props: any) {
 
   return (
     <>
-      <Div data-ecu="XvcE1oC52g:0">
-        Edit me I'm famous 1
+      <Div data-ecu="zg_dvHLnNR:0">
+        Edit me I'm famous!
       </Div>
       <CoolDiv />
     </>
