@@ -42,7 +42,7 @@ function getHierarchyDelta(hierarchy: HierarchyItemType[]) {
 function HierarchyBar() {
   const { id = '' } = useParams()
   const { hierarchyIds, setHierarchyIds, componentRootHierarchyIds, setComponentRootHierarchyIds } = useContext(HierarchyIdsContext)
-  const { setHierarchy, componentDelta, setComponentDelta, shouldAdjustComponentDelta, setShouldAdjustComponentDelta } = useContext(HierarchyContext)
+  const { setHierarchy, componentDelta, setComponentDelta, shouldAdjustComponentDelta, setShouldAdjustComponentDelta, setIsHierarchyOnComponent } = useContext(HierarchyContext)
 
   const [hierarchyQueryResult] = useQuery<HierarchyQueryReturnType>({
     query: HierarchyQuery,
@@ -61,11 +61,9 @@ function HierarchyBar() {
       componentDelta,
       sourceComponentAddress: id,
     },
-    pause: !id,
+    pause: !id || shouldAdjustComponentDelta,
     requestPolicy: 'network-only',
   })
-
-  console.log('isHierarchyOnComponentQueryResult.data.', isHierarchyOnComponentQueryResult.data)
 
   const hierarchy = useMemo(() => hierarchyQueryResult.data?.hierarchy?.hierarchy || [], [hierarchyQueryResult.data?.hierarchy?.hierarchy])
   const actualHierarchy = useMemo(() => getActualHierarchy(hierarchy, componentDelta), [hierarchy, componentDelta])
@@ -119,6 +117,12 @@ function HierarchyBar() {
     setHierarchy(hierarchy)
     setComponentRootHierarchyIds(componentRootHierarchyIds)
   }, [hierarchyQueryResult.data, setHierarchy, setComponentRootHierarchyIds])
+
+  useEffect(() => {
+    if (!isHierarchyOnComponentQueryResult.data) return
+
+    setIsHierarchyOnComponent(isHierarchyOnComponentQueryResult.data.isHierarchyOnComponent)
+  }, [isHierarchyOnComponentQueryResult.data, setIsHierarchyOnComponent])
 
   useEffect(() => {
     if (!shouldAdjustComponentDelta) return

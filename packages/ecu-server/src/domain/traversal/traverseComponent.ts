@@ -199,8 +199,6 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
             }
           }
 
-          console.log('x.removed', x.removed)
-
           if (!(x.shouldStop || x.removed) && !x.node.selfClosing && shouldPushIndex) {
             indexRegistries.push({})
           }

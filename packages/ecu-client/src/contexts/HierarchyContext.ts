@@ -9,6 +9,8 @@ export type HierarchyContextType = {
   setComponentDelta: Dispatch<SetStateAction<number>>
   shouldAdjustComponentDelta: boolean
   setShouldAdjustComponentDelta: Dispatch<SetStateAction<boolean>>
+  isHierarchyOnComponent: boolean
+  setIsHierarchyOnComponent: Dispatch<SetStateAction<boolean>>
 }
 
 export default createContext<HierarchyContextType>({
@@ -18,4 +20,6 @@ export default createContext<HierarchyContextType>({
   setComponentDelta: () => {},
   shouldAdjustComponentDelta: false,
   setShouldAdjustComponentDelta: () => {},
+  isHierarchyOnComponent: false,
+  setIsHierarchyOnComponent: () => {},
 })
