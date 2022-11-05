@@ -39,11 +39,6 @@ function createAddComponentMutate(componentNode: FunctionNodeType, hierarchyPosi
           finalX.insertAfter(inserted)
         }
       }
-      else if (hierarchyPosition === 'within') {
-        const inserted = jsxElement(jsxOpeningElement(jsxIdentifier(componentNode.payload.name), [], true), null, [], true)
-
-        finalX.node.children.push(inserted)
-      }
       else if (hierarchyPosition === 'children') {
         const inserted = jsxElement(jsxOpeningElement(jsxIdentifier(componentNode.payload.name), [], true), null, [], true)
 

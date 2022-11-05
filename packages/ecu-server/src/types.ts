@@ -48,7 +48,6 @@ export type FunctionNodeType = Particule<FunctionNodePayloadType>
 export enum HierarchyPositionType {
   before = 'before',
   after = 'after',
-  within = 'within',
   children = 'children',
   parent = 'parent',
 }

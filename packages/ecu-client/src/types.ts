@@ -1,4 +1,4 @@
-export type HierarchyPosition = 'before' | 'after' | 'within' | 'children' | 'parent'
+export type HierarchyPosition = 'before' | 'after' | 'children' | 'parent'
 
 export type HierarchyItemType = {
   label: string
