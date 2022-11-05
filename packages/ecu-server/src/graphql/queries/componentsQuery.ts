@@ -2,8 +2,8 @@ import { FunctionNodeType } from '../../types'
 
 import { getNodesByRole } from '../../graph'
 
-function getComponents() {
+function componentsQuery() {
   return getNodesByRole<FunctionNodeType>('Function').filter(node => node.payload.isComponent)
 }
 
-export default getComponents
+export default componentsQuery

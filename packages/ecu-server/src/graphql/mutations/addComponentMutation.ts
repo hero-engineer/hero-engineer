@@ -9,14 +9,14 @@ import processImpactedFileNodes from '../../domain/traversal/processImpactedFile
 import createAddComponentMutate from '../../domain/traversal/factories/createAddComponentMutate'
 import createAddComponentPostTraverse from '../../domain/traversal/factories/createAddComponentPostTraverse'
 
-type AddComponentArgs = {
+type AddComponentMutationArgs = {
   sourceComponentAddress: string
   targetComponentAddress: string
   hierarchyIds: string[]
   hierarchyPosition: HierarchyPositionType
 }
 
-async function addComponent(_: any, { sourceComponentAddress, targetComponentAddress, hierarchyIds, hierarchyPosition }: AddComponentArgs): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
+async function addComponentMutation(_: any, { sourceComponentAddress, targetComponentAddress, hierarchyIds, hierarchyPosition }: AddComponentMutationArgs): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
   console.log('___addComponent___')
 
   const sourceComponentNode = getNodeByAddress(sourceComponentAddress)
@@ -50,4 +50,4 @@ async function addComponent(_: any, { sourceComponentAddress, targetComponentAdd
   }
 }
 
-export default composeHistoryMutation(addComponent)
+export default composeHistoryMutation(addComponentMutation)

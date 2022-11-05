@@ -4,12 +4,12 @@ import { FileNodeType, FunctionNodeType, HierarchyItemType } from '../../types'
 import { getNodesByFirstNeighbourg } from '../../graph'
 import areArraysEqual from '../../utils/areArraysEqual'
 
-type GetComponentArgs = {
+type HierarchyQueryArgs = {
   sourceComponentAddress: string
   hierarchyIds: string[]
 }
 
-function getHierarchy(_: any, { sourceComponentAddress, hierarchyIds }: GetComponentArgs) {
+function hierarchyQuery(_: any, { sourceComponentAddress, hierarchyIds }: HierarchyQueryArgs) {
   console.log('__getHierarchy__')
 
   const hierarchy: HierarchyItemType[] = [] // retval
@@ -99,4 +99,4 @@ function getHierarchy(_: any, { sourceComponentAddress, hierarchyIds }: GetCompo
   }
 }
 
-export default getHierarchy
+export default hierarchyQuery

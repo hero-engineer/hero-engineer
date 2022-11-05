@@ -1,13 +1,13 @@
 import { gql } from 'apollo-server'
 
-import getComponent from './queries/getComponent'
-import getComponents from './queries/getComponents'
-import getHierarchy from './queries/getHierarchy'
-import isHierarchyOnComponent from './queries/isHierarchyOnComponent'
-import createComponent from './mutations/createComponent'
-import addComponent from './mutations/addComponent'
-import deleteComponent from './mutations/deleteComponent'
-import moveComponent from './mutations/moveComponent'
+import componentQuery from './queries/componentQuery'
+import componentsQuery from './queries/componentsQuery'
+import hierarchyQuery from './queries/hierarchyQuery'
+import isHierarchyOnComponentQuery from './queries/isHierarchyOnComponentQuery'
+import createComponentMutation from './mutations/createComponentMutation'
+import addComponentMutation from './mutations/addComponentMutation'
+import deleteComponentMutation from './mutations/deleteComponentMutation'
+import moveComponentMutation from './mutations/moveComponentMutation'
 
 export const typeDefs = gql`
 
@@ -84,15 +84,15 @@ export const typeDefs = gql`
 
 export const resolvers = {
   Query: {
-    component: getComponent,
-    components: getComponents,
-    hierarchy: getHierarchy,
-    isHierarchyOnComponent,
+    component: componentQuery,
+    components: componentsQuery,
+    hierarchy: hierarchyQuery,
+    isHierarchyOnComponent: isHierarchyOnComponentQuery,
   },
   Mutation: {
-    createComponent,
-    addComponent,
-    deleteComponent,
-    moveComponent,
+    createComponent: createComponentMutation,
+    addComponent: addComponentMutation,
+    deleteComponent: deleteComponentMutation,
+    moveComponent: moveComponentMutation,
   },
 }

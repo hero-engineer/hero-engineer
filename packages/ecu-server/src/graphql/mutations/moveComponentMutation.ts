@@ -7,31 +7,22 @@ import compareCursors from '../../utils/compareCursors'
 import composeHistoryMutation from '../../history/composeHistoryMutation'
 
 import getComponentHierarchyCursors from '../../domain/traversal/getComponentHierarchyCursors'
-import updateComponentHierarchy from '../../domain/traversal/updateComponentHierarchy'
-import processImpactedFileNodes from '../../domain/traversal/processImpactedFileNodes'
+// import updateComponentHierarchy from '../../domain/traversal/updateComponentHierarchy'
+// import processImpactedFileNodes from '../../domain/traversal/processImpactedFileNodes'
 // import getComponentHierarchy from '../../domain/traversal/getComponentHierarchy'
-import createAddComponentMutate from '../../domain/traversal/factories/createAddComponentMutate'
-import createAddComponentPostTraverse from '../../domain/traversal/factories/createAddComponentPostTraverse'
+// import createAddComponentMutate from '../../domain/traversal/factories/createAddComponentMutate'
+// import createAddComponentPostTraverse from '../../domain/traversal/factories/createAddComponentPostTraverse'
 import createDeleteComponentMutate from '../../domain/traversal/factories/createDeleteComponentMutate'
 import createDeleteComponentPostTraverse from '../../domain/traversal/factories/createDeleteComponentPostTraverse'
 
-type MoveComponentArgs = {
+type MoveComponentMutationArgs = {
   sourceComponentAddress: string
   sourceHierarchyIds: string[]
   targetHierarchyIds: string[]
   hierarchyPosition: HierarchyPositionType
 }
 
-// function extractInserted(hierarchy: HierarchyItemType[]) {
-//   const stack = [...hierarchy]
-
-//   while (stack.length) {
-//     const item = stack.pop()
-
-//   }
-// }
-
-async function moveComponent(_: any, { sourceComponentAddress, sourceHierarchyIds, targetHierarchyIds, hierarchyPosition }: MoveComponentArgs): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
+async function moveComponentMutation(_: any, { sourceComponentAddress, sourceHierarchyIds, targetHierarchyIds, hierarchyPosition }: MoveComponentMutationArgs): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
   console.log('___moveComponent___')
 
   const sourceComponentNode = getNodeByAddress(sourceComponentAddress)
@@ -76,4 +67,4 @@ async function moveComponent(_: any, { sourceComponentAddress, sourceHierarchyId
   }
 }
 
-export default composeHistoryMutation(moveComponent)
+export default composeHistoryMutation(moveComponentMutation)

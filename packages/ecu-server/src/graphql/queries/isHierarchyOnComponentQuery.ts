@@ -3,13 +3,13 @@ import { FileNodeType } from '../../types'
 
 import { getNodesBySecondNeighbourg } from '../../graph'
 
-type IsHierarchyOnComponentArgs = {
+type IsHierarchyOnComponentQueryArgs = {
   sourceComponentAddress: string
   hierarchyIds: string[]
   componentDelta: number
 }
 
-function isHierarchyOnComponent(_: any, { sourceComponentAddress, hierarchyIds, componentDelta }: IsHierarchyOnComponentArgs) {
+function isHierarchyOnComponentQuery(_: any, { sourceComponentAddress, hierarchyIds, componentDelta }: IsHierarchyOnComponentQueryArgs) {
   console.log('__isHierarchyOnComponent__')
 
   const sourceFileNode = getNodesBySecondNeighbourg<FileNodeType>(sourceComponentAddress, 'DeclaresFunction')[0]
@@ -22,17 +22,17 @@ function isHierarchyOnComponent(_: any, { sourceComponentAddress, hierarchyIds, 
     throw new Error('Positive componentDelta not supported')
   }
 
-  let isHierarchyOnComponentRetval = false
+  let isHierarchyOnComponent = false
 
   function onSuccess(_paths: any[], fileNodes: FileNodeType[]) {
-    isHierarchyOnComponentRetval = fileNodes.map(fileNode => fileNode.address)[fileNodes.length - 1 + componentDelta] === sourceFileNode.address
+    isHierarchyOnComponent = fileNodes.map(fileNode => fileNode.address)[fileNodes.length - 1 + componentDelta] === sourceFileNode.address
   }
 
   traverseComponent(sourceComponentAddress, hierarchyIds, {
     onSuccess,
   })
 
-  return isHierarchyOnComponentRetval
+  return isHierarchyOnComponent
 }
 
-export default isHierarchyOnComponent
+export default isHierarchyOnComponentQuery

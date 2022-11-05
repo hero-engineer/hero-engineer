@@ -17,11 +17,11 @@ import regenerate from '../../domain/regenerate'
 
 import capitalize from '../../utils/capitalize'
 
-type CreateComponentArgs = {
+type CreateComponentMutationArgs = {
   name: string
 }
 
-async function createComponent(_: any, { name }: CreateComponentArgs): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
+async function createComponentMutation(_: any, { name }: CreateComponentMutationArgs): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
   if (!name) {
     throw new Error('Component name is required')
   }
@@ -49,4 +49,4 @@ async function createComponent(_: any, { name }: CreateComponentArgs): Promise<H
   }
 }
 
-export default composeHistoryMutation(createComponent)
+export default composeHistoryMutation(createComponentMutation)

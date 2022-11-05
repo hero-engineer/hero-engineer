@@ -2,14 +2,14 @@ import { FunctionNodeType } from '../../types'
 
 import { getNodeByAddress } from '../../graph'
 
-type GetComponentArgs = {
+type ComponentQueryArgs = {
   id: string
 }
 
-function getComponent(_: any, { id }: GetComponentArgs) {
+function componentQuery(_: any, { id }: ComponentQueryArgs) {
   const node = getNodeByAddress<FunctionNodeType>(id)
 
   return node || null
 }
 
-export default getComponent
+export default componentQuery

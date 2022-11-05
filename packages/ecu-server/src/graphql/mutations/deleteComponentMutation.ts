@@ -8,13 +8,13 @@ import processImpactedFileNodes from '../../domain/traversal/processImpactedFile
 import createDeleteComponentPostTraverse from '../../domain/traversal/factories/createDeleteComponentPostTraverse'
 import traverseComponent from '../../domain/traversal/traverseComponent'
 
-type DeleteComponentArgs = {
+type DeleteComponentMutationArgs = {
   sourceComponentAddress: string
   hierarchyIds: string[]
   componentDelta: number
 }
 
-async function deleteComponent(_: any, { sourceComponentAddress, hierarchyIds, componentDelta }: DeleteComponentArgs): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
+async function deleteComponentMutation(_: any, { sourceComponentAddress, hierarchyIds, componentDelta }: DeleteComponentMutationArgs): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
   console.log('___deleteComponent___')
 
   const componentNode = getNodeByAddress<FunctionNodeType>(sourceComponentAddress)
@@ -45,4 +45,4 @@ async function deleteComponent(_: any, { sourceComponentAddress, hierarchyIds, c
   }
 }
 
-export default composeHistoryMutation(deleteComponent)
+export default composeHistoryMutation(deleteComponentMutation)
