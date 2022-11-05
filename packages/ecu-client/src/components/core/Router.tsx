@@ -18,7 +18,7 @@ function Router({ children }: any) {
             element={<Components />}
           />
           <Route
-            path="component/:id"
+            path="component/:componentAddress"
             element={<Component />}
           />
         </Route>

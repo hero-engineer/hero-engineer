@@ -9,10 +9,12 @@ import { DeleteComponentMutation } from '../../queries'
 import HierarchyIdsContext from '../../contexts/HierarchyIdsContext'
 import HierarchyContext from '../../contexts/HierarchyContext'
 
+import isHierarchyOnComponent from '../../helpers/isHierarchyOnComponent'
+
 function DeleteComponentButton(props: any) {
-  const { id = '' } = useParams()
+  const { componentAddress = '' } = useParams()
   const { hierarchyIds, setHierarchyIds } = useContext(HierarchyIdsContext)
-  const { hierarchy, componentDelta, isHierarchyOnComponent } = useContext(HierarchyContext)
+  const { hierarchy, componentDelta } = useContext(HierarchyContext)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const lastEditedComponent = useMemo(() => [...hierarchy].reverse().find(x => x.componentAddress), [hierarchy])
   const navigate = useNavigate()
@@ -20,20 +22,20 @@ function DeleteComponentButton(props: any) {
   const [, deleteComponent] = useMutation(DeleteComponentMutation)
 
   const handleDeleteComponentClick = useCallback(async () => {
-    if (!isHierarchyOnComponent) {
+    if (!isHierarchyOnComponent(hierarchy, componentDelta, componentAddress)) {
       setIsModalOpen(true)
 
       return
     }
 
     await deleteComponent({
-      sourceComponentAddress: id,
+      sourceComponentAddress: componentAddress,
       hierarchyIds,
       componentDelta,
     })
 
     setHierarchyIds([])
-  }, [id, deleteComponent, hierarchyIds, componentDelta, isHierarchyOnComponent, setHierarchyIds])
+  }, [hierarchy, componentDelta, componentAddress, deleteComponent, hierarchyIds, setHierarchyIds])
 
   const navigateToLastEditedComponent = useCallback(() => {
     setIsModalOpen(false)
@@ -41,7 +43,7 @@ function DeleteComponentButton(props: any) {
     navigate(`/__ecu__/component/${lastEditedComponent?.componentAddress}`)
   }, [navigate, lastEditedComponent])
 
-  if (!id) {
+  if (!componentAddress) {
     return null
   }
 

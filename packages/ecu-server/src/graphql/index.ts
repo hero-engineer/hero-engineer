@@ -3,7 +3,6 @@ import { gql } from 'apollo-server'
 import componentQuery from './queries/componentQuery'
 import componentsQuery from './queries/componentsQuery'
 import hierarchyQuery from './queries/hierarchyQuery'
-import hierarchyMetadataQuery from './queries/hierarchyMetadataQuery'
 import createComponentMutation from './mutations/createComponentMutation'
 import addComponentMutation from './mutations/addComponentMutation'
 import deleteComponentMutation from './mutations/deleteComponentMutation'
@@ -65,10 +64,9 @@ export const typeDefs = gql`
   }
 
   type Query {
-    component(id: String!): FunctionNode
+    component(sourceComponentAddress: String!): FunctionNode
     components: [FunctionNode]
-    hierarchy(sourceComponentAddress: String!, hierarchyIds: [String!]!): [HierarchyItem]!
-    hierarchyMetadata(sourceComponentAddress: String!, hierarchyIds: [String!]!, componentDelta: Int!): HierarchyMetadataReturnValue
+    hierarchy(sourceComponentAddress: String!): String!
   }
 
   type Mutation {
@@ -85,7 +83,6 @@ export const resolvers = {
     component: componentQuery,
     components: componentsQuery,
     hierarchy: hierarchyQuery,
-    hierarchyMetadata: hierarchyMetadataQuery,
   },
   Mutation: {
     createComponent: createComponentMutation,

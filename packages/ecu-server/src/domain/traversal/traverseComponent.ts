@@ -8,7 +8,7 @@ import {
 } from '@babel/types'
 import traverse from '@babel/traverse'
 
-import { FileNodeType, FunctionNodeType, ImpactedType, ImportDeclarationsRegistry, IndexRegistryType } from '../../types'
+import { FileNodeType, FunctionNodeType, HierarchyTreeType, ImportDeclarationsRegistry, IndexRegistryType } from '../../types'
 import { ecuPropName } from '../../configuration'
 
 import { getNodesByFirstNeighbourg, getNodesByRole, getNodesBySecondNeighbourg } from '../../graph'
@@ -28,7 +28,7 @@ type TraverseComponentEventsType = {
   onSuccess?: (paths: any[], fileNodes: FileNodeType[], componentRootIndexes: number[], componentIndex: number) => void
 }
 
-function traverseComponent(componentAddress: string, hierarchyIds: string[], events: TraverseComponentEventsType = {}): ImpactedType[] {
+function traverseComponent(componentAddress: string, hierarchyIds: string[], events: TraverseComponentEventsType = {}): HierarchyTreeType[] {
   console.log('traverseComponent', componentAddress, hierarchyIds)
 
   const fileNode = getNodesBySecondNeighbourg<FileNodeType>(componentAddress, 'DeclaresFunction')[0]
@@ -47,7 +47,7 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
   } = events
 
   // const impacted: ImpactedType[] = [] // retval
-  const hierarchyTrees: any[] = [] // retval
+  const hierarchyTrees: HierarchyTreeType[] = [] // retval
   const componentNodes = getNodesByRole<FunctionNodeType>('Function').filter(n => n.payload.isComponent)
   const allFileNodes = getNodesByRole<FileNodeType>('File')
   const [, indexes] = extractIdsAndIndexes(hierarchyIds)
@@ -66,6 +66,13 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
     }
 
     return currentHierarchyTrees
+  }
+
+  function appendToHierarchy(hierarchyItem: Omit<HierarchyTreeType, 'children'>) {
+    hierarchyTreesIndexes.push(-1 + getCurrentHierarchyTrees().push({
+      ...hierarchyItem,
+      children: [],
+    }))
   }
 
   function isSuccessiveNodeFound(nextHierarchyId: string) {
@@ -113,13 +120,12 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
     const previousFileNode = fileNodes[fileNodes.length - 2] || fileNode
     const previousComponentNode = getNodesByFirstNeighbourg<FunctionNodeType>(previousFileNode.address, 'DeclaresFunction')[0]
 
-    hierarchyTreesIndexes.push(-1 + getCurrentHierarchyTrees().push({
+    appendToHierarchy({
       componentAddress: componentNode.address,
       onComponentAddress: previousComponentNode.address,
       label: `${componentNode.payload.name}[${componentRootIndexes[componentRootIndexes.length - 1]}]`,
       index: componentRootIndexes[componentRootIndexes.length - 1],
-      children: [],
-    }))
+    })
 
     // console.log('--> TRAVERSE', componentNode.payload.name)
     // console.log('tree:', JSON.stringify(formatHierarchyTrees(hierarchyTrees), null, 2))
@@ -158,14 +164,12 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
 
               const hierarchyId = createHierarchyId(limitedHierarchyId, lastingIndexRegistry[limitedHierarchyId])
 
-              console.log('getCurrentHierarchyTrees()', getCurrentHierarchyTrees())
-              hierarchyTreesIndexes.push(-1 + getCurrentHierarchyTrees().push({
+              appendToHierarchy({
                 hierarchyId,
                 onComponentAddress: componentNode.address,
                 label: `${x.node.openingElement.name.name}[${componentIndex}]`,
                 index: componentIndex,
-                children: [],
-              }))
+              })
 
               shouldIncrement = false
 

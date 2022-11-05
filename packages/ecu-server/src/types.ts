@@ -73,13 +73,6 @@ export type PostTraverseType = (fileNode: FileNodeType, ast: ParseResult<File>, 
 
 export type IndexRegistryType = Record<string, number>
 
-export type HierarchyItemType = {
-  label: string
-  componentName: string
-  componentAddress?: string
-  hierarchyId?: string
-}
-
 export type HierarchyTreeType = {
   label: string
   index: number

@@ -4,21 +4,24 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Button, Div, H3, MenuItem, Modal, P, Select } from 'honorable'
 import { TbRowInsertBottom } from 'react-icons/tb'
 
+import { hierarchyPositions } from '../../constants'
+import { HierarchyPosition } from '../../types'
+
 import HierarchyIdsContext from '../../contexts/HierarchyIdsContext'
 import HierarchyContext from '../../contexts/HierarchyContext'
 
 import { AddComponentMutation, ComponentsQuery } from '../../queries'
 
-import { hierarchyPositions } from '../../constants'
-import { HierarchyPosition } from '../../types'
+import isHierarchyOnComponent from '../../helpers/isHierarchyOnComponent'
+
 import capitalize from '../../utils/capitalize'
 
 function AddComponentButton() {
-  const { id } = useParams()
+  const { componentAddress = '' } = useParams()
   const { hierarchyIds } = useContext(HierarchyIdsContext)
-  const { hierarchy, isHierarchyOnComponent, componentDelta } = useContext(HierarchyContext)
+  const { hierarchy, componentDelta } = useContext(HierarchyContext)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [componentAddress, setComponentId] = useState('')
+  const [selectedComponentAddress, setSelectedComponentId] = useState('')
   const [hierarchyPosition, setHierarchyPosition] = useState<HierarchyPosition>(hierarchyPositions[0])
   const lastEditedComponent = useMemo(() => [...hierarchy].reverse().find(x => x.componentAddress), [hierarchy])
   const navigate = useNavigate()
@@ -29,20 +32,20 @@ function AddComponentButton() {
   const [, addComponent] = useMutation(AddComponentMutation)
 
   const handleAddComponentClick = useCallback(() => {
-    if (!isHierarchyOnComponent) {
+    if (!isHierarchyOnComponent(hierarchy, componentDelta, componentAddress)) {
       setIsModalOpen(true)
 
       return
     }
 
     addComponent({
-      sourceComponentAddress: id,
-      targetComponentAddress: componentAddress,
+      sourceComponentAddress: componentAddress,
+      targetComponentAddress: selectedComponentAddress,
       hierarchyIds,
       hierarchyPosition,
       componentDelta,
     })
-  }, [id, addComponent, componentAddress, hierarchyIds, hierarchyPosition, isHierarchyOnComponent, componentDelta])
+  }, [hierarchy, componentDelta, componentAddress, addComponent, selectedComponentAddress, hierarchyIds, hierarchyPosition])
 
   const navigateToLastEditedComponent = useCallback(() => {
     setIsModalOpen(false)
@@ -56,7 +59,7 @@ function AddComponentButton() {
   if (componentsQueryResult.error) {
     return null
   }
-  if (!id) {
+  if (!componentAddress) {
     return null
   }
 
@@ -67,8 +70,8 @@ function AddComponentButton() {
         gap={0.5}
       >
         <Select
-          value={componentAddress}
-          onChange={event => setComponentId(event.target.value)}
+          value={selectedComponentAddress}
+          onChange={event => setSelectedComponentId(event.target.value)}
         >
           <MenuItem value="">
             Select a component
@@ -98,7 +101,7 @@ function AddComponentButton() {
         <Button
           ghost
           onClick={handleAddComponentClick}
-          disabled={!(componentAddress && hierarchyIds.length)}
+          disabled={!(selectedComponentAddress && hierarchyIds.length)}
         >
           <TbRowInsertBottom />
         </Button>

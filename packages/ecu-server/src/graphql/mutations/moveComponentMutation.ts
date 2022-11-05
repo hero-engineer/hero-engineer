@@ -1,4 +1,4 @@
-import { FileNodeType, FunctionNodeType, HierarchyItemType, HierarchyPositionType, HistoryMutationReturnType } from '../../types'
+import { FileNodeType, FunctionNodeType, HierarchyPositionType, HistoryMutationReturnType } from '../../types'
 
 import { getNodeByAddress, getNodesBySecondNeighbourg } from '../../graph'
 
@@ -22,49 +22,51 @@ type MoveComponentMutationArgs = {
   hierarchyPosition: HierarchyPositionType
 }
 
-async function moveComponentMutation(_: any, { sourceComponentAddress, sourceHierarchyIds, targetHierarchyIds, hierarchyPosition }: MoveComponentMutationArgs): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
-  console.log('___moveComponent___')
+async function moveComponentMutation(_: any, { sourceComponentAddress, sourceHierarchyIds, targetHierarchyIds, hierarchyPosition }: MoveComponentMutationArgs): Promise<void> {
+// async function moveComponentMutation(_: any, { sourceComponentAddress, sourceHierarchyIds, targetHierarchyIds, hierarchyPosition }: MoveComponentMutationArgs): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
+  // console.log('___moveComponent___')
 
-  const sourceComponentNode = getNodeByAddress(sourceComponentAddress)
+  // const sourceComponentNode = getNodeByAddress(sourceComponentAddress)
 
-  if (!sourceComponentNode) {
-    throw new Error(`Component with id ${sourceComponentAddress} not found`)
-  }
+  // if (!sourceComponentNode) {
+  //   throw new Error(`Component with id ${sourceComponentAddress} not found`)
+  // }
 
-  const fileNode = getNodesBySecondNeighbourg<FileNodeType>(sourceComponentNode.address, 'DeclaresFunction')[0]
+  // const fileNode = getNodesBySecondNeighbourg<FileNodeType>(sourceComponentNode.address, 'DeclaresFunction')[0]
 
-  if (!fileNode) {
-    throw new Error(`File for Function with id ${sourceComponentAddress} not found`)
-  }
+  // if (!fileNode) {
+  //   throw new Error(`File for Function with id ${sourceComponentAddress} not found`)
+  // }
 
-  console.log('sourceHierarchyIds', sourceHierarchyIds)
-  console.log('targetHierarchyIds', targetHierarchyIds)
+  // console.log('sourceHierarchyIds', sourceHierarchyIds)
+  // console.log('targetHierarchyIds', targetHierarchyIds)
 
-  const sourceCursors = getComponentHierarchyCursors(sourceComponentAddress, sourceHierarchyIds)
-  const targetCursors = getComponentHierarchyCursors(sourceComponentAddress, targetHierarchyIds)
+  // const sourceCursors = getComponentHierarchyCursors(sourceComponentAddress, sourceHierarchyIds)
+  // const targetCursors = getComponentHierarchyCursors(sourceComponentAddress, targetHierarchyIds)
 
-  // const
-  console.log('sourceCursors', sourceCursors)
-  console.log('targetCursors', targetCursors)
+  // // const
+  // console.log('sourceCursors', sourceCursors)
+  // console.log('targetCursors', targetCursors)
 
-  const isSourceFirst = compareCursors(sourceCursors, targetCursors)
+  // const isSourceFirst = compareCursors(sourceCursors, targetCursors)
 
-  console.log('isSourceFirst', isSourceFirst)
+  // console.log('isSourceFirst', isSourceFirst)
 
-  // const sourceHierarchy = getComponentHierarchy(sourceComponentAddress, sourceHierarchyIds) // ?
+  // // const sourceHierarchy = getComponentHierarchy(sourceComponentAddress, sourceHierarchyIds) // ?
 
-  // const insertedComponentAddress = extractInserted(sourceHierarchy)
-  // const componeNodeToInsert = //
+  // // const insertedComponentAddress = extractInserted(sourceHierarchy)
+  // // const componeNodeToInsert = //
 
-  const deleteMutate = createDeleteComponentMutate()
-  const deletePostTraverse = createDeleteComponentPostTraverse()
-  // const addMutate = createAddComponentMutate(sourceComponentNode, hierarchyPosition)
+  // const deleteMutate = createDeleteComponentMutate()
+  // const deletePostTraverse = createDeleteComponentPostTraverse()
+  // // const addMutate = createAddComponentMutate(sourceComponentNode, hierarchyPosition)
 
-  return {
-    returnValue: null,
-    impactedFileNodes: [],
-    description: `Move component ${sourceComponentNode.payload.name}`,
-  }
+  // return {
+  //   returnValue: null,
+  //   impactedFileNodes: [],
+  //   description: `Move component ${sourceComponentNode.payload.name}`,
+  // }
 }
 
-export default composeHistoryMutation(moveComponentMutation)
+// export default composeHistoryMutation(moveComponentMutation)
+export default moveComponentMutation

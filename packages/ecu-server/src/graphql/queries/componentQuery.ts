@@ -3,11 +3,11 @@ import { FunctionNodeType } from '../../types'
 import { getNodeByAddress } from '../../graph'
 
 type ComponentQueryArgs = {
-  id: string
+  sourceComponentAddress: string
 }
 
-function componentQuery(_: any, { id }: ComponentQueryArgs) {
-  const node = getNodeByAddress<FunctionNodeType>(id)
+function componentQuery(_: any, { sourceComponentAddress }: ComponentQueryArgs) {
+  const node = getNodeByAddress<FunctionNodeType>(sourceComponentAddress)
 
   return node || null
 }

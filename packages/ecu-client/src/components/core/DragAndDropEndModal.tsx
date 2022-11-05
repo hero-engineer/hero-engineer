@@ -13,7 +13,7 @@ import { MoveComponentMutation } from '../../queries'
 import capitalize from '../../utils/capitalize'
 
 function DragAndDropEndModal() {
-  const { id = '' } = useParams()
+  const { componentAddress = '' } = useParams()
   const { dragAndDrop, setDragAndDrop } = useContext(DragAndDropContext)
   const [hierarchyPosition, setHierarchyPosition] = useState<HierarchyPosition>('before')
 
@@ -29,16 +29,16 @@ function DragAndDropEndModal() {
 
   const submitDragAndDrop = useCallback(async () => {
     await moveComponent({
-      sourceComponentAddress: id,
+      sourceComponentAddress: componentAddress,
       sourceHierarchyIds: dragAndDrop.sourceHierarchyIds,
       targetHierarchyIds: dragAndDrop.targetHierarchyIds,
       hierarchyPosition,
     })
 
     clearDragAndDrop()
-  }, [moveComponent, id, dragAndDrop, hierarchyPosition, clearDragAndDrop])
+  }, [moveComponent, componentAddress, dragAndDrop, hierarchyPosition, clearDragAndDrop])
 
-  if (!id) {
+  if (!componentAddress) {
     return null
   }
 

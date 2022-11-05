@@ -1,20 +1,6 @@
 export const HierarchyQuery = `
-  query ($sourceComponentAddress: String!, $hierarchyIds: [String!]!) {
-    hierarchy (sourceComponentAddress: $sourceComponentAddress, hierarchyIds: $hierarchyIds) {
-      label
-      componentName
-      componentAddress
-      hierarchyId
-    }
-  }
-`
-
-export const HierarchyMetadataQuery = `
-  query ($sourceComponentAddress: String!, $hierarchyIds: [String!]!, $componentDelta: Int!) {
-    hierarchyMetadata (sourceComponentAddress: $sourceComponentAddress, hierarchyIds: $hierarchyIds, componentDelta: $componentDelta) {
-      isHierarchyOnComponent
-      componentRootHierarchyIds
-    }
+  query ($sourceComponentAddress: String!) {
+    hierarchy (sourceComponentAddress: $sourceComponentAddress)
   }
 `
 
@@ -32,8 +18,8 @@ export const ComponentsQuery = `
 `
 
 export const ComponentQuery = `
-  query ($id: String!){
-    component (id: $id) {
+  query ($sourceComponentAddress: String!){
+    component (sourceComponentAddress: $sourceComponentAddress) {
       address
       payload {
         name

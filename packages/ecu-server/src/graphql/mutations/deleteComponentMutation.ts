@@ -15,37 +15,39 @@ type DeleteComponentMutationArgs = {
   componentDelta: number
 }
 
-async function deleteComponentMutation(_: any, { sourceComponentAddress, hierarchyIds, componentDelta }: DeleteComponentMutationArgs): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
-  console.log('___deleteComponent___')
+// async function deleteComponentMutation(_: any, { sourceComponentAddress, hierarchyIds, componentDelta }: DeleteComponentMutationArgs): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
+async function deleteComponentMutation(_: any, { sourceComponentAddress, hierarchyIds, componentDelta }: DeleteComponentMutationArgs): Promise<void> {
+  // console.log('___deleteComponent___')
 
-  const componentNode = getNodeByAddress<FunctionNodeType>(sourceComponentAddress)
+  // const componentNode = getNodeByAddress<FunctionNodeType>(sourceComponentAddress)
 
-  if (!componentNode) {
-    throw new Error(`Component with id ${sourceComponentAddress} not found`)
-  }
+  // if (!componentNode) {
+  //   throw new Error(`Component with id ${sourceComponentAddress} not found`)
+  // }
 
-  if (componentDelta > 0) {
-    throw new Error('Positive componentDelta not supported')
-  }
+  // if (componentDelta > 0) {
+  //   throw new Error('Positive componentDelta not supported')
+  // }
 
-  function onSuccess(paths: any[]) {
-    const finalPath = applyComponentDelta(paths, componentDelta)
+  // function onSuccess(paths: any[]) {
+  //   const finalPath = applyComponentDelta(paths, componentDelta)
 
-    finalPath.remove()
-  }
+  //   finalPath.remove()
+  // }
 
-  const postTraverse = createDeleteComponentPostTraverse()
-  const impacted = traverseComponent(sourceComponentAddress, hierarchyIds, {
-    onSuccess,
-  })
+  // const postTraverse = createDeleteComponentPostTraverse()
+  // const impacted = traverseComponent(sourceComponentAddress, hierarchyIds, {
+  //   onSuccess,
+  // })
 
-  const { impactedFileNode, impactedComponentNode } = await processImpactedFileNodes(impacted, postTraverse)
+  // const { impactedFileNode, impactedComponentNode } = await processImpactedFileNodes(impacted, postTraverse)
 
-  return {
-    returnValue: impactedComponentNode,
-    impactedFileNodes: impactedFileNode ? [impactedFileNode] : [],
-    description: `Delete component ${impactedComponentNode?.payload.name} in ${componentNode.payload.name}`,
-  }
+  // return {
+  //   returnValue: impactedComponentNode,
+  //   impactedFileNodes: impactedFileNode ? [impactedFileNode] : [],
+  //   description: `Delete component ${impactedComponentNode?.payload.name} in ${componentNode.payload.name}`,
+  // }
 }
 
-export default composeHistoryMutation(deleteComponentMutation)
+export default deleteComponentMutation
+// export default composeHistoryMutation(deleteComponentMutation)
