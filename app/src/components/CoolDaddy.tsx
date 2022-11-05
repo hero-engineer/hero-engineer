@@ -6,8 +6,8 @@ function CoolDaddy({
   console.log('__rendering CoolDaddy')
 
   return (
-    <Div data-ecu="QjCGxJR28A:0">
-      <Div data-ecu="QjCGxJR28A:0_0">
+    <Div data-ecu="XiDTka3uxJ:0">
+      <Div data-ecu="XiDTka3uxJ:0_0">
         I'm a cool daddy look at me
       </Div>
       {children}

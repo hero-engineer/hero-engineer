@@ -22,10 +22,10 @@ import extractIdAndIndex from '../utils/extractIdAndIndex'
 import extractIdsAndIndexes from '../utils/extractIdsAndIndexes'
 
 type TraverseComponentEventsType = {
-  onTraverseFile?: (fileNode: FileNodeType, indexRegistriesHash: string, componentRootIndexes: number[]) => () => void
-  onBeforeHierarchyPush?: (paths: any[], fileNode: FileNodeType, indexRegistriesHash: string, componentRootIndexes: number[], componentIndex: number, hierarchyId: string) => void
-  onHierarchyPush?: (paths: any[], fileNode: FileNodeType, indexRegistriesHash: string, componentRootIndexes: number[], componentIndex: number, hierarchyId: string) => void
-  onSuccess?: (paths: any[], fileNode: FileNodeType, indexRegistriesHash: string, componentRootIndexes: number[], componentIndex: number) => void
+  onTraverseFile?: (fileNodes: FileNodeType[], indexRegistriesHash: string, componentRootIndexes: number[]) => () => void
+  onBeforeHierarchyPush?: (paths: any[], fileNodes: FileNodeType[], indexRegistriesHash: string, componentRootIndexes: number[], componentIndex: number, hierarchyId: string) => void
+  onHierarchyPush?: (paths: any[], fileNodes: FileNodeType[], indexRegistriesHash: string, componentRootIndexes: number[], componentIndex: number, hierarchyId: string) => void
+  onSuccess?: (paths: any[], fileNodes: FileNodeType[], indexRegistriesHash: string, componentRootIndexes: number[], componentIndex: number) => void
 }
 
 function traverseComponent(componentAddress: string, hierarchyIds: string[], events: TraverseComponentEventsType = {}): ImpactedType[] {
@@ -48,7 +48,7 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
 
   const impacted: ImpactedType[] = [] // retval
   const componentNodes = getNodesByRole<FunctionNodeType>('Function').filter(n => n.payload.isComponent)
-  const fileNodes = getNodesByRole<FileNodeType>('File')
+  const allFileNodes = getNodesByRole<FileNodeType>('File')
   const [, indexes] = extractIdsAndIndexes(hierarchyIds)
   const lastingHierarchyIds: string[] = []
   const lastingIndexRegistry: IndexRegistryType = {}
@@ -94,10 +94,12 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
     })
   }
 
-  function traverseFileNode(fileNode: FileNodeType, previousFileNode: FileNodeType | null = null, previousXs: any[] = [], indexRegistriesHash = '', componentRootIndexes: number[] = [0], stop = () => {}) {
+  function traverseFileNode(fileNodes: FileNodeType[], previousPaths: any[] = [], indexRegistriesHash = '', componentRootIndexes: number[] = [0], stop = () => {}) {
+    const fileNode = fileNodes[fileNodes.length - 1]
+
     console.log('-> traverseFileNode', fileNode.payload.name, componentRootIndexes)
 
-    const onContinue = onTraverseFile(fileNode, indexRegistriesHash, componentRootIndexes)
+    const onContinue = onTraverseFile(fileNodes, indexRegistriesHash, componentRootIndexes)
 
     const { ast } = fileNode.payload
     const indexRegistries: IndexRegistryType[] = [{}]
@@ -108,14 +110,15 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
       impacted.push({ fileNode, ast, importDeclarationsRegistry })
     }
 
-    function createTraverser(currentFileNode: FileNodeType) {
+    function createTraverser(currentFileNodes: FileNodeType[]) {
+      const currentFileNode = currentFileNodes[currentFileNodes.length - 1]
       const importDeclarations = importDeclarationsRegistry[currentFileNode.address] || []
 
       return {
         JSXElement(x: any) {
           console.log('--> JSXElement', x.node.openingElement.name.name)
 
-          const currentXs = [...previousXs, x]
+          const currentXs = [...previousPaths, x]
           const idIndex = x.node.openingElement.attributes.findIndex((x: JSXAttribute) => x.name.name === ecuPropName)
 
           // hierarchyId found means we're at an ecu-client Component
@@ -133,21 +136,21 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
 
               const hierarchyId = createHierarchyId(limitedHierarchyId, lastingIndexRegistry[limitedHierarchyId])
 
-              onBeforeHierarchyPush(currentXs, currentFileNode, indexRegistriesHash, componentRootIndexes, componentIndex, hierarchyId)
+              onBeforeHierarchyPush(currentXs, currentFileNodes, indexRegistriesHash, componentRootIndexes, componentIndex, hierarchyId)
 
               if (isSuccessiveNodeFound(hierarchyId)) {
                 lastingHierarchyIds.push(hierarchyId)
 
                 console.log('PUSHED')
 
-                onHierarchyPush(currentXs, currentFileNode, indexRegistriesHash, componentRootIndexes, componentIndex, hierarchyId)
+                onHierarchyPush(currentXs, currentFileNodes, indexRegistriesHash, componentRootIndexes, componentIndex, hierarchyId)
 
                 if (isFinalNodeFound()) {
                   console.log('SUCCESS')
 
                   shouldContinue = false
 
-                  onSuccess(currentXs, currentFileNode, indexRegistriesHash, componentRootIndexes, componentIndex)
+                  onSuccess(currentXs, currentFileNodes, indexRegistriesHash, componentRootIndexes, componentIndex)
                   x.stop()
                   stop()
                 }
@@ -164,7 +167,7 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
               const componentNode = componentNodes.find(n => n.payload.name === componentName && n.payload.path === absolutePath)
 
               if (componentNode) {
-                const nextFileNode = fileNodes.find(n => n.payload.path === componentNode.payload.path)
+                const nextFileNode = allFileNodes.find(n => n.payload.path === componentNode.payload.path)
 
                 if (nextFileNode) {
                   console.log('--->', nextFileNode.payload.name)
@@ -174,8 +177,7 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
                   shouldPushIndex = false
 
                   traverseFileNode(
-                    nextFileNode,
-                    currentFileNode,
+                    [...currentFileNodes, nextFileNode],
                     currentXs,
                     JSON.stringify(indexRegistries),
                     [...componentRootIndexes, nextComponentRootIndex],
@@ -212,17 +214,20 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
         JSXExpressionContainer(x: any) {
           if (!(x.node.expression.type === 'Identifier' && x.node.expression.name === 'children')) return
 
-          const previousX = previousXs[previousXs.length - 1]
+          const previousX = previousPaths[previousPaths.length - 1]
+          const previousFileNodes = currentFileNodes.slice()
 
-          if (!(previousX && previousFileNode)) return
+          previousFileNodes.pop()
+
+          if (!(previousX && previousFileNodes.length)) return
 
           // If children is found, traverse children with new traverser
-          previousX.traverse(createTraverser(previousFileNode))
+          previousX.traverse(createTraverser(previousFileNodes))
         },
       }
     }
 
-    traverse(ast, createTraverser(fileNode))
+    traverse(ast, createTraverser(fileNodes))
 
     if (shouldContinue) {
       onContinue()
@@ -230,7 +235,7 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
   }
 
   traverseFileNodesToFindImportDeclarations(fileNode)
-  traverseFileNode(fileNode)
+  traverseFileNode([fileNode])
 
   return impacted
 }

@@ -9,7 +9,7 @@ import { HierarchyItemType } from '../../types'
 import HierarchyIdsContext from '../../contexts/HierarchyIdsContext'
 import HierarchyContext from '../../contexts/HierarchyContext'
 
-import { HierarchyQuery } from '../../queries'
+import { HierarchyQuery, IsHierarchyOnComponentQuery } from '../../queries'
 
 import usePreviousWithDefault from '../../hooks/usePreviousWithDefault'
 
@@ -22,6 +22,10 @@ type HierarchyQueryReturnType = {
     hierarchy: HierarchyItemType[],
     componentRootHierarchyIds: string[],
   }
+}
+
+type IsHierarchyOnComponentQueryReturnType = {
+  isHierarchyOnComponent: boolean
 }
 
 function getHierarchyDelta(hierarchy: HierarchyItemType[]) {
@@ -49,6 +53,19 @@ function HierarchyBar() {
     pause: !id,
     requestPolicy: 'network-only',
   })
+
+  const [isHierarchyOnComponentQueryResult] = useQuery<IsHierarchyOnComponentQueryReturnType>({
+    query: IsHierarchyOnComponentQuery,
+    variables: {
+      hierarchyIds,
+      componentDelta,
+      sourceComponentAddress: id,
+    },
+    pause: !id,
+    requestPolicy: 'network-only',
+  })
+
+  console.log('isHierarchyOnComponentQueryResult.data.', isHierarchyOnComponentQueryResult.data)
 
   const hierarchy = useMemo(() => hierarchyQueryResult.data?.hierarchy?.hierarchy || [], [hierarchyQueryResult.data?.hierarchy?.hierarchy])
   const actualHierarchy = useMemo(() => getActualHierarchy(hierarchy, componentDelta), [hierarchy, componentDelta])

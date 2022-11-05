@@ -3,6 +3,7 @@ import { gql } from 'apollo-server'
 import getComponent from './queries/getComponent'
 import getComponents from './queries/getComponents'
 import getHierarchy from './queries/getHierarchy'
+import isHierarchyOnComponent from './queries/isHierarchyOnComponent'
 import createComponent from './mutations/createComponent'
 import addComponent from './mutations/addComponent'
 import deleteComponent from './mutations/deleteComponent'
@@ -69,6 +70,7 @@ export const typeDefs = gql`
     component(id: String!): FunctionNode
     components: [FunctionNode]
     hierarchy(sourceComponentAddress: String!, hierarchyIds: [String!]!): HierarchyReturnValue
+    isHierarchyOnComponent(sourceComponentAddress: String!, hierarchyIds: [String!]!, componentDelta: Int!): Boolean
   }
 
   type Mutation {
@@ -85,6 +87,7 @@ export const resolvers = {
     component: getComponent,
     components: getComponents,
     hierarchy: getHierarchy,
+    isHierarchyOnComponent,
   },
   Mutation: {
     createComponent,

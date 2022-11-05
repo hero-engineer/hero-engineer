@@ -12,6 +12,12 @@ export const HierarchyQuery = `
   }
 `
 
+export const IsHierarchyOnComponentQuery = `
+  query ($sourceComponentAddress: String!, $hierarchyIds: [String!]!, $componentDelta: Int!) {
+    isHierarchyOnComponent (sourceComponentAddress: $sourceComponentAddress, hierarchyIds: $hierarchyIds, componentDelta: $componentDelta)
+  }
+`
+
 export const ComponentsQuery = `
   query {
     components {
