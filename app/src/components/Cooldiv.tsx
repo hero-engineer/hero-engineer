@@ -4,7 +4,7 @@ function CoolDiv(props: any) {
   console.log('__rendering CoolDiv')
 
   return (
-    <Div data-ecu="3mOXxmkq1b:0">
+    <Div data-ecu="O1EXiEvrDp:0">
       Edit me I'm famous
     </Div>
   )

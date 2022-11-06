@@ -4,9 +4,11 @@ function bfs(hierarchy: HierarchyItemType[], goalHierarchyId: string) {
   const queue = hierarchy.map(hierarchyItem => [hierarchyItem])
 
   while (queue.length) {
+    // console.log('queue.length', queue.length)
     const path = queue.shift() as HierarchyItemType[]
     const hierarchyItem = path[path.length - 1]
 
+    // console.log('hierarchyItem', hierarchyItem)
     if (hierarchyItem.hierarchyId === goalHierarchyId) {
       return path
     }

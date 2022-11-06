@@ -15,7 +15,7 @@ function formatHierarchyTrees(hierarchyTrees: any[]) {
     retval.push(toPush)
   })
 
-  return retval.flat()
+  return retval
 }
 
 export default formatHierarchyTrees

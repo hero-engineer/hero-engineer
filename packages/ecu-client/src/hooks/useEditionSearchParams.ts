@@ -16,7 +16,7 @@ function useEditionSearchParams() {
   const hierarchyIds = useMemo(() => (searchParams.get(hierarchyIdsKey) || '').split(','), [searchParams])
 
   const setEditionSearchParams = useCallback((setter: SetterType) => {
-    const componentDeltaValue = typeof setter.componentDelta === 'function' ? setter.componentDelta(componentDelta) : setter.componentDelta || componentDelta
+    const componentDeltaValue = typeof setter.componentDelta === 'function' ? setter.componentDelta(componentDelta) : typeof setter.componentDelta === 'number' ? setter.componentDelta : componentDelta
     const hierarchyIdsValue = typeof setter.hierarchyIds === 'function' ? setter.hierarchyIds(hierarchyIds) : setter.hierarchyIds || hierarchyIds
 
     const nextSearchParams = createSearchParams(searchParams)

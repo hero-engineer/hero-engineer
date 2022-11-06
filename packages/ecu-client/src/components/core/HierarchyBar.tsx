@@ -34,6 +34,9 @@ function HierarchyBar() {
   const actualHierarchy = useMemo(() => totalHierarchy.slice(0, totalHierarchy.length + componentDelta), [totalHierarchy, componentDelta])
   const previousHierarchy = usePreviousWithDefault(actualHierarchy, actualHierarchy)
 
+  // console.log('hierarchy', hierarchy)
+  // console.log('actualHierarchy', actualHierarchy)
+
   const handleClick = useCallback((index: number) => {
     // console.log('___handleClick', actualHierarchy.map(x => x.label), index)
 
@@ -52,6 +55,8 @@ function HierarchyBar() {
 
       const lastHierarchyId = nextHierarchyIds[nextHierarchyIds.length - 1]
       const nextComponentDelta = index - totalHierarchy.findIndex(x => x.hierarchyId === lastHierarchyId)
+
+      console.log('nextComponentDelta', nextComponentDelta)
 
       setEditionSearchParams({
         hierarchyIds: nextHierarchyIds,
@@ -78,10 +83,12 @@ function HierarchyBar() {
 
   useEffect(() => {
     if (!shouldAdjustComponentDelta) return
-    if (areArraysEqual(previousHierarchy, actualHierarchy)) return
 
-    // console.log('adjusting')
-    // console.log('totalHierarchy', totalHierarchy)
+    setShouldAdjustComponentDelta(false)
+
+    console.log('areArraysEqual(previousHierarchy, actualHierarchy)', areArraysEqual(previousHierarchy, actualHierarchy))
+
+    if (areArraysEqual(previousHierarchy, actualHierarchy)) return
 
     const commonHierarchy: HierarchyItemType[] = []
 
@@ -97,13 +104,13 @@ function HierarchyBar() {
     const workingHierarchyPart = totalHierarchy.slice(commonHierarchy.length, -1)
     const nextDelta = workingHierarchyPart.length ? getHierarchyDelta(workingHierarchyPart) : 0
 
-    // console.log('workingHierarchyPart', workingHierarchyPart)
-    // console.log('nextDelta', nextDelta)
+    console.log('commonHierarchy', commonHierarchy)
+    console.log('workingHierarchyPart', workingHierarchyPart)
+    console.log('nextDelta', nextDelta)
 
     setEditionSearchParams({
       componentDelta: nextDelta,
     })
-    setShouldAdjustComponentDelta(false)
   }, [shouldAdjustComponentDelta, totalHierarchy, previousHierarchy, actualHierarchy, setEditionSearchParams, setShouldAdjustComponentDelta])
 
   if (!componentAddress) {
@@ -136,7 +143,7 @@ function HierarchyBar() {
             -
           </Div>
         )}
-        {JSON.stringify(hierarchy, null, 2)}
+        {/* {JSON.stringify(hierarchy, null, 2)} */}
       </Div>
       <Div
         xflex="x4"
