@@ -52,6 +52,7 @@ export enum HierarchyPositionType {
 }
 
 export type ImportDeclaration = { value: string, specifiers: string[] }
+
 export type ImportDeclarationsRegistry = Record<string, ImportDeclaration[]>
 
 export type HistoryMutationReturnType<T> = {
