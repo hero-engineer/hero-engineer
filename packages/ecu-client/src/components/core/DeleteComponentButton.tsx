@@ -16,9 +16,10 @@ function DeleteComponentButton(props: any) {
   const { hierarchyIds, componentDelta, setEditionSearchParams } = useEditionSearchParams()
   const { hierarchy } = useContext(HierarchyContext)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const lastEditedComponent = useMemo(() => [...hierarchy].reverse().find(x => x.componentAddress), [hierarchy])
+  const lastEditedHierarchyItem = useMemo(() => [...hierarchy].reverse().find(x => x.componentAddress), [hierarchy])
   const navigate = useNavigate()
 
+  console.log('lastEditedComponent', lastEditedHierarchyItem)
   const [, deleteComponent] = useMutation(DeleteComponentMutation)
 
   const handleDeleteComponentClick = useCallback(async () => {
@@ -42,8 +43,8 @@ function DeleteComponentButton(props: any) {
   const navigateToLastEditedComponent = useCallback(() => {
     setIsModalOpen(false)
 
-    navigate(`/__ecu__/component/${lastEditedComponent?.componentAddress}`)
-  }, [navigate, lastEditedComponent])
+    navigate(`/__ecu__/component/${lastEditedHierarchyItem?.componentAddress}`)
+  }, [navigate, lastEditedHierarchyItem])
 
   if (!componentAddress) {
     return null
@@ -76,7 +77,7 @@ function DeleteComponentButton(props: any) {
           {' '}
           you must edit
           {' '}
-          {lastEditedComponent?.componentName}
+          {lastEditedHierarchyItem?.componentName}
           .
         </P>
         <Div
@@ -90,7 +91,7 @@ function DeleteComponentButton(props: any) {
           <Button onClick={navigateToLastEditedComponent}>
             Go to
             {' '}
-            {lastEditedComponent?.componentName}
+            {lastEditedHierarchyItem?.componentName}
           </Button>
         </Div>
       </Modal>

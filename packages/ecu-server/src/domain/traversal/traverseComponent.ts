@@ -130,6 +130,7 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
     const previousComponentNode = getNodesByFirstNeighbourg<FunctionNodeType>(previousFileNode.address, 'DeclaresFunction')[0]
 
     appendToHierarchy({
+      componentName: componentNode.payload.name,
       componentAddress: componentNode.address,
       onComponentAddress: previousComponentNode.address,
       label: `${componentNode.payload.name}[${componentRootIndexes[componentRootIndexes.length - 1]}]`,
@@ -183,6 +184,7 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
               const hierarchyId = createHierarchyId(limitedHierarchyId, lastingIndexRegistry[limitedHierarchyId])
               const hierarchyTree = appendToHierarchy({
                 hierarchyId,
+                componentName: x.node.openingElement.name.name,
                 onComponentAddress: componentNode.address,
                 label: `${x.node.openingElement.name.name}[${componentIndex}]`,
                 index: componentIndex,

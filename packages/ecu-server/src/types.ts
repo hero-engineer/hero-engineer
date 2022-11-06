@@ -75,6 +75,7 @@ export type IndexRegistryType = Record<string, number>
 export type HierarchyTreeType = {
   label: string
   index: number
+  componentName: string
   onComponentAddress: string
   componentAddress?: string
   hierarchyId?: string
