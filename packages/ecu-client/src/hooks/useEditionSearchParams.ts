@@ -12,8 +12,12 @@ const componentDeltaKey = 'componentDelta'
 function useEditionSearchParams() {
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const componentDelta = useMemo(() => parseInt(searchParams.get(componentDeltaKey) || '0'), [searchParams])
-  const hierarchyIds = useMemo(() => (searchParams.get(hierarchyIdsKey) || '').split(','), [searchParams])
+  const componentDeltaRawValue = searchParams.get(componentDeltaKey)
+  const componentDelta = useMemo(() => parseInt(componentDeltaRawValue || '0'), [componentDeltaRawValue])
+  const hierarchyIdsRawIds = (searchParams.get(hierarchyIdsKey) || '').split(',')
+  const hierarchyIdsString = JSON.stringify(hierarchyIdsRawIds)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const hierarchyIds = useMemo(() => hierarchyIdsRawIds, [hierarchyIdsString])
 
   const setEditionSearchParams = useCallback((setter: SetterType) => {
     const componentDeltaValue = typeof setter.componentDelta === 'function' ? setter.componentDelta(componentDelta) : typeof setter.componentDelta === 'number' ? setter.componentDelta : componentDelta
@@ -26,7 +30,7 @@ function useEditionSearchParams() {
 
     setSearchParams(nextSearchParams, { replace: true })
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hierarchyIds, componentDelta])
+  }, [hierarchyIdsString, componentDelta])
 
   return { hierarchyIds, componentDelta, setEditionSearchParams }
 }

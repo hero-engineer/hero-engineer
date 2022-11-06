@@ -1,23 +1,15 @@
-import { memo, useContext, useEffect, useMemo } from 'react'
+import { memo } from 'react'
 import { useQuery } from 'urql'
 import { useParams } from 'react-router-dom'
 import { Div, P } from 'honorable'
 
-import { ComponentQuery, HierarchyQuery } from '../../queries'
-
-import HierarchyContext from '../../contexts/HierarchyContext'
-
-import useEditionSearchParams from '../../hooks/useEditionSearchParams'
-
-import getFlattenedHierarchy from '../../helpers/getFlattenedHierarchy'
+import { ComponentQuery } from '../../queries'
 
 import ComponentLoader from './ComponentLoader'
 import DragAndDropEndModal from './DragAndDropEndModal'
 
 function Component() {
   const { componentAddress = '' } = useParams()
-  const { componentDelta, hierarchyIds } = useEditionSearchParams()
-  const { setHierarchy, setTotalHierarchy } = useContext(HierarchyContext)
 
   const [componentQueryResult] = useQuery({
     query: ComponentQuery,
@@ -26,22 +18,6 @@ function Component() {
     },
     pause: !componentAddress,
   })
-  const [hierarchyQueryResult] = useQuery({
-    query: HierarchyQuery,
-    variables: {
-      sourceComponentAddress: componentAddress,
-    },
-    pause: !componentAddress,
-  })
-
-  const hierarchy = useMemo(() => JSON.parse(hierarchyQueryResult.data?.hierarchy || '""') || [], [hierarchyQueryResult.data])
-  const totalHierarchy = useMemo(() => getFlattenedHierarchy(hierarchy, hierarchyIds), [hierarchy, hierarchyIds])
-  const actualHierarchy = useMemo(() => totalHierarchy.slice(0, totalHierarchy.length + componentDelta), [totalHierarchy, componentDelta])
-
-  useEffect(() => {
-    setTotalHierarchy(totalHierarchy)
-    setHierarchy(actualHierarchy)
-  }, [actualHierarchy, setHierarchy, setTotalHierarchy, totalHierarchy])
 
   if (componentQueryResult.fetching) {
     return null
