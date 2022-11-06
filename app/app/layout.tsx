@@ -1,3 +1,5 @@
+import '../styles/globals.css'
+
 import { PropsWithChildren } from 'react'
 
 type RootLayoutProps = PropsWithChildren<never>
