@@ -1,16 +1,15 @@
 import {
-  File,
   ImportDefaultSpecifier,
   ImportNamespaceSpecifier,
   ImportSpecifier,
 } from '@babel/types'
-import { ParseResult } from '@babel/parser'
+import { ParseResult } from '@babel/core'
 import traverse from '@babel/traverse'
 
 import { FileNodeType, PostTraverseType } from '../../../types'
 
 function createDeleteComponentPostTraverse(): PostTraverseType {
-  return (_fileNode: FileNodeType, ast: ParseResult<File>) => {
+  return (_fileNode: FileNodeType, ast: ParseResult) => {
     const identifierNames: string[] = []
 
     traverse(ast, {

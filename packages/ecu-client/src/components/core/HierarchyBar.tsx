@@ -1,4 +1,4 @@
-import { Fragment, memo, useCallback, useContext, useEffect, useMemo } from 'react'
+import { Fragment, memo, useCallback, useContext, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Div } from 'honorable'
 import { MdChevronRight } from 'react-icons/md'
@@ -8,8 +8,6 @@ import { HierarchyItemType } from '../../types'
 import HierarchyContext from '../../contexts/HierarchyContext'
 
 import usePreviousWithDefault from '../../hooks/usePreviousWithDefault'
-
-import getFlattenedHierarchy from '../../helpers/getFlattenedHierarchy'
 
 import areArraysEqual from '../../utils/areArraysEqual'
 import useEditionSearchParams from '../../hooks/useEditionSearchParams'
@@ -28,20 +26,18 @@ function getHierarchyDelta(hierarchy: HierarchyItemType[]) {
 function HierarchyBar() {
   const { componentAddress = '' } = useParams()
   const { hierarchyIds, componentDelta, setEditionSearchParams } = useEditionSearchParams()
-  const { hierarchy, shouldAdjustComponentDelta, setShouldAdjustComponentDelta } = useContext(HierarchyContext)
+  const { hierarchy, totalHierarchy, shouldAdjustComponentDelta, setShouldAdjustComponentDelta } = useContext(HierarchyContext)
 
-  const totalHierarchy = useMemo(() => getFlattenedHierarchy(hierarchy, hierarchyIds), [hierarchy, hierarchyIds])
-  const actualHierarchy = useMemo(() => totalHierarchy.slice(0, totalHierarchy.length + componentDelta), [totalHierarchy, componentDelta])
-  const previousHierarchy = usePreviousWithDefault(actualHierarchy, actualHierarchy)
+  const previousHierarchy = usePreviousWithDefault(hierarchy, hierarchy)
 
   // console.log('hierarchy', hierarchy)
-  // console.log('actualHierarchy', actualHierarchy)
+  // console.log('hierarchy', hierarchy)
 
   const handleClick = useCallback((index: number) => {
-    // console.log('___handleClick', actualHierarchy.map(x => x.label), index)
+    // console.log('___handleClick', hierarchy.map(x => x.label), index)
 
     // If clicked on a Component node link, ...
-    if (actualHierarchy[index].componentAddress) {
+    if (hierarchy[index].componentAddress) {
       // Reduce the hierarchyIds to the closest next DOM node
       const nextHierarchyIds: string[] = []
 
@@ -56,7 +52,7 @@ function HierarchyBar() {
       const lastHierarchyId = nextHierarchyIds[nextHierarchyIds.length - 1]
       const nextComponentDelta = index - totalHierarchy.findIndex(x => x.hierarchyId === lastHierarchyId)
 
-      console.log('nextComponentDelta', nextComponentDelta)
+      // console.log('nextComponentDelta', nextComponentDelta)
 
       setEditionSearchParams({
         hierarchyIds: nextHierarchyIds,
@@ -70,8 +66,8 @@ function HierarchyBar() {
     const nextHierarchyIds: string[] = []
 
     for (let i = 0; i <= index; i++) {
-      if (actualHierarchy[i].hierarchyId) {
-        nextHierarchyIds.push(actualHierarchy[i].hierarchyId as string)
+      if (hierarchy[i].hierarchyId) {
+        nextHierarchyIds.push(hierarchy[i].hierarchyId as string)
       }
     }
 
@@ -79,21 +75,21 @@ function HierarchyBar() {
       hierarchyIds: nextHierarchyIds,
       componentDelta: 0,
     })
-  }, [actualHierarchy, totalHierarchy, setEditionSearchParams])
+  }, [hierarchy, totalHierarchy, setEditionSearchParams])
 
   useEffect(() => {
     if (!shouldAdjustComponentDelta) return
 
     setShouldAdjustComponentDelta(false)
 
-    console.log('areArraysEqual(previousHierarchy, actualHierarchy)', areArraysEqual(previousHierarchy, actualHierarchy))
+    // console.log('areArraysEqual(previousHierarchy, hierarchy)', areArraysEqual(previousHierarchy, hierarchy))
 
-    if (areArraysEqual(previousHierarchy, actualHierarchy)) return
+    if (areArraysEqual(previousHierarchy, hierarchy)) return
 
     const commonHierarchy: HierarchyItemType[] = []
 
     for (let i = 0; i < previousHierarchy.length; i++) {
-      if (JSON.stringify(previousHierarchy[i]) === JSON.stringify(actualHierarchy[i])) {
+      if (JSON.stringify(previousHierarchy[i]) === JSON.stringify(hierarchy[i])) {
         commonHierarchy.push(previousHierarchy[i])
       }
       else {
@@ -104,14 +100,14 @@ function HierarchyBar() {
     const workingHierarchyPart = totalHierarchy.slice(commonHierarchy.length, -1)
     const nextDelta = workingHierarchyPart.length ? getHierarchyDelta(workingHierarchyPart) : 0
 
-    console.log('commonHierarchy', commonHierarchy)
-    console.log('workingHierarchyPart', workingHierarchyPart)
-    console.log('nextDelta', nextDelta)
+    // console.log('commonHierarchy', commonHierarchy)
+    // console.log('workingHierarchyPart', workingHierarchyPart)
+    // console.log('nextDelta', nextDelta)
 
     setEditionSearchParams({
       componentDelta: nextDelta,
     })
-  }, [shouldAdjustComponentDelta, totalHierarchy, previousHierarchy, actualHierarchy, setEditionSearchParams, setShouldAdjustComponentDelta])
+  }, [shouldAdjustComponentDelta, totalHierarchy, previousHierarchy, hierarchy, setEditionSearchParams, setShouldAdjustComponentDelta])
 
   if (!componentAddress) {
     return null
@@ -128,7 +124,7 @@ function HierarchyBar() {
         p={0.5}
         whiteSpace="pre"
       >
-        {actualHierarchy.map(({ label }, i, a) => (
+        {hierarchy.map(({ label }, i, a) => (
           <Fragment key={i + label}>
             <Div onClick={() => handleClick(i)}>
               {label}
@@ -138,7 +134,7 @@ function HierarchyBar() {
             )}
           </Fragment>
         ))}
-        {actualHierarchy.length === 0 && (
+        {hierarchy.length === 0 && (
           <Div visibility="hidden">
             -
           </Div>

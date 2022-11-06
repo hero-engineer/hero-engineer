@@ -33,7 +33,7 @@ function AddComponentButton() {
   const [, addComponent] = useMutation(AddComponentMutation)
 
   const handleAddComponentClick = useCallback(() => {
-    if (!isHierarchyOnComponent(hierarchy, componentDelta, componentAddress)) {
+    if (!isHierarchyOnComponent(hierarchy, componentAddress)) {
       setIsModalOpen(true)
 
       return

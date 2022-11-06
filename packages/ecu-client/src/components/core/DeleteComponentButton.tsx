@@ -22,7 +22,7 @@ function DeleteComponentButton(props: any) {
   const [, deleteComponent] = useMutation(DeleteComponentMutation)
 
   const handleDeleteComponentClick = useCallback(async () => {
-    if (!isHierarchyOnComponent(hierarchy, componentDelta, componentAddress)) {
+    if (!isHierarchyOnComponent(hierarchy, componentAddress)) {
       setIsModalOpen(true)
 
       return

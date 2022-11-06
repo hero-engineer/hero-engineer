@@ -1,5 +1,4 @@
 import { ParseResult } from '@babel/core'
-import { File } from '@babel/types'
 
 export type Particule<PayloadType = any, StateType = any> = {
   // A unique address for this particule

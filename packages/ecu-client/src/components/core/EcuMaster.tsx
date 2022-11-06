@@ -25,8 +25,9 @@ type EcuMasterProps = PropsWithChildren<{
 
 function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps) {
   const [hierarchy, setHierarchy] = useState<HierarchyItemType[]>([])
+  const [totalHierarchy, setTotalHierarchy] = useState<HierarchyItemType[]>([])
   const [shouldAdjustComponentDelta, setShouldAdjustComponentDelta] = useState(false)
-  const HierarchyContextValue = useMemo<HierarchyContextType>(() => ({ hierarchy, setHierarchy, shouldAdjustComponentDelta, setShouldAdjustComponentDelta }), [hierarchy, setHierarchy, shouldAdjustComponentDelta])
+  const HierarchyContextValue = useMemo<HierarchyContextType>(() => ({ hierarchy, setHierarchy, totalHierarchy, setTotalHierarchy, shouldAdjustComponentDelta, setShouldAdjustComponentDelta }), [hierarchy, totalHierarchy, shouldAdjustComponentDelta])
 
   const [dragAndDrop, setDragAndDrop] = useState<DragAndDropType>({ sourceHierarchyIds: [], targetHierarchyIds: [] })
   const dragAndDropContextValue = useMemo<DragAndDropContextType>(() => ({ dragAndDrop, setDragAndDrop }), [dragAndDrop])

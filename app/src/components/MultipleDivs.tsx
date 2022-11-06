@@ -48,7 +48,7 @@ function MultipleDivs(props: any) {
           Darling
         </CoolDaddy>
       </Div>
-      <CoolDiv />
+      
     </>
   )
 }

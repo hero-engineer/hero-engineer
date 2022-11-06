@@ -6,7 +6,6 @@ import { useDrag, useDrop } from 'react-dnd'
 import HierarchyContext from '../contexts/HierarchyContext'
 import DragAndDropContext from '../contexts/DragAndDropContext'
 
-import getFlattenedHierarchy from '../helpers/getFlattenedHierarchy'
 import getComponentRootHierarchyIds from '../helpers/getComponentRootHierarchyIds'
 
 import areArraysEqualAtStart from '../utils/areArraysEqualAtStart'
@@ -44,9 +43,7 @@ function useEditionProps<T>(id: string, className = '') {
   const { hierarchy, setShouldAdjustComponentDelta } = useContext(HierarchyContext)
   const { setDragAndDrop } = useContext(DragAndDropContext)
 
-  const totalHierarchy = useMemo(() => getFlattenedHierarchy(hierarchy, hierarchyIds), [hierarchy, hierarchyIds])
-  const actualHierarchy = useMemo(() => totalHierarchy.slice(0, totalHierarchy.length + componentDelta), [totalHierarchy, componentDelta]) // TODO contextualize to save computation
-  const componentRootHierarchyIds = useMemo(() => getComponentRootHierarchyIds(actualHierarchy), [actualHierarchy])
+  const componentRootHierarchyIds = useMemo(() => getComponentRootHierarchyIds(hierarchy), [hierarchy])
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'Node',
