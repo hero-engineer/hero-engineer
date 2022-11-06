@@ -1,16 +1,19 @@
 import '../css/edition.css'
 
-import { MouseEvent, Ref, useCallback, useContext, useRef } from 'react'
+import { MouseEvent, Ref, useCallback, useContext, useMemo, useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 
-import HierarchyIdsContext from '../contexts/HierarchyIdsContext'
 import HierarchyContext from '../contexts/HierarchyContext'
 import DragAndDropContext from '../contexts/DragAndDropContext'
+
+import getFlattenedHierarchy from '../helpers/getFlattenedHierarchy'
+import getComponentRootHierarchyIds from '../helpers/getComponentRootHierarchyIds'
 
 import areArraysEqualAtStart from '../utils/areArraysEqualAtStart'
 
 import useForkedRef from './useForkedRef'
 import useHierarchyId from './useHierarchyId'
+import useEditionSearchParams from './useEditionSearchParams'
 
 type DropResult = {
   hierarchyIds: string[]
@@ -37,11 +40,13 @@ function getHierarchyIds(element: EventTarget | HTMLElement) {
 function useEditionProps<T>(id: string, className = '') {
   const rootRef = useRef<T>(null)
   const hierarchyId = useHierarchyId(id, rootRef)
-  const { hierarchyIds, setHierarchyIds } = useContext(HierarchyIdsContext)
-  const { componentDelta, setComponentDelta, setShouldAdjustComponentDelta } = useContext(HierarchyContext)
+  const { hierarchyIds, componentDelta, setEditionSearchParams } = useEditionSearchParams()
+  const { hierarchy, setShouldAdjustComponentDelta } = useContext(HierarchyContext)
   const { setDragAndDrop } = useContext(DragAndDropContext)
 
-  // const actualHierarchy = useMemo(() => getActualHierarchy(hierarchy, hierarchyDepth), [hierarchy, hierarchyDepth])
+  const totalHierarchy = useMemo(() => getFlattenedHierarchy(hierarchy, hierarchyIds), [hierarchy, hierarchyIds])
+  const actualHierarchy = useMemo(() => totalHierarchy.slice(0, totalHierarchy.length + componentDelta), [totalHierarchy, componentDelta]) // TODO contextualize to save computation
+  const componentRootHierarchyIds = useMemo(() => getComponentRootHierarchyIds(hierarchy, actualHierarchy), [hierarchy, actualHierarchy])
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'Node',
@@ -87,46 +92,50 @@ function useEditionProps<T>(id: string, className = '') {
     const ids = getHierarchyIds(event.target)
 
     if (areArraysEqualAtStart(hierarchyIds, ids) && componentDelta < 0) {
-      setComponentDelta(x => x + 1)
+      setEditionSearchParams({
+        componentDelta: x => x + 1,
+      })
 
       return
     }
 
-    setHierarchyIds(x => {
-      const nextHierarchyIds: string[] = []
+    setEditionSearchParams({
+      hierarchyIds: x => {
+        const nextHierarchyIds: string[] = []
 
-      for (let i = 0; i < ids.length; i++) {
-        const id = ids[i]
+        for (let i = 0; i < ids.length; i++) {
+          const id = ids[i]
 
-        nextHierarchyIds.push(id)
+          nextHierarchyIds.push(id)
 
-        if (x[i] !== id) {
-          break
+          if (x[i] !== id) {
+            break
+          }
         }
-      }
 
-      return nextHierarchyIds
+        return nextHierarchyIds
+      },
     })
 
     setShouldAdjustComponentDelta(true)
-  }, [hierarchyIds, setHierarchyIds, componentDelta, setComponentDelta, setShouldAdjustComponentDelta])
+  }, [hierarchyIds, componentDelta, setEditionSearchParams, setShouldAdjustComponentDelta])
 
   const generateClassName = useCallback(() => {
     let klassName = className
 
-    // if (componentDelta < 0 && componentRootHierarchyIds.some(x => x === hierarchyId)) {
-    //   klassName += ' ecu-selected-root'
+    if (componentDelta < 0 && componentRootHierarchyIds.some(x => x === hierarchyId)) {
+      klassName += ' ecu-selected-root'
 
-    //   const index = componentRootHierarchyIds.indexOf(hierarchyId)
+      const index = componentRootHierarchyIds.indexOf(hierarchyId)
 
-    //   if (index === 0) {
-    //     klassName += ' ecu-selected-root-first'
-    //   }
+      if (index === 0) {
+        klassName += ' ecu-selected-root-first'
+      }
 
-    //   if (index === componentRootHierarchyIds.length - 1) {
-    //     klassName += ' ecu-selected-root-last'
-    //   }
-    // }
+      if (index === componentRootHierarchyIds.length - 1) {
+        klassName += ' ecu-selected-root-last'
+      }
+    }
 
     if (componentDelta >= 0 && hierarchyIds[hierarchyIds.length - 1] === hierarchyId) {
       klassName += ' ecu-selected'
@@ -141,7 +150,7 @@ function useEditionProps<T>(id: string, className = '') {
     }
 
     return klassName.trim()
-  }, [className, hierarchyIds, hierarchyId, componentDelta, isDragging, canDrop, isOverCurrent])
+  }, [className, hierarchyIds, hierarchyId, componentDelta, componentRootHierarchyIds, isDragging, canDrop, isOverCurrent])
 
   return {
     ref,

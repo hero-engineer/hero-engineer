@@ -6,15 +6,15 @@ import { TbTrash } from 'react-icons/tb'
 
 import { DeleteComponentMutation } from '../../queries'
 
-import HierarchyIdsContext from '../../contexts/HierarchyIdsContext'
 import HierarchyContext from '../../contexts/HierarchyContext'
 
 import isHierarchyOnComponent from '../../helpers/isHierarchyOnComponent'
+import useEditionSearchParams from '../../hooks/useEditionSearchParams'
 
 function DeleteComponentButton(props: any) {
   const { componentAddress = '' } = useParams()
-  const { hierarchyIds, setHierarchyIds } = useContext(HierarchyIdsContext)
-  const { hierarchy, componentDelta } = useContext(HierarchyContext)
+  const { hierarchyIds, componentDelta, setEditionSearchParams } = useEditionSearchParams()
+  const { hierarchy } = useContext(HierarchyContext)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const lastEditedComponent = useMemo(() => [...hierarchy].reverse().find(x => x.componentAddress), [hierarchy])
   const navigate = useNavigate()
@@ -34,8 +34,10 @@ function DeleteComponentButton(props: any) {
       componentDelta,
     })
 
-    setHierarchyIds([])
-  }, [hierarchy, componentDelta, componentAddress, deleteComponent, hierarchyIds, setHierarchyIds])
+    setEditionSearchParams({
+      hierarchyIds: [],
+    })
+  }, [hierarchy, componentDelta, componentAddress, deleteComponent, hierarchyIds, setEditionSearchParams])
 
   const navigateToLastEditedComponent = useCallback(() => {
     setIsModalOpen(false)

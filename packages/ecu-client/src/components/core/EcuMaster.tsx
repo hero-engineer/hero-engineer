@@ -11,11 +11,8 @@ import theme from '../../theme'
 
 import ModeContext from '../../contexts/ModeContext'
 import HotContext from '../../contexts/HotContext'
-import HierarchyIdsContext, { HierarchyIdsContextType } from '../../contexts/HierarchyIdsContext'
 import HierarchyContext, { HierarchyContextType } from '../../contexts/HierarchyContext'
 import DragAndDropContext, { DragAndDropContextType, DragAndDropType } from '../../contexts/DragAndDropContext'
-
-import usePersistedState from '../../hooks/usePersistedState'
 
 import { HierarchyItemType } from '../../types'
 
@@ -27,13 +24,9 @@ type EcuMasterProps = PropsWithChildren<{
 }>
 
 function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps) {
-  const [hierarchyIds, setHierarchyIds] = usePersistedState<string[]>('ecu-hierarchyIds', [])
-  const HierarchyIdsContextValue = useMemo<HierarchyIdsContextType>(() => ({ hierarchyIds, setHierarchyIds }), [hierarchyIds, setHierarchyIds])
-
-  const [hierarchy, setHierarchy] = usePersistedState<HierarchyItemType[]>('ecu-hierarchy', [])
-  const [componentDelta, setComponentDelta] = usePersistedState<number>('ecu-component-delta', 0)
+  const [hierarchy, setHierarchy] = useState<HierarchyItemType[]>([])
   const [shouldAdjustComponentDelta, setShouldAdjustComponentDelta] = useState(false)
-  const HierarchyContextValue = useMemo<HierarchyContextType>(() => ({ hierarchy, setHierarchy, componentDelta, setComponentDelta, shouldAdjustComponentDelta, setShouldAdjustComponentDelta }), [hierarchy, setHierarchy, componentDelta, setComponentDelta, shouldAdjustComponentDelta])
+  const HierarchyContextValue = useMemo<HierarchyContextType>(() => ({ hierarchy, setHierarchy, shouldAdjustComponentDelta, setShouldAdjustComponentDelta }), [hierarchy, setHierarchy, shouldAdjustComponentDelta])
 
   const [dragAndDrop, setDragAndDrop] = useState<DragAndDropType>({ sourceHierarchyIds: [], targetHierarchyIds: [] })
   const dragAndDropContextValue = useMemo<DragAndDropContextType>(() => ({ dragAndDrop, setDragAndDrop }), [dragAndDrop])
@@ -45,15 +38,13 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
           <CssBaseline />
           <ModeContext.Provider value={mode}>
             <HotContext.Provider value={hot}>
-              <HierarchyIdsContext.Provider value={HierarchyIdsContextValue}>
-                <HierarchyContext.Provider value={HierarchyContextValue}>
-                  <DragAndDropContext.Provider value={dragAndDropContextValue}>
-                    <Router>
-                      {children}
-                    </Router>
-                  </DragAndDropContext.Provider>
-                </HierarchyContext.Provider>
-              </HierarchyIdsContext.Provider>
+              <HierarchyContext.Provider value={HierarchyContextValue}>
+                <DragAndDropContext.Provider value={dragAndDropContextValue}>
+                  <Router>
+                    {children}
+                  </Router>
+                </DragAndDropContext.Provider>
+              </HierarchyContext.Provider>
             </HotContext.Provider>
           </ModeContext.Provider>
         </ThemeProvider>

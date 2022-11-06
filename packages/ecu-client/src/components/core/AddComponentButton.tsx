@@ -7,8 +7,9 @@ import { TbRowInsertBottom } from 'react-icons/tb'
 import { hierarchyPositions } from '../../constants'
 import { HierarchyPosition } from '../../types'
 
-import HierarchyIdsContext from '../../contexts/HierarchyIdsContext'
 import HierarchyContext from '../../contexts/HierarchyContext'
+
+import useEditionSearchParams from '../../hooks/useEditionSearchParams'
 
 import { AddComponentMutation, ComponentsQuery } from '../../queries'
 
@@ -18,8 +19,8 @@ import capitalize from '../../utils/capitalize'
 
 function AddComponentButton() {
   const { componentAddress = '' } = useParams()
-  const { hierarchyIds } = useContext(HierarchyIdsContext)
-  const { hierarchy, componentDelta } = useContext(HierarchyContext)
+  const { hierarchyIds, componentDelta } = useEditionSearchParams()
+  const { hierarchy } = useContext(HierarchyContext)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedComponentAddress, setSelectedComponentId] = useState('')
   const [hierarchyPosition, setHierarchyPosition] = useState<HierarchyPosition>(hierarchyPositions[0])
