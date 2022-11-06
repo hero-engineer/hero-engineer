@@ -1,7 +1,13 @@
+import { Div } from 'ecu-client'
+
 type RootProps = never
 
 function Root(props: RootProps) {
-  return <div>Root</div>
+  return (
+    <Div>
+      Root
+    </Div>
+  )
 }
 
 export default Root

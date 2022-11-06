@@ -1,6 +1,7 @@
 import '../styles/globals.css'
 
 import { PropsWithChildren } from 'react'
+import { EcuMaster } from 'ecu-client'
 
 type RootLayoutProps = PropsWithChildren<never>
 
@@ -9,7 +10,9 @@ function RootLayout({ children }: RootLayoutProps) {
     <html lang="en">
       <head />
       <body>
-        {children}
+        <EcuMaster mode="development">
+          {children}
+        </EcuMaster>
       </body>
     </html>
   )
