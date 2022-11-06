@@ -41,7 +41,7 @@ function getHierarchyDelta(hierarchy: HierarchyItemType[]) {
 
 function HierarchyBar() {
   const { componentAddress = '' } = useParams()
-  const { hierarchyIds, setHierarchyIds, componentRootHierarchyIds, setComponentRootHierarchyIds } = useContext(HierarchyIdsContext)
+  const { hierarchyIds, setHierarchyIds } = useContext(HierarchyIdsContext)
   const { hierarchy, componentDelta, setComponentDelta, shouldAdjustComponentDelta, setShouldAdjustComponentDelta } = useContext(HierarchyContext)
 
   // const [hierarchyQueryResult] = useQuery<HierarchyQueryReturnType>({
@@ -186,7 +186,7 @@ function HierarchyBar() {
           </Div>
         ))}
         {' / '}
-        {componentRootHierarchyIds.map(hierarchyId => (
+        {/* {componentRootHierarchyIds.map(hierarchyId => (
           <Div
             key={hierarchyId}
             color="gold"
@@ -194,7 +194,7 @@ function HierarchyBar() {
             {hierarchyId}
             {', '}
           </Div>
-        ))}
+        ))} */}
       </Div>
     </>
   )

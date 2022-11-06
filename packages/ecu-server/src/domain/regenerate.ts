@@ -1,14 +1,13 @@
 import fs from 'fs'
 
+import { ParseResult } from '@babel/core'
 import generate from '@babel/generator'
-import { ParseResult } from '@babel/parser'
-import { File } from '@babel/types'
 
 import { FileNodeType } from '../types'
 
 import lintCode from './lintCode'
 
-async function regenerate(fileNode: FileNodeType, ast: ParseResult<File>) {
+async function regenerate(fileNode: FileNodeType, ast: ParseResult) {
   let { code } = generate(ast)
 
   code = await lintCode(code)

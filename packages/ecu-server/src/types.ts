@@ -1,5 +1,5 @@
+import { ParseResult } from '@babel/core'
 import { File } from '@babel/types'
-import { ParseResult } from '@babel/parser'
 
 export type Particule<PayloadType = any, StateType = any> = {
   // A unique address for this particule
@@ -30,7 +30,7 @@ export type FileNodePayloadType = {
   path: string
   relativePath: string
   code: string
-  ast: ParseResult<File>
+  ast: ParseResult
 }
 
 export type FileNodeType = Particule<FileNodePayloadType>
@@ -63,13 +63,13 @@ export type HistoryMutationReturnType<T> = {
 
 export type ImpactedType = {
   fileNode: FileNodeType
-  ast: ParseResult<File>
+  ast: ParseResult
   importDeclarationsRegistry: ImportDeclarationsRegistry
 }
 
 export type MutateType = (x: any, previousX: any) => void
 
-export type PostTraverseType = (fileNode: FileNodeType, ast: ParseResult<File>, importDeclarationsRegistry: ImportDeclarationsRegistry) => void
+export type PostTraverseType = (fileNode: FileNodeType, ast: ParseResult, importDeclarationsRegistry: ImportDeclarationsRegistry) => void
 
 export type IndexRegistryType = Record<string, number>
 

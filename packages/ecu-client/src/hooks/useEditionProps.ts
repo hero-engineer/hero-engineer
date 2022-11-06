@@ -37,7 +37,7 @@ function getHierarchyIds(element: EventTarget | HTMLElement) {
 function useEditionProps<T>(id: string, className = '') {
   const rootRef = useRef<T>(null)
   const hierarchyId = useHierarchyId(id, rootRef)
-  const { hierarchyIds, setHierarchyIds, componentRootHierarchyIds } = useContext(HierarchyIdsContext)
+  const { hierarchyIds, setHierarchyIds } = useContext(HierarchyIdsContext)
   const { componentDelta, setComponentDelta, setShouldAdjustComponentDelta } = useContext(HierarchyContext)
   const { setDragAndDrop } = useContext(DragAndDropContext)
 
@@ -114,19 +114,19 @@ function useEditionProps<T>(id: string, className = '') {
   const generateClassName = useCallback(() => {
     let klassName = className
 
-    if (componentDelta < 0 && componentRootHierarchyIds.some(x => x === hierarchyId)) {
-      klassName += ' ecu-selected-root'
+    // if (componentDelta < 0 && componentRootHierarchyIds.some(x => x === hierarchyId)) {
+    //   klassName += ' ecu-selected-root'
 
-      const index = componentRootHierarchyIds.indexOf(hierarchyId)
+    //   const index = componentRootHierarchyIds.indexOf(hierarchyId)
 
-      if (index === 0) {
-        klassName += ' ecu-selected-root-first'
-      }
+    //   if (index === 0) {
+    //     klassName += ' ecu-selected-root-first'
+    //   }
 
-      if (index === componentRootHierarchyIds.length - 1) {
-        klassName += ' ecu-selected-root-last'
-      }
-    }
+    //   if (index === componentRootHierarchyIds.length - 1) {
+    //     klassName += ' ecu-selected-root-last'
+    //   }
+    // }
 
     if (componentDelta >= 0 && hierarchyIds[hierarchyIds.length - 1] === hierarchyId) {
       klassName += ' ecu-selected'
@@ -141,7 +141,7 @@ function useEditionProps<T>(id: string, className = '') {
     }
 
     return klassName.trim()
-  }, [className, hierarchyIds, hierarchyId, componentDelta, componentRootHierarchyIds, isDragging, canDrop, isOverCurrent])
+  }, [className, hierarchyIds, hierarchyId, componentDelta, isDragging, canDrop, isOverCurrent])
 
   return {
     ref,

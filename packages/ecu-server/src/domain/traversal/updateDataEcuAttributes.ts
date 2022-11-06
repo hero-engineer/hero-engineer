@@ -1,6 +1,6 @@
-import { File, JSXAttribute, jsxAttribute, jsxIdentifier, stringLiteral } from '@babel/types'
+import { JSXAttribute, jsxAttribute, jsxIdentifier, stringLiteral } from '@babel/types'
+import { ParseResult } from '@babel/core'
 import traverse from '@babel/traverse'
-import { ParseResult } from '@babel/parser'
 
 import { FunctionNodeType } from '../../types'
 import { ecuPropName } from '../../configuration'
@@ -28,7 +28,7 @@ function insertPropFactory(key: string, getValue: () => string) {
   }
 }
 
-function updateDataEcuAttributes(componentNode: FunctionNodeType, ast: ParseResult<File>) {
+function updateDataEcuAttributes(componentNode: FunctionNodeType, ast: ParseResult) {
   const cursors = [0]
   const importedEcuComponentNames: string[] = []
 
