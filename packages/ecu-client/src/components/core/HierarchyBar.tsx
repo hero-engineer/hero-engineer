@@ -6,7 +6,7 @@ import { MdChevronRight } from 'react-icons/md'
 
 import { HierarchyItemType } from '../../types'
 
-import { ComponentQuery, HierarchyQuery } from '../../queries'
+import { HierarchyQuery } from '../../queries'
 
 import HierarchyContext from '../../contexts/HierarchyContext'
 
@@ -36,13 +36,6 @@ function HierarchyBar() {
   // const previousHierarchy = usePreviousWithDefault(usePreviousWithDefault(hierarchy, hierarchy), hierarchy)
   // const previousTotalHierarchy = usePreviousWithDefault(totalHierarchy, totalHierarchy)
 
-  const [componentQueryResult] = useQuery({
-    query: ComponentQuery,
-    variables: {
-      sourceComponentAddress: componentAddress,
-    },
-    pause: !componentAddress,
-  })
   const [hierarchyQueryResult] = useQuery({
     query: HierarchyQuery,
     variables: {
@@ -143,15 +136,6 @@ function HierarchyBar() {
     })
   }, [shouldAdjustComponentDelta, totalHierarchy, previousHierarchy, hierarchy, setEditionSearchParams, setShouldAdjustComponentDelta])
 
-  if (componentQueryResult.fetching) {
-    return null
-  }
-  if (componentQueryResult.error) {
-    return null
-  }
-  if (!componentQueryResult.data.component) {
-    return null
-  }
   if (!componentAddress) {
     return null
   }

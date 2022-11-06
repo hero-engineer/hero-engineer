@@ -1,0 +1,266 @@
+{
+  "hash": "66+RvZ8gHsbONlo5dcGWeqnPRVM=",
+  "nodes": {
+    "cuWKbvzNz": {
+      "address": "cuWKbvzNz",
+      "role": "File",
+      "state": null,
+      "payload": {
+        "name": "App",
+        "extension": "tsx",
+        "path": "/Users/sven/dev/ecu/app/src/App.tsx",
+        "relativePath": "src/App.tsx",
+        "code": null,
+        "ast": null
+      }
+    },
+    "jTAZeMM6_F": {
+      "address": "jTAZeMM6_F",
+      "role": "File",
+      "state": null,
+      "payload": {
+        "name": "CoolDaddy",
+        "extension": "tsx",
+        "path": "/Users/sven/dev/ecu/app/src/components/CoolDaddy.tsx",
+        "relativePath": "src/components/CoolDaddy.tsx",
+        "code": null,
+        "ast": null
+      }
+    },
+    "24XCqFjKTG": {
+      "address": "24XCqFjKTG",
+      "role": "File",
+      "state": null,
+      "payload": {
+        "name": "CoolDiv",
+        "extension": "tsx",
+        "path": "/Users/sven/dev/ecu/app/src/components/CoolDiv.tsx",
+        "relativePath": "src/components/CoolDiv.tsx",
+        "code": null,
+        "ast": null
+      }
+    },
+    "cq0PgPRtyQ": {
+      "address": "cq0PgPRtyQ",
+      "role": "File",
+      "state": null,
+      "payload": {
+        "name": "DualCoolDiv",
+        "extension": "tsx",
+        "path": "/Users/sven/dev/ecu/app/src/components/DualCoolDiv.tsx",
+        "relativePath": "src/components/DualCoolDiv.tsx",
+        "code": null,
+        "ast": null
+      }
+    },
+    "SVnUNZCc3u": {
+      "address": "SVnUNZCc3u",
+      "role": "File",
+      "state": null,
+      "payload": {
+        "name": "MultipleDivs",
+        "extension": "tsx",
+        "path": "/Users/sven/dev/ecu/app/src/components/MultipleDivs.tsx",
+        "relativePath": "src/components/MultipleDivs.tsx",
+        "code": null,
+        "ast": null
+      }
+    },
+    "16A8jSs-Rq": {
+      "address": "16A8jSs-Rq",
+      "role": "File",
+      "state": null,
+      "payload": {
+        "name": "main",
+        "extension": "tsx",
+        "path": "/Users/sven/dev/ecu/app/src/main.tsx",
+        "relativePath": "src/main.tsx",
+        "code": null,
+        "ast": null
+      }
+    },
+    "jkgUhgl2qT": {
+      "address": "jkgUhgl2qT",
+      "role": "File",
+      "state": null,
+      "payload": {
+        "name": "vite-env.d",
+        "extension": "ts",
+        "path": "/Users/sven/dev/ecu/app/src/vite-env.d.ts",
+        "relativePath": "src/vite-env.d.ts",
+        "code": null,
+        "ast": null
+      }
+    },
+    "WJpd-kkOCl": {
+      "address": "WJpd-kkOCl",
+      "role": "File",
+      "state": null,
+      "payload": {
+        "name": "vite.config",
+        "extension": "ts",
+        "path": "/Users/sven/dev/ecu/app/vite.config.ts",
+        "relativePath": "vite.config.ts",
+        "code": null,
+        "ast": null
+      }
+    },
+    "ZzfMWVOV9I": {
+      "address": "ZzfMWVOV9I",
+      "role": "Function",
+      "state": null,
+      "payload": {
+        "name": "App",
+        "isComponent": true,
+        "path": "/Users/sven/dev/ecu/app/src/App.tsx",
+        "relativePath": "src/App.tsx",
+        "exportType": "None"
+      }
+    },
+    "Ql9vSVRoab": {
+      "address": "Ql9vSVRoab",
+      "role": "Function",
+      "state": null,
+      "payload": {
+        "name": "CoolDaddy",
+        "isComponent": true,
+        "path": "/Users/sven/dev/ecu/app/src/components/CoolDaddy.tsx",
+        "relativePath": "src/components/CoolDaddy.tsx",
+        "exportType": "None"
+      }
+    },
+    "AxjG39E_OF": {
+      "address": "AxjG39E_OF",
+      "role": "Function",
+      "state": null,
+      "payload": {
+        "name": "CoolDiv",
+        "isComponent": true,
+        "path": "/Users/sven/dev/ecu/app/src/components/CoolDiv.tsx",
+        "relativePath": "src/components/CoolDiv.tsx",
+        "exportType": "None"
+      }
+    },
+    "tGM5YozqLo": {
+      "address": "tGM5YozqLo",
+      "role": "Function",
+      "state": null,
+      "payload": {
+        "name": "DualCoolDiv",
+        "isComponent": true,
+        "path": "/Users/sven/dev/ecu/app/src/components/DualCoolDiv.tsx",
+        "relativePath": "src/components/DualCoolDiv.tsx",
+        "exportType": "None"
+      }
+    },
+    "zOE7UCLckC": {
+      "address": "zOE7UCLckC",
+      "role": "Function",
+      "state": null,
+      "payload": {
+        "name": "MultipleDivs",
+        "isComponent": true,
+        "path": "/Users/sven/dev/ecu/app/src/components/MultipleDivs.tsx",
+        "relativePath": "src/components/MultipleDivs.tsx",
+        "exportType": "None"
+      }
+    }
+  },
+  "edges": [
+    [
+      "cuWKbvzNz",
+      "ImportsModule",
+      "ecu-client"
+    ],
+    [
+      "cuWKbvzNz",
+      "DeclaresFunction",
+      "ZzfMWVOV9I"
+    ],
+    [
+      "jTAZeMM6_F",
+      "ImportsModule",
+      "ecu-client"
+    ],
+    [
+      "jTAZeMM6_F",
+      "DeclaresFunction",
+      "Ql9vSVRoab"
+    ],
+    [
+      "24XCqFjKTG",
+      "ImportsModule",
+      "ecu-client"
+    ],
+    [
+      "24XCqFjKTG",
+      "DeclaresFunction",
+      "AxjG39E_OF"
+    ],
+    [
+      "cq0PgPRtyQ",
+      "ImportsModule",
+      "ecu-client"
+    ],
+    [
+      "cq0PgPRtyQ",
+      "ImportsFile",
+      "24XCqFjKTG"
+    ],
+    [
+      "cq0PgPRtyQ",
+      "DeclaresFunction",
+      "tGM5YozqLo"
+    ],
+    [
+      "SVnUNZCc3u",
+      "ImportsModule",
+      "ecu-client"
+    ],
+    [
+      "SVnUNZCc3u",
+      "ImportsFile",
+      "cq0PgPRtyQ"
+    ],
+    [
+      "SVnUNZCc3u",
+      "ImportsFile",
+      "24XCqFjKTG"
+    ],
+    [
+      "SVnUNZCc3u",
+      "ImportsFile",
+      "jTAZeMM6_F"
+    ],
+    [
+      "SVnUNZCc3u",
+      "DeclaresFunction",
+      "zOE7UCLckC"
+    ],
+    [
+      "16A8jSs-Rq",
+      "ImportsModule",
+      "react-dom/client"
+    ],
+    [
+      "16A8jSs-Rq",
+      "ImportsModule",
+      "ecu-client"
+    ],
+    [
+      "16A8jSs-Rq",
+      "ImportsFile",
+      "cuWKbvzNz"
+    ],
+    [
+      "WJpd-kkOCl",
+      "ImportsModule",
+      "vite"
+    ],
+    [
+      "WJpd-kkOCl",
+      "ImportsModule",
+      "@vitejs/plugin-react"
+    ]
+  ]
+}
