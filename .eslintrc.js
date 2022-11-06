@@ -1,3 +1,3 @@
 module.exports = {
-  extends: 'dherault-typescript',
+  extends: 'ecu',
 }
