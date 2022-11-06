@@ -4,7 +4,7 @@ import traverse from '@babel/traverse'
 import shortId from 'shortid'
 
 import { appPath } from '../../configuration'
-import { FileNodeType } from '../../types'
+import { FileNodeType, FunctionNodeType } from '../../types'
 
 import { addEdge, addNode, getNodesByRole } from '..'
 import createFunctionNode from '../models/createFunctionNode'
@@ -23,7 +23,7 @@ function addFileDependencies(fileNode: FileNodeType) {
       const { value } = node.source
 
       if (value.startsWith('.')) {
-        const relativePath = possiblyAddExtension(path.relative(appPath, path.join(path.dirname(fileNode.payload.path), value)))
+        const relativePath = possiblyAddExtension(path.relative(appPath, path.join(path.dirname(fileNode.payload.path), value)), fileNode.payload.extension)
         const dependency = fileNodes.find(n => n.payload.relativePath === relativePath)
 
         if (dependency) {
@@ -47,17 +47,17 @@ function addFileDependencies(fileNode: FileNodeType) {
         role: 'Function',
         state: null,
         payload: {
-          name: path.node.id?.name || '',
+          name: path.node.id?.name || '<anonymous>',
           isComponent: false,
           path: fileNode.payload.path,
           relativePath: fileNode.payload.relativePath,
-          exportType: 'none',
+          exportType: 'None',
         },
       })
 
       let isWithinReturnStatement = false
 
-      traverse(path.node, {
+      path.traverse({
         ReturnStatement() {
           isWithinReturnStatement = true
         },
@@ -68,7 +68,9 @@ function addFileDependencies(fileNode: FileNodeType) {
             path.stop()
           }
         },
-      }, path.scope, path)
+      })
+
+      path.skip()
 
       addNode(functionNode)
       addEdge([fileNode.address, 'DeclaresFunction', functionNode.address])
@@ -101,10 +103,10 @@ function addFileDependencies(fileNode: FileNodeType) {
         }
       }
 
-      const functionNode = getNodesByRole('Function').find(n => n.payload.name === name && n.payload.path === fileNode.payload.path)
+      const functionNode = getNodesByRole<FunctionNodeType>('Function').find(n => n.payload.name === name && n.payload.path === fileNode.payload.path)
 
       if (functionNode) {
-        functionNode.payload.exportType = type === 'ExportDefaultDeclaration' ? 'default' : 'named'
+        functionNode.payload.exportType = type === 'ExportDefaultDeclaration' ? 'Default' : 'Named'
       }
     },
   })

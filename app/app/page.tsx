@@ -1,13 +1,13 @@
 import { Div } from 'ecu-client'
 
-type RootProps = never
+type RootPageProps = never;
 
-function Root(props: RootProps) {
+function RootPage(props: RootPageProps) {
   return (
-    <Div>
-      Root
+    <Div data-ecu="sXW0oypLae:0">
+      RootPage
     </Div>
   )
 }
 
-export default Root
+export default RootPage

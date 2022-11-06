@@ -214,7 +214,7 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
             const relativeImportDeclaration = importDeclarations.find(x => x.value.startsWith('.') && x.specifiers.includes(componentName))
 
             if (relativeImportDeclaration) {
-              const absolutePath = possiblyAddExtension(path.join(path.dirname(currentFileNode.payload.path), relativeImportDeclaration.value))
+              const absolutePath = possiblyAddExtension(path.join(path.dirname(currentFileNode.payload.path), relativeImportDeclaration.value), currentFileNode.payload.extension)
               const nextComponentNode = componentNodes.find(n => n.payload.name === componentName && n.payload.path === absolutePath)
 
               if (nextComponentNode) {

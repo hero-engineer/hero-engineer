@@ -1,9 +1,9 @@
-function possiblyAddExtension(string: string, isJsx = true) {
-  if (string.endsWith('.ts') || string.endsWith('.tsx')) {
+function possiblyAddExtension(string: string, extension: string) {
+  if (string.endsWith(extension)) {
     return string
   }
 
-  return isJsx ? `${string}.tsx` : `${string}.ts`
+  return `${string}.${extension}`
 }
 
 export default possiblyAddExtension

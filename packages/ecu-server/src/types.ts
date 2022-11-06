@@ -21,7 +21,7 @@ export type GraphType = {
   edges: Array<GraphEdgeType>
 }
 
-export type ExportType = 'default' | 'named' | 'none'
+export type ExportType = 'Default' | 'Named' | 'None'
 
 export type FileNodePayloadType = {
   name: string
