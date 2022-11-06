@@ -1,6 +1,6 @@
 {
   "name": "ecu-client",
-  "version": "0.0.0",
+  "version": "0.3.0",
   "type": "module",
   "scripts": {
     "build": "tsc && vite build",
@@ -44,10 +44,5 @@
     "dist"
   ],
   "module": "./dist/ecu-client.es.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/ecu-client.es.js"
-    }
-  }
+  "types": "./dist/index.d.ts"
 }
