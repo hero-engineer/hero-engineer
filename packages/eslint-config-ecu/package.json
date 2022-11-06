@@ -22,6 +22,6 @@
   "homepage": "https://github.com/dherault/ecu#readme",
   "dependencies": {
     "eslint": "^8.27.0",
-    "eslint-config-dherault-typescript": "^1.1.0"
+    "eslint-config-dherault-typescript": "^1.2.0"
   }
 }
