@@ -34,9 +34,6 @@ function HierarchyBar() {
   const actualHierarchy = useMemo(() => totalHierarchy.slice(0, totalHierarchy.length + componentDelta), [totalHierarchy, componentDelta])
   const previousHierarchy = usePreviousWithDefault(actualHierarchy, actualHierarchy)
 
-  // console.log('totalHierarchy', totalHierarchy)
-  // console.log('actualHierarchy', actualHierarchy)
-
   const handleClick = useCallback((index: number) => {
     // console.log('___handleClick', actualHierarchy.map(x => x.label), index)
 
@@ -85,6 +82,7 @@ function HierarchyBar() {
 
     // console.log('adjusting')
     // console.log('totalHierarchy', totalHierarchy)
+
     const commonHierarchy: HierarchyItemType[] = []
 
     for (let i = 0; i < previousHierarchy.length; i++) {
@@ -97,10 +95,11 @@ function HierarchyBar() {
     }
 
     const workingHierarchyPart = totalHierarchy.slice(commonHierarchy.length, -1)
-    // console.log('workingHierarchyPart', workingHierarchyPart)
     const nextDelta = workingHierarchyPart.length ? getHierarchyDelta(workingHierarchyPart) : 0
 
+    // console.log('workingHierarchyPart', workingHierarchyPart)
     // console.log('nextDelta', nextDelta)
+
     setEditionSearchParams({
       componentDelta: nextDelta,
     })
@@ -137,7 +136,7 @@ function HierarchyBar() {
             -
           </Div>
         )}
-        {/* {JSON.stringify(hierarchy, null, 2)} */}
+        {JSON.stringify(hierarchy, null, 2)}
       </Div>
       <Div
         xflex="x4"

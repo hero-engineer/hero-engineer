@@ -46,7 +46,7 @@ function useEditionProps<T>(id: string, className = '') {
 
   const totalHierarchy = useMemo(() => getFlattenedHierarchy(hierarchy, hierarchyIds), [hierarchy, hierarchyIds])
   const actualHierarchy = useMemo(() => totalHierarchy.slice(0, totalHierarchy.length + componentDelta), [totalHierarchy, componentDelta]) // TODO contextualize to save computation
-  const componentRootHierarchyIds = useMemo(() => getComponentRootHierarchyIds(hierarchy, actualHierarchy), [hierarchy, actualHierarchy])
+  const componentRootHierarchyIds = useMemo(() => getComponentRootHierarchyIds(actualHierarchy), [actualHierarchy])
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'Node',
