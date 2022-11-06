@@ -1,24 +1,27 @@
 {
-  "private": true,
-  "name": "ecu-monorepo",
+  "name": "eslint-config-ecu",
+  "version": "1.0.0",
+  "description": "Am ecu-compatible ESlint config",
+  "main": "index.js",
   "scripts": {
-    "link": "(cd app && npm link ../packages/ecu-client)",
-    "dev:app": "npm run link && (cd app && npm run dev)"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dherault/ecu.git"
   },
+  "keywords": [
+    "eslint",
+    "ecu"
+  ],
   "author": "David Hérault <dherault@gmail.com> (https://github.com/dherault)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/dherault/ecu/issues"
   },
   "homepage": "https://github.com/dherault/ecu#readme",
-  "devDependencies": {
-    "eslint": "^8.26.0",
-    "eslint-config-dherault-typescript": "^1.1.0",
-    "rimraf": "^3.0.2",
-    "typescript": "^4.8.4"
+  "dependencies": {
+    "eslint": "^8.27.0",
+    "eslint-config-dherault-typescript": "^1.1.0"
   }
 }
