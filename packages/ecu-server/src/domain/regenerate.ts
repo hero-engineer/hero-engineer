@@ -1,4 +1,4 @@
-import fs from 'fs'
+import fs from 'node:fs'
 
 import { ParseResult } from '@babel/core'
 import generate from '@babel/generator'
