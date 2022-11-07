@@ -2,12 +2,10 @@ import { useCallback, useState } from 'react'
 import { Div, DivProps } from 'honorable'
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md'
 
+import xor from '../../../utils/xor'
+
 type RetractablePanelProps = DivProps & {
   direction: 'left' | 'right' | string
-}
-
-function xor(a: boolean, b: boolean) {
-  return (a || b) && !(a && b)
 }
 
 function RetractablePanel({ children, direction, ...props }: RetractablePanelProps) {
