@@ -13,16 +13,17 @@ function Layout() {
       height="100vh"
       position="relative"
     >
-      <Overlay />
-      <Div
-        xflex="y2s"
-        overflowY="auto"
-        flexGrow={1}
-        flexShrink={0}
-        p={0.5}
-      >
-        <Outlet />
-      </Div>
+      <Overlay>
+        <Div
+          xflex="y2s"
+          overflowY="auto"
+          flexGrow={1}
+          flexShrink={0}
+          p={0.5}
+        >
+          <Outlet />
+        </Div>
+      </Overlay>
     </Div>
   )
 }

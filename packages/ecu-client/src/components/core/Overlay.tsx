@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { PropsWithChildren, memo } from 'react'
 import { Div, P } from 'honorable'
 
 import ViewAppButton from './ViewAppButton'
@@ -7,30 +7,51 @@ import AddComponentButton from './AddComponentButton'
 import CreateComponentButton from './CreateComponentButton'
 import DeleteComponentButton from './DeleteComponentButton'
 import HierarchyBar from './HierarchyBar'
+import RetractablePanel from './layout/RetractablePanel'
 
-function Overlay() {
+type OverlayProps = PropsWithChildren<any>
+
+function Overlay({ children }: OverlayProps) {
   return (
-    <Div backgroundColor="background-light">
+    <Div
+      xflex="y2s"
+      flexGrow={1}
+    >
       <Div
-        xflex="x4s"
-        borderBottom="1px solid border"
+        xflex="y2s"
+        flexShrink={0}
+        backgroundColor="background-light"
       >
-        <P
-          xflex="x5"
-          fontWeight="bold"
-          borderRight="1px solid border"
-          px={0.5}
+        <Div
+          xflex="x4s"
+          borderBottom="1px solid border"
         >
-          Ecu
-        </P>
-        <ComponentsLinkButton borderRight="1px solid border" />
-        <CreateComponentButton borderRight="1px solid border" />
-        <DeleteComponentButton borderRight="1px solid border" />
-        <AddComponentButton />
-        <Div flexGrow={1} />
-        <ViewAppButton borderLeft="1px solid border" />
+          <P
+            xflex="x5"
+            fontWeight="bold"
+            borderRight="1px solid border"
+            px={0.5}
+          >
+            Ecu
+          </P>
+          <ComponentsLinkButton borderRight="1px solid border" />
+          <CreateComponentButton borderRight="1px solid border" />
+          <DeleteComponentButton borderRight="1px solid border" />
+          <AddComponentButton />
+          <Div flexGrow={1} />
+          <ViewAppButton borderLeft="1px solid border" />
+        </Div>
+        <HierarchyBar />
       </Div>
-      <HierarchyBar />
+      <Div
+        xflex="x1"
+        flexGrow={1}
+      >
+        {children}
+        <RetractablePanel direction="right">
+          Foo
+        </RetractablePanel>
+      </Div>
     </Div>
   )
 }
