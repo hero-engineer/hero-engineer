@@ -1,8 +1,25 @@
+type FunctionNodeType = {
+  address: string
+  payload: {
+    name: string
+    path: string
+    relativePath: string
+  }
+}
+
+type FileNodeType = {
+  address: string
+}
+
 export const HierarchyQuery = `
   query ($sourceComponentAddress: String!) {
     hierarchy (sourceComponentAddress: $sourceComponentAddress)
   }
 `
+
+export type HierarchyQueryDataType = {
+  hierarchy: string
+}
 
 export const ComponentsQuery = `
   query {
@@ -17,18 +34,40 @@ export const ComponentsQuery = `
   }
 `
 
+export type ComponentsQueryDataType = {
+  components: FunctionNodeType[]
+}
+
 export const ComponentQuery = `
-  query ($sourceComponentAddress: String!){
-    component (sourceComponentAddress: $sourceComponentAddress) {
-      address
-      payload {
-        name
-        path
-        relativePath
-      }
+query ($sourceComponentAddress: String!){
+  component (sourceComponentAddress: $sourceComponentAddress) {
+    address
+    payload {
+      name
+      path
+      relativePath
+    }
+  }
+}
+`
+
+export type ComponentQueryDataType = {
+  component: FunctionNodeType
+}
+
+export const GlobalTypesQuery = `
+  query {
+    globalTypes {
+      globalTypesFileContent
     }
   }
 `
+
+export type GlobalTypesQueryDataType = {
+  globalTypes: {
+    globalTypesFileContent: string
+  }
+}
 
 export const CreateComponentMutation = `
   mutation ($name: String!) {
@@ -38,6 +77,10 @@ export const CreateComponentMutation = `
   }
 `
 
+export type CreateComponentMutationDataType = {
+  createComponent: FileNodeType
+}
+
 export const AddComponentMutation = `
   mutation ($sourceComponentAddress: String!, $targetComponentAddress: String!, $hierarchyIds: [String!]!, $hierarchyPosition: HierarchyPosition!, $componentDelta: Int!) {
     addComponent (sourceComponentAddress: $sourceComponentAddress, targetComponentAddress: $targetComponentAddress, hierarchyIds: $hierarchyIds, hierarchyPosition: $hierarchyPosition, componentDelta: $componentDelta) {
@@ -45,6 +88,10 @@ export const AddComponentMutation = `
     }
   }
 `
+
+export type AddComponentMutationDataType = {
+  addComponent: FileNodeType
+}
 
 export const DeleteComponentMutation = `
   mutation ($sourceComponentAddress: String!, $hierarchyIds: [String!]!, $componentDelta: Int!) {
@@ -54,6 +101,10 @@ export const DeleteComponentMutation = `
   }
 `
 
+export type DeleteComponentMutationDataType = {
+  deleteComponent: FileNodeType
+}
+
 export const MoveComponentMutation = `
   mutation ($sourceComponentAddress: String!, $sourceHierarchyIds: [String!]!, $targetHierarchyIds: [String!]!, $hierarchyPosition: HierarchyPosition!) {
     moveComponent (sourceComponentAddress: $sourceComponentAddress, sourceHierarchyIds: $sourceHierarchyIds, targetHierarchyIds: $targetHierarchyIds, hierarchyPosition: $hierarchyPosition) {
@@ -61,3 +112,7 @@ export const MoveComponentMutation = `
     }
   }
 `
+
+export type MoveComponentMutationDataType = {
+  moveComponent: FileNodeType
+}

@@ -1,8 +1,8 @@
 {
-  "hash": "66+RvZ8gHsbONlo5dcGWeqnPRVM=",
+  "hash": "huKBqK8i1pDdcAptAxFFk12Kz6g=",
   "nodes": {
-    "cuWKbvzNz": {
-      "address": "cuWKbvzNz",
+    "8gz0lR-UT": {
+      "address": "8gz0lR-UT",
       "role": "File",
       "state": null,
       "payload": {
@@ -14,8 +14,8 @@
         "ast": null
       }
     },
-    "jTAZeMM6_F": {
-      "address": "jTAZeMM6_F",
+    "8RdQVbcfQW": {
+      "address": "8RdQVbcfQW",
       "role": "File",
       "state": null,
       "payload": {
@@ -27,8 +27,8 @@
         "ast": null
       }
     },
-    "24XCqFjKTG": {
-      "address": "24XCqFjKTG",
+    "NfDnz0HTY6": {
+      "address": "NfDnz0HTY6",
       "role": "File",
       "state": null,
       "payload": {
@@ -40,8 +40,8 @@
         "ast": null
       }
     },
-    "cq0PgPRtyQ": {
-      "address": "cq0PgPRtyQ",
+    "pAs08SN-o_": {
+      "address": "pAs08SN-o_",
       "role": "File",
       "state": null,
       "payload": {
@@ -53,8 +53,8 @@
         "ast": null
       }
     },
-    "SVnUNZCc3u": {
-      "address": "SVnUNZCc3u",
+    "cewmI32VMf": {
+      "address": "cewmI32VMf",
       "role": "File",
       "state": null,
       "payload": {
@@ -66,8 +66,8 @@
         "ast": null
       }
     },
-    "16A8jSs-Rq": {
-      "address": "16A8jSs-Rq",
+    "3SBiui2KUN": {
+      "address": "3SBiui2KUN",
       "role": "File",
       "state": null,
       "payload": {
@@ -79,8 +79,21 @@
         "ast": null
       }
     },
-    "jkgUhgl2qT": {
-      "address": "jkgUhgl2qT",
+    "nPGLSIga-T": {
+      "address": "nPGLSIga-T",
+      "role": "File",
+      "state": null,
+      "payload": {
+        "name": "types",
+        "extension": "ts",
+        "path": "/Users/sven/dev/ecu/app/src/types.ts",
+        "relativePath": "src/types.ts",
+        "code": null,
+        "ast": null
+      }
+    },
+    "OekpQWaVe9": {
+      "address": "OekpQWaVe9",
       "role": "File",
       "state": null,
       "payload": {
@@ -92,8 +105,8 @@
         "ast": null
       }
     },
-    "WJpd-kkOCl": {
-      "address": "WJpd-kkOCl",
+    "QsYH-pOuic": {
+      "address": "QsYH-pOuic",
       "role": "File",
       "state": null,
       "payload": {
@@ -105,8 +118,8 @@
         "ast": null
       }
     },
-    "ZzfMWVOV9I": {
-      "address": "ZzfMWVOV9I",
+    "VkxW_wI8D0": {
+      "address": "VkxW_wI8D0",
       "role": "Function",
       "state": null,
       "payload": {
@@ -117,8 +130,8 @@
         "exportType": "None"
       }
     },
-    "Ql9vSVRoab": {
-      "address": "Ql9vSVRoab",
+    "w6mLUMh6XM": {
+      "address": "w6mLUMh6XM",
       "role": "Function",
       "state": null,
       "payload": {
@@ -129,8 +142,8 @@
         "exportType": "None"
       }
     },
-    "AxjG39E_OF": {
-      "address": "AxjG39E_OF",
+    "mIWBqR_TuU": {
+      "address": "mIWBqR_TuU",
       "role": "Function",
       "state": null,
       "payload": {
@@ -141,8 +154,8 @@
         "exportType": "None"
       }
     },
-    "tGM5YozqLo": {
-      "address": "tGM5YozqLo",
+    "ZsCWKcTqR5": {
+      "address": "ZsCWKcTqR5",
       "role": "Function",
       "state": null,
       "payload": {
@@ -153,8 +166,8 @@
         "exportType": "None"
       }
     },
-    "zOE7UCLckC": {
-      "address": "zOE7UCLckC",
+    "Ed0ebsstYx": {
+      "address": "Ed0ebsstYx",
       "role": "Function",
       "state": null,
       "payload": {
@@ -168,97 +181,97 @@
   },
   "edges": [
     [
-      "cuWKbvzNz",
+      "8gz0lR-UT",
       "ImportsModule",
       "ecu-client"
     ],
     [
-      "cuWKbvzNz",
+      "8gz0lR-UT",
       "DeclaresFunction",
-      "ZzfMWVOV9I"
+      "VkxW_wI8D0"
     ],
     [
-      "jTAZeMM6_F",
+      "8RdQVbcfQW",
       "ImportsModule",
       "ecu-client"
     ],
     [
-      "jTAZeMM6_F",
+      "8RdQVbcfQW",
       "DeclaresFunction",
-      "Ql9vSVRoab"
+      "w6mLUMh6XM"
     ],
     [
-      "24XCqFjKTG",
+      "NfDnz0HTY6",
       "ImportsModule",
       "ecu-client"
     ],
     [
-      "24XCqFjKTG",
+      "NfDnz0HTY6",
       "DeclaresFunction",
-      "AxjG39E_OF"
+      "mIWBqR_TuU"
     ],
     [
-      "cq0PgPRtyQ",
+      "pAs08SN-o_",
       "ImportsModule",
       "ecu-client"
     ],
     [
-      "cq0PgPRtyQ",
+      "pAs08SN-o_",
       "ImportsFile",
-      "24XCqFjKTG"
+      "NfDnz0HTY6"
     ],
     [
-      "cq0PgPRtyQ",
+      "pAs08SN-o_",
       "DeclaresFunction",
-      "tGM5YozqLo"
+      "ZsCWKcTqR5"
     ],
     [
-      "SVnUNZCc3u",
+      "cewmI32VMf",
       "ImportsModule",
       "ecu-client"
     ],
     [
-      "SVnUNZCc3u",
+      "cewmI32VMf",
       "ImportsFile",
-      "cq0PgPRtyQ"
+      "pAs08SN-o_"
     ],
     [
-      "SVnUNZCc3u",
+      "cewmI32VMf",
       "ImportsFile",
-      "24XCqFjKTG"
+      "NfDnz0HTY6"
     ],
     [
-      "SVnUNZCc3u",
+      "cewmI32VMf",
       "ImportsFile",
-      "jTAZeMM6_F"
+      "8RdQVbcfQW"
     ],
     [
-      "SVnUNZCc3u",
+      "cewmI32VMf",
       "DeclaresFunction",
-      "zOE7UCLckC"
+      "Ed0ebsstYx"
     ],
     [
-      "16A8jSs-Rq",
+      "3SBiui2KUN",
       "ImportsModule",
       "react-dom/client"
     ],
     [
-      "16A8jSs-Rq",
+      "3SBiui2KUN",
       "ImportsModule",
       "ecu-client"
     ],
     [
-      "16A8jSs-Rq",
+      "3SBiui2KUN",
       "ImportsFile",
-      "cuWKbvzNz"
+      "8gz0lR-UT"
     ],
     [
-      "WJpd-kkOCl",
+      "QsYH-pOuic",
       "ImportsModule",
       "vite"
     ],
     [
-      "WJpd-kkOCl",
+      "QsYH-pOuic",
       "ImportsModule",
       "@vitejs/plugin-react"
     ]

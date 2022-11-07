@@ -8,7 +8,7 @@ import DragAndDropContext from '../../contexts/DragAndDropContext'
 import { HierarchyPosition } from '../../types'
 import { hierarchyPositions } from '../../constants'
 
-import { MoveComponentMutation } from '../../queries'
+import { MoveComponentMutation, MoveComponentMutationDataType } from '../../queries'
 
 import capitalize from '../../utils/capitalize'
 
@@ -17,7 +17,7 @@ function DragAndDropEndModal() {
   const { dragAndDrop, setDragAndDrop } = useContext(DragAndDropContext)
   const [hierarchyPosition, setHierarchyPosition] = useState<HierarchyPosition>('before')
 
-  const [, moveComponent] = useMutation(MoveComponentMutation)
+  const [, moveComponent] = useMutation<MoveComponentMutationDataType>(MoveComponentMutation)
 
   const clearDragAndDrop = useCallback(() => {
     setHierarchyPosition('before')

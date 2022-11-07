@@ -3,6 +3,7 @@ import { gql } from 'apollo-server'
 import componentQuery from './queries/componentQuery'
 import componentsQuery from './queries/componentsQuery'
 import hierarchyQuery from './queries/hierarchyQuery'
+import globalTypesQuery from './queries/globalTypesQuery'
 import createComponentMutation from './mutations/createComponentMutation'
 import addComponentMutation from './mutations/addComponentMutation'
 import deleteComponentMutation from './mutations/deleteComponentMutation'
@@ -11,11 +12,12 @@ import moveComponentMutation from './mutations/moveComponentMutation'
 export const typeDefs = gql`
 
   enum ExportType {
-    default
-    named
-    none
+    Default
+    Named
+    None
   }
 
+  # TODO capitalize
   enum HierarchyPosition {
     before
     after
@@ -51,22 +53,15 @@ export const typeDefs = gql`
     payload: FunctionNodePayload
   }
 
-  type HierarchyItem {
-    label: String!
-    componentName: String!
-    componentAddress: String
-    hierarchyId: String
-  }
-
-  type HierarchyMetadataReturnValue {
-    isHierarchyOnComponent: Boolean!
-    componentRootHierarchyIds: [String]!
+  type GlobalTypesReturnValue {
+    globalTypesFileContent: String!
   }
 
   type Query {
     component(sourceComponentAddress: String!): FunctionNode
     components: [FunctionNode]
     hierarchy(sourceComponentAddress: String!): String!
+    globalTypes: GlobalTypesReturnValue!
   }
 
   type Mutation {
@@ -83,6 +78,7 @@ export const resolvers = {
     component: componentQuery,
     components: componentsQuery,
     hierarchy: hierarchyQuery,
+    globalTypes: globalTypesQuery,
   },
   Mutation: {
     createComponent: createComponentMutation,

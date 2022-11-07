@@ -3,10 +3,10 @@ import { useQuery } from 'urql'
 import { Link } from 'react-router-dom'
 import { H2, Li, Ul } from 'honorable'
 
-import { ComponentsQuery } from '../../queries'
+import { ComponentsQuery, ComponentsQueryDataType } from '../../queries'
 
 function Components() {
-  const [componentsQueryResult] = useQuery({
+  const [componentsQueryResult] = useQuery<ComponentsQueryDataType>({
     query: ComponentsQuery,
     requestPolicy: 'network-only',
   })
@@ -15,6 +15,9 @@ function Components() {
     return null
   }
   if (componentsQueryResult.error) {
+    return null
+  }
+  if (!componentsQueryResult.data) {
     return null
   }
 

@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Button, Div, H3, Modal, P } from 'honorable'
 import { TbTrash } from 'react-icons/tb'
 
-import { DeleteComponentMutation } from '../../queries'
+import { DeleteComponentMutation, DeleteComponentMutationDataType } from '../../queries'
 
 import HierarchyContext from '../../contexts/HierarchyContext'
 
@@ -19,7 +19,7 @@ function DeleteComponentButton(props: any) {
   const lastEditedHierarchyItem = useMemo(() => [...hierarchy].reverse().find(x => x.componentAddress), [hierarchy])
   const navigate = useNavigate()
 
-  const [, deleteComponent] = useMutation(DeleteComponentMutation)
+  const [, deleteComponent] = useMutation<DeleteComponentMutationDataType>(DeleteComponentMutation)
 
   const handleDeleteComponentClick = useCallback(async () => {
     if (!isHierarchyOnComponent(hierarchy, componentAddress)) {

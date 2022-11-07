@@ -3,7 +3,7 @@ import { useQuery } from 'urql'
 import { useParams } from 'react-router-dom'
 import { Div, P } from 'honorable'
 
-import { ComponentQuery } from '../../queries'
+import { ComponentQuery, ComponentQueryDataType } from '../../queries'
 
 import ComponentLoader from './ComponentLoader'
 import DragAndDropEndModal from './DragAndDropEndModal'
@@ -11,7 +11,7 @@ import DragAndDropEndModal from './DragAndDropEndModal'
 function Component() {
   const { componentAddress = '' } = useParams()
 
-  const [componentQueryResult] = useQuery({
+  const [componentQueryResult] = useQuery<ComponentQueryDataType>({
     query: ComponentQuery,
     variables: {
       sourceComponentAddress: componentAddress,
@@ -25,7 +25,7 @@ function Component() {
   if (componentQueryResult.error) {
     return null
   }
-  if (!componentQueryResult.data.component) {
+  if (!componentQueryResult.data) {
     return null
   }
 

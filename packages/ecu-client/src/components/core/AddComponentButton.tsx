@@ -11,7 +11,7 @@ import HierarchyContext from '../../contexts/HierarchyContext'
 
 import useEditionSearchParams from '../../hooks/useEditionSearchParams'
 
-import { AddComponentMutation, ComponentsQuery } from '../../queries'
+import { AddComponentMutation, ComponentsQuery, ComponentsQueryDataType } from '../../queries'
 
 import isHierarchyOnComponent from '../../helpers/isHierarchyOnComponent'
 
@@ -27,7 +27,7 @@ function AddComponentButton() {
   const lastEditedComponent = useMemo(() => [...hierarchy].reverse().find(x => x.componentAddress), [hierarchy])
   const navigate = useNavigate()
 
-  const [componentsQueryResult] = useQuery({
+  const [componentsQueryResult] = useQuery<ComponentsQueryDataType>({
     query: ComponentsQuery,
   })
   const [, addComponent] = useMutation(AddComponentMutation)
@@ -58,6 +58,9 @@ function AddComponentButton() {
     return null
   }
   if (componentsQueryResult.error) {
+    return null
+  }
+  if (!componentsQueryResult.data) {
     return null
   }
   if (!componentAddress) {

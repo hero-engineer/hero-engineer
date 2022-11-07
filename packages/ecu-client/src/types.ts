@@ -9,3 +9,8 @@ export type HierarchyItemType = {
   hierarchyId?: string
   children: HierarchyItemType[]
 }
+
+export type TypeType = {
+  name: string
+  declaration: string
+}
