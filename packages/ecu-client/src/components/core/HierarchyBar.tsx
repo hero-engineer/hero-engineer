@@ -77,8 +77,8 @@ function HierarchyBar() {
       const lastHierarchyId = nextHierarchyIds[nextHierarchyIds.length - 1]
       const nextComponentDelta = index - totalHierarchy.findIndex(x => x.hierarchyId === lastHierarchyId)
 
-      console.log('totalHierarchy', totalHierarchy)
-      console.log('nextComponentDelta', nextComponentDelta)
+      // console.log('totalHierarchy', totalHierarchy)
+      // console.log('nextComponentDelta', nextComponentDelta)
 
       setEditionSearchParams({
         hierarchyIds: nextHierarchyIds,
@@ -108,7 +108,7 @@ function HierarchyBar() {
 
     setShouldAdjustComponentDelta(false)
 
-    console.log('areArraysEqual(previousHierarchy, hierarchy)', areArraysEqual(previousHierarchy, hierarchy))
+    // console.log('areArraysEqual(previousHierarchy, hierarchy)', areArraysEqual(previousHierarchy, hierarchy))
 
     if (areArraysEqual(previousHierarchy, hierarchy)) return
 
@@ -126,10 +126,10 @@ function HierarchyBar() {
     const workingHierarchyPart = totalHierarchy.slice(commonHierarchy.length, -1)
     const nextDelta = workingHierarchyPart.length ? getHierarchyDelta(workingHierarchyPart) : 0
 
-    console.log('totalHierarchy', totalHierarchy)
-    console.log('commonHierarchy', commonHierarchy)
-    console.log('workingHierarchyPart', workingHierarchyPart)
-    console.log('nextDelta', nextDelta)
+    // console.log('totalHierarchy', totalHierarchy)
+    // console.log('commonHierarchy', commonHierarchy)
+    // console.log('workingHierarchyPart', workingHierarchyPart)
+    // console.log('nextDelta', nextDelta)
 
     setEditionSearchParams({
       componentDelta: nextDelta,

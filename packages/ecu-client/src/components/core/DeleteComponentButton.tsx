@@ -19,7 +19,6 @@ function DeleteComponentButton(props: any) {
   const lastEditedHierarchyItem = useMemo(() => [...hierarchy].reverse().find(x => x.componentAddress), [hierarchy])
   const navigate = useNavigate()
 
-  console.log('lastEditedComponent', lastEditedHierarchyItem)
   const [, deleteComponent] = useMutation(DeleteComponentMutation)
 
   const handleDeleteComponentClick = useCallback(async () => {
