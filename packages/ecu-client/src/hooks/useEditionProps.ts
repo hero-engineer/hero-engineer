@@ -10,6 +10,8 @@ import getComponentRootHierarchyIds from '../helpers/getComponentRootHierarchyId
 
 import areArraysEqualAtStart from '../utils/areArraysEqualAtStart'
 
+import areArraysEqual from '../utils/areArraysEqual'
+
 import useForkedRef from './useForkedRef'
 import useHierarchyId from './useHierarchyId'
 import useEditionSearchParams from './useEditionSearchParams'
@@ -88,9 +90,9 @@ function useEditionProps<T>(id: string, className = '') {
 
     const ids = getHierarchyIds(event.target)
 
-    if (areArraysEqualAtStart(hierarchyIds, ids) && componentDelta < 0) {
+    if (areArraysEqual(hierarchyIds, ids) || (areArraysEqualAtStart(hierarchyIds, ids) && componentDelta < 0)) {
       setEditionSearchParams({
-        componentDelta: x => x + 1,
+        componentDelta: Math.min(0, componentDelta + 1),
       })
 
       return

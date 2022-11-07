@@ -108,14 +108,14 @@ function HierarchyBar() {
 
     setShouldAdjustComponentDelta(false)
 
-    // console.log('areArraysEqual(previousHierarchy, hierarchy)', areArraysEqual(previousHierarchy, hierarchy))
+    // console.log('areArraysEqual(previousHierarchy, hierarchy)', areArraysEqual(previousHierarchy, actualHierarchy))
 
-    if (areArraysEqual(previousHierarchy, hierarchy)) return
+    if (areArraysEqual(previousHierarchy, actualHierarchy)) return
 
     const commonHierarchy: HierarchyItemType[] = []
 
     for (let i = 0; i < previousHierarchy.length; i++) {
-      if (JSON.stringify(previousHierarchy[i]) === JSON.stringify(hierarchy[i])) {
+      if (JSON.stringify(previousHierarchy[i]) === JSON.stringify(actualHierarchy[i])) {
         commonHierarchy.push(previousHierarchy[i])
       }
       else {
@@ -126,6 +126,7 @@ function HierarchyBar() {
     const workingHierarchyPart = totalHierarchy.slice(commonHierarchy.length, -1)
     const nextDelta = workingHierarchyPart.length ? getHierarchyDelta(workingHierarchyPart) : 0
 
+    // console.log('previousHierarchy', previousHierarchy)
     // console.log('totalHierarchy', totalHierarchy)
     // console.log('commonHierarchy', commonHierarchy)
     // console.log('workingHierarchyPart', workingHierarchyPart)
@@ -134,7 +135,7 @@ function HierarchyBar() {
     setEditionSearchParams({
       componentDelta: nextDelta,
     })
-  }, [shouldAdjustComponentDelta, totalHierarchy, previousHierarchy, hierarchy, setEditionSearchParams, setShouldAdjustComponentDelta])
+  }, [shouldAdjustComponentDelta, totalHierarchy, previousHierarchy, actualHierarchy, setEditionSearchParams, setShouldAdjustComponentDelta])
 
   if (!componentAddress) {
     return null
