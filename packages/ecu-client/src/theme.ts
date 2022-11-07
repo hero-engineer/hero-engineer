@@ -222,7 +222,6 @@ export default mergeTheme(defaultTheme, {
   H1: {
     Root: [
       {
-        fontFamily: "'Cormorant', serif",
         fontSize: 48,
       },
     ],
@@ -230,7 +229,6 @@ export default mergeTheme(defaultTheme, {
   H2: {
     Root: [
       {
-        fontFamily: "'Cormorant', serif",
         fontSize: 40,
       },
     ],
@@ -238,7 +236,6 @@ export default mergeTheme(defaultTheme, {
   H3: {
     Root: [
       {
-        fontFamily: "'Cormorant', serif",
         fontSize: 32,
       },
     ],
@@ -246,23 +243,20 @@ export default mergeTheme(defaultTheme, {
   H4: {
     Root: [
       {
-        fontFamily: "'Cormorant', serif",
         fontSize: 24,
       },
     ],
   },
-  H5: {
-    Root: [
-      {
-        fontFamily: "'Cormorant', serif",
-      },
-    ],
-  },
-  H6: {
-    Root: [
-      {
-        fontFamily: "'Cormorant', serif",
-      },
-    ],
-  },
+  // H5: {
+  //   Root: [
+  //     {
+  //     },
+  //   ],
+  // },
+  // H6: {
+  //   Root: [
+  //     {
+  //     },
+  //   ],
+  // },
 })

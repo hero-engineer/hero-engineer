@@ -3,7 +3,7 @@
   "version": "0.3.0",
   "type": "module",
   "scripts": {
-    "build": "NODE_ENV=\"production\" tsc && vite build",
+    "build": "tsc && vite build",
     "preview": "vite preview",
     "dev": "nodemon --watch src --ext ts,tsx,js,css --exec \"npm run build\"",
     "prepublishOnly": "npm run build"

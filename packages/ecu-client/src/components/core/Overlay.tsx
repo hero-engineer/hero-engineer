@@ -8,6 +8,7 @@ import CreateComponentButton from './CreateComponentButton'
 import DeleteComponentButton from './DeleteComponentButton'
 import HierarchyBar from './HierarchyBar'
 import RetractablePanel from './layout/RetractablePanel'
+import TypesSection from './TypesSection'
 
 type OverlayProps = PropsWithChildren<any>
 
@@ -49,7 +50,7 @@ function Overlay({ children }: OverlayProps) {
       >
         {children}
         <RetractablePanel direction="right">
-          Foo
+          <TypesSection />
         </RetractablePanel>
       </Div>
     </Div>

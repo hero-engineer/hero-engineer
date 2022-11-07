@@ -9,7 +9,7 @@ type RetractablePanelProps = DivProps & {
 }
 
 function RetractablePanel({ children, direction, ...props }: RetractablePanelProps) {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(true)
 
   const toggleOpen = useCallback(() => setOpen(x => !x), [])
 
