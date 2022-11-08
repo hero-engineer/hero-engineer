@@ -116,3 +116,13 @@ export const MoveComponentMutation = `
 export type MoveComponentMutationDataType = {
   moveComponent: FileNodeType
 }
+
+export const WriteGlobalTypesMutation = `
+  mutation ($globalTypesFileContent: String!) {
+    writeGlobalTypes (globalTypesFileContent: $globalTypesFileContent)
+  }
+`
+
+export type WriteGlobalTypesMutationDataType = {
+  writeGlobalTypes: boolean
+}

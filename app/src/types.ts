@@ -4,3 +4,5 @@
 --- */
 
 export type Foo = string | number
+
+export type Bar = boolean

@@ -25,11 +25,11 @@ function getGlobalTypes() {
   let finalGlobalTypesFileContent = removePaddingEmptyLines(globalTypesFileContent)
 
   if (globalTypesFileContent.startsWith(globalTypesFileBegginingComment)) {
-    finalGlobalTypesFileContent = finalGlobalTypesFileContent.slice(globalTypesFileBegginingComment.length)
+    finalGlobalTypesFileContent = removePaddingEmptyLines(finalGlobalTypesFileContent.slice(globalTypesFileBegginingComment.length))
   }
 
   return {
-    globalTypesFileContent: removePaddingEmptyLines(finalGlobalTypesFileContent),
+    globalTypesFileContent: finalGlobalTypesFileContent,
   }
 }
 

@@ -4,10 +4,12 @@ import componentQuery from './queries/componentQuery'
 import componentsQuery from './queries/componentsQuery'
 import hierarchyQuery from './queries/hierarchyQuery'
 import globalTypesQuery from './queries/globalTypesQuery'
+import componentTypesQuery from './queries/componentTypesQuery'
 import createComponentMutation from './mutations/createComponentMutation'
 import addComponentMutation from './mutations/addComponentMutation'
 import deleteComponentMutation from './mutations/deleteComponentMutation'
 import moveComponentMutation from './mutations/moveComponentMutation'
+import writeGlobalTypesMutation from './mutations/writeGlobalTypesMutation'
 
 export const typeDefs = gql`
 
@@ -57,18 +59,26 @@ export const typeDefs = gql`
     globalTypesFileContent: String!
   }
 
+  type Typex {
+    name: String!
+    declaration: String!
+    fileNodeAddress: String!
+  }
+
   type Query {
     component(sourceComponentAddress: String!): FunctionNode
     components: [FunctionNode]
     hierarchy(sourceComponentAddress: String!): String!
     globalTypes: GlobalTypesReturnValue!
+    componentTypesQuery(sourceComponentAddress: String!): Typex[]
   }
 
   type Mutation {
-    createComponent(name: String!): FunctionNode
-    addComponent(sourceComponentAddress: String!, targetComponentAddress: String!, hierarchyIds: [String!]!, hierarchyPosition: HierarchyPosition!, componentDelta: Int!): FunctionNode
-    deleteComponent(sourceComponentAddress: String!, hierarchyIds: [String!]!, componentDelta: Int!): FunctionNode
-    moveComponent(sourceComponentAddress: String!, sourceHierarchyIds: [String!]!, targetHierarchyIds: [String!]!, hierarchyPosition: HierarchyPosition!): [FunctionNode]
+    createComponent(name: String!): FunctionNode!
+    addComponent(sourceComponentAddress: String!, targetComponentAddress: String!, hierarchyIds: [String!]!, hierarchyPosition: HierarchyPosition!, componentDelta: Int!): FunctionNode!
+    deleteComponent(sourceComponentAddress: String!, hierarchyIds: [String!]!, componentDelta: Int!): FunctionNode!
+    moveComponent(sourceComponentAddress: String!, sourceHierarchyIds: [String!]!, targetHierarchyIds: [String!]!, hierarchyPosition: HierarchyPosition!): [FunctionNode!]!
+    writeGlobalTypes(globalTypesFileContent: String!): Boolean!
   }
 
 `
@@ -79,11 +89,13 @@ export const resolvers = {
     components: componentsQuery,
     hierarchy: hierarchyQuery,
     globalTypes: globalTypesQuery,
+    componentTypes: componentTypesQuery,
   },
   Mutation: {
     createComponent: createComponentMutation,
     addComponent: addComponentMutation,
     deleteComponent: deleteComponentMutation,
     moveComponent: moveComponentMutation,
+    writeGlobalTypes: writeGlobalTypesMutation,
   },
 }

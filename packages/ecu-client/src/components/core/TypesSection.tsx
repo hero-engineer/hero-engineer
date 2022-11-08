@@ -9,7 +9,7 @@ function TypesSection() {
   return (
     <>
       <A onClick={() => setIsModalOpen(true)}>
-        Edit global types
+        Global types
       </A>
       <GlobalTypesModal
         open={isModalOpen}

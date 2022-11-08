@@ -82,3 +82,9 @@ export type HierarchyTreeType = {
   hierarchyId?: string
   children: HierarchyTreeType[]
 }
+
+export type TypeType = {
+  name: string
+  declaration: string
+  fileNodeAddress: string
+}
