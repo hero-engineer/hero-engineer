@@ -1,3 +1,5 @@
+import { TypeType } from './types'
+
 type FunctionNodeType = {
   address: string
   payload: {
@@ -66,6 +68,26 @@ export const GlobalTypesQuery = `
 export type GlobalTypesQueryDataType = {
   globalTypes: {
     globalTypesFileContent: string
+  }
+}
+
+export const ComponentTypesQuery = `
+query ($sourceComponentAddress: String!){
+  componentTypes (sourceComponentAddress: $sourceComponentAddress) {
+    rawTypes
+    types {
+      name
+      declaration
+      fileNodeAddress
+    }
+  }
+}
+`
+
+export type ComponentTypesQueryDataType = {
+  componentTypes: {
+    rawTypes: string
+    types: TypeType[]
   }
 }
 

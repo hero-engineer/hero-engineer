@@ -12,3 +12,11 @@ export const globalTypesFileBegginingComment = `/* ---
   Please do not delete this file
   as it is needed by the ecu core engine
 --- */`
+
+export const typesStartComment = `/* --
+  * TYPES START
+-- */`
+
+export const typesEndComment = `/* --
+  * TYPES END
+-- */`

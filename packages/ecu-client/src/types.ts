@@ -13,4 +13,5 @@ export type HierarchyItemType = {
 export type TypeType = {
   name: string
   declaration: string
+  fileNodeAddress: string
 }

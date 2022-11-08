@@ -31,6 +31,10 @@ function Component() {
 
   const { component } = componentQueryResult.data
 
+  if (!component) {
+    return null
+  }
+
   return (
     <>
       <P fontWeight="bold">{component.payload.name}</P>

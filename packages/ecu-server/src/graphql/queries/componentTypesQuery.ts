@@ -1,7 +1,9 @@
+import { typesEndComment, typesStartComment } from '../../configuration'
 import { FileNodeType, FunctionNodeType } from '../../types'
 
 import { getNodeByAddress, getNodesBySecondNeighbourg } from '../../graph'
 import traverseTypes from '../../domain/traversal/traverseTypes'
+import extractBetweenComments from '../../domain/comments/extractBetweenComments'
 
 type ComponentTypesQueryArgs = {
   sourceComponentAddress: string
@@ -26,7 +28,10 @@ function componentTypesQuery(_: any, { sourceComponentAddress }: ComponentTypesQ
 
   console.log('types', types)
 
-  return types
+  return {
+    rawTypes: extractBetweenComments(fileNode, typesStartComment, typesEndComment),
+    types,
+  }
 }
 
 export default componentTypesQuery

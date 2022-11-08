@@ -9,7 +9,7 @@ import DeleteComponentButton from './DeleteComponentButton'
 import HierarchyBar from './HierarchyBar'
 import RetractablePanel from './layout/RetractablePanel'
 import TypesSection from './TypesSection'
-import ComponentPropTypeEditor from './ComponentPropTypeEditor'
+import ComponentTypesEditor from './ComponentTypesEditor'
 
 type OverlayProps = PropsWithChildren<any>
 
@@ -52,7 +52,7 @@ function Overlay({ children }: OverlayProps) {
         {children}
         <RetractablePanel direction="right">
           <TypesSection />
-          <ComponentPropTypeEditor />
+          <ComponentTypesEditor />
         </RetractablePanel>
       </Div>
     </Div>

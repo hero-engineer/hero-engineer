@@ -59,10 +59,15 @@ export const typeDefs = gql`
     globalTypesFileContent: String!
   }
 
-  type Typex {
+  type Type {
     name: String!
     declaration: String!
     fileNodeAddress: String!
+  }
+
+  type ComponentTypesReturnValue {
+    rawTypes: String!
+    types: [Type]!
   }
 
   type Query {
@@ -70,7 +75,7 @@ export const typeDefs = gql`
     components: [FunctionNode]
     hierarchy(sourceComponentAddress: String!): String!
     globalTypes: GlobalTypesReturnValue!
-    componentTypesQuery(sourceComponentAddress: String!): Typex[]
+    componentTypes(sourceComponentAddress: String!): ComponentTypesReturnValue
   }
 
   type Mutation {
