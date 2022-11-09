@@ -2,12 +2,10 @@ import traverse from '@babel/traverse'
 
 import { FileNodeType, ImportType } from '../../types'
 
-function getAllFileImports(fileNode: FileNodeType) {
-  const { ast } = fileNode.payload
-
+function traverseImports(fileNode: FileNodeType) {
   const imports: ImportType[] = []
 
-  traverse(ast, {
+  traverse(fileNode.payload.ast, {
     ImportDeclaration(path) {
       path.node.specifiers.forEach(s => {
         imports.push({
@@ -21,4 +19,4 @@ function getAllFileImports(fileNode: FileNodeType) {
   return imports
 }
 
-export default getAllFileImports
+export default traverseImports

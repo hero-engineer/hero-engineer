@@ -10,6 +10,7 @@ import HierarchyBar from './HierarchyBar'
 import RetractablePanel from './layout/RetractablePanel'
 import TypesSection from './TypesSection'
 import ComponentTypesEditor from './ComponentTypesEditor'
+import ComponentImportsEditor from './ComponentImportsEditor'
 
 type OverlayProps = PropsWithChildren<any>
 
@@ -52,6 +53,7 @@ function Overlay({ children }: OverlayProps) {
         {children}
         <RetractablePanel direction="right">
           <Div minWidth={512}>
+            <ComponentImportsEditor />
             <TypesSection />
             <ComponentTypesEditor />
           </Div>

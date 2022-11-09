@@ -1,5 +1,7 @@
 import { FileNodeType } from '../../types'
 
+import removePaddingEmptyLines from '../code/removePaddingEmptyLines'
+
 function extractBetweenComments(fileNode: FileNodeType, startComment: string, endComment: string) {
   const { code } = fileNode.payload
 
@@ -8,7 +10,7 @@ function extractBetweenComments(fileNode: FileNodeType, startComment: string, en
 
   if (startIndex === -1 || endIndex === -1) return ''
 
-  return code.slice(startIndex + startComment.length, endIndex)
+  return removePaddingEmptyLines(code.slice(startIndex + startComment.length, endIndex))
 }
 
 export default extractBetweenComments

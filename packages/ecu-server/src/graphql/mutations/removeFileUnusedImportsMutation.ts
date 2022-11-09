@@ -1,6 +1,6 @@
-import { FileNodeType, FunctionNodeType, HistoryMutationReturnType } from '../../types'
+import { FileNodeType, HistoryMutationReturnType } from '../../types'
 
-import { getNodeByAddress, getNodesBySecondNeighbourg } from '../../graph'
+import { getNodeByAddress } from '../../graph'
 
 import composeHistoryMutation from '../../history/composeHistoryMutation'
 

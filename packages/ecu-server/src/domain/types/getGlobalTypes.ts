@@ -6,23 +6,9 @@ import { FileNodeType } from '../../types'
 
 import { getNodesByRole } from '../../graph'
 
-import traverseTypes from '../traversal/traverseTypes'
+import removePaddingEmptyLines from '../code/removePaddingEmptyLines'
 
-function removePaddingEmptyLines(text: string) {
-  const textArray = text.split('\n')
-
-  for (const line of [...textArray]) {
-    if (line.trim() === '') textArray.shift()
-    else break
-  }
-
-  for (const line of [...textArray].reverse()) {
-    if (line.trim() === '') textArray.pop()
-    else break
-  }
-
-  return textArray.join('\n')
-}
+import traverseTypes from './traverseTypes'
 
 function getGlobalTypes() {
   const globalTypesFilePath = path.join(appPath, globalTypesFileRelativePath)
@@ -42,7 +28,7 @@ function getGlobalTypes() {
 
   return {
     globalTypesFileContent: finalGlobalTypesFileContent,
-    globalTypes: traverseTypes(fileNode).types,
+    globalTypes: traverseTypes(fileNode),
   }
 }
 

@@ -1,4 +1,4 @@
-import { TypeType } from './types'
+import { ImportType, TypeType } from './types'
 
 type FunctionNodeType = {
   address: string
@@ -86,9 +86,9 @@ export type GlobalTypesQueryDataType = {
   }
 }
 
-export const ComponentTypesQuery = `
-query ($sourceComponentAddress: String!){
-  componentTypes (sourceComponentAddress: $sourceComponentAddress) {
+export const FileTypesQuery = `
+query ($sourceFileAddress: String!){
+  fileTypes (sourceFileAddress: $sourceFileAddress) {
     rawTypes
     types {
       name
@@ -99,10 +99,29 @@ query ($sourceComponentAddress: String!){
 }
 `
 
-export type ComponentTypesQueryDataType = {
-  componentTypes: {
+export type FileTypesQueryDataType = {
+  fileTypes: {
     rawTypes: string
     types: TypeType[]
+  }
+}
+
+export const FileImportsQuery = `
+query ($sourceFileAddress: String!){
+  fileImports (sourceFileAddress: $sourceFileAddress) {
+    rawImports
+    imports {
+      name
+      value
+    }
+  }
+}
+`
+
+export type FileImportsQueryDataType = {
+  fileImports: {
+    rawImports: string
+    imports: ImportType[]
   }
 }
 
@@ -165,11 +184,21 @@ export type WriteGlobalTypesMutationDataType = {
 }
 
 export const WriteFileTypesMutation = `
-  mutation ($sourceComponentAddress: String!, $rawTypes: String!) {
+  mutation ($sourceFileAddress: String!, $rawTypes: String!) {
     writeFileTypes (sourceFileAddress: $sourceFileAddress, rawTypes: $rawTypes)
   }
 `
 
 export type WriteFileTypesMutationDataType = {
   writeFileTypes: boolean
+}
+
+export const WriteFileImportsMutation = `
+  mutation ($sourceFileAddress: String!, $rawImports: String!) {
+    writeFileImports (sourceFileAddress: $sourceFileAddress, rawImports: $rawImports)
+  }
+`
+
+export type WriteFileImportsMutationDataType = {
+  writeFileImports: boolean
 }

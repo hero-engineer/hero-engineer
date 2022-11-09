@@ -1,4 +1,4 @@
-import { FileNodeType, FunctionNodeType, HierarchyTreeType, HistoryMutationReturnType } from '../../types'
+import { FunctionNodeType, HistoryMutationReturnType } from '../../types'
 
 import { getNodeByAddress } from '../../graph'
 

@@ -13,6 +13,14 @@ export const globalTypesFileBegginingComment = `/* ---
   as it is needed by the ecu core engine
 --- */`
 
+export const importsStartComment = `/* --
+  * IMPORTS START
+-- */`
+
+export const importsEndComment = `/* --
+  * IMPORTS END
+-- */`
+
 export const typesStartComment = `/* --
   * TYPES START
 -- */`

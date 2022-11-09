@@ -3,16 +3,16 @@ import { useParams } from 'react-router-dom'
 import { useMutation, useQuery } from 'urql'
 import { Button, Div, Input } from 'honorable'
 
-import { ComponentTypesQuery, ComponentTypesQueryDataType, WriteFileTypesMutation, WriteFileTypesMutationDataType } from '../../queries'
+import { FileTypesQuery, FileTypesQueryDataType, WriteFileTypesMutation, WriteFileTypesMutationDataType } from '../../queries'
 
 function ComponentTypesEditor() {
-  const { fileAddress = '', componentAddress = '' } = useParams()
+  const { fileAddress = '' } = useParams()
   const [rawTypes, setRawTypes] = useState('')
 
-  const [componentTypesQueryResult] = useQuery<ComponentTypesQueryDataType>({
-    query: ComponentTypesQuery,
+  const [fileTypesQueryResult] = useQuery<FileTypesQueryDataType>({
+    query: FileTypesQuery,
     variables: {
-      sourceComponentAddress: componentAddress,
+      sourceFileAddress: fileAddress,
     },
   })
   const [, writeFileTypes] = useMutation<WriteFileTypesMutationDataType>(WriteFileTypesMutation)
@@ -25,14 +25,14 @@ function ComponentTypesEditor() {
   }, [writeFileTypes, fileAddress, rawTypes])
 
   useEffect(() => {
-    if (!componentTypesQueryResult.data?.componentTypes) {
+    if (!fileTypesQueryResult.data?.fileTypes) {
       return
     }
 
-    setRawTypes(componentTypesQueryResult.data?.componentTypes.rawTypes)
-  }, [componentTypesQueryResult.data])
+    setRawTypes(fileTypesQueryResult.data?.fileTypes.rawTypes)
+  }, [fileTypesQueryResult.data])
 
-  console.log('componentTypesQueryResult.data', componentTypesQueryResult.data)
+  console.log('fileTypesQueryResult.data', fileTypesQueryResult.data)
 
   return (
     <Div>

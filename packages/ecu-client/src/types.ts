@@ -16,3 +16,8 @@ export type TypeType = {
   declaration: string
   fileNodeAddress: string
 }
+
+export type ImportType = {
+  name: string
+  value: string
+}
