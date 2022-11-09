@@ -148,3 +148,13 @@ export const WriteGlobalTypesMutation = `
 export type WriteGlobalTypesMutationDataType = {
   writeGlobalTypes: boolean
 }
+
+export const WriteComponentTypesMutation = `
+  mutation ($sourceComponentAddress: String!, $rawTypes: String!) {
+    writeComponentTypes (sourceComponentAddress: $sourceComponentAddress, rawTypes: $rawTypes)
+  }
+`
+
+export type WriteComponentTypesMutationDataType = {
+  writeComponentTypes: boolean
+}

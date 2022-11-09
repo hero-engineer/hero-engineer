@@ -50,7 +50,10 @@ function Overlay({ children }: OverlayProps) {
         flexGrow={1}
       >
         {children}
-        <RetractablePanel direction="right">
+        <RetractablePanel
+          direction="right"
+          minWidth={512}
+        >
           <TypesSection />
           <ComponentTypesEditor />
         </RetractablePanel>

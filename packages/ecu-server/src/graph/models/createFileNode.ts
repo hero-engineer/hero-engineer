@@ -1,8 +1,8 @@
 import fs from 'node:fs'
 
-import { parse } from '@babel/parser'
-
 import { FileNodePayloadType, FileNodeType } from '../../types'
+
+import parseCode from '../../domain/parseCode'
 
 type CreateFileNodeDataType = Omit<FileNodeType, 'payload'> & { payload: Omit<FileNodePayloadType, 'code' | 'ast'> }
 
@@ -15,13 +15,7 @@ function createFileNode(data: CreateFileNodeDataType): FileNodeType {
         return fs.readFileSync(data.payload.path, 'utf8')
       },
       get ast() {
-        return parse(
-          this.code,
-          {
-            sourceType: 'module',
-            plugins: ['jsx', 'typescript'],
-          }
-        )
+        return parseCode(this.code)
       },
     },
   }

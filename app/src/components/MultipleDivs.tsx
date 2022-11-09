@@ -7,9 +7,9 @@ import CoolDaddy from './CoolDaddy'
 function MultipleDivs(props: any) {
   return (
     <>
-      <Div data-ecu="rnx97ptZj8:0">
+      <Div data-ecu="Xe59-3Zyeu:0">
         <CoolDaddy>
-          <Div data-ecu="rnx97ptZj8:0_0">
+          <Div data-ecu="Xe59-3Zyeu:0_0">
             Yo
           </Div>
           <CoolDiv />
@@ -21,8 +21,8 @@ function MultipleDivs(props: any) {
           <CoolDiv />
         </CoolDaddy>
       </CoolDaddy>
-      <Div data-ecu="rnx97ptZj8:1">
-        <Div data-ecu="rnx97ptZj8:1_0">
+      <Div data-ecu="Xe59-3Zyeu:1">
+        <Div data-ecu="Xe59-3Zyeu:1_0">
           <CoolDaddy>
             <CoolDaddy>
               <CoolDaddy>
@@ -34,11 +34,11 @@ function MultipleDivs(props: any) {
       </Div>
       <DualCoolDiv />
       <DualCoolDiv />
-      <Div data-ecu="rnx97ptZj8:2">
-        <Div data-ecu="rnx97ptZj8:2_0">
+      <Div data-ecu="Xe59-3Zyeu:2">
+        <Div data-ecu="Xe59-3Zyeu:2_0">
           Dear component
         </Div>
-        <Div data-ecu="rnx97ptZj8:2_1">
+        <Div data-ecu="Xe59-3Zyeu:2_1">
           Hello
         </Div>
         <CoolDiv />

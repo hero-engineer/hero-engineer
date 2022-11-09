@@ -10,6 +10,7 @@ import addComponentMutation from './mutations/addComponentMutation'
 import deleteComponentMutation from './mutations/deleteComponentMutation'
 import moveComponentMutation from './mutations/moveComponentMutation'
 import writeGlobalTypesMutation from './mutations/writeGlobalTypesMutation'
+import writeComponentTypesMutation from './mutations/writeComponentTypesMutation'
 
 export const typeDefs = gql`
 
@@ -84,6 +85,7 @@ export const typeDefs = gql`
     deleteComponent(sourceComponentAddress: String!, hierarchyIds: [String!]!, componentDelta: Int!): FunctionNode!
     moveComponent(sourceComponentAddress: String!, sourceHierarchyIds: [String!]!, targetHierarchyIds: [String!]!, hierarchyPosition: HierarchyPosition!): [FunctionNode!]!
     writeGlobalTypes(globalTypesFileContent: String!): Boolean!
+    writeComponentTypes(sourceComponentAddress: String!, rawTypes: String!): Boolean!
   }
 
 `
@@ -102,5 +104,6 @@ export const resolvers = {
     deleteComponent: deleteComponentMutation,
     moveComponent: moveComponentMutation,
     writeGlobalTypes: writeGlobalTypesMutation,
+    writeComponentTypes: writeComponentTypesMutation,
   },
 }

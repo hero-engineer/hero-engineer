@@ -20,3 +20,10 @@ export const typesStartComment = `/* --
 export const typesEndComment = `/* --
   * TYPES END
 -- */`
+
+export const moduleNameToImportNames = {
+  react: [
+    'PropsWithChildren',
+    'Node',
+  ],
+}
