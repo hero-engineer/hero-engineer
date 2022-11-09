@@ -25,11 +25,11 @@ function Component() {
   if (componentQueryResult.error) {
     return null
   }
-  if (!componentQueryResult.data) {
+  if (!componentQueryResult.data?.component) {
     return null
   }
 
-  const { component } = componentQueryResult.data
+  const { component } = componentQueryResult.data.component
 
   if (!component) {
     return null

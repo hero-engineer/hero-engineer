@@ -18,8 +18,12 @@ function Router({ children }: any) {
             element={<Components />}
           />
           <Route
-            path="component/:componentAddress"
+            path="component/:fileAddress/:componentAddress"
             element={<Component />}
+          />
+          <Route
+            path="*"
+            element={<div>Not found</div>}
           />
         </Route>
         <Route

@@ -3,6 +3,7 @@ export type HierarchyPosition = 'before' | 'after' | 'children' | 'parent'
 export type HierarchyItemType = {
   label: string
   index: number
+  fileAddress: string
   componentName: string
   onComponentAddress: string
   componentAddress?: string

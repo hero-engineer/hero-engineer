@@ -33,9 +33,6 @@ function HierarchyBar() {
   const { hierarchyIds, componentDelta, setEditionSearchParams } = useEditionSearchParams()
   const { shouldAdjustComponentDelta, setShouldAdjustComponentDelta, setHierarchy, setTotalHierarchy } = useContext(HierarchyContext)
 
-  // const previousHierarchy = usePreviousWithDefault(usePreviousWithDefault(hierarchy, hierarchy), hierarchy)
-  // const previousTotalHierarchy = usePreviousWithDefault(totalHierarchy, totalHierarchy)
-
   const [hierarchyQueryResult] = useQuery<HierarchyQueryDataType>({
     query: HierarchyQuery,
     variables: {

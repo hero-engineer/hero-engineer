@@ -17,7 +17,7 @@ function Components() {
   if (componentsQueryResult.error) {
     return null
   }
-  if (!componentsQueryResult.data) {
+  if (!componentsQueryResult.data?.components) {
     return null
   }
 
@@ -27,10 +27,10 @@ function Components() {
     <>
       <H2>Components</H2>
       <Ul mt={2}>
-        {components.map((component: any) => (
-          <Li key={component.address}>
-            <Link to={`/__ecu__/component/${component.address}`}>
-              {component.payload.name}
+        {components.map(componentAndFile => (
+          <Li key={componentAndFile.component.address}>
+            <Link to={`/__ecu__/component/${componentAndFile.file.address}/${componentAndFile.component.address}`}>
+              {componentAndFile.component.payload.name}
             </Link>
           </Li>
         ))}

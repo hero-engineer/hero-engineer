@@ -51,7 +51,9 @@ function AddComponentButton() {
   const navigateToLastEditedComponent = useCallback(() => {
     setIsModalOpen(false)
 
-    navigate(`/__ecu__/component/${lastEditedComponent?.componentAddress}`)
+    if (!lastEditedComponent) return
+
+    navigate(`/__ecu__/component/${lastEditedComponent.fileAddress}/${lastEditedComponent.componentAddress}`)
   }, [navigate, lastEditedComponent])
 
   if (componentsQueryResult.fetching) {
@@ -60,7 +62,7 @@ function AddComponentButton() {
   if (componentsQueryResult.error) {
     return null
   }
-  if (!componentsQueryResult.data) {
+  if (!componentsQueryResult.data?.components) {
     return null
   }
   if (!componentAddress) {
@@ -80,12 +82,12 @@ function AddComponentButton() {
           <MenuItem value="">
             Select a component
           </MenuItem>
-          {componentsQueryResult.data.components.map((component: any) => (
+          {componentsQueryResult.data.components.map(componentAndFile => (
             <MenuItem
-              key={component.address}
-              value={component.address}
+              key={componentAndFile.component.address}
+              value={componentAndFile.component.address}
             >
-              {component.payload.name}
+              {componentAndFile.component.payload.name}
             </MenuItem>
           ))}
         </Select>

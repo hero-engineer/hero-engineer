@@ -13,6 +13,11 @@ type FileNodeType = {
   address: string
 }
 
+type ComponentAndFileType = {
+  component: FunctionNodeType
+  file: FileNodeType
+}
+
 export const HierarchyQuery = `
   query ($sourceComponentAddress: String!) {
     hierarchy (sourceComponentAddress: $sourceComponentAddress)
@@ -26,6 +31,32 @@ export type HierarchyQueryDataType = {
 export const ComponentsQuery = `
   query {
     components {
+      file {
+        address
+      }
+      component {
+        address
+        payload {
+          name
+          path
+          relativePath
+        }
+      }
+    }
+  }
+`
+
+export type ComponentsQueryDataType = {
+  components: ComponentAndFileType[]
+}
+
+export const ComponentQuery = `
+query ($sourceComponentAddress: String!){
+  component (sourceComponentAddress: $sourceComponentAddress) {
+    file {
+      address
+    }
+    component {
       address
       payload {
         name
@@ -34,27 +65,11 @@ export const ComponentsQuery = `
       }
     }
   }
-`
-
-export type ComponentsQueryDataType = {
-  components: FunctionNodeType[]
-}
-
-export const ComponentQuery = `
-query ($sourceComponentAddress: String!){
-  component (sourceComponentAddress: $sourceComponentAddress) {
-    address
-    payload {
-      name
-      path
-      relativePath
-    }
-  }
 }
 `
 
 export type ComponentQueryDataType = {
-  component: FunctionNodeType
+  component: ComponentAndFileType
 }
 
 export const GlobalTypesQuery = `
@@ -149,12 +164,12 @@ export type WriteGlobalTypesMutationDataType = {
   writeGlobalTypes: boolean
 }
 
-export const WriteComponentTypesMutation = `
+export const WriteFileTypesMutation = `
   mutation ($sourceComponentAddress: String!, $rawTypes: String!) {
-    writeComponentTypes (sourceComponentAddress: $sourceComponentAddress, rawTypes: $rawTypes)
+    writeFileTypes (sourceFileAddress: $sourceFileAddress, rawTypes: $rawTypes)
   }
 `
 
-export type WriteComponentTypesMutationDataType = {
-  writeComponentTypes: boolean
+export type WriteFileTypesMutationDataType = {
+  writeFileTypes: boolean
 }

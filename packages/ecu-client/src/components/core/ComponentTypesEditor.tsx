@@ -3,10 +3,10 @@ import { useParams } from 'react-router-dom'
 import { useMutation, useQuery } from 'urql'
 import { Button, Div, Input } from 'honorable'
 
-import { ComponentTypesQuery, ComponentTypesQueryDataType, WriteComponentTypesMutation, WriteComponentTypesMutationDataType } from '../../queries'
+import { ComponentTypesQuery, ComponentTypesQueryDataType, WriteFileTypesMutation, WriteFileTypesMutationDataType } from '../../queries'
 
 function ComponentTypesEditor() {
-  const { componentAddress = '' } = useParams()
+  const { fileAddress = '', componentAddress = '' } = useParams()
   const [rawTypes, setRawTypes] = useState('')
 
   const [componentTypesQueryResult] = useQuery<ComponentTypesQueryDataType>({
@@ -15,14 +15,14 @@ function ComponentTypesEditor() {
       sourceComponentAddress: componentAddress,
     },
   })
-  const [, writeComponentTypes] = useMutation<WriteComponentTypesMutationDataType>(WriteComponentTypesMutation)
+  const [, writeFileTypes] = useMutation<WriteFileTypesMutationDataType>(WriteFileTypesMutation)
 
   const handleSave = useCallback(() => {
-    writeComponentTypes({
-      sourceComponentAddress: componentAddress,
+    writeFileTypes({
+      sourceFileAddress: fileAddress,
       rawTypes,
     })
-  }, [writeComponentTypes, componentAddress, rawTypes])
+  }, [writeFileTypes, fileAddress, rawTypes])
 
   useEffect(() => {
     if (!componentTypesQueryResult.data?.componentTypes) {

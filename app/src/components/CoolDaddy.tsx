@@ -1,15 +1,16 @@
 import { Foo } from '@global-types'
 import { PropsWithChildren } from 'react'
-// import { PropsWithChildren } from 'react'
 import { Div } from 'ecu-client'
 
 /* --
   * TYPES START
 -- */
 
+
 type CoolDaddyPropsType = PropsWithChildren<{
   placeholder: Foo;
 }>;
+
 
 /* --
   * TYPES END

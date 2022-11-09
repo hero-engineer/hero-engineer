@@ -10,7 +10,8 @@ import addComponentMutation from './mutations/addComponentMutation'
 import deleteComponentMutation from './mutations/deleteComponentMutation'
 import moveComponentMutation from './mutations/moveComponentMutation'
 import writeGlobalTypesMutation from './mutations/writeGlobalTypesMutation'
-import writeComponentTypesMutation from './mutations/writeComponentTypesMutation'
+import writeFileTypesMutation from './mutations/writeFileTypesMutation'
+import removeFileUnusedImportsMutation from './mutations/removeFileUnusedImportsMutation'
 
 export const typeDefs = gql`
 
@@ -56,6 +57,11 @@ export const typeDefs = gql`
     payload: FunctionNodePayload
   }
 
+  type ComponentAndFile {
+    component: FunctionNode!
+    file: FileNode!
+  }
+
   type GlobalTypesReturnValue {
     globalTypesFileContent: String!
   }
@@ -72,8 +78,8 @@ export const typeDefs = gql`
   }
 
   type Query {
-    component(sourceComponentAddress: String!): FunctionNode
-    components: [FunctionNode]
+    component(sourceComponentAddress: String!): ComponentAndFile!
+    components: [ComponentAndFile]!
     hierarchy(sourceComponentAddress: String!): String!
     globalTypes: GlobalTypesReturnValue!
     componentTypes(sourceComponentAddress: String!): ComponentTypesReturnValue
@@ -85,7 +91,8 @@ export const typeDefs = gql`
     deleteComponent(sourceComponentAddress: String!, hierarchyIds: [String!]!, componentDelta: Int!): FunctionNode!
     moveComponent(sourceComponentAddress: String!, sourceHierarchyIds: [String!]!, targetHierarchyIds: [String!]!, hierarchyPosition: HierarchyPosition!): [FunctionNode!]!
     writeGlobalTypes(globalTypesFileContent: String!): Boolean!
-    writeComponentTypes(sourceComponentAddress: String!, rawTypes: String!): Boolean!
+    writeFileTypes(sourceFileAddress: String!, rawTypes: String!): Boolean!
+    removeFileUnusedImports(sourceFileAddress: String!): Boolean!
   }
 
 `
@@ -104,6 +111,7 @@ export const resolvers = {
     deleteComponent: deleteComponentMutation,
     moveComponent: moveComponentMutation,
     writeGlobalTypes: writeGlobalTypesMutation,
-    writeComponentTypes: writeComponentTypesMutation,
+    writeFileTypes: writeFileTypesMutation,
+    removeFileUnusedImports: removeFileUnusedImportsMutation,
   },
 }

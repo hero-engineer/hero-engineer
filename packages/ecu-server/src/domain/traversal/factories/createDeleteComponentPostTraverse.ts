@@ -1,8 +1,3 @@
-import {
-  ImportDefaultSpecifier,
-  ImportNamespaceSpecifier,
-  ImportSpecifier,
-} from '@babel/types'
 import { ParseResult } from '@babel/core'
 import traverse from '@babel/traverse'
 
@@ -13,14 +8,14 @@ function createDeleteComponentPostTraverse(): PostTraverseType {
     const identifierNames: string[] = []
 
     traverse(ast, {
-      JSXIdentifier(path: any) {
+      JSXIdentifier(path) {
         identifierNames.push(path.node.name)
       },
     })
 
     traverse(ast, {
-      ImportDeclaration(path: any) {
-        if (path.node.specifiers.some((s: ImportSpecifier | ImportDefaultSpecifier | ImportNamespaceSpecifier) => identifierNames.includes(s.local.name))) return
+      ImportDeclaration(path) {
+        if (path.node.specifiers.some(s => identifierNames.includes(s.local.name))) return
 
         path.remove()
       },
