@@ -4,9 +4,8 @@ import { getNodeByAddress } from '../../graph'
 
 import composeHistoryMutation from '../../history/composeHistoryMutation'
 
-import processImpactedFileNodes from '../../domain/traversal/processImpactedFileNodes'
-import createDeleteComponentPostTraverse from '../../domain/traversal/factories/createDeleteComponentPostTraverse'
-import traverseComponent from '../../domain/traversal/traverseComponent'
+import processImpactedFileNodes from '../../domain/processImpactedFileNodes'
+import traverseComponent from '../../domain/component/traverseComponent'
 import applyComponentDelta from '../../domain/utils/applyComponentDelta'
 
 type DeleteComponentMutationArgs = {
@@ -36,9 +35,7 @@ async function deleteComponentMutation(_: any, { sourceComponentAddress, hierarc
 
   const { impacted } = traverseComponent(sourceComponentAddress, hierarchyIds, { onSuccess })
 
-  const postTraverse = createDeleteComponentPostTraverse()
-
-  const { impactedFileNode, impactedComponentNode } = await processImpactedFileNodes(impacted, postTraverse)
+  const { impactedFileNode, impactedComponentNode } = await processImpactedFileNodes(impacted)
 
   return {
     returnValue: impactedComponentNode,

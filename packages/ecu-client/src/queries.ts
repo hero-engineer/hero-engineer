@@ -112,7 +112,8 @@ query ($sourceFileAddress: String!){
     rawImports
     imports {
       name
-      value
+      source
+      type
     }
   }
 }

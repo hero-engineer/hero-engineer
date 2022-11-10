@@ -70,7 +70,8 @@ export const typeDefs = gql`
 
   type Import {
     name: String!
-    value: String!
+    source: String!
+    type: String!
   }
 
   type Type {

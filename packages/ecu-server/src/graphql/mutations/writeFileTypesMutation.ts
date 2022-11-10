@@ -19,7 +19,7 @@ type WriteFileTypesMutationArgs = {
 async function writeFileTypesMutation(_: any, { sourceFileAddress, rawTypes }: WriteFileTypesMutationArgs): Promise<HistoryMutationReturnType<boolean>> {
   console.log('___writeFileTypesMutation___')
 
-  const fileNode = getNodeByAddress<FileNodeType>('sourceFileAddress')
+  const fileNode = getNodeByAddress<FileNodeType>(sourceFileAddress)
 
   if (!fileNode) {
     throw new Error(`File ${sourceFileAddress} not found`)
@@ -31,12 +31,19 @@ async function writeFileTypesMutation(_: any, { sourceFileAddress, rawTypes }: W
     throw new Error(`Types start or end comment not found for component ${sourceFileAddress}`)
   }
 
-  const ast = parseCode(code)
-  const typeImports = getTypesImports(rawTypes)
+  try {
+    const ast = parseCode(code)
+    const typeImports = getTypesImports(rawTypes)
 
-  insertImports(ast, typeImports)
+    insertImports(ast, typeImports)
 
-  await regenerate(fileNode, ast)
+    await regenerate(fileNode, ast)
+  }
+  catch (error) {
+    console.log('error', error)
+  }
+
+  console.log('success')
 
   return {
     returnValue: true,

@@ -9,8 +9,9 @@ function traverseImports(fileNode: FileNodeType) {
     ImportDeclaration(path) {
       path.node.specifiers.forEach(s => {
         imports.push({
-          value: path.node.source.value,
+          source: path.node.source.value,
           name: s.local.name,
+          type: s.type,
         })
       })
     },

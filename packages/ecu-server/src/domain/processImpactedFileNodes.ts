@@ -1,17 +1,17 @@
-import { FileNodeType, FunctionNodeType, ImpactedType, PostTraverseType } from '../../types'
+import { FileNodeType, FunctionNodeType, ImpactedType, PostTraverseType } from '../types'
 
-import { getNodesByFirstNeighbourg } from '../../graph'
+import { getNodesByFirstNeighbourg } from '../graph'
 
-import regenerate from '../regenerate'
+import regenerate from './regenerate'
 
-import updateDataEcuAttributes from './updateDataEcuAttributes'
+import updateDataEcuAttributes from './component/updateDataEcuAttributes'
 
 type ProcessImpactedFileNodesResolveType = {
   impactedFileNode: FileNodeType | null
   impactedComponentNode: FunctionNodeType | null
 }
 
-async function processImpactedFileNodes(impacted: ImpactedType[], postTraverse: PostTraverseType, refreshDataEcuAttributes = true): Promise<ProcessImpactedFileNodesResolveType> {
+async function processImpactedFileNodes(impacted: ImpactedType[], postTraverse: PostTraverseType = () => {}, refreshDataEcuAttributes = true): Promise<ProcessImpactedFileNodesResolveType> {
   let impactedFileNode: FileNodeType | null = null
   let impactedComponentNode: FunctionNodeType | null = null
 

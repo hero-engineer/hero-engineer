@@ -90,7 +90,10 @@ export type TypeType = {
   fileNodeAddress: string
 }
 
+export type ImportSpecifierType = 'ImportDefaultSpecifier' | 'ImportNamespaceSpecifier' | 'ImportSpecifier'
+
 export type ImportType = {
-  value: string
+  source: string
   name: string
+  type: ImportSpecifierType
 }

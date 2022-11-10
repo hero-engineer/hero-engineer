@@ -34,7 +34,7 @@ type TraverseComponentReturnType = {
 }
 
 function traverseComponent(componentAddress: string, hierarchyIds: string[], events: TraverseComponentEventsType = {}): TraverseComponentReturnType {
-  console.log('traverseComponent', componentAddress, hierarchyIds)
+  // console.log('traverseComponent', componentAddress, hierarchyIds)
 
   const fileNode = getNodesBySecondNeighbourg<FileNodeType>(componentAddress, 'DeclaresFunction')[0]
 

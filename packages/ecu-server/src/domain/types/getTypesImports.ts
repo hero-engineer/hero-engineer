@@ -1,12 +1,10 @@
 import traverse from '@babel/traverse'
 
-import { moduleNameToImportNames } from '../../configuration'
+import { externalModulesImports } from '../../configuration'
 import { ImportType } from '../../types'
 import parseCode from '../parseCode'
 
 import getGlobalTypes from '../types/getGlobalTypes'
-
-const moduleNameToImportNamesEntries = Object.entries(moduleNameToImportNames)
 
 function getTypesImports(rawTypes: string) {
   const typeImports: ImportType[] = []
@@ -21,19 +19,17 @@ function getTypesImports(rawTypes: string) {
       if (foundGlobalType) {
         typeImports.push({
           name,
-          value: '@global-types',
+          source: '@global-types',
+          type: 'ImportSpecifier',
         })
 
         return
       }
 
-      const [moduleName] = moduleNameToImportNamesEntries.find(([, importNames]) => importNames.includes(name)) || []
+      const externalImport = externalModulesImports.find(x => x.name === name)
 
-      if (moduleName) {
-        typeImports.push({
-          name,
-          value: moduleName,
-        })
+      if (externalImport) {
+        typeImports.push(externalImport)
       }
     },
   })

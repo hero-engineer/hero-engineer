@@ -1,3 +1,5 @@
+import { ImportType } from './types'
+
 export const appPath = '/Users/sven/dev/ecu/app'
 
 export const ecuPropName = 'data-ecu'
@@ -29,9 +31,15 @@ export const typesEndComment = `/* --
   * TYPES END
 -- */`
 
-export const moduleNameToImportNames = {
-  react: [
-    'PropsWithChildren',
-    'Node',
-  ],
-}
+export const externalModulesImports: ImportType[] = [
+  {
+    name: 'PropsWithChildren',
+    source: 'react',
+    type: 'ImportSpecifier',
+  },
+  {
+    name: 'ReactNode',
+    source: 'react',
+    type: 'ImportSpecifier',
+  },
+]
