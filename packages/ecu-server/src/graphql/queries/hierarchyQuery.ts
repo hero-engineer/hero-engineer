@@ -1,4 +1,4 @@
-import traverseComponent from '../../domain/traversal/traverseComponent'
+import traverseComponent from '../../domain/component/traverseComponent'
 
 type HierarchyQueryArgs = {
   sourceComponentAddress: string

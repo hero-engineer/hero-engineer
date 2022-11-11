@@ -4,7 +4,7 @@ import { getNodesByFirstNeighbourg } from '../graph'
 
 import regenerate from './regenerate'
 
-import updateDataEcuAttributes from './traversal/updateDataEcuAttributes'
+import updateDataEcuAttributes from './component/updateDataEcuAttributes'
 
 type ProcessImpactedFileNodesResolveType = {
   impactedFileNode: FileNodeType | null
