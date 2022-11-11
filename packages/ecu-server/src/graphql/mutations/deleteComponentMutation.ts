@@ -5,7 +5,7 @@ import { getNodeByAddress } from '../../graph'
 import composeHistoryMutation from '../../history/composeHistoryMutation'
 
 import processImpactedFileNodes from '../../domain/processImpactedFileNodes'
-import traverseComponent from '../../domain/component/traverseComponent'
+import traverseComponent from '../../domain/components/traverseComponent'
 import applyComponentDelta from '../../domain/utils/applyComponentDelta'
 
 type DeleteComponentMutationArgs = {

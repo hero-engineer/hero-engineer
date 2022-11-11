@@ -12,7 +12,7 @@ import { getNodesByFirstNeighbourg } from '../../graph'
 import addFile from '../../graph/add/addFile'
 import addFileDependencies from '../../graph/add/addFileDependencies'
 
-import updateDataEcuAttributes from '../../domain/component/updateDataEcuAttributes'
+import updateDataEcuAttributes from '../../domain/components/updateDataEcuAttributes'
 import regenerate from '../../domain/regenerate'
 
 import capitalize from '../../utils/capitalize'
