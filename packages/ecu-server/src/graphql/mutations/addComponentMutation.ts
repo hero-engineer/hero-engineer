@@ -14,7 +14,7 @@ import { getNodeByAddress, getNodesBySecondNeighbourg } from '../../graph'
 
 import composeHistoryMutation from '../../history/composeHistoryMutation'
 
-import traverseComponent from '../../domain/component/traverseComponent'
+import traverseComponent from '../../domain/traversal/traverseComponent'
 import processImpactedFileNodes from '../../domain/processImpactedFileNodes'
 
 type AddComponentMutationArgs = {

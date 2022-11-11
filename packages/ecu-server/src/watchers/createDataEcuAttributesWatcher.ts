@@ -3,7 +3,7 @@ import { FileNodeType, FunctionNodeType } from '../types'
 import { getNodesByRole, getNodesBySecondNeighbourg } from '../graph'
 
 import regenerate from '../domain/regenerate'
-import updateDataEcuAttributes from '../domain/component/updateDataEcuAttributes'
+import updateDataEcuAttributes from '../domain/traversal/updateDataEcuAttributes'
 
 async function createDataEcuAttributesWatcher() {
   const componentNodes = getNodesByRole<FunctionNodeType>('Function').filter(node => node.payload.isComponent)
