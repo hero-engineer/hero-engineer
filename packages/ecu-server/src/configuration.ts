@@ -43,3 +43,7 @@ export const externalModulesImports: ImportType[] = [
     type: 'ImportSpecifier',
   },
 ]
+
+export const ecuAcceptingChildrenComponentNames = [
+  'Div',
+]

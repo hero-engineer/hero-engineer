@@ -3,7 +3,6 @@ import { Div, P } from 'honorable'
 
 import ViewAppButton from './ViewAppButton'
 import ComponentsLinkButton from './ComponentsLinkButton'
-import AddComponentButton from './AddComponentButton'
 import CreateComponentButton from './CreateComponentButton'
 import DeleteComponentButton from './DeleteComponentButton'
 import HierarchyBar from './HierarchyBar'
@@ -11,6 +10,7 @@ import RetractablePanel from './layout/RetractablePanel'
 import TypesSection from './TypesSection'
 import ComponentTypesEditor from './ComponentTypesEditor'
 import ComponentImportsEditor from './ComponentImportsEditor'
+import AddComponentSection from './AddComponentSection'
 
 type OverlayProps = PropsWithChildren<any>
 
@@ -40,7 +40,6 @@ function Overlay({ children }: OverlayProps) {
           <ComponentsLinkButton borderRight="1px solid border" />
           <CreateComponentButton borderRight="1px solid border" />
           <DeleteComponentButton borderRight="1px solid border" />
-          <AddComponentButton />
           <Div flexGrow={1} />
           <ViewAppButton borderLeft="1px solid border" />
         </Div>
@@ -50,8 +49,22 @@ function Overlay({ children }: OverlayProps) {
         xflex="x1"
         flexGrow={1}
       >
-        {children}
-        <RetractablePanel direction="right">
+        <RetractablePanel
+          defaultOpen
+          direction="left"
+        >
+          <AddComponentSection />
+        </RetractablePanel>
+        <Div
+          flexGrow={1}
+          px={2}
+        >
+          {children}
+        </Div>
+        <RetractablePanel
+          defaultOpen
+          direction="right"
+        >
           <Div minWidth={512}>
             <ComponentImportsEditor />
             <TypesSection />

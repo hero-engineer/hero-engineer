@@ -1,7 +1,7 @@
 import { memo, useCallback, useState } from 'react'
 import { useMutation } from 'urql'
 import { useNavigate } from 'react-router-dom'
-import { Button, Div, H2, Input, Modal } from 'honorable'
+import { Button, Div, H2, Input, Modal, Tooltip } from 'honorable'
 import { AiOutlinePlus } from 'react-icons/ai'
 
 import { CreateComponentMutation, CreateComponentMutationDataType } from '../../queries'
@@ -25,13 +25,18 @@ function CreateComponentButton(props: any) {
 
   return (
     <>
-      <Button
-        ghost
-        onClick={() => setIsModalOpen(true)}
-        {...props}
+      <Tooltip
+        label="Create component"
+        placement="bottom"
       >
-        <AiOutlinePlus />
-      </Button>
+        <Button
+          ghost
+          onClick={() => setIsModalOpen(true)}
+          {...props}
+        >
+          <AiOutlinePlus />
+        </Button>
+      </Tooltip>
       <Modal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}

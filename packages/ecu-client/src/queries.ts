@@ -51,21 +51,21 @@ export type ComponentsQueryDataType = {
 }
 
 export const ComponentQuery = `
-query ($sourceComponentAddress: String!){
-  component (sourceComponentAddress: $sourceComponentAddress) {
-    file {
-      address
-    }
-    component {
-      address
-      payload {
-        name
-        path
-        relativePath
+  query ($sourceComponentAddress: String!){
+    component (sourceComponentAddress: $sourceComponentAddress) {
+      file {
+        address
+      }
+      component {
+        address
+        payload {
+          name
+          path
+          relativePath
+        }
       }
     }
   }
-}
 `
 
 export type ComponentQueryDataType = {
@@ -87,16 +87,16 @@ export type GlobalTypesQueryDataType = {
 }
 
 export const FileTypesQuery = `
-query ($sourceFileAddress: String!){
-  fileTypes (sourceFileAddress: $sourceFileAddress) {
-    rawTypes
-    types {
-      name
-      declaration
-      fileNodeAddress
+  query ($sourceFileAddress: String!){
+    fileTypes (sourceFileAddress: $sourceFileAddress) {
+      rawTypes
+      types {
+        name
+        declaration
+        fileNodeAddress
+      }
     }
   }
-}
 `
 
 export type FileTypesQueryDataType = {
@@ -124,6 +124,16 @@ export type FileImportsQueryDataType = {
     rawImports: string
     imports: ImportType[]
   }
+}
+
+export const IsComponentAcceptingChildrenQuery = `
+  query ($sourceComponentAddress: String, ecuComponentName: String) {
+    isComponentAcceptingChildren (sourceComponentAddress: $sourceComponentAddress, ecuComponentName: $ecuComponentName)
+  }
+`
+
+export type IsComponentAcceptingChildrenQueryDataType = {
+  isComponentAcceptingChildren: boolean
 }
 
 export const CreateComponentMutation = `

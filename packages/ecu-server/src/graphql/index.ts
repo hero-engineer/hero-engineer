@@ -6,6 +6,7 @@ import hierarchyQuery from './queries/hierarchyQuery'
 import globalTypesQuery from './queries/globalTypesQuery'
 import fileImportsQuery from './queries/fileImportsQuery'
 import fileTypesQuery from './queries/fileTypesQuery'
+import isComponentAcceptingChildrenQuery from './queries/isComponentAcceptingChildrenQuery'
 import createComponentMutation from './mutations/createComponentMutation'
 import addComponentMutation from './mutations/addComponentMutation'
 import deleteComponentMutation from './mutations/deleteComponentMutation'
@@ -97,6 +98,7 @@ export const typeDefs = gql`
     globalTypes: GlobalTypesReturnValue!
     fileImports(sourceFileAddress: String!): FileImportsReturnValue!
     fileTypes(sourceFileAddress: String!): FileTypesReturnValue!
+    isComponentAcceptingChildren(sourceComponentAddress: String, ecuComponentName: String): Boolean!
   }
 
   type Mutation {
@@ -120,6 +122,7 @@ export const resolvers = {
     globalTypes: globalTypesQuery,
     fileImports: fileImportsQuery,
     fileTypes: fileTypesQuery,
+    isComponentAcceptingChildren: isComponentAcceptingChildrenQuery,
   },
   Mutation: {
     createComponent: createComponentMutation,

@@ -1,7 +1,7 @@
 import { memo, useCallback, useContext, useMemo, useState } from 'react'
 import { useMutation } from 'urql'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Button, Div, H3, Modal, P } from 'honorable'
+import { Button, Div, H3, Modal, P, Tooltip } from 'honorable'
 import { TbTrash } from 'react-icons/tb'
 
 import { DeleteComponentMutation, DeleteComponentMutationDataType } from '../../queries'
@@ -51,14 +51,19 @@ function DeleteComponentButton(props: any) {
 
   return (
     <>
-      <Button
-        ghost
-        onClick={handleDeleteComponentClick}
-        disabled={!hierarchyIds.length}
-        {...props}
+      <Tooltip
+        label="Delete component"
+        placement="bottom"
       >
-        <TbTrash />
-      </Button>
+        <Button
+          ghost
+          onClick={handleDeleteComponentClick}
+          disabled={!hierarchyIds.length}
+          {...props}
+        >
+          <TbTrash />
+        </Button>
+      </Tooltip>
       <Modal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
