@@ -17,6 +17,7 @@ import DragAndDropContext, { DragAndDropContextType, DragAndDropType } from '../
 import { HierarchyItemType } from '../../types'
 
 import Router from './Router'
+import WithEcuHomeButton from './WithEcuHomeButton'
 
 type EcuMasterProps = PropsWithChildren<{
   mode?: string
@@ -42,7 +43,9 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
               <HierarchyContext.Provider value={HierarchyContextValue}>
                 <DragAndDropContext.Provider value={dragAndDropContextValue}>
                   <Router>
-                    {children}
+                    <WithEcuHomeButton>
+                      {children}
+                    </WithEcuHomeButton>
                   </Router>
                 </DragAndDropContext.Provider>
               </HierarchyContext.Provider>
