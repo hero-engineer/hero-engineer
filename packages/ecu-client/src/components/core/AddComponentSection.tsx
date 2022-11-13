@@ -200,7 +200,7 @@ function AddComponentSection() {
           <Button onClick={() => setIsChildrenModalOpen(false)}>
             Close
           </Button>
-          {!!lastHierarchyItem.componentAddress && (
+          {!!lastHierarchyItem?.componentAddress && (
             <Button onClick={navigateToLastHierarchyItem}>
               Go to
               {' '}
