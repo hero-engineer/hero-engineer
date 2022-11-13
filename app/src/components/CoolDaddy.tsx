@@ -25,8 +25,8 @@ function CoolDaddy({
 }: CoolDaddyPropsType) {
   return (
     <>
-      <Div data-ecu="ooDByplP6O:0">
-        <Div data-ecu="ooDByplP6O:0_0">
+      <Div data-ecu="HyJIF3jjcC:0">
+        <Div data-ecu="HyJIF3jjcC:0_0">
           I'm a cool daddy look at me
         </Div>
         {children}

@@ -7,11 +7,17 @@ type HierarchyQueryArgs = {
 function hierarchyQuery(_: any, { sourceComponentAddress }: HierarchyQueryArgs) {
   console.log('__hierarchyQuery__')
 
-  const { hierarchy } = traverseComponent(sourceComponentAddress, [])
+  try {
+    const { hierarchy } = traverseComponent(sourceComponentAddress, [])
+
+    return JSON.stringify(hierarchy)
+  }
+  catch (error) {
+    console.log('error', error)
+  }
 
   // console.log('hierarchy', JSON.stringify(hierarchy, null, 2))
-
-  return JSON.stringify(hierarchy)
+  return ''
 }
 
 export default hierarchyQuery
