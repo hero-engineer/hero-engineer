@@ -123,6 +123,7 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
     const fileNode = fileNodes[fileNodes.length - 1]
     const componentNode = getNodesByFirstNeighbourg<FunctionNodeType>(fileNode.address, 'DeclaresFunction')[0]
 
+    // If it breaks, it's here
     const previousFileNode = fileNodes[fileNodes.length - 2] || fileNode
     const previousComponentNode = getNodesByFirstNeighbourg<FunctionNodeType>(previousFileNode.address, 'DeclaresFunction')[0]
 
