@@ -11,10 +11,13 @@ import theme from '../../theme'
 
 import ModeContext from '../../contexts/ModeContext'
 import HotContext from '../../contexts/HotContext'
+import RefetchContext, { RefetchContextType } from '../../contexts/RefetchContext'
 import HierarchyContext, { HierarchyContextType } from '../../contexts/HierarchyContext'
 import DragAndDropContext, { DragAndDropContextType, DragAndDropType } from '../../contexts/DragAndDropContext'
 
 import { HierarchyItemType } from '../../types'
+
+import createRefetchRegistry from '../../helpers/createRefetchRegistry'
 
 import Router from './Router'
 import WithEcuHomeButton from './WithEcuHomeButton'
@@ -25,10 +28,13 @@ type EcuMasterProps = PropsWithChildren<{
 }>
 
 function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps) {
+  const { refetch, register } = createRefetchRegistry()
+  const refetchContextValue = useMemo<RefetchContextType>(() => ({ refetch, register }), [refetch, register])
+
   const [hierarchy, setHierarchy] = useState<HierarchyItemType[]>([])
   const [totalHierarchy, setTotalHierarchy] = useState<HierarchyItemType[]>([])
   const [shouldAdjustComponentDelta, setShouldAdjustComponentDelta] = useState(false)
-  const HierarchyContextValue = useMemo<HierarchyContextType>(() => ({ hierarchy, setHierarchy, totalHierarchy, setTotalHierarchy, shouldAdjustComponentDelta, setShouldAdjustComponentDelta }), [hierarchy, totalHierarchy, shouldAdjustComponentDelta])
+  const hierarchyContextValue = useMemo<HierarchyContextType>(() => ({ hierarchy, setHierarchy, totalHierarchy, setTotalHierarchy, shouldAdjustComponentDelta, setShouldAdjustComponentDelta }), [hierarchy, totalHierarchy, shouldAdjustComponentDelta])
 
   const [dragAndDrop, setDragAndDrop] = useState<DragAndDropType>({ sourceHierarchyIds: [], targetHierarchyIds: [] })
   const dragAndDropContextValue = useMemo<DragAndDropContextType>(() => ({ dragAndDrop, setDragAndDrop }), [dragAndDrop])
@@ -40,15 +46,17 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
           <CssBaseline />
           <ModeContext.Provider value={mode}>
             <HotContext.Provider value={hot}>
-              <HierarchyContext.Provider value={HierarchyContextValue}>
-                <DragAndDropContext.Provider value={dragAndDropContextValue}>
-                  <Router>
-                    <WithEcuHomeButton>
-                      {children}
-                    </WithEcuHomeButton>
-                  </Router>
-                </DragAndDropContext.Provider>
-              </HierarchyContext.Provider>
+              <RefetchContext.Provider value={refetchContextValue}>
+                <HierarchyContext.Provider value={hierarchyContextValue}>
+                  <DragAndDropContext.Provider value={dragAndDropContextValue}>
+                    <Router>
+                      <WithEcuHomeButton>
+                        {children}
+                      </WithEcuHomeButton>
+                    </Router>
+                  </DragAndDropContext.Provider>
+                </HierarchyContext.Provider>
+              </RefetchContext.Provider>
             </HotContext.Provider>
           </ModeContext.Provider>
         </ThemeProvider>

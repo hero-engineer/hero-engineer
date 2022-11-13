@@ -4,6 +4,7 @@ import { useQuery } from 'urql'
 import { Div } from 'honorable'
 import { MdChevronRight } from 'react-icons/md'
 
+import { refetchKeys } from '../../constants'
 import { HierarchyItemType } from '../../types'
 
 import { HierarchyQuery, HierarchyQueryDataType } from '../../queries'
@@ -12,6 +13,7 @@ import HierarchyContext from '../../contexts/HierarchyContext'
 
 import usePreviousWithDefault from '../../hooks/usePreviousWithDefault'
 import useEditionSearchParams from '../../hooks/useEditionSearchParams'
+import useRefetch from '../../hooks/useRefetch'
 
 import getFlattenedHierarchy from '../../helpers/getFlattenedHierarchy'
 
@@ -33,13 +35,15 @@ function HierarchyBar() {
   const { hierarchyIds, componentDelta, setEditionSearchParams } = useEditionSearchParams()
   const { shouldAdjustComponentDelta, setShouldAdjustComponentDelta, setHierarchy, setTotalHierarchy } = useContext(HierarchyContext)
 
-  const [hierarchyQueryResult] = useQuery<HierarchyQueryDataType>({
+  const [hierarchyQueryResult, refetchHierarchyQuery] = useQuery<HierarchyQueryDataType>({
     query: HierarchyQuery,
     variables: {
       sourceComponentAddress: componentAddress,
     },
     pause: !componentAddress,
   })
+
+  useRefetch(refetchKeys.hierarchy, refetchHierarchyQuery)
 
   const hierarchy = useMemo(() => JSON.parse(hierarchyQueryResult.data?.hierarchy || '""') || [], [hierarchyQueryResult.data])
   const totalHierarchy = useMemo(() => getFlattenedHierarchy(hierarchy, hierarchyIds), [hierarchy, hierarchyIds])

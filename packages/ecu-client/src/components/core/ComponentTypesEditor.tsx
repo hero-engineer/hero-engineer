@@ -3,13 +3,17 @@ import { useParams } from 'react-router-dom'
 import { useMutation, useQuery } from 'urql'
 import { Button, Div, Input } from 'honorable'
 
+import { refetchKeys } from '../../constants'
+
 import { FileTypesQuery, FileTypesQueryDataType, WriteFileTypesMutation, WriteFileTypesMutationDataType } from '../../queries'
+
+import useRefetch from '../../hooks/useRefetch'
 
 function ComponentTypesEditor() {
   const { fileAddress = '' } = useParams()
   const [rawTypes, setRawTypes] = useState('')
 
-  const [fileTypesQueryResult] = useQuery<FileTypesQueryDataType>({
+  const [fileTypesQueryResult, refetchFileTypesQuery] = useQuery<FileTypesQueryDataType>({
     query: FileTypesQuery,
     variables: {
       sourceFileAddress: fileAddress,
@@ -17,17 +21,21 @@ function ComponentTypesEditor() {
   })
   const [, writeFileTypes] = useMutation<WriteFileTypesMutationDataType>(WriteFileTypesMutation)
 
-  const handleSave = useCallback(() => {
-    writeFileTypes({
+  const refetch = useRefetch(refetchKeys.fileTypes, refetchFileTypesQuery)
+
+  const handleSave = useCallback(async () => {
+    await writeFileTypes({
       sourceFileAddress: fileAddress,
       rawTypes,
     })
-  }, [writeFileTypes, fileAddress, rawTypes])
+
+    console.log('refetch about to be called')
+
+    refetch(refetchKeys.fileImports)
+  }, [writeFileTypes, fileAddress, rawTypes, refetch])
 
   useEffect(() => {
-    if (!fileTypesQueryResult.data?.fileTypes) {
-      return
-    }
+    if (!fileTypesQueryResult.data?.fileTypes) return
 
     setRawTypes(fileTypesQueryResult.data?.fileTypes.rawTypes)
   }, [fileTypesQueryResult.data])

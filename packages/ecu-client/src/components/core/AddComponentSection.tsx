@@ -4,12 +4,13 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Button, Div, H3, Menu, MenuItem, Modal, P, Select } from 'honorable'
 import { TbRowInsertBottom } from 'react-icons/tb'
 
-import { hierarchyPositions } from '../../constants'
+import { hierarchyPositions, refetchKeys } from '../../constants'
 import { HierarchyPosition } from '../../types'
 
 import HierarchyContext from '../../contexts/HierarchyContext'
 
 import useEditionSearchParams from '../../hooks/useEditionSearchParams'
+import useRefetch from '../../hooks/useRefetch'
 
 import { AddComponentMutation, ComponentsQuery, ComponentsQueryDataType, IsComponentAcceptingChildrenQuery, IsComponentAcceptingChildrenQueryDataType } from '../../queries'
 
@@ -31,10 +32,10 @@ function AddComponentSection() {
 
   const navigate = useNavigate()
 
-  const [componentsQueryResult] = useQuery<ComponentsQueryDataType>({
+  const [componentsQueryResult, refetchComponentsQuery] = useQuery<ComponentsQueryDataType>({
     query: ComponentsQuery,
   })
-  const [isComponentAcceptingChildrenQueryResult] = useQuery<IsComponentAcceptingChildrenQueryDataType>({
+  const [isComponentAcceptingChildrenQueryResult, refetchIsComponentAcceptingChildrenQuery] = useQuery<IsComponentAcceptingChildrenQueryDataType>({
     query: IsComponentAcceptingChildrenQuery,
     variables: {
       sourceComponentAddress: lastHierarchyItem?.componentAddress,
@@ -44,7 +45,9 @@ function AddComponentSection() {
   })
   const [, addComponent] = useMutation(AddComponentMutation)
 
-  const handleAddComponentClick = useCallback(() => {
+  const refetch = useRefetch(refetchKeys.components, refetchComponentsQuery, refetchKeys.isComponentAcceptingChildren, refetchIsComponentAcceptingChildrenQuery)
+
+  const handleAddComponentClick = useCallback(async () => {
     if (!isComponentAcceptingChildrenQueryResult.data?.isComponentAcceptingChildren && hierarchyPosition === 'children') {
       setIsChildrenModalOpen(true)
 
@@ -57,13 +60,15 @@ function AddComponentSection() {
       return
     }
 
-    addComponent({
+    await addComponent({
       sourceComponentAddress: componentAddress,
       targetComponentAddress: selectedComponentAddress,
       hierarchyIds,
       hierarchyPosition,
       componentDelta,
     })
+
+    refetch(refetchKeys.hierarchy)
   }, [
     isComponentAcceptingChildrenQueryResult.data,
     addComponent,
@@ -73,6 +78,7 @@ function AddComponentSection() {
     hierarchyIds,
     hierarchyPosition,
     selectedComponentAddress,
+    refetch,
   ])
 
   const navigateToLastEditedComponent = useCallback(() => {

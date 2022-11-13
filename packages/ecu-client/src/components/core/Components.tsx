@@ -3,13 +3,19 @@ import { useQuery } from 'urql'
 import { Link } from 'react-router-dom'
 import { H2, Li, Ul } from 'honorable'
 
+import { refetchKeys } from '../../constants'
+
 import { ComponentsQuery, ComponentsQueryDataType } from '../../queries'
 
+import useRefetch from '../../hooks/useRefetch'
+
 function Components() {
-  const [componentsQueryResult] = useQuery<ComponentsQueryDataType>({
+  const [componentsQueryResult, refetchComponentsQuery] = useQuery<ComponentsQueryDataType>({
     query: ComponentsQuery,
     requestPolicy: 'network-only',
   })
+
+  useRefetch(refetchKeys.components, refetchComponentsQuery)
 
   if (componentsQueryResult.fetching) {
     return null

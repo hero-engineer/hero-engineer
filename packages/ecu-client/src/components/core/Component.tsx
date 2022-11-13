@@ -3,7 +3,11 @@ import { useQuery } from 'urql'
 import { useParams } from 'react-router-dom'
 import { Div, P } from 'honorable'
 
+import { refetchKeys } from '../../constants'
+
 import { ComponentQuery, ComponentQueryDataType } from '../../queries'
+
+import useRefetch from '../../hooks/useRefetch'
 
 import ComponentLoader from './ComponentLoader'
 import DragAndDropEndModal from './DragAndDropEndModal'
@@ -11,13 +15,15 @@ import DragAndDropEndModal from './DragAndDropEndModal'
 function Component() {
   const { componentAddress = '' } = useParams()
 
-  const [componentQueryResult] = useQuery<ComponentQueryDataType>({
+  const [componentQueryResult, refetchComponentQuery] = useQuery<ComponentQueryDataType>({
     query: ComponentQuery,
     variables: {
       sourceComponentAddress: componentAddress,
     },
     pause: !componentAddress,
   })
+
+  useRefetch(refetchKeys.component, refetchComponentQuery)
 
   if (componentQueryResult.fetching) {
     return null

@@ -1,7 +1,7 @@
 /* --
   * IMPORTS START
 -- */
-import { Bar, Foo } from '@global-types'
+import { Baar, Bar, Baz, Foo, Fooo } from '@global-types'
 import { PropsWithChildren } from 'react'
 import { Div } from 'ecu-client'
 
@@ -14,7 +14,7 @@ import CoolDiv from './CoolDiv'
   * TYPES START
 -- */
 type CoolDaddyPropsType = PropsWithChildren<{
-  placeholder: Foo;
+  placeholder: Baar;
 }>;
 /* --
   * TYPES END
@@ -24,12 +24,15 @@ function CoolDaddy({
   children,
 }: CoolDaddyPropsType) {
   return (
-    <Div data-ecu="ooDByplP6O:0">
-      <Div data-ecu="ooDByplP6O:0_0">
-        I'm a cool daddy look at me
+    <>
+      <Div data-ecu="ooDByplP6O:0">
+        <Div data-ecu="ooDByplP6O:0_0">
+          I'm a cool daddy look at me
+        </Div>
+        {children}
       </Div>
-      {children}
-    </Div>
+      <CoolDiv />
+    </>
   )
 }
 

@@ -3,19 +3,25 @@ import { useParams } from 'react-router-dom'
 import { useMutation, useQuery } from 'urql'
 import { Button, Div, Input } from 'honorable'
 
+import { refetchKeys } from '../../constants'
+
 import { FileImportsQuery, FileImportsQueryDataType, WriteFileImportsMutation, WriteFileImportsMutationDataType } from '../../queries'
+
+import useRefetch from '../../hooks/useRefetch'
 
 function ComponentImportsEditor() {
   const { fileAddress = '' } = useParams()
   const [rawImports, setRawImports] = useState('')
 
-  const [fileImportsQueryResult] = useQuery<FileImportsQueryDataType>({
+  const [fileImportsQueryResult, refetchFileImportsQuery] = useQuery<FileImportsQueryDataType>({
     query: FileImportsQuery,
     variables: {
       sourceFileAddress: fileAddress,
     },
   })
   const [, writeFileImports] = useMutation<WriteFileImportsMutationDataType>(WriteFileImportsMutation)
+
+  useRefetch(refetchKeys.fileImports, refetchFileImportsQuery)
 
   const handleSave = useCallback(() => {
     writeFileImports({

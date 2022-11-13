@@ -6,3 +6,11 @@
 export type Foo = string | number
 
 export type Bar = boolean
+
+export type Baz = number
+
+export type Fooo = string
+
+export type Baar = number
+
+export type Baaz = boolean

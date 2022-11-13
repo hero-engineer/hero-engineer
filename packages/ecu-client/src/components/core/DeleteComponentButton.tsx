@@ -4,12 +4,16 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Button, Div, H3, Modal, P, Tooltip } from 'honorable'
 import { TbTrash } from 'react-icons/tb'
 
+import { refetchKeys } from '../../constants'
+
 import { DeleteComponentMutation, DeleteComponentMutationDataType } from '../../queries'
 
 import HierarchyContext from '../../contexts/HierarchyContext'
 
-import isHierarchyOnComponent from '../../helpers/isHierarchyOnComponent'
 import useEditionSearchParams from '../../hooks/useEditionSearchParams'
+import useRefetch from '../../hooks/useRefetch'
+
+import isHierarchyOnComponent from '../../helpers/isHierarchyOnComponent'
 
 function DeleteComponentButton(props: any) {
   const { componentAddress = '' } = useParams()
@@ -20,6 +24,8 @@ function DeleteComponentButton(props: any) {
   const navigate = useNavigate()
 
   const [, deleteComponent] = useMutation<DeleteComponentMutationDataType>(DeleteComponentMutation)
+
+  const refetch = useRefetch()
 
   const handleDeleteComponentClick = useCallback(async () => {
     if (!isHierarchyOnComponent(hierarchy, componentAddress)) {
@@ -37,7 +43,9 @@ function DeleteComponentButton(props: any) {
     setEditionSearchParams({
       hierarchyIds: [],
     })
-  }, [hierarchy, componentDelta, componentAddress, deleteComponent, hierarchyIds, setEditionSearchParams])
+
+    refetch(refetchKeys.hierarchy)
+  }, [hierarchy, componentDelta, componentAddress, deleteComponent, hierarchyIds, setEditionSearchParams, refetch])
 
   const navigateToLastEditedComponent = useCallback(() => {
     setIsModalOpen(false)
