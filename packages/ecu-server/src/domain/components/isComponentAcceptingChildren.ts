@@ -20,7 +20,7 @@ function isComponentAcceptingChildren(componentAddress: string) {
   const componentPropsTypesIdentifier = `${componentNode.payload.name}PropsType`
   const type = types.find(type => type.name === componentPropsTypesIdentifier)
 
-  return type && type.declaration.includes('PropsWithChildren') // HACK
+  return !!(type && type.declaration.includes('PropsWithChildren')) // HACK
 }
 
 export default isComponentAcceptingChildren

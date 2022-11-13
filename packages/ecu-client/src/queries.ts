@@ -127,7 +127,7 @@ export type FileImportsQueryDataType = {
 }
 
 export const IsComponentAcceptingChildrenQuery = `
-  query ($sourceComponentAddress: String, ecuComponentName: String) {
+  query ($sourceComponentAddress: String, $ecuComponentName: String) {
     isComponentAcceptingChildren (sourceComponentAddress: $sourceComponentAddress, ecuComponentName: $ecuComponentName)
   }
 `

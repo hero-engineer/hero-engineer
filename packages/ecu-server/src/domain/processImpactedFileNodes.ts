@@ -15,10 +15,10 @@ async function processImpactedFileNodes(impacted: ImpactedType[], postTraverse: 
   let impactedFileNode: FileNodeType | null = null
   let impactedComponentNode: FunctionNodeType | null = null
 
-  await Promise.all(impacted.map(async ({ fileNode, ast, importDeclarationsRegistry }) => {
+  await Promise.all(impacted.map(async ({ fileNode, ast, importsRegistry }) => {
     console.log('impacted:', fileNode.payload.name)
 
-    postTraverse(fileNode, ast, importDeclarationsRegistry)
+    postTraverse(fileNode, ast, importsRegistry)
 
     const componentNode = getNodesByFirstNeighbourg<FunctionNodeType>(fileNode.address, 'DeclaresFunction')[0]
 

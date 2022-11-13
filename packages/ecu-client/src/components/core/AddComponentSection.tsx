@@ -11,7 +11,7 @@ import HierarchyContext from '../../contexts/HierarchyContext'
 
 import useEditionSearchParams from '../../hooks/useEditionSearchParams'
 
-import { AddComponentMutation, ComponentsQuery, ComponentsQueryDataType } from '../../queries'
+import { AddComponentMutation, ComponentsQuery, ComponentsQueryDataType, IsComponentAcceptingChildrenQuery, IsComponentAcceptingChildrenQueryDataType } from '../../queries'
 
 import isHierarchyOnComponent from '../../helpers/isHierarchyOnComponent'
 
@@ -21,20 +21,38 @@ function AddComponentSection() {
   const { componentAddress = '' } = useParams()
   const { hierarchyIds, componentDelta } = useEditionSearchParams()
   const { hierarchy } = useContext(HierarchyContext)
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isComponentModalOpen, setIsComponentModalOpen] = useState(false)
+  const [isChildrenModalOpen, setIsChildrenModalOpen] = useState(false)
   const [selectedComponentAddress, setSelectedComponentId] = useState('')
   const [hierarchyPosition, setHierarchyPosition] = useState<HierarchyPosition>(hierarchyPositions[0])
+
   const lastEditedComponent = useMemo(() => [...hierarchy].reverse().find(x => x.componentAddress), [hierarchy])
+  const lastHierarchyItem = useMemo(() => hierarchy[hierarchy.length - 1], [hierarchy])
+
   const navigate = useNavigate()
 
   const [componentsQueryResult] = useQuery<ComponentsQueryDataType>({
     query: ComponentsQuery,
   })
+  const [isComponentAcceptingChildrenQueryResult] = useQuery<IsComponentAcceptingChildrenQueryDataType>({
+    query: IsComponentAcceptingChildrenQuery,
+    variables: {
+      sourceComponentAddress: lastHierarchyItem?.componentAddress,
+      ecuComponentName: lastHierarchyItem?.componentName,
+    },
+    pause: !lastHierarchyItem,
+  })
   const [, addComponent] = useMutation(AddComponentMutation)
 
   const handleAddComponentClick = useCallback(() => {
+    if (!isComponentAcceptingChildrenQueryResult.data?.isComponentAcceptingChildren && hierarchyPosition === 'children') {
+      setIsChildrenModalOpen(true)
+
+      return
+    }
+
     if (!isHierarchyOnComponent(hierarchy, componentAddress)) {
-      setIsModalOpen(true)
+      setIsComponentModalOpen(true)
 
       return
     }
@@ -46,15 +64,32 @@ function AddComponentSection() {
       hierarchyPosition,
       componentDelta,
     })
-  }, [hierarchy, componentDelta, componentAddress, addComponent, selectedComponentAddress, hierarchyIds, hierarchyPosition])
+  }, [
+    isComponentAcceptingChildrenQueryResult.data,
+    addComponent,
+    componentAddress,
+    componentDelta,
+    hierarchy,
+    hierarchyIds,
+    hierarchyPosition,
+    selectedComponentAddress,
+  ])
 
   const navigateToLastEditedComponent = useCallback(() => {
-    setIsModalOpen(false)
+    setIsComponentModalOpen(false)
 
     if (!lastEditedComponent) return
 
     navigate(`/__ecu__/component/${lastEditedComponent.fileAddress}/${lastEditedComponent.componentAddress}`)
   }, [navigate, lastEditedComponent])
+
+  const navigateToLastHierarchyItem = useCallback(() => {
+    setIsChildrenModalOpen(false)
+
+    if (!lastHierarchyItem) return
+
+    navigate(`/__ecu__/component/${lastHierarchyItem.fileAddress}/${lastHierarchyItem.componentAddress}`)
+  }, [navigate, lastHierarchyItem])
 
   if (componentsQueryResult.fetching) {
     return null
@@ -93,6 +128,7 @@ function AddComponentSection() {
         flexShrink={0}
         gap={0.5}
         px={0.5}
+        pb={0.5}
       >
         <Select
           menuOnTop
@@ -116,10 +152,10 @@ function AddComponentSection() {
         </Button>
       </Div>
       <Modal
-        open={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        open={isComponentModalOpen}
+        onClose={() => setIsComponentModalOpen(false)}
       >
-        <H3>Cannot delete component</H3>
+        <H3>Cannot insert component</H3>
         <P mt={2}>
           You are currently editing
           {' '}
@@ -136,7 +172,7 @@ function AddComponentSection() {
           mt={2}
           gap={0.5}
         >
-          <Button onClick={() => setIsModalOpen(false)}>
+          <Button onClick={() => setIsComponentModalOpen(false)}>
             Close
           </Button>
           <Button onClick={navigateToLastEditedComponent}>
@@ -146,8 +182,35 @@ function AddComponentSection() {
           </Button>
         </Div>
       </Modal>
+      <Modal
+        open={isChildrenModalOpen}
+        onClose={() => setIsChildrenModalOpen(false)}
+      >
+        <H3>Cannot insert component</H3>
+        <P mt={2}>
+          {lastHierarchyItem?.componentName}
+          {' '}
+          is not accepting children.
+        </P>
+        <Div
+          xflex="x6"
+          mt={2}
+          gap={0.5}
+        >
+          <Button onClick={() => setIsChildrenModalOpen(false)}>
+            Close
+          </Button>
+          {!!lastHierarchyItem.componentAddress && (
+            <Button onClick={navigateToLastHierarchyItem}>
+              Go to
+              {' '}
+              {lastHierarchyItem?.componentName}
+            </Button>
+          )}
+        </Div>
+      </Modal>
     </>
   )
 }
 
-export default AddComponentSection
+export default memo(AddComponentSection)

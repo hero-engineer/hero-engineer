@@ -1,14 +1,9 @@
 import path from 'node:path'
 
-import {
-  ImportDefaultSpecifier,
-  ImportNamespaceSpecifier,
-  ImportSpecifier,
-  JSXAttribute,
-} from '@babel/types'
+import { JSXAttribute } from '@babel/types'
 import traverse from '@babel/traverse'
 
-import { FileNodeType, FunctionNodeType, HierarchyTreeType, ImpactedType, ImportDeclarationsRegistry, IndexRegistryType } from '../../types'
+import { FileNodeType, FunctionNodeType, HierarchyTreeType, ImpactedType, ImportsRegistry, IndexRegistryType } from '../../types'
 import { ecuPropName } from '../../configuration'
 
 import { getNodesByFirstNeighbourg, getNodesByRole, getNodesBySecondNeighbourg } from '../../graph'
@@ -60,7 +55,7 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
   const [, indexes] = extractIdsAndIndexes(hierarchyIds)
   const lastingHierarchyIds: string[] = []
   const lastingIndexRegistry: IndexRegistryType = {}
-  const importDeclarationsRegistry: ImportDeclarationsRegistry = {}
+  const importsRegistry: ImportsRegistry = {}
   const hierarchyTreesIndexes: number[] = []
 
   function getCurrentHierarchyTrees() {
@@ -97,17 +92,20 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
     return areArraysEqual(lastingHierarchyIds, hierarchyIds) && areArraysEqual(lastingHierarchyIdsIndexes, indexes)
   }
 
-  function traverseFileNodesToFindImportDeclarations(fileNode: FileNodeType) {
+  function traverseFileNodesToFindImports(fileNode: FileNodeType) {
+    // Build the importsRegistry for the file
     traverse(fileNode.payload.ast, {
-      // Build the importDeclarationsRegistry for the file
-      ImportDeclaration(x: any) {
-        if (!importDeclarationsRegistry[fileNode.address]) {
-          importDeclarationsRegistry[fileNode.address] = []
+      ImportDeclaration(x) {
+        if (!importsRegistry[fileNode.address]) {
+          importsRegistry[fileNode.address] = []
         }
 
-        importDeclarationsRegistry[fileNode.address].push({
-          value: x.node.source.value,
-          specifiers: x.node.specifiers.map((x: ImportSpecifier | ImportDefaultSpecifier | ImportNamespaceSpecifier) => x.local.name),
+        x.node.specifiers.forEach(specifier => {
+          importsRegistry[fileNode.address].push({
+            source: x.node.source.value,
+            name: specifier.local.name,
+            type: specifier.type,
+          })
         })
       },
     })
@@ -115,14 +113,13 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
     const importedFileNodes = getNodesByFirstNeighbourg<FileNodeType>(fileNode.address, 'ImportsFile')
 
     importedFileNodes.forEach(fileNode => {
-      if (importDeclarationsRegistry[fileNode.address]) return
+      if (importsRegistry[fileNode.address]) return
 
-      traverseFileNodesToFindImportDeclarations(fileNode)
+      traverseFileNodesToFindImports(fileNode)
     })
   }
 
   function traverseFileNode(fileNodes: FileNodeType[], previousPaths: any[] = [], componentRootIndexes: number[] = [0], stop = () => {}) {
-
     const fileNode = fileNodes[fileNodes.length - 1]
     const componentNode = getNodesByFirstNeighbourg<FunctionNodeType>(fileNode.address, 'DeclaresFunction')[0]
 
@@ -149,7 +146,7 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
     let shouldPop = true
 
     if (!impacted.some(x => x.fileNode.address === fileNode.address)) {
-      impacted.push({ fileNode, ast, importDeclarationsRegistry })
+      impacted.push({ fileNode, ast, importsRegistry })
     }
 
     onTraverseFile(fileNodes)
@@ -157,7 +154,7 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
     // Create a traerser object for given files
     function createTraverser(currentFileNodes: FileNodeType[]) {
       const currentFileNode = currentFileNodes[currentFileNodes.length - 1]
-      const importDeclarations = importDeclarationsRegistry[currentFileNode.address] || []
+      const imports = importsRegistry[currentFileNode.address] || []
 
       return {
         JSXElement(x: any) {
@@ -195,12 +192,12 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
               if (isSuccessiveNodeFound(hierarchyId)) {
                 lastingHierarchyIds.push(hierarchyId)
 
-                console.log('PUSHED')
+                // console.log('PUSHED')
 
                 onHierarchyPush(currentXs, currentFileNodes, hierarchyTree)
 
                 if (isFinalNodeFound()) {
-                  console.log('SUCCESS')
+                  // console.log('SUCCESS')
 
                   onSuccess(currentXs, currentFileNodes, hierarchyTree)
 
@@ -211,12 +208,12 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
             }
           }
           // No hierarchyId found means we're at an imported Component node
-          else if (importDeclarations.length) {
+          else if (imports.length) {
             const componentName = x.node.openingElement.name.name
-            const relativeImportDeclaration = importDeclarations.find(x => x.value.startsWith('.') && x.specifiers.includes(componentName))
+            const relativeImportDeclaration = imports.find(x => x.source.startsWith('.') && x.name === componentName)
 
             if (relativeImportDeclaration) {
-              const absolutePath = possiblyAddExtension(path.join(path.dirname(currentFileNode.payload.path), relativeImportDeclaration.value), currentFileNode.payload.extension)
+              const absolutePath = possiblyAddExtension(path.join(path.dirname(currentFileNode.payload.path), relativeImportDeclaration.source), currentFileNode.payload.extension)
               const nextComponentNode = componentNodes.find(n => n.payload.name === componentName && n.payload.path === absolutePath)
 
               if (nextComponentNode) {
@@ -300,10 +297,6 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
           hierarchyTreesIndexes.pop()
 
           shouldPop = false
-
-          // console.log('tree:', JSON.stringify(formatHierarchyTrees(hierarchyTrees), null, 2))
-          // console.log('indexes', hierarchyTreesIndexes)
-          // console.log('---')
         },
       }
     }
@@ -311,7 +304,7 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
     traverse(ast, createTraverser(fileNodes))
   }
 
-  traverseFileNodesToFindImportDeclarations(fileNode)
+  traverseFileNodesToFindImports(fileNode)
   traverseFileNode([fileNode])
 
   return {

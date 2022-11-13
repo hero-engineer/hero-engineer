@@ -32,8 +32,6 @@ function ComponentTypesEditor() {
     setRawTypes(fileTypesQueryResult.data?.fileTypes.rawTypes)
   }, [fileTypesQueryResult.data])
 
-  console.log('fileTypesQueryResult.data', fileTypesQueryResult.data)
-
   return (
     <Div>
       <Input

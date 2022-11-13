@@ -32,8 +32,6 @@ function ComponentImportsEditor() {
     setRawImports(fileImportsQueryResult.data?.fileImports.rawImports)
   }, [fileImportsQueryResult.data])
 
-  console.log('fileImportsQueryResult.data', fileImportsQueryResult.data)
-
   return (
     <Div>
       <Input

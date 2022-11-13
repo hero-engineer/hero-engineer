@@ -51,9 +51,15 @@ export enum HierarchyPositionType {
   parent = 'parent',
 }
 
-export type ImportDeclaration = { value: string, specifiers: string[] }
+export type ImportSpecifierType = 'ImportDefaultSpecifier' | 'ImportNamespaceSpecifier' | 'ImportSpecifier'
 
-export type ImportDeclarationsRegistry = Record<string, ImportDeclaration[]>
+export type ImportType = {
+  source: string
+  name: string
+  type: ImportSpecifierType
+}
+
+export type ImportsRegistry = Record<string, ImportType[]>
 
 export type HistoryMutationReturnType<T> = {
   returnValue: T
@@ -64,12 +70,12 @@ export type HistoryMutationReturnType<T> = {
 export type ImpactedType = {
   fileNode: FileNodeType
   ast: ParseResult
-  importDeclarationsRegistry: ImportDeclarationsRegistry
+  importsRegistry: ImportsRegistry
 }
 
 export type MutateType = (x: any, previousX: any) => void
 
-export type PostTraverseType = (fileNode: FileNodeType, ast: ParseResult, importDeclarationsRegistry: ImportDeclarationsRegistry) => void
+export type PostTraverseType = (fileNode: FileNodeType, ast: ParseResult, importDeclarationsRegistry: ImportsRegistry) => void
 
 export type IndexRegistryType = Record<string, number>
 
@@ -88,12 +94,4 @@ export type TypeType = {
   name: string
   declaration: string
   fileNodeAddress: string
-}
-
-export type ImportSpecifierType = 'ImportDefaultSpecifier' | 'ImportNamespaceSpecifier' | 'ImportSpecifier'
-
-export type ImportType = {
-  source: string
-  name: string
-  type: ImportSpecifierType
 }

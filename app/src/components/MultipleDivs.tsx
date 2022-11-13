@@ -12,6 +12,11 @@ function MultipleDivs(props: any) {
           <Div data-ecu="dYy2nVYwY:0_0">
             Yo
           </Div>
+          <CoolDaddy>
+            <CoolDiv />
+            <CoolDiv />
+          </CoolDaddy>
+          <CoolDiv />
           <CoolDiv />
         </CoolDaddy>
       </Div>

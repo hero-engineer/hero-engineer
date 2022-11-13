@@ -22,8 +22,6 @@ function GlobalTypesModal({ open, onClose }: GlobalTypesModalProps) {
 
   const globalTypesFileContent = useMemo(() => globalTypesQueryResult.data?.globalTypes.globalTypesFileContent ?? '', [globalTypesQueryResult.data])
 
-  console.log('globalTypesFileContent', globalTypesFileContent)
-
   const handleSave = useCallback(async () => {
     await writeGlobalTypes({
       globalTypesFileContent: content,

@@ -5,6 +5,8 @@ import { Bar, Foo } from '@global-types'
 import { PropsWithChildren } from 'react'
 import { Div } from 'ecu-client'
 
+import CoolDiv from './CoolDiv'
+
 /* --
   * IMPORTS END
 -- */

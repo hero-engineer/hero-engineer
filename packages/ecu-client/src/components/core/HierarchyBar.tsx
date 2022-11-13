@@ -56,7 +56,7 @@ function HierarchyBar() {
   // console.log('hierarchy', hierarchy)
 
   const handleClick = useCallback((index: number) => {
-    console.log('___handleClick', actualHierarchy.map(x => x.label), index)
+    // console.log('___handleClick', actualHierarchy.map(x => x.label), index)
 
     // If clicked on a Component node link, ...
     if (actualHierarchy[index].componentAddress) {
