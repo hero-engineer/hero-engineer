@@ -8,6 +8,8 @@ export type HierarchyItemType = {
   onComponentAddress: string
   componentAddress?: string
   hierarchyId?: string
+  isChild: boolean
+  isComponentAcceptingChildren: boolean
   children: HierarchyItemType[]
 }
 

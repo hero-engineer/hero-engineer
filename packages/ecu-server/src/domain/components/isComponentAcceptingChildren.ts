@@ -1,9 +1,20 @@
 import { FunctionNodeType } from '../../types'
 
+import { ecuAcceptingChildrenComponentNames } from '../../configuration'
+
 import { getNodeByAddress, getNodesBySecondNeighbourg } from '../../graph'
+
 import traverseTypes from '../types/traverseTypes'
 
-function isComponentAcceptingChildren(componentAddress: string) {
+function isComponentAcceptingChildren(componentAddress?: string, ecuComponentName?: string) {
+  if (ecuComponentName) {
+    return ecuAcceptingChildrenComponentNames.includes(ecuComponentName)
+  }
+
+  if (!componentAddress) {
+    throw new Error('No componentAddress or ecuComponentName provided to isComponentAcceptingChildren')
+  }
+
   const componentNode = getNodeByAddress<FunctionNodeType>(componentAddress)
 
   if (!componentNode) {

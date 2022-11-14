@@ -12,7 +12,7 @@ import HierarchyContext from '../../contexts/HierarchyContext'
 import useEditionSearchParams from '../../hooks/useEditionSearchParams'
 import useRefetch from '../../hooks/useRefetch'
 
-import { AddComponentMutation, ComponentsQuery, ComponentsQueryDataType, IsComponentAcceptingChildrenQuery, IsComponentAcceptingChildrenQueryDataType } from '../../queries'
+import { AddComponentMutation, ComponentsQuery, ComponentsQueryDataType } from '../../queries'
 
 import isHierarchyOnComponent from '../../helpers/isHierarchyOnComponent'
 import getLastEditedHierarchyItem from '../../helpers/getLastEditedHierarchyItem'
@@ -36,20 +36,12 @@ function AddComponentSection() {
   const [componentsQueryResult, refetchComponentsQuery] = useQuery<ComponentsQueryDataType>({
     query: ComponentsQuery,
   })
-  const [isComponentAcceptingChildrenQueryResult, refetchIsComponentAcceptingChildrenQuery] = useQuery<IsComponentAcceptingChildrenQueryDataType>({
-    query: IsComponentAcceptingChildrenQuery,
-    variables: {
-      sourceComponentAddress: lastHierarchyItem?.componentAddress,
-      ecuComponentName: lastHierarchyItem?.componentName,
-    },
-    pause: !lastHierarchyItem,
-  })
   const [, addComponent] = useMutation(AddComponentMutation)
 
-  const refetch = useRefetch(refetchKeys.components, refetchComponentsQuery, refetchKeys.isComponentAcceptingChildren, refetchIsComponentAcceptingChildrenQuery)
+  const refetch = useRefetch(refetchKeys.components, refetchComponentsQuery)
 
   const handleAddComponentClick = useCallback(async () => {
-    if (!isComponentAcceptingChildrenQueryResult.data?.isComponentAcceptingChildren && hierarchyPosition === 'children') {
+    if (!lastHierarchyItem.isComponentAcceptingChildren && hierarchyPosition === 'children') {
       setIsChildrenModalOpen(true)
 
       return
@@ -73,7 +65,7 @@ function AddComponentSection() {
 
     refetch(refetchKeys.hierarchy)
   }, [
-    isComponentAcceptingChildrenQueryResult.data,
+    lastHierarchyItem,
     addComponent,
     componentAddress,
     componentDelta,

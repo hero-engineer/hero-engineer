@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { useQuery } from 'urql'
 import { Div } from 'honorable'
 import { MdChevronRight } from 'react-icons/md'
+import { VscTypeHierarchySub } from 'react-icons/vsc'
 
 import { refetchKeys } from '../../constants'
 import { HierarchyItemType } from '../../types'
@@ -152,13 +153,19 @@ function HierarchyBar() {
         gap={0.25}
         p={0.5}
       >
-        {displayHierarchy.map(({ label }, i, a) => (
+        {displayHierarchy.map(({ label, isChild }, i, a) => (
           <Fragment key={i + label}>
             <Div onClick={() => handleClick(i)}>
               {label}
             </Div>
             {i < a.length - 1 && (
               <MdChevronRight />
+            )}
+            {i === a.length - 1 && isChild && (
+              <VscTypeHierarchySub
+                size={12}
+                title="child"
+              />
             )}
           </Fragment>
         ))}

@@ -11,6 +11,7 @@ function MultipleDivs(props: any) {
         <CoolDaddy>
           <CoolDaddy>
             <CoolDiv />
+            <CoolDiv />
           </CoolDaddy>
         </CoolDaddy>
       </Div>

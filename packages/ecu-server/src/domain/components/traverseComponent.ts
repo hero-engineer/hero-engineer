@@ -29,6 +29,8 @@ import possiblyAddExtension from '../../utils/possiblyAddExtension'
 
 import createHierarchyId from '../utils/createHierarchyId'
 
+import isComponentAcceptingChildren from './isComponentAcceptingChildren'
+
 type TraverseComponentReturnType = {
   impacted: ImpactedType[],
   hierarchy: HierarchyTreeType | null,
@@ -45,6 +47,23 @@ type TraverseComponentHierarchyTreeType = Omit<HierarchyTreeType, 'children'> & 
   context: TraverseComponentHierarchyTreeContextType
   childrenContext: null | TraverseComponentHierarchyTreeContextType
   children: TraverseComponentHierarchyTreeType[]
+}
+
+const isComponentAcceptingChildrenMemoryHashSeparator = '___'
+const isComponentAcceptingChildrenMemory = new Map()
+
+function memoizedIsComponentAcceptingChildren(componentAddress: string, ecuComponentName = '') {
+  const hash = `${componentAddress}${isComponentAcceptingChildrenMemoryHashSeparator}${ecuComponentName}`
+
+  if (isComponentAcceptingChildrenMemory.has(hash)) {
+    return isComponentAcceptingChildrenMemory.get(hash)
+  }
+
+  const retval = isComponentAcceptingChildren(componentAddress, ecuComponentName)
+
+  isComponentAcceptingChildrenMemory.set(hash, retval)
+
+  return retval
 }
 
 function postProcessHierarchy(hierarchy: TraverseComponentHierarchyTreeType) {
@@ -96,6 +115,8 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
     label: componentNode.payload.name,
     index: 0,
     hierarchyId: '',
+    isChild: false,
+    isComponentAcceptingChildren: memoizedIsComponentAcceptingChildren(componentNode.address),
     children: [],
   }
   const componentNodes = getNodesByRole<FunctionNodeType>('Function').filter(n => n.payload.isComponent)
@@ -205,6 +226,8 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
             index,
             label: `${componentName}[${index}]`,
             hierarchyId,
+            isChild: !hasAst,
+            isComponentAcceptingChildren: memoizedIsComponentAcceptingChildren('', componentName),
             children: [],
           })
 
@@ -237,6 +260,8 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
                 index,
                 label: `${componentName}[${index}]`,
                 hierarchyId: '',
+                isChild: !hasAst,
+                isComponentAcceptingChildren: memoizedIsComponentAcceptingChildren(componentNode.address),
                 children: [],
               })
             }
@@ -272,8 +297,8 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
   dfs(rootHierarchy)
   postProcessHierarchy(rootHierarchy)
 
-  console.log('\n\n!!!!')
-  console.log('hierarchy', JSON.stringify(rootHierarchy, null, 2))
+  // console.log('\n\n!!!!')
+  // console.log('hierarchy', JSON.stringify(rootHierarchy, null, 2))
 
   return {
     impacted,
