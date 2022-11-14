@@ -22,6 +22,8 @@
     "eslint": "^8.26.0",
     "find-up": "^6.3.0",
     "folder-hash": "^4.0.2",
+    "git-user-email-2": "^1.0.0",
+    "git-user-name": "^2.0.0",
     "isomorphic-git": "^1.21.0",
     "shortid": "^2.2.16"
   },
@@ -31,6 +33,8 @@
     "@types/babel__traverse": "^7.18.2",
     "@types/eslint": "^8.4.10",
     "@types/folder-hash": "^4.0.2",
+    "@types/git-user-email": "^0.2.0",
+    "@types/git-user-name": "^2.0.1",
     "@types/lodash": "^4.14.188",
     "@types/shortid": "^0.0.29",
     "nodemon": "^2.0.20",
