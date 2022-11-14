@@ -1,31 +1,34 @@
-import fs from 'node:fs'
 
 import * as git from 'isomorphic-git'
 
-import { appPath } from '../configuration'
-
-const repo = {
-  fs,
-  dir: appPath,
-}
+import getAppRepository from './getAppRepository'
 
 async function createCommit(message: string) {
   console.log('___createCommit___')
 
-  // git add . -A
-  // https://isomorphic-git.org/docs/en/snippets#git-add-a-
-  await git.statusMatrix(repo).then(status =>
-    Promise.all(
-      status.map(([filepath, , worktreeStatus]) =>
-        worktreeStatus ? git.add({ ...repo, filepath }) : git.remove({ ...repo, filepath })
+  try {
+    const repository = await getAppRepository()
+
+    // git add . -A
+    // https://isomorphic-git.org/docs/en/snippets#git-add-a-
+    await git.statusMatrix(repository).then(status =>
+      Promise.all(
+        status.map(([filepath, , worktreeStatus]) =>
+          worktreeStatus ? git.add({ ...repository, filepath }) : git.remove({ ...repository, filepath })
+        )
       )
     )
-  )
 
-  await git.commit({
-    ...repo,
-    message,
-  })
+    await git.commit({
+      ...repository,
+      message,
+    })
+  }
+  catch (error) {
+    console.log(error)
+
+    throw new Error('Commit creation failed')
+  }
 }
 
 export default createCommit
