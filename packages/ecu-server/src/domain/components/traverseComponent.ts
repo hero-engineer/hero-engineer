@@ -10,7 +10,7 @@ import { xor } from 'lodash'
 import { FileNodeType, FunctionNodeType, HierarchyTreeType, ImpactedType, ImportType, ImportsRegistry, IndexRegistryType } from '../../types'
 import { ecuPropName } from '../../configuration'
 
-import { getNodesByFirstNeighbourg, getNodesByRole, getNodesBySecondNeighbourg } from '../../graph'
+import { getNodeByAddress, getNodesByFirstNeighbourg, getNodesByRole, getNodesBySecondNeighbourg } from '../../graph'
 
 import areArraysEqual from '../../utils/areArraysEqual'
 import areArraysEqualAtStart from '../../utils/areArraysEqualAtStart'
@@ -33,9 +33,15 @@ type TraverseComponentReturnType = {
 }
 
 type TraverseComponentHierarchyType = {
+  index: number,
+  label: string,
   fileNode: FileNodeType
+  fileAddress: string
+  componentAddress: string
+  // onComponentAddress: string
   path: NodePath<JSXElement> | null
   componentName: string
+  hierarchyId: string
   children: TraverseComponentHierarchyType[]
 }
 
@@ -50,6 +56,17 @@ function postProcessHierarchy(hierarchy: TraverseComponentHierarchyType) {
 
 function traverseComponent(componentAddress: string, hierarchyIds: string[], events: TraverseComponentEventsType = {}): TraverseComponentReturnType {
   // console.log('traverseComponent', componentAddress, hierarchyIds)
+
+  const componentNode = getNodeByAddress<FunctionNodeType>(componentAddress)
+
+  if (!componentNode) {
+    console.log(`No component node found for component ${componentAddress}`)
+
+    return {
+      impacted: [],
+      hierarchy: [],
+    }
+  }
 
   const fileNode = getNodesBySecondNeighbourg<FileNodeType>(componentAddress, 'DeclaresFunction')[0]
 
@@ -73,6 +90,8 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
   const componentNodes = getNodesByRole<FunctionNodeType>('Function').filter(n => n.payload.isComponent)
   const allFileNodes = getNodesByRole<FileNodeType>('File')
   const importsRegistry: ImportsRegistry = {}
+  const lastingHierarchyIds: string[] = []
+  const lastingIndexRegistry: IndexRegistryType = {}
 
   function buildImportsRegistry(fileNode: FileNodeType) {
     // Build the importsRegistry for the file
@@ -112,13 +131,10 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
     const limitedHierarchyId = (jsxAttributes[idIndex].value as StringLiteral).value
 
     if (!limitedHierarchyId) return null
-        // lastingIndexRegistry[limitedHierarchyId] = lastingIndexRegistry[limitedHierarchyId] + 1 || 0
 
-    const [componentAddress] = extractIdAndIndex(limitedHierarchyId)
-        // const componentIndex = indexRegistries[indexRegistries.length - 1][componentAddress] = indexRegistries[indexRegistries.length - 1][componentAddress] + 1 || 0
+    lastingIndexRegistry[limitedHierarchyId] = lastingIndexRegistry[limitedHierarchyId] + 1 || 0
 
-        // const hierarchyId = createHierarchyId(limitedHierarchyId, lastingIndexRegistry[limitedHierarchyId])
-    return createHierarchyId(limitedHierarchyId, 0)
+    return createHierarchyId(limitedHierarchyId, lastingIndexRegistry[limitedHierarchyId])
   }
 
   function getComponentFileNode(jsxElement: JSXElement, fileNode: FileNodeType) {
@@ -141,6 +157,7 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
   function bfs(hierarchy: TraverseComponentHierarchyType) {
     console.log('-->', hierarchy.componentName)
 
+    const componentNameToIndex: Record<string, number> = {}
     const ast = hierarchy.path ? null : hierarchy.fileNode.payload.ast
     const scope = hierarchy.path ? hierarchy.path.scope : undefined
     const parentPath = hierarchy.path ? hierarchy.path.parentPath : undefined
@@ -152,12 +169,20 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
     traverse(ast || hierarchy.path?.node, {
       JSXElement(x) {
         const hierarchyId = getComponentHierarchyId(x.node)
+        const componentName = (x.node.openingElement.name as JSXIdentifier)?.name || 'Component'
+
+        const index = componentNameToIndex[componentName] = componentNameToIndex[componentName] + 1 || 0
 
         if (hierarchyId) {
           hierarchy.children.push({
             fileNode: hierarchy.fileNode,
             path: x,
-            componentName: (x.node.openingElement.name as JSXIdentifier)?.name || 'Component',
+            fileAddress: hierarchy.fileNode.address,
+            componentAddress: hierarchy.componentAddress,
+            componentName,
+            index,
+            label: `${componentName}[${index}]`,
+            hierarchyId,
             children: [],
           })
         }
@@ -165,12 +190,21 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
           const componentFileNode = getComponentFileNode(x.node, hierarchy.fileNode)
 
           if (componentFileNode) {
-            hierarchy.children.push({
-              fileNode: componentFileNode,
-              path: null,
-              componentName: (x.node.openingElement.name as JSXIdentifier)?.name || 'Component',
-              children: [],
-            })
+            const componentNode = getNodesByFirstNeighbourg<FunctionNodeType>(componentFileNode.address, 'DeclaresFunction')[0]
+
+            if (componentNode) {
+              hierarchy.children.push({
+                fileNode: componentFileNode,
+                path: null,
+                fileAddress: componentFileNode.address,
+                componentAddress: componentNode.address,
+                componentName,
+                index,
+                label: `${componentName}[${index}]`,
+                hierarchyId: '',
+                children: [],
+              })
+            }
           }
         }
 
@@ -188,7 +222,12 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
   const hierarchy: TraverseComponentHierarchyType = {
     fileNode,
     path: null,
-    componentName: fileNode.payload.name, // TODO component name
+    fileAddress: fileNode.address,
+    componentAddress: componentNode.address,
+    componentName: componentNode.payload.name, // TODO component name
+    index: 0,
+    label: componentNode.payload.name,
+    hierarchyId: '',
     children: [],
   }
 
