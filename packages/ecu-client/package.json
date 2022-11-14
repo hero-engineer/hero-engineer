@@ -6,7 +6,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "dev": "nodemon --watch src --ext ts,tsx,js,css --exec \"npm run build\"",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "MINIFY_BUILD=true npm run build"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",

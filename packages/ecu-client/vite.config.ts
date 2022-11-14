@@ -14,6 +14,7 @@ export default defineConfig({
     }),
   ],
   build: {
+    minify: process.env.MINIFY_BUILD === 'true',
     sourcemap: true,
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),

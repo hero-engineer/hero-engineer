@@ -136,7 +136,7 @@ function useEditionProps<T>(id: string, className = '') {
       }
     }
 
-    if (componentDelta >= 0 && hierarchyIds[hierarchyIds.length - 1] === hierarchyId) {
+    if (componentDelta >= 0 && hierarchyIds.length && hierarchyId && hierarchyIds[hierarchyIds.length - 1] === hierarchyId) {
       klassName += ' ecu-selected'
     }
 

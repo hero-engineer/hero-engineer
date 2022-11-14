@@ -23,7 +23,11 @@ function Component() {
     pause: !componentAddress,
   })
 
-  useRefetch(refetchKeys.component, refetchComponentQuery)
+  useRefetch({
+    key: refetchKeys.component,
+    refetch: refetchComponentQuery,
+    skip: !componentAddress,
+  })
 
   if (componentQueryResult.fetching) {
     return null

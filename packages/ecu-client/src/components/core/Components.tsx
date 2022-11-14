@@ -15,7 +15,10 @@ function Components() {
     requestPolicy: 'network-only',
   })
 
-  useRefetch(refetchKeys.components, refetchComponentsQuery)
+  useRefetch({
+    key: refetchKeys.components,
+    refetch: refetchComponentsQuery,
+  })
 
   if (componentsQueryResult.fetching) {
     return null

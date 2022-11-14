@@ -38,7 +38,11 @@ function AddComponentSection() {
   })
   const [, addComponent] = useMutation(AddComponentMutation)
 
-  const refetch = useRefetch(refetchKeys.components, refetchComponentsQuery)
+  const refetch = useRefetch({
+    key: refetchKeys.components,
+    refetch: refetchComponentsQuery,
+    skip: !componentAddress,
+  })
 
   const handleAddComponentClick = useCallback(async () => {
     if (!lastHierarchyItem.isComponentAcceptingChildren && hierarchyPosition === 'children') {

@@ -1,4 +1,5 @@
 import { PropsWithChildren, memo } from 'react'
+import { useParams } from 'react-router-dom'
 import { Div, P } from 'honorable'
 import { BiNetworkChart } from 'react-icons/bi'
 import { TbRowInsertBottom } from 'react-icons/tb'
@@ -18,6 +19,8 @@ import AddComponentSection from './AddComponentSection'
 type OverlayProps = PropsWithChildren<any>
 
 function Overlay({ children }: OverlayProps) {
+  const { componentAddress = '' } = useParams()
+
   return (
     <>
       <Div
@@ -53,12 +56,14 @@ function Overlay({ children }: OverlayProps) {
         maxHeight="calc(100vh - 64px)"
         overflow="hidden"
       >
-        <RetractablePanel
-          direction="left"
-          openIcon={<TbRowInsertBottom />}
-        >
-          <AddComponentSection />
-        </RetractablePanel>
+        {!!componentAddress && (
+          <RetractablePanel
+            direction="left"
+            openIcon={<TbRowInsertBottom />}
+          >
+            <AddComponentSection />
+          </RetractablePanel>
+        )}
         <Div
           xflex="y2s"
           flexGrow={1}
@@ -69,16 +74,18 @@ function Overlay({ children }: OverlayProps) {
         >
           {children}
         </Div>
-        <RetractablePanel
-          direction="right"
-          openIcon={<BiNetworkChart />}
-        >
-          <Div minWidth={512}>
-            <ComponentImportsEditor />
-            <TypesSection />
-            <ComponentTypesEditor />
-          </Div>
-        </RetractablePanel>
+        {!!componentAddress && (
+          <RetractablePanel
+            direction="right"
+            openIcon={<BiNetworkChart />}
+          >
+            <Div minWidth={512}>
+              <ComponentImportsEditor />
+              <TypesSection />
+              <ComponentTypesEditor />
+            </Div>
+          </RetractablePanel>
+        )}
       </Div>
     </>
   )

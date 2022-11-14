@@ -44,7 +44,11 @@ function HierarchyBar() {
     pause: !componentAddress,
   })
 
-  useRefetch(refetchKeys.hierarchy, refetchHierarchyQuery)
+  useRefetch({
+    key: refetchKeys.hierarchy,
+    refetch: refetchHierarchyQuery,
+    skip: !componentAddress,
+  })
 
   const hierarchy = useMemo(() => JSON.parse(hierarchyQueryResult.data?.hierarchy || '""') || {}, [hierarchyQueryResult.data])
   const totalHierarchy = useMemo(() => getFlattenedHierarchy(hierarchy, hierarchyIds), [hierarchy, hierarchyIds])

@@ -21,7 +21,11 @@ function ComponentTypesEditor() {
   })
   const [, writeFileTypes] = useMutation<WriteFileTypesMutationDataType>(WriteFileTypesMutation)
 
-  const refetch = useRefetch(refetchKeys.fileTypes, refetchFileTypesQuery)
+  const refetch = useRefetch({
+    key: refetchKeys.fileTypes,
+    refetch: refetchFileTypesQuery,
+    skip: !fileAddress,
+  })
 
   const handleSave = useCallback(async () => {
     await writeFileTypes({

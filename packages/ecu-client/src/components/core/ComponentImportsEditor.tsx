@@ -21,7 +21,11 @@ function ComponentImportsEditor() {
   })
   const [, writeFileImports] = useMutation<WriteFileImportsMutationDataType>(WriteFileImportsMutation)
 
-  useRefetch(refetchKeys.fileImports, refetchFileImportsQuery)
+  useRefetch({
+    key: refetchKeys.fileImports,
+    refetch: refetchFileImportsQuery,
+    skip: !fileAddress,
+  })
 
   const handleSave = useCallback(() => {
     writeFileImports({
