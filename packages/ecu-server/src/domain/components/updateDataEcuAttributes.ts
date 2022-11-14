@@ -1,9 +1,10 @@
 import { JSXAttribute, jsxAttribute, jsxIdentifier, stringLiteral } from '@babel/types'
 import { ParseResult } from '@babel/core'
-import traverse from '@babel/traverse'
 
 import { FunctionNodeType } from '../../types'
 import { ecuPropName } from '../../configuration'
+
+import traverse from '../traverse'
 
 import createHierarchyId from '../utils/createHierarchyId'
 

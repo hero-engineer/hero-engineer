@@ -1,5 +1,5 @@
 import { ParseResult } from '@babel/core'
-import traverse from '@babel/traverse'
+
 import {
   identifier,
   importDeclaration,
@@ -8,6 +8,8 @@ import {
   importSpecifier,
   stringLiteral,
 } from '@babel/types'
+
+import traverse from '../traverse'
 
 import { ImportType } from '../../types'
 

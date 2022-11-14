@@ -1,7 +1,8 @@
-import traverse from '@babel/traverse'
 
 import { externalModulesImports } from '../../configuration'
 import { ImportType } from '../../types'
+
+import traverse from '../traverse'
 import parseCode from '../parseCode'
 
 import getGlobalTypes from '../types/getGlobalTypes'

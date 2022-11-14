@@ -1,14 +1,17 @@
 import path from 'node:path'
 
-import traverse from '@babel/traverse'
 import shortId from 'shortid'
 
 import { appPath } from '../../configuration'
 import { FileNodeType, FunctionNodeType } from '../../types'
 
-import { addEdge, addNode, getNodesByRole } from '..'
-import createFunctionNode from '../models/createFunctionNode'
+import traverse from '../../domain/traverse'
+
 import possiblyAddExtension from '../../utils/possiblyAddExtension'
+
+import { addEdge, addNode, getNodesByRole } from '..'
+
+import createFunctionNode from '../models/createFunctionNode'
 
 function addFileDependencies(fileNode: FileNodeType) {
   const { ast } = fileNode.payload

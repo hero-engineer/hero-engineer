@@ -1,4 +1,4 @@
-import traverse from '@babel/traverse'
+import traverse from '../traverse'
 
 import { FileNodeType, ImportType } from '../../types'
 

@@ -1,10 +1,10 @@
 import fs from 'node:fs'
 
 import { ParseResult } from '@babel/core'
-import generate from '@babel/generator'
 
 import { FileNodeType } from '../types'
 
+import generate from './generate'
 import lintCode from './lintCode'
 
 async function regenerate(fileNode: FileNodeType, astOrCode: ParseResult | string) {

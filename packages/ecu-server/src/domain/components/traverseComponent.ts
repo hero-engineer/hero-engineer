@@ -6,7 +6,7 @@ import {
   JSXIdentifier,
   StringLiteral,
 } from '@babel/types'
-import traverse, { NodePath } from '@babel/traverse'
+import { NodePath } from '@babel/traverse'
 
 import {
   FileNodeType,
@@ -28,6 +28,8 @@ import {
 import possiblyAddExtension from '../../utils/possiblyAddExtension'
 
 import createHierarchyId from '../utils/createHierarchyId'
+
+import traverse from '../traverse'
 
 import isComponentAcceptingChildren from './isComponentAcceptingChildren'
 

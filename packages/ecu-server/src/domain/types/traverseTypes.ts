@@ -1,7 +1,7 @@
-import traverse from '@babel/traverse'
-import generate from '@babel/generator'
-
 import { FileNodeType, TypeType } from '../../types'
+
+import traverse from '../traverse'
+import generate from '../generate'
 
 function traverseTypes(fileNode: FileNodeType) {
   const types: TypeType[] = []

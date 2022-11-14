@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "A shield",
   "main": "index.js",
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "dev": "nodemon --watch src --ext ts,tsx --exec \"npm run start\"",
-    "start": "ts-node  src/index.ts"
+    "start": "ts-node  --experimental-specifier-resolution=node src/index.ts"
   },
   "author": "",
   "license": "MIT",
