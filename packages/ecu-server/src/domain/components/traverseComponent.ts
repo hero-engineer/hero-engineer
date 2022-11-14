@@ -1,25 +1,33 @@
 import path from 'node:path'
 
-import { File, JSXAttribute, JSXElement, JSXIdentifier, StringLiteral, file } from '@babel/types'
+import {
+  JSXAttribute,
+  JSXElement,
+  JSXIdentifier,
+  StringLiteral,
+} from '@babel/types'
 import traverse, { NodePath } from '@babel/traverse'
 
-import { ParseResult } from '@babel/core'
-
-import { xor } from 'lodash'
-
-import { FileNodeType, FunctionNodeType, HierarchyTreeType, ImpactedType, ImportType, ImportsRegistry, IndexRegistryType } from '../../types'
+import {
+  FileNodeType,
+  FunctionNodeType,
+  HierarchyTreeType,
+  ImpactedType,
+  ImportsRegistry,
+  IndexRegistryType,
+} from '../../types'
 import { ecuPropName } from '../../configuration'
 
-import { getNodeByAddress, getNodesByFirstNeighbourg, getNodesByRole, getNodesBySecondNeighbourg } from '../../graph'
+import {
+  getNodeByAddress,
+  getNodesByFirstNeighbourg,
+  getNodesByRole,
+  getNodesBySecondNeighbourg,
+} from '../../graph'
 
-import areArraysEqual from '../../utils/areArraysEqual'
-import areArraysEqualAtStart from '../../utils/areArraysEqualAtStart'
 import possiblyAddExtension from '../../utils/possiblyAddExtension'
 
 import createHierarchyId from '../utils/createHierarchyId'
-import extractIdAndIndex from '../utils/extractIdAndIndex'
-import extractIdsAndIndexes from '../utils/extractIdsAndIndexes'
-import formatHierarchyTrees from '../utils/formatHierarchyTrees'
 
 type TraverseComponentReturnType = {
   impacted: ImpactedType[],
@@ -28,6 +36,7 @@ type TraverseComponentReturnType = {
 
 type TraverseComponentHierarchyTreeContextType = {
   useAst?: boolean
+  onComponentAddress?: string
   fileNode: FileNodeType
   paths: NodePath<JSXElement>[]
 }
@@ -157,14 +166,15 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
     // console.log('-->', hierarchy.componentName, useChildrenPath ? 'children path' : '')
 
     const indexRegistry: IndexRegistryType = {}
+    const { useAst, fileNode, paths } = hierarchy.context
     const hasChildrenPath = !!(useChildrenPath && hierarchy.childrenContext)
-    const hasAst = !hasChildrenPath && hierarchy.context.useAst
-    const ast = hasAst ? hierarchy.context.fileNode.payload.ast : null
-    const path = hasAst ? null : hasChildrenPath ? hierarchy.childrenContext!.paths[0] : hierarchy.context.paths[hierarchy.context.paths.length - 1]
+    const hasAst = !hasChildrenPath && useAst
+    const ast = hasAst ? fileNode.payload.ast : null
+    const path = hasAst ? null : hasChildrenPath ? hierarchy.childrenContext!.paths[0] : paths[paths.length - 1]
     const scope = hasAst ? undefined : (path as NodePath).scope
     const parentPath = hasAst ? undefined : (path as NodePath).parentPath
 
-    if (ast && !impacted.some(x => x.fileNode.address === hierarchy.context.fileNode.address)) {
+    if (ast && !impacted.some(x => x.fileNode.address === fileNode.address)) {
       impacted.push({ fileNode, ast })
     }
 
@@ -174,7 +184,8 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
 
         const componentName = (x.node.openingElement.name as JSXIdentifier)?.name || 'Component'
         const index = indexRegistry[componentName] = indexRegistry[componentName] + 1 || 0
-        const nextPaths = [...hierarchy.context.paths, x]
+        const nextPaths = [...paths, x]
+        const onComponentAddress = hasChildrenPath ? hierarchy.childrenContext!.onComponentAddress! : hierarchy.componentAddress || hierarchy.onComponentAddress
         const hierarchyId = getComponentHierarchyId(x.node)
 
         // console.log('JSXElement', componentName)
@@ -183,13 +194,13 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
         if (hierarchyId) {
           hierarchy.children.push({
             context: {
-              fileNode: hierarchy.context.fileNode,
+              fileNode,
               paths: nextPaths,
             },
             childrenContext: hierarchy.childrenContext,
-            fileAddress: hierarchy.context.fileNode.address,
-            componentAddress: hierarchy.componentAddress,
-            onComponentAddress: hierarchy.componentAddress,
+            fileAddress: fileNode.address,
+            componentAddress: '',
+            onComponentAddress,
             componentName,
             index,
             label: `${componentName}[${index}]`,
@@ -202,7 +213,7 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
           }
         }
         else {
-          const componentFileNode = getComponentFileNode(x.node, hasChildrenPath ? hierarchy.childrenContext!.fileNode : hierarchy.context.fileNode)
+          const componentFileNode = getComponentFileNode(x.node, hasChildrenPath ? hierarchy.childrenContext!.fileNode : fileNode)
 
           if (componentFileNode) {
             const componentNode = getNodesByFirstNeighbourg<FunctionNodeType>(componentFileNode.address, 'DeclaresFunction')[0]
@@ -215,12 +226,13 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
                   paths: nextPaths,
                 },
                 childrenContext: {
-                  fileNode: hierarchy.childrenContext?.fileNode || hierarchy.context.fileNode,
+                  onComponentAddress,
+                  fileNode: hierarchy.childrenContext?.fileNode || fileNode,
                   paths: [x],
                 },
                 fileAddress: componentFileNode.address,
                 componentAddress: componentNode.address,
-                onComponentAddress: hierarchy.componentAddress,
+                onComponentAddress,
                 componentName,
                 index,
                 label: `${componentName}[${index}]`,
@@ -260,8 +272,8 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
   dfs(rootHierarchy)
   postProcessHierarchy(rootHierarchy)
 
-  // console.log('\n\n!!!!')
-  // console.log('hierarchy', JSON.stringify(rootHierarchy, null, 2))
+  console.log('\n\n!!!!')
+  console.log('hierarchy', JSON.stringify(rootHierarchy, null, 2))
 
   return {
     impacted,

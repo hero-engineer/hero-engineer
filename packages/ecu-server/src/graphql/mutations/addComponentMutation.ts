@@ -59,7 +59,7 @@ async function addComponentMutation(_: any, { sourceComponentAddress, targetComp
         finalPath.replaceWith(inserted)
       }
       else {
-        finalPath.insertAfter(inserted)
+        finalPath.insertBefore(inserted)
       }
     }
     else if (hierarchyPosition === 'after') {

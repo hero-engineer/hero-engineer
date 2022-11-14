@@ -14,13 +14,14 @@ import useEditionSearchParams from '../../hooks/useEditionSearchParams'
 import useRefetch from '../../hooks/useRefetch'
 
 import isHierarchyOnComponent from '../../helpers/isHierarchyOnComponent'
+import getLastEditedHierarchyItem from '../../helpers/getLastEditedHierarchyItem'
 
 function DeleteComponentButton(props: any) {
   const { componentAddress = '' } = useParams()
   const { hierarchyIds, componentDelta, setEditionSearchParams } = useEditionSearchParams()
   const { hierarchy } = useContext(HierarchyContext)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const lastEditedHierarchyItem = useMemo(() => [...hierarchy].reverse().find(x => x.componentAddress), [hierarchy])
+  const lastEditedHierarchyItem = useMemo(() => getLastEditedHierarchyItem(hierarchy), [hierarchy])
   const navigate = useNavigate()
 
   const [, deleteComponent] = useMutation<DeleteComponentMutationDataType>(DeleteComponentMutation)

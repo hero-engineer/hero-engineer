@@ -15,6 +15,7 @@ import useRefetch from '../../hooks/useRefetch'
 import { AddComponentMutation, ComponentsQuery, ComponentsQueryDataType, IsComponentAcceptingChildrenQuery, IsComponentAcceptingChildrenQueryDataType } from '../../queries'
 
 import isHierarchyOnComponent from '../../helpers/isHierarchyOnComponent'
+import getLastEditedHierarchyItem from '../../helpers/getLastEditedHierarchyItem'
 
 import capitalize from '../../utils/capitalize'
 
@@ -27,7 +28,7 @@ function AddComponentSection() {
   const [selectedComponentAddress, setSelectedComponentId] = useState('')
   const [hierarchyPosition, setHierarchyPosition] = useState<HierarchyPosition>(hierarchyPositions[0])
 
-  const lastEditedComponent = useMemo(() => [...hierarchy].reverse().find(x => x.componentAddress), [hierarchy])
+  const lastEditedHierarchyItem = useMemo(() => getLastEditedHierarchyItem(hierarchy), [hierarchy])
   const lastHierarchyItem = useMemo(() => hierarchy[hierarchy.length - 1], [hierarchy])
 
   const navigate = useNavigate()
@@ -53,6 +54,8 @@ function AddComponentSection() {
 
       return
     }
+
+    console.log('hierarchy[hierarchy.length - 1]', hierarchy[hierarchy.length - 1])
 
     if (!isHierarchyOnComponent(hierarchy, componentAddress)) {
       setIsComponentModalOpen(true)
@@ -84,10 +87,10 @@ function AddComponentSection() {
   const navigateToLastEditedComponent = useCallback(() => {
     setIsComponentModalOpen(false)
 
-    if (!lastEditedComponent) return
+    if (!lastEditedHierarchyItem) return
 
-    navigate(`/__ecu__/component/${lastEditedComponent.fileAddress}/${lastEditedComponent.componentAddress}`)
-  }, [navigate, lastEditedComponent])
+    navigate(`/__ecu__/component/${lastEditedHierarchyItem.fileAddress}/${lastEditedHierarchyItem.componentAddress}`)
+  }, [navigate, lastEditedHierarchyItem])
 
   const navigateToLastHierarchyItem = useCallback(() => {
     setIsChildrenModalOpen(false)
@@ -170,7 +173,7 @@ function AddComponentSection() {
         <P mt={1}>
           To add a component here, you must edit
           {' '}
-          {lastEditedComponent?.componentName}
+          {lastEditedHierarchyItem?.componentName}
           .
         </P>
         <Div
@@ -184,7 +187,7 @@ function AddComponentSection() {
           <Button onClick={navigateToLastEditedComponent}>
             Go to
             {' '}
-            {lastEditedComponent?.componentName}
+            {lastEditedHierarchyItem?.componentName}
           </Button>
         </Div>
       </Modal>
