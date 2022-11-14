@@ -7,16 +7,16 @@ import CoolDaddy from './CoolDaddy'
 function MultipleDivs(props: any) {
   return (
     <>
-      <Div data-ecu="jBdCLiAUmg:0">
-        <Div data-ecu="jBdCLiAUmg:0_0">
-          Yo
-        </Div>
-        <CoolDiv />
-        <CoolDiv />
-      </Div>
-      {/* <Div data-ecu="dYy2nVYwY:0">
+      <Div data-ecu="02CA4cVTtT:0">
         <CoolDaddy>
-          <Div data-ecu="dYy2nVYwY:0_0">
+          <CoolDaddy>
+            <CoolDiv />
+          </CoolDaddy>
+        </CoolDaddy>
+      </Div>
+      <Div data-ecu="02CA4cVTtT:1">
+        <CoolDaddy>
+          <Div data-ecu="02CA4cVTtT:1_0">
             Yo
           </Div>
           <CoolDaddy>
@@ -26,15 +26,14 @@ function MultipleDivs(props: any) {
           <CoolDiv />
           <CoolDiv />
         </CoolDaddy>
-       </Div>
-       <CoolDaddy>
-        Yo
+      </Div>
+      <CoolDaddy>
         <CoolDaddy>
           <CoolDiv />
         </CoolDaddy>
-       </CoolDaddy>
-       <Div data-ecu="dYy2nVYwY:1">
-        <Div data-ecu="dYy2nVYwY:1_0">
+      </CoolDaddy>
+      <Div data-ecu="02CA4cVTtT:2">
+        <Div data-ecu="02CA4cVTtT:2_0">
           <CoolDaddy>
             <CoolDaddy>
               <CoolDaddy>
@@ -43,21 +42,21 @@ function MultipleDivs(props: any) {
             </CoolDaddy>
           </CoolDaddy>
         </Div>
-       </Div>
-       <DualCoolDiv />
-       <DualCoolDiv />
-       <Div data-ecu="dYy2nVYwY:2">
-        <Div data-ecu="dYy2nVYwY:2_0">
+      </Div>
+      <DualCoolDiv />
+      <DualCoolDiv />
+      <Div data-ecu="02CA4cVTtT:3">
+        <Div data-ecu="02CA4cVTtT:3_0">
           Dear component
         </Div>
-        <Div data-ecu="dYy2nVYwY:2_1">
+        <Div data-ecu="02CA4cVTtT:3_1">
           Hello
         </Div>
         <CoolDiv />
         <CoolDaddy>
           Darling
         </CoolDaddy>
-       </Div> */}
+      </Div>
     </>
   )
 }

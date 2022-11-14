@@ -19,7 +19,7 @@ import possiblyAddExtension from '../../utils/possiblyAddExtension'
 import createHierarchyId from '../utils/createHierarchyId'
 import extractIdAndIndex from '../utils/extractIdAndIndex'
 import extractIdsAndIndexes from '../utils/extractIdsAndIndexes'
-// import formatHierarchyTrees from '../utils/formatHierarchyTrees'
+import formatHierarchyTrees from '../utils/formatHierarchyTrees'
 
 type TraverseComponentEventsType = {
   onTraverseFile?: (fileNodes: FileNodeType[]) => void
@@ -29,27 +29,25 @@ type TraverseComponentEventsType = {
 
 type TraverseComponentReturnType = {
   impacted: ImpactedType[],
-  hierarchy: HierarchyTreeType[],
+  hierarchy: HierarchyTreeType | null,
 }
 
-type TraverseComponentHierarchyType = {
-  index: number,
-  label: string,
+type TraverseComponentHierarchyTreeContextType = {
   fileNode: FileNodeType
-  fileAddress: string
-  componentAddress: string
-  // onComponentAddress: string
   path: NodePath<JSXElement> | null
-  componentName: string
-  hierarchyId: string
-  children: TraverseComponentHierarchyType[]
 }
 
-function postProcessHierarchy(hierarchy: TraverseComponentHierarchyType) {
+type TraverseComponentHierarchyTreeType = Omit<HierarchyTreeType, 'children'> & {
+  context: TraverseComponentHierarchyTreeContextType
+  childrenContext: null | TraverseComponentHierarchyTreeContextType
+  children: TraverseComponentHierarchyTreeType[]
+}
+
+function postProcessHierarchy(hierarchy: TraverseComponentHierarchyTreeType) {
   // @ts-expect-error
-  delete hierarchy.fileNode
+  delete hierarchy.context
   // @ts-expect-error
-  delete hierarchy.path
+  delete hierarchy.childrenContext
 
   hierarchy.children.forEach(postProcessHierarchy)
 }
@@ -64,7 +62,7 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
 
     return {
       impacted: [],
-      hierarchy: [],
+      hierarchy: null,
     }
   }
 
@@ -75,7 +73,7 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
 
     return {
       impacted: [],
-      hierarchy: [],
+      hierarchy: null,
     }
   }
 
@@ -154,31 +152,41 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
     return getNodesBySecondNeighbourg<FileNodeType>(nextComponentNode.address, 'DeclaresFunction')[0]
   }
 
-  function bfs(hierarchy: TraverseComponentHierarchyType) {
-    console.log('-->', hierarchy.componentName)
+  function dfs(hierarchy: TraverseComponentHierarchyTreeType, useChildrenPath = false) {
+    // console.log('-->', hierarchy.componentName, useChildrenPath ? 'children path' : '')
 
-    const componentNameToIndex: Record<string, number> = {}
-    const ast = hierarchy.path ? null : hierarchy.fileNode.payload.ast
-    const scope = hierarchy.path ? hierarchy.path.scope : undefined
-    const parentPath = hierarchy.path ? hierarchy.path.parentPath : undefined
+    const indexRegistry: Record<string, number> = {}
+    const hasChildrenPath = !!(useChildrenPath && hierarchy.childrenContext)
+    const skipAst = hasChildrenPath || hierarchy.context.path
+    const ast = skipAst ? null : hierarchy.context.fileNode.payload.ast
+    const path = skipAst ? hasChildrenPath ? hierarchy.childrenContext!.path : hierarchy.context.path : null
+    const scope = skipAst ? (path as NodePath).scope : undefined
+    const parentPath = skipAst ? (path as NodePath).parentPath : undefined
 
-    if (ast && !impacted.some(x => x.fileNode.address === hierarchy.fileNode.address)) {
+    if (ast && !impacted.some(x => x.fileNode.address === hierarchy.context.fileNode.address)) {
       impacted.push({ fileNode, ast })
     }
 
-    traverse(ast || hierarchy.path?.node, {
+    traverse(skipAst ? path?.node : ast, {
       JSXElement(x) {
+        x.skip()
+
         const hierarchyId = getComponentHierarchyId(x.node)
         const componentName = (x.node.openingElement.name as JSXIdentifier)?.name || 'Component'
+        // console.log('JSXElement', componentName)
 
-        const index = componentNameToIndex[componentName] = componentNameToIndex[componentName] + 1 || 0
+        const index = indexRegistry[componentName] = indexRegistry[componentName] + 1 || 0
 
         if (hierarchyId) {
           hierarchy.children.push({
-            fileNode: hierarchy.fileNode,
-            path: x,
-            fileAddress: hierarchy.fileNode.address,
+            context: {
+              fileNode: hierarchy.context.fileNode,
+              path: x,
+            },
+            childrenContext: hierarchy.childrenContext,
+            fileAddress: hierarchy.context.fileNode.address,
             componentAddress: hierarchy.componentAddress,
+            onComponentAddress: hierarchy.componentAddress,
             componentName,
             index,
             label: `${componentName}[${index}]`,
@@ -187,17 +195,24 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
           })
         }
         else {
-          const componentFileNode = getComponentFileNode(x.node, hierarchy.fileNode)
+          const componentFileNode = getComponentFileNode(x.node, hasChildrenPath ? hierarchy.childrenContext!.fileNode : hierarchy.context.fileNode)
 
           if (componentFileNode) {
             const componentNode = getNodesByFirstNeighbourg<FunctionNodeType>(componentFileNode.address, 'DeclaresFunction')[0]
 
             if (componentNode) {
               hierarchy.children.push({
-                fileNode: componentFileNode,
-                path: null,
+                context: {
+                  fileNode: componentFileNode,
+                  path: null,
+                },
+                childrenContext: {
+                  fileNode: hierarchy.childrenContext?.fileNode || hierarchy.context.fileNode,
+                  path: x,
+                },
                 fileAddress: componentFileNode.address,
                 componentAddress: componentNode.address,
+                onComponentAddress: hierarchy.componentAddress,
                 componentName,
                 index,
                 label: `${componentName}[${index}]`,
@@ -205,25 +220,44 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
                 children: [],
               })
             }
+            // else {
+            //   console.log(`No component node found for component ${componentName}`)
+            // }
           }
+          // else {
+          //   console.log('No component file node found for', componentName)
+          // }
         }
+      },
+      JSXExpressionContainer(x) {
+        if (!(x.node.expression.type === 'Identifier' && x.node.expression.name === 'children')) return
 
-        x.skip()
+        // console.log('CHILDREN')
+
+        dfs(hierarchy, true)
       },
     }, scope, parentPath)
 
-    hierarchy.children.forEach(hierarchyChild => {
-      bfs(hierarchyChild)
-    })
+    // console.log('About to traverse children of', hierarchy.label)
+
+    if (!hasChildrenPath) {
+      hierarchy.children.forEach(childHierarchy => {
+        dfs(childHierarchy)
+      })
+    }
+
+    // console.log('End traversal of', hierarchy.label)
   }
 
-  buildImportsRegistry(fileNode)
-
-  const hierarchy: TraverseComponentHierarchyType = {
-    fileNode,
-    path: null,
+  const hierarchy: TraverseComponentHierarchyTreeType = {
+    context: {
+      fileNode,
+      path: null,
+    },
+    childrenContext: null,
     fileAddress: fileNode.address,
     componentAddress: componentNode.address,
+    onComponentAddress: componentNode.address,
     componentName: componentNode.payload.name, // TODO component name
     index: 0,
     label: componentNode.payload.name,
@@ -231,15 +265,16 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
     children: [],
   }
 
-  bfs(hierarchy)
-
+  buildImportsRegistry(fileNode)
+  dfs(hierarchy)
   postProcessHierarchy(hierarchy)
-  console.log('\n\n!!!!')
-  console.log('hierarchy', JSON.stringify(hierarchy, null, 2))
+
+  // console.log('\n\n!!!!')
+  // console.log('hierarchy', JSON.stringify(hierarchy, null, 2))
 
   return {
     impacted,
-    hierarchy: hierarchyTrees,
+    hierarchy: hierarchy as HierarchyTreeType,
   }
 }
 

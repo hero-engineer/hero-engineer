@@ -84,8 +84,8 @@ export type HierarchyTreeType = {
   fileAddress: string
   componentName: string
   onComponentAddress: string
-  componentAddress?: string
-  hierarchyId?: string
+  componentAddress: string
+  hierarchyId: string
   children: HierarchyTreeType[]
 }
 

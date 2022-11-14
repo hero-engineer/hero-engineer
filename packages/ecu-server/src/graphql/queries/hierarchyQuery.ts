@@ -7,6 +7,7 @@ type HierarchyQueryArgs = {
 function hierarchyQuery(_: any, { sourceComponentAddress }: HierarchyQueryArgs) {
   console.log('__hierarchyQuery__')
 
+  // TODO remove try catch
   try {
     const { hierarchy } = traverseComponent(sourceComponentAddress, [])
 
