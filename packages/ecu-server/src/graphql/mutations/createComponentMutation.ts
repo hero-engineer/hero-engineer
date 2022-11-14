@@ -44,7 +44,6 @@ async function createComponentMutation(_: any, { name }: CreateComponentMutation
 
   return {
     returnValue: componentNode,
-    impactedFileNodes: [fileNode],
     description: `Create component ${validatedName}`,
   }
 }

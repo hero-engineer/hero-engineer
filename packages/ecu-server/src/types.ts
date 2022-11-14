@@ -63,7 +63,6 @@ export type ImportsRegistry = Record<string, ImportType[]>
 
 export type HistoryMutationReturnType<T> = {
   returnValue: T
-  impactedFileNodes: FileNodeType[]
   description: string
 }
 

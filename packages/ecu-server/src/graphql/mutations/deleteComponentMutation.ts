@@ -35,11 +35,10 @@ async function deleteComponentMutation(_: any, { sourceComponentAddress, targetH
 
   const { impacted } = traverseComponent(sourceComponentAddress, targetHierarchyId, onSuccess)
 
-  const { impactedFileNode, impactedComponentNode } = await processImpactedFileNodes(impacted)
+  const { impactedComponentNode } = await processImpactedFileNodes(impacted)
 
   return {
     returnValue: impactedComponentNode,
-    impactedFileNodes: impactedFileNode ? [impactedFileNode] : [],
     description: `Delete component ${impactedComponentNode?.payload.name} in ${componentNode.payload.name}`,
   }
 }

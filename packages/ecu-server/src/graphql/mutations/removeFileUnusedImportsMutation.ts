@@ -28,7 +28,6 @@ async function removeFileUnunsedImportsMutation(_: any, { sourceFileAddress }: R
 
   return {
     returnValue: true,
-    impactedFileNodes: [fileNode],
     description: `Remove  unused imports for file ${fileNode.payload.name}`,
   }
 }

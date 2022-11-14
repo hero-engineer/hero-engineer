@@ -1,18 +1,15 @@
 import { HistoryMutationReturnType } from '../types'
 import updateGraphHash from '../graph/hash/updateGraphHash'
 
-// import createHistoryBackup from './createHistoryBackup'
-// import createHistoryEntry from './createHistoryEntry'
+import createCommit from './createCommit'
 
 function composeHistoryMutation(mutate: (...args: any[]) => Promise<HistoryMutationReturnType<any>>) {
   return async (...args: any[]) => {
-    // const backupPath = createHistoryBackup()
-
-    const { returnValue, impactedFileNodes, description } = await mutate(...args)
+    const { returnValue, description } = await mutate(...args)
 
     await updateGraphHash()
 
-    // createHistoryEntry(impactedFileNodes, description)
+    await createCommit(description)
 
     return returnValue
   }

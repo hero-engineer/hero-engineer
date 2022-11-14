@@ -90,11 +90,10 @@ async function addComponentMutation(_: any, { sourceComponentAddress, targetComp
   const postTraverse = createAddComponentPostTraverse(targetComponentNode)
   const { impacted } = traverseComponent(sourceComponentAddress, targetHierarchyId, onSuccess)
 
-  const { impactedFileNode, impactedComponentNode } = await processImpactedFileNodes(impacted, postTraverse, true)
+  const { impactedComponentNode } = await processImpactedFileNodes(impacted, postTraverse, true)
 
   return {
     returnValue: impactedComponentNode,
-    impactedFileNodes: impactedFileNode ? [impactedFileNode] : [],
     description: `Add component ${targetComponentNode.payload.name} to ${sourceComponentNode.payload.name}`,
   }
 }

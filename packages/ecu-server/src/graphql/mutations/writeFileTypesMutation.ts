@@ -47,7 +47,6 @@ async function writeFileTypesMutation(_: any, { sourceFileAddress, rawTypes }: W
 
   return {
     returnValue: true,
-    impactedFileNodes: [fileNode],
     description: `Write types for file ${fileNode.payload.name}`,
   }
 }

@@ -32,7 +32,6 @@ async function writeFileImportsMutation(_: any, { sourceFileAddress, rawImports 
 
   return {
     returnValue: true,
-    impactedFileNodes: [fileNode],
     description: `Write imports for file ${fileNode.payload.name}`,
   }
 }

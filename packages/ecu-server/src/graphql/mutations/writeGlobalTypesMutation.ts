@@ -29,7 +29,6 @@ ${globalTypesFileContent}
 
   return {
     returnValue: true,
-    impactedFileNodes: [fileNode],
     description: 'Write global styles',
   }
 }

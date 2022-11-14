@@ -21,6 +21,7 @@
     "apollo-server": "^3.11.1",
     "eslint": "^8.26.0",
     "folder-hash": "^4.0.2",
+    "isomorphic-git": "^1.21.0",
     "shortid": "^2.2.16"
   },
   "devDependencies": {
