@@ -103,9 +103,9 @@ export const typeDefs = gql`
 
   type Mutation {
     createComponent(name: String!): FunctionNode!
-    addComponent(sourceComponentAddress: String!, targetComponentAddress: String!, hierarchyIds: [String!]!, hierarchyPosition: HierarchyPosition!, componentDelta: Int!): FunctionNode!
-    deleteComponent(sourceComponentAddress: String!, hierarchyIds: [String!]!, componentDelta: Int!): FunctionNode!
-    moveComponent(sourceComponentAddress: String!, sourceHierarchyIds: [String!]!, targetHierarchyIds: [String!]!, hierarchyPosition: HierarchyPosition!): [FunctionNode!]!
+    addComponent(sourceComponentAddress: String!, targetComponentAddress: String!, targetHierarchyId: String!, hierarchyPosition: HierarchyPosition!, componentDelta: Int!): FunctionNode!
+    deleteComponent(sourceComponentAddress: String!, targetHierarchyId: String!, componentDelta: Int!): FunctionNode!
+    moveComponent(sourceComponentAddress: String!, sourceHierarchyId: String!, targetHierarchyId: String!, hierarchyPosition: HierarchyPosition!): [FunctionNode!]!
     writeGlobalTypes(globalTypesFileContent: String!): Boolean!
     writeFileImports(sourceFileAddress: String!, rawImports: String!): Boolean!
     writeFileTypes(sourceFileAddress: String!, rawTypes: String!): Boolean!

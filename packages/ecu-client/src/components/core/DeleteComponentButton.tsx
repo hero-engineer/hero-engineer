@@ -36,7 +36,7 @@ function DeleteComponentButton(props: any) {
 
     await deleteComponent({
       sourceComponentAddress: componentAddress,
-      hierarchyIds,
+      targetHierarchyId: hierarchyIds[hierarchyIds.length - 1],
       componentDelta,
     })
 

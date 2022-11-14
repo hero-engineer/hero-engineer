@@ -63,7 +63,7 @@ function AddComponentSection() {
     await addComponent({
       sourceComponentAddress: componentAddress,
       targetComponentAddress: selectedComponentAddress,
-      hierarchyIds,
+      targetHierarchyId: hierarchyIds[hierarchyIds.length - 1],
       hierarchyPosition,
       componentDelta,
     })

@@ -21,12 +21,12 @@ import processImpactedFileNodes from '../../domain/processImpactedFileNodes'
 type AddComponentMutationArgs = {
   sourceComponentAddress: string
   targetComponentAddress: string
-  hierarchyIds: string[]
+  targetHierarchyId: string
   hierarchyPosition: HierarchyPositionType
   componentDelta: number
 }
 
-async function addComponentMutation(_: any, { sourceComponentAddress, targetComponentAddress, hierarchyIds, hierarchyPosition, componentDelta }: AddComponentMutationArgs): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
+async function addComponentMutation(_: any, { sourceComponentAddress, targetComponentAddress, targetHierarchyId, hierarchyPosition, componentDelta }: AddComponentMutationArgs): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
   console.log('___addComponentMutation___')
 
   const sourceComponentNode = getNodeByAddress(sourceComponentAddress)
@@ -88,9 +88,7 @@ async function addComponentMutation(_: any, { sourceComponentAddress, targetComp
   }
 
   const postTraverse = createAddComponentPostTraverse(targetComponentNode)
-  const { impacted } = traverseComponent(sourceComponentAddress, hierarchyIds, {
-    onSuccess,
-  })
+  const { impacted } = traverseComponent(sourceComponentAddress, targetHierarchyId, onSuccess)
 
   const { impactedFileNode, impactedComponentNode } = await processImpactedFileNodes(impacted, postTraverse, true)
 

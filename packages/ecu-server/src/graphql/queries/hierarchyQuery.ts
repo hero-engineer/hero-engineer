@@ -9,7 +9,7 @@ function hierarchyQuery(_: any, { sourceComponentAddress }: HierarchyQueryArgs) 
 
   // TODO remove try catch
   try {
-    const { hierarchy } = traverseComponent(sourceComponentAddress, [])
+    const { hierarchy } = traverseComponent(sourceComponentAddress)
 
     return JSON.stringify(hierarchy)
   }

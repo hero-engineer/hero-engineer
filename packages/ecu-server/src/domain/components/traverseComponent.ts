@@ -21,20 +21,15 @@ import extractIdAndIndex from '../utils/extractIdAndIndex'
 import extractIdsAndIndexes from '../utils/extractIdsAndIndexes'
 import formatHierarchyTrees from '../utils/formatHierarchyTrees'
 
-type TraverseComponentEventsType = {
-  onTraverseFile?: (fileNodes: FileNodeType[]) => void
-  onHierarchyPush?: (paths: any[], fileNodes: FileNodeType[], hierarchyTree: HierarchyTreeType) => void
-  onSuccess?: (paths: any[], fileNodes: FileNodeType[], hierarchyTree: HierarchyTreeType) => void
-}
-
 type TraverseComponentReturnType = {
   impacted: ImpactedType[],
   hierarchy: HierarchyTreeType | null,
 }
 
 type TraverseComponentHierarchyTreeContextType = {
+  useAst?: boolean
   fileNode: FileNodeType
-  path: NodePath<JSXElement> | null
+  paths: NodePath<JSXElement>[]
 }
 
 type TraverseComponentHierarchyTreeType = Omit<HierarchyTreeType, 'children'> & {
@@ -52,7 +47,7 @@ function postProcessHierarchy(hierarchy: TraverseComponentHierarchyTreeType) {
   hierarchy.children.forEach(postProcessHierarchy)
 }
 
-function traverseComponent(componentAddress: string, hierarchyIds: string[], events: TraverseComponentEventsType = {}): TraverseComponentReturnType {
+function traverseComponent(componentAddress: string, targetHierarchyId = '', onSuccess: (paths: any[]) => void = () => {}): TraverseComponentReturnType {
   // console.log('traverseComponent', componentAddress, hierarchyIds)
 
   const componentNode = getNodeByAddress<FunctionNodeType>(componentAddress)
@@ -77,18 +72,25 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
     }
   }
 
-  const {
-    onTraverseFile = () => {},
-    onHierarchyPush = () => {},
-    onSuccess = () => {},
-  } = events
-
   const impacted: ImpactedType[] = [] // retval
-  const hierarchyTrees: HierarchyTreeType[] = [] // retval
+  const rootHierarchy: TraverseComponentHierarchyTreeType = { // retval
+    context: {
+      useAst: true,
+      fileNode,
+      paths: [],
+    },
+    childrenContext: null,
+    fileAddress: fileNode.address,
+    componentAddress: componentNode.address,
+    onComponentAddress: componentNode.address,
+    componentName: componentNode.payload.name,
+    label: componentNode.payload.name,
+    index: 0,
+    hierarchyId: '',
+    children: [],
+  }
   const componentNodes = getNodesByRole<FunctionNodeType>('Function').filter(n => n.payload.isComponent)
-  const allFileNodes = getNodesByRole<FileNodeType>('File')
   const importsRegistry: ImportsRegistry = {}
-  const lastingHierarchyIds: string[] = []
   const lastingIndexRegistry: IndexRegistryType = {}
 
   function buildImportsRegistry(fileNode: FileNodeType) {
@@ -123,7 +125,6 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
 
     const idIndex = jsxAttributes.findIndex(x => x.name.name === ecuPropName)
 
-    // hierarchyId found means we're at an ecu-client Component
     if (!(idIndex !== -1 && jsxAttributes[idIndex].value?.type === 'StringLiteral')) return null
 
     const limitedHierarchyId = (jsxAttributes[idIndex].value as StringLiteral).value
@@ -155,33 +156,35 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
   function dfs(hierarchy: TraverseComponentHierarchyTreeType, useChildrenPath = false) {
     // console.log('-->', hierarchy.componentName, useChildrenPath ? 'children path' : '')
 
-    const indexRegistry: Record<string, number> = {}
+    const indexRegistry: IndexRegistryType = {}
     const hasChildrenPath = !!(useChildrenPath && hierarchy.childrenContext)
-    const skipAst = hasChildrenPath || hierarchy.context.path
-    const ast = skipAst ? null : hierarchy.context.fileNode.payload.ast
-    const path = skipAst ? hasChildrenPath ? hierarchy.childrenContext!.path : hierarchy.context.path : null
-    const scope = skipAst ? (path as NodePath).scope : undefined
-    const parentPath = skipAst ? (path as NodePath).parentPath : undefined
+    const hasAst = !hasChildrenPath && hierarchy.context.useAst
+    const ast = hasAst ? hierarchy.context.fileNode.payload.ast : null
+    const path = hasAst ? null : hasChildrenPath ? hierarchy.childrenContext!.paths[0] : hierarchy.context.paths[hierarchy.context.paths.length - 1]
+    const scope = hasAst ? undefined : (path as NodePath).scope
+    const parentPath = hasAst ? undefined : (path as NodePath).parentPath
 
     if (ast && !impacted.some(x => x.fileNode.address === hierarchy.context.fileNode.address)) {
       impacted.push({ fileNode, ast })
     }
 
-    traverse(skipAst ? path?.node : ast, {
+    traverse(hasAst ? ast : path?.node, {
       JSXElement(x) {
         x.skip()
 
-        const hierarchyId = getComponentHierarchyId(x.node)
         const componentName = (x.node.openingElement.name as JSXIdentifier)?.name || 'Component'
+        const index = indexRegistry[componentName] = indexRegistry[componentName] + 1 || 0
+        const nextPaths = [...hierarchy.context.paths, x]
+        const hierarchyId = getComponentHierarchyId(x.node)
+
         // console.log('JSXElement', componentName)
 
-        const index = indexRegistry[componentName] = indexRegistry[componentName] + 1 || 0
-
+        // hierarchyId found means we're at an ecu-client Component
         if (hierarchyId) {
           hierarchy.children.push({
             context: {
               fileNode: hierarchy.context.fileNode,
-              path: x,
+              paths: nextPaths,
             },
             childrenContext: hierarchy.childrenContext,
             fileAddress: hierarchy.context.fileNode.address,
@@ -193,6 +196,10 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
             hierarchyId,
             children: [],
           })
+
+          if (hierarchyId === targetHierarchyId) {
+            onSuccess(nextPaths)
+          }
         }
         else {
           const componentFileNode = getComponentFileNode(x.node, hasChildrenPath ? hierarchy.childrenContext!.fileNode : hierarchy.context.fileNode)
@@ -203,12 +210,13 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
             if (componentNode) {
               hierarchy.children.push({
                 context: {
+                  useAst: true,
                   fileNode: componentFileNode,
-                  path: null,
+                  paths: nextPaths,
                 },
                 childrenContext: {
                   fileNode: hierarchy.childrenContext?.fileNode || hierarchy.context.fileNode,
-                  path: x,
+                  paths: [x],
                 },
                 fileAddress: componentFileNode.address,
                 componentAddress: componentNode.address,
@@ -238,43 +246,26 @@ function traverseComponent(componentAddress: string, hierarchyIds: string[], eve
       },
     }, scope, parentPath)
 
-    // console.log('About to traverse children of', hierarchy.label)
-
     if (!hasChildrenPath) {
+      // console.log('About to traverse children of', hierarchy.label)
       hierarchy.children.forEach(childHierarchy => {
         dfs(childHierarchy)
       })
+      // console.log('End traversal of', hierarchy.label)
     }
 
-    // console.log('End traversal of', hierarchy.label)
-  }
-
-  const hierarchy: TraverseComponentHierarchyTreeType = {
-    context: {
-      fileNode,
-      path: null,
-    },
-    childrenContext: null,
-    fileAddress: fileNode.address,
-    componentAddress: componentNode.address,
-    onComponentAddress: componentNode.address,
-    componentName: componentNode.payload.name, // TODO component name
-    index: 0,
-    label: componentNode.payload.name,
-    hierarchyId: '',
-    children: [],
   }
 
   buildImportsRegistry(fileNode)
-  dfs(hierarchy)
-  postProcessHierarchy(hierarchy)
+  dfs(rootHierarchy)
+  postProcessHierarchy(rootHierarchy)
 
   // console.log('\n\n!!!!')
-  // console.log('hierarchy', JSON.stringify(hierarchy, null, 2))
+  // console.log('hierarchy', JSON.stringify(rootHierarchy, null, 2))
 
   return {
     impacted,
-    hierarchy: hierarchy as HierarchyTreeType,
+    hierarchy: rootHierarchy as HierarchyTreeType,
   }
 }
 

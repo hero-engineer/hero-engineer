@@ -17,12 +17,12 @@ import composeHistoryMutation from '../../history/composeHistoryMutation'
 
 type MoveComponentMutationArgs = {
   sourceComponentAddress: string
-  sourceHierarchyIds: string[]
-  targetHierarchyIds: string[]
+  sourceHierarchyId: string
+  targetHierarchyId: string
   hierarchyPosition: HierarchyPositionType
 }
 
-async function moveComponentMutation(_: any, { sourceComponentAddress, sourceHierarchyIds, targetHierarchyIds, hierarchyPosition }: MoveComponentMutationArgs): Promise<void> {
+async function moveComponentMutation(_: any, { sourceComponentAddress, sourceHierarchyId, targetHierarchyId, hierarchyPosition }: MoveComponentMutationArgs): Promise<void> {
 // async function moveComponentMutation(_: any, { sourceComponentAddress, sourceHierarchyIds, targetHierarchyIds, hierarchyPosition }: MoveComponentMutationArgs): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
   // console.log('___moveComponent___')
 

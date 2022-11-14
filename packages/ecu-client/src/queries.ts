@@ -149,8 +149,8 @@ export type CreateComponentMutationDataType = {
 }
 
 export const AddComponentMutation = `
-  mutation ($sourceComponentAddress: String!, $targetComponentAddress: String!, $hierarchyIds: [String!]!, $hierarchyPosition: HierarchyPosition!, $componentDelta: Int!) {
-    addComponent (sourceComponentAddress: $sourceComponentAddress, targetComponentAddress: $targetComponentAddress, hierarchyIds: $hierarchyIds, hierarchyPosition: $hierarchyPosition, componentDelta: $componentDelta) {
+  mutation ($sourceComponentAddress: String!, $targetComponentAddress: String!, $targetHierarchyId: String!, $hierarchyPosition: HierarchyPosition!, $componentDelta: Int!) {
+    addComponent (sourceComponentAddress: $sourceComponentAddress, targetComponentAddress: $targetComponentAddress, targetHierarchyId: $targetHierarchyId, hierarchyPosition: $hierarchyPosition, componentDelta: $componentDelta) {
       address
     }
   }
@@ -161,8 +161,8 @@ export type AddComponentMutationDataType = {
 }
 
 export const DeleteComponentMutation = `
-  mutation ($sourceComponentAddress: String!, $hierarchyIds: [String!]!, $componentDelta: Int!) {
-    deleteComponent (sourceComponentAddress: $sourceComponentAddress, hierarchyIds: $hierarchyIds, componentDelta: $componentDelta) {
+  mutation ($sourceComponentAddress: String!, $targetHierarchyId: String!, $componentDelta: Int!) {
+    deleteComponent (sourceComponentAddress: $sourceComponentAddress, targetHierarchyId: $targetHierarchyId, componentDelta: $componentDelta) {
       address
     }
   }
@@ -173,8 +173,8 @@ export type DeleteComponentMutationDataType = {
 }
 
 export const MoveComponentMutation = `
-  mutation ($sourceComponentAddress: String!, $sourceHierarchyIds: [String!]!, $targetHierarchyIds: [String!]!, $hierarchyPosition: HierarchyPosition!) {
-    moveComponent (sourceComponentAddress: $sourceComponentAddress, sourceHierarchyIds: $sourceHierarchyIds, targetHierarchyIds: $targetHierarchyIds, hierarchyPosition: $hierarchyPosition) {
+  mutation ($sourceComponentAddress: String!, $sourceHierarchyId: String!, $targetHierarchyId: String!, $hierarchyPosition: HierarchyPosition!) {
+    moveComponent (sourceComponentAddress: $sourceComponentAddress, sourceHierarchyId: $sourceHierarchyId, targetHierarchyId: $targetHierarchyId, hierarchyPosition: $hierarchyPosition) {
       address
     }
   }

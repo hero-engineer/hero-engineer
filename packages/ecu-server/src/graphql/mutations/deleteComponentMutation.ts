@@ -10,11 +10,11 @@ import applyComponentDelta from '../../domain/utils/applyComponentDelta'
 
 type DeleteComponentMutationArgs = {
   sourceComponentAddress: string
-  hierarchyIds: string[]
+  targetHierarchyId: string
   componentDelta: number
 }
 
-async function deleteComponentMutation(_: any, { sourceComponentAddress, hierarchyIds, componentDelta }: DeleteComponentMutationArgs): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
+async function deleteComponentMutation(_: any, { sourceComponentAddress, targetHierarchyId, componentDelta }: DeleteComponentMutationArgs): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
   console.log('___deleteComponentMutation___')
 
   const componentNode = getNodeByAddress<FunctionNodeType>(sourceComponentAddress)
@@ -33,7 +33,7 @@ async function deleteComponentMutation(_: any, { sourceComponentAddress, hierarc
     finalPath.remove()
   }
 
-  const { impacted } = traverseComponent(sourceComponentAddress, hierarchyIds, { onSuccess })
+  const { impacted } = traverseComponent(sourceComponentAddress, targetHierarchyId, onSuccess)
 
   const { impactedFileNode, impactedComponentNode } = await processImpactedFileNodes(impacted)
 

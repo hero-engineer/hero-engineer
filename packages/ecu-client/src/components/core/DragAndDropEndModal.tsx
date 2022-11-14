@@ -30,8 +30,8 @@ function DragAndDropEndModal() {
   const submitDragAndDrop = useCallback(async () => {
     await moveComponent({
       sourceComponentAddress: componentAddress,
-      sourceHierarchyIds: dragAndDrop.sourceHierarchyIds,
-      targetHierarchyIds: dragAndDrop.targetHierarchyIds,
+      sourceHierarchyId: dragAndDrop.sourceHierarchyIds[dragAndDrop.sourceHierarchyIds.length - 1],
+      targetHierarchyId: dragAndDrop.targetHierarchyIds[dragAndDrop.targetHierarchyIds.length - 1],
       hierarchyPosition,
     })
 
