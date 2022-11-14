@@ -13,7 +13,6 @@ async function getAppRepository() {
   const dir = await findUp(gitDir, { cwd: appPath, type: 'directory' })
   const name = gitUserName() || ''
   const email = gitUserEmail() || ''
-  console.log('dir', dir, name, email)
 
   return {
     fs,
