@@ -143,6 +143,7 @@ export default mergeTheme(defaultTheme, {
   Button: {
     Root: [
       ({ ghost }: any) => ghost && {
+        minHeight: 0,
         paddingLeft: 8,
         paddingRight: 8,
         borderRadius: 0,

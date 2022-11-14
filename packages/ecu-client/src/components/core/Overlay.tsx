@@ -2,6 +2,7 @@ import { PropsWithChildren, memo } from 'react'
 import { Div, P } from 'honorable'
 
 import ViewAppButton from './ViewAppButton'
+import UndoRedoButtons from './UndoRedoButtons'
 import ComponentsLinkButton from './ComponentsLinkButton'
 import CreateComponentButton from './CreateComponentButton'
 import DeleteComponentButton from './DeleteComponentButton'
@@ -41,6 +42,7 @@ function Overlay({ children }: OverlayProps) {
           <CreateComponentButton borderRight="1px solid border" />
           <DeleteComponentButton borderRight="1px solid border" />
           <Div flexGrow={1} />
+          <UndoRedoButtons />
           <ViewAppButton borderLeft="1px solid border" />
         </Div>
         <HierarchyBar />

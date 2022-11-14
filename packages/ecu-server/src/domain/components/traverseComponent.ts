@@ -175,6 +175,7 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
     const relativeImportDeclaration = imports.find(x => x.name === componentName)
 
     if (!relativeImportDeclaration) return null
+
     const absolutePath = possiblyAddExtension(path.join(path.dirname(fileNode.payload.path), relativeImportDeclaration.source), fileNode.payload.extension)
     const nextComponentNode = componentNodes.find(n => n.payload.name === componentName && n.payload.path === absolutePath)
 
