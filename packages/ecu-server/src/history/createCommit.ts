@@ -9,6 +9,8 @@ async function createCommit(message: string) {
   try {
     const repository = await getAppRepository()
 
+    console.log('repository', repository)
+
     // git add . -A
     // https://isomorphic-git.org/docs/en/snippets#git-add-a-
     await git.statusMatrix(repository).then(status =>

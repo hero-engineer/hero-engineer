@@ -4,15 +4,16 @@ import { findUp } from 'find-up'
 
 import { appPath } from '../configuration'
 
-async function getAppRepository() {
-  const gitDir = await findUp('.git', { cwd: appPath, type: 'directory' })
+const gitDir = '.git'
 
-  console.log('gitDir', gitDir)
+async function getAppRepository() {
+  const dir = await findUp(gitDir, { cwd: appPath, type: 'directory' })
+
+  console.log('dir', dir)
 
   return {
     fs,
-    dir: appPath,
-    gitDir,
+    dir: dir?.slice(0, -gitDir.length) ?? appPath,
   }
 }
 
