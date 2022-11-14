@@ -1,5 +1,7 @@
 import { PropsWithChildren, memo } from 'react'
 import { Div, P } from 'honorable'
+import { BiNetworkChart } from 'react-icons/bi'
+import { TbRowInsertBottom } from 'react-icons/tb'
 
 import ViewAppButton from './ViewAppButton'
 import UndoRedoButtons from './UndoRedoButtons'
@@ -52,8 +54,8 @@ function Overlay({ children }: OverlayProps) {
         overflow="hidden"
       >
         <RetractablePanel
-          defaultOpen
           direction="left"
+          openIcon={<TbRowInsertBottom />}
         >
           <AddComponentSection />
         </RetractablePanel>
@@ -68,8 +70,8 @@ function Overlay({ children }: OverlayProps) {
           {children}
         </Div>
         <RetractablePanel
-          defaultOpen
           direction="right"
+          openIcon={<BiNetworkChart />}
         >
           <Div minWidth={512}>
             <ComponentImportsEditor />

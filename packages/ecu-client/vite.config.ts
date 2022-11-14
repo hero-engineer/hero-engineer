@@ -7,7 +7,7 @@ import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 
 export default defineConfig({
   plugins: [
-    react(),
+    react({ jsxRuntime: 'classic' }),
     cssInjectedByJsPlugin(),
     dts({
       insertTypesEntry: true,
