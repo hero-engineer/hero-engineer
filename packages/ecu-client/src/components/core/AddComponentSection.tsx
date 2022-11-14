@@ -112,12 +112,13 @@ function AddComponentSection() {
         flexGrow={1}
         gap={0.5}
       >
-        <Menu>
+        <Menu ghost>
           {componentsQueryResult.data.components.map(componentAndFile => (
             <MenuItem
+              ghost
               key={componentAndFile.component.address}
               onClick={() => setSelectedComponentId(componentAndFile.component.address)}
-              backgroundColor={selectedComponentAddress === componentAndFile.component.address ? 'lighten(primary, 80)' : null}
+              backgroundColor={selectedComponentAddress === componentAndFile.component.address ? 'darken(background-light, 20)' : null}
             >
               {componentAndFile.component.payload.name}
             </MenuItem>

@@ -17,10 +17,7 @@ type OverlayProps = PropsWithChildren<any>
 
 function Overlay({ children }: OverlayProps) {
   return (
-    <Div
-      xflex="y2s"
-      flexGrow={1}
-    >
+    <>
       <Div
         xflex="y2s"
         flexShrink={0}
@@ -50,6 +47,9 @@ function Overlay({ children }: OverlayProps) {
       <Div
         xflex="x1"
         flexGrow={1}
+        height="calc(100vh - 64px)"
+        maxHeight="calc(100vh - 64px)"
+        overflow="hidden"
       >
         <RetractablePanel
           defaultOpen
@@ -58,8 +58,12 @@ function Overlay({ children }: OverlayProps) {
           <AddComponentSection />
         </RetractablePanel>
         <Div
+          xflex="y2s"
           flexGrow={1}
-          px={2}
+          maxHeight="100%"
+          overflowY="auto"
+          py={0.5}
+          px={2.5}
         >
           {children}
         </Div>
@@ -74,7 +78,7 @@ function Overlay({ children }: OverlayProps) {
           </Div>
         </RetractablePanel>
       </Div>
-    </Div>
+    </>
   )
 }
 

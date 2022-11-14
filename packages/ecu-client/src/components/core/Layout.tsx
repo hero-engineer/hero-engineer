@@ -11,18 +11,11 @@ function Layout() {
       overflowY="auto"
       width="100vw"
       height="100vh"
+      maxHeight="100vh"
       position="relative"
     >
       <Overlay>
-        <Div
-          xflex="y2s"
-          overflowY="auto"
-          flexGrow={1}
-          flexShrink={0}
-          p={0.5}
-        >
-          <Outlet />
-        </Div>
+        <Outlet />
       </Overlay>
     </Div>
   )

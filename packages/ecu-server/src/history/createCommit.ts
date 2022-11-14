@@ -1,4 +1,3 @@
-
 import * as git from 'isomorphic-git'
 
 import getAppRepository from './getAppRepository'

@@ -161,6 +161,22 @@ export default mergeTheme(defaultTheme, {
       },
     ],
   },
+  Menu: {
+    Root: [
+      ({ ghost }: any) => ghost && {
+        elevation: 0,
+        backgroundColor: 'transparent',
+        borderRadius: 0,
+      },
+    ],
+  },
+  MenuItem: {
+    Children: [
+      ({ active, ghost }: any) => active && ghost && {
+        backgroundColor: 'darken(background-light, 10)',
+      },
+    ],
+  },
   // IconButton: {
   //   Root: [
   //     ({ large }: any) => large && {
