@@ -112,11 +112,6 @@ export default mergeTheme(defaultTheme, {
         color: 'primary',
       },
     ],
-    // '::placeholder': [
-    //   {
-    //     color: 'grey.200',
-    //   },
-    // ],
   },
   colors: {
     primary: 'blue.500',
@@ -131,11 +126,6 @@ export default mergeTheme(defaultTheme, {
     mpRecipe(),
     gapRecipe(),
     ({ xflex }: any) => typeof xflex === 'string' && flexpad(xflex),
-    // ({ truncate }: any) => truncate && {
-    //   overflow: 'hidden',
-    //   whiteSpace: 'nowrap',
-    //   textOverflow: 'ellipsis',
-    // },
     ({ borderRadius }: any) => typeof borderRadius === 'string' && typeof borderRadii[borderRadius as keyof typeof borderRadii] !== 'undefined' && {
       borderRadius: borderRadii[borderRadius as keyof typeof borderRadii],
     },
@@ -146,11 +136,23 @@ export default mergeTheme(defaultTheme, {
         elevation: 0,
         backgroundColor: 'transparent',
       },
+      {
+        '&:first-of-type': {
+          borderTopLeftRadius: 0,
+          borderTopRightRadius: 0,
+        },
+        '&:last-of-type': {
+          borderBottom: '1px solid border',
+          borderBottomLeftRadius: 0,
+          borderBottomRightRadius: 0,
+        },
+      },
     ],
     Title: [
       ({ ghost }: any) => ghost && {
-        paddingTop: 8,
-        paddingBottom: 8,
+        paddingTop: 7, // 7 to match the height of the RetractablePanel toggle icon
+        paddingBottom: 7,
+        fontWeight: 500,
       },
     ],
     Children: [
@@ -197,44 +199,6 @@ export default mergeTheme(defaultTheme, {
       },
     ],
   },
-  // IconButton: {
-  //   Root: [
-  //     ({ large }: any) => large && {
-  //       padding: 16,
-  //     },
-  //     ({ ghost }: any) => ghost && {
-  //       elevation: 0,
-  //     },
-  //   ],
-  // },
-  // Input: {
-  //   Root: [
-  //     {
-  //       border: '1px solid primary',
-  //     },
-  //   ],
-  // },
-  // Flex: {
-  //   Root: [
-  //     ({ column }: any) => column && {
-  //       flexDirection: 'column',
-  //     },
-  //     ({ center }: any) => center && {
-  //       alignItems: 'center',
-  //       justifyContent: 'center',
-  //     },
-  //   ],
-  // },
-  // P: {
-  //   Root: [
-  //     ({ lead }: any) => lead && {
-  //       fontSize: 24,
-  //     },
-  //     ({ caption }: any) => caption && {
-  //       fontSize: 12,
-  //     },
-  //   ],
-  // },
   Ul: {
     Root: [
       {
@@ -284,16 +248,18 @@ export default mergeTheme(defaultTheme, {
       },
     ],
   },
-  // H5: {
-  //   Root: [
-  //     {
-  //     },
-  //   ],
-  // },
-  // H6: {
-  //   Root: [
-  //     {
-  //     },
-  //   ],
-  // },
+  H5: {
+    Root: [
+      {
+        fontSize: 18,
+      },
+    ],
+  },
+  H6: {
+    Root: [
+      {
+        fontSize: 12,
+      },
+    ],
+  },
 })
