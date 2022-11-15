@@ -22,6 +22,7 @@ It acts as a shield around your app to reprogram it as you create new components
 - Style components
 - Undo/Redo
 - Drag-and-drop components
+- State management
 
 And much more!
 
