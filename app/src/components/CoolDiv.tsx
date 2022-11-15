@@ -4,7 +4,7 @@ import CoolDaddy from './CoolDaddy'
 
 function CoolDiv(props: any) {
   return (
-    <Div data-ecu="BObaJQ-F7s:0">
+    <Div data-ecu="OumQnuAJuV:0">
       Edit me I'm famous
     </Div>
   )

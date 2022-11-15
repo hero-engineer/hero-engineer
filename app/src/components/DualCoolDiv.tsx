@@ -6,7 +6,7 @@ import CoolDiv from './CoolDiv'
 function DualCoolDiv(props: any) {
   return (
     <>
-      <Div data-ecu="vDpSuigzzr:0">
+      <Div data-ecu="cVpqHGlQPQ:0">
         Edit me I'm famous!
       </Div>
       <CoolDiv />

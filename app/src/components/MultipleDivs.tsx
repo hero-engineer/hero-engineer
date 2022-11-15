@@ -1,13 +1,28 @@
+/* --
+  * IMPORTS START
+-- */
 import { Div } from 'ecu-client'
 
 import DualCoolDiv from './DualCoolDiv'
 import CoolDiv from './CoolDiv'
 import CoolDaddy from './CoolDaddy'
 
-function MultipleDivs(props: any) {
+/* --
+  * IMPORTS END
+-- */
+/* --
+  * TYPES START
+-- */
+
+type MultipleDivsPropsType = Record<string, never>;
+/* --
+  * TYPES END
+-- */
+
+function MultipleDivs(props: MultipleDivsPropsType) {
   return (
     <>
-      <Div data-ecu="-LQr-6NtT4:0">
+      <Div data-ecu="5bvSMz8gZQ:0">
         <CoolDaddy>
           <CoolDaddy>
             <CoolDiv />
@@ -15,7 +30,7 @@ function MultipleDivs(props: any) {
           </CoolDaddy>
         </CoolDaddy>
       </Div>
-      <Div data-ecu="-LQr-6NtT4:1">
+      <Div data-ecu="5bvSMz8gZQ:1">
         <CoolDaddy>
           <CoolDiv />
           <CoolDaddy><CoolDiv /></CoolDaddy>
@@ -27,7 +42,7 @@ function MultipleDivs(props: any) {
           <CoolDiv />
           <CoolDiv />
           <CoolDiv />
-          <Div data-ecu="-LQr-6NtT4:1_0">
+          <Div data-ecu="5bvSMz8gZQ:1_0">
             Yo
           </Div>
           <CoolDiv />
@@ -45,13 +60,13 @@ function MultipleDivs(props: any) {
           <CoolDiv />
         </CoolDaddy>
       </CoolDaddy>
-      <Div data-ecu="-LQr-6NtT4:2">
-        <Div data-ecu="-LQr-6NtT4:2_0">
+      <Div data-ecu="5bvSMz8gZQ:2">
+        <Div data-ecu="5bvSMz8gZQ:2_0">
           <CoolDaddy>
             <CoolDaddy>
               <CoolDiv />
               <CoolDaddy>
-                <Div data-ecu="-LQr-6NtT4:2_0_0">
+                <Div data-ecu="5bvSMz8gZQ:2_0_0">
                   Darling
                 </Div>
               </CoolDaddy>
@@ -65,16 +80,16 @@ function MultipleDivs(props: any) {
       </Div>
       <DualCoolDiv />
       <DualCoolDiv />
-      <Div data-ecu="-LQr-6NtT4:3">
-        <Div data-ecu="-LQr-6NtT4:3_0">
+      <Div data-ecu="5bvSMz8gZQ:3">
+        <Div data-ecu="5bvSMz8gZQ:3_0">
           Dear component
         </Div>
-        <Div data-ecu="-LQr-6NtT4:3_1">
+        <Div data-ecu="5bvSMz8gZQ:3_1">
           Hello
         </Div>
         <CoolDiv />
         <CoolDaddy>
-          <Div data-ecu="-LQr-6NtT4:3_2">
+          <Div data-ecu="5bvSMz8gZQ:3_2">
             Darling
           </Div>
         </CoolDaddy>
