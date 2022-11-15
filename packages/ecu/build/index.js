@@ -14,3 +14,4 @@ program.command('serve')
     .action(async () => {
     await serve();
 });
+program.parse();

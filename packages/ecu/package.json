@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A self-reprogramming shield for creating React app fast",
   "main": "src/index.js",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dherault/ecu.git"
@@ -13,7 +14,6 @@
     "url": "https://github.com/dherault/ecu/issues"
   },
   "homepage": "https://github.com/dherault/ecu#readme",
-  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
@@ -28,5 +28,8 @@
     "build"
   ],
   "module": "./build/index.js",
-  "types": "./build/index.d.ts"
+  "types": "./build/index.d.ts",
+  "bin": {
+    "ecu": "./build/index.js"
+  }
 }
