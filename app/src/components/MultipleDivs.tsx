@@ -47,6 +47,7 @@ function MultipleDivs(props: MultipleDivsPropsType) {
           </Div>
           <CoolDiv />
           <CoolDiv />
+          <CoolDiv />
           <CoolDaddy>
             <CoolDiv />
             <CoolDiv />
