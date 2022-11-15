@@ -2,6 +2,16 @@
   "name": "ecu-client",
   "version": "0.3.0",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dherault/ecu.git"
+  },
+  "author": "David Hérault <dherault@gmail.com> (https://github.com/dherault)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dherault/ecu/issues"
+  },
+  "homepage": "https://github.com/dherault/ecu#readme",
   "scripts": {
     "build": "tsc && vite build",
     "preview": "vite preview",
