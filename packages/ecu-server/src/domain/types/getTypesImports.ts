@@ -5,7 +5,7 @@ import { ImportType } from '../../types'
 import traverse from '../traverse'
 import parseCode from '../parseCode'
 
-import getGlobalTypes from '../types/getGlobalTypes'
+import getGlobalTypes from './getGlobalTypes'
 
 function getTypesImports(rawTypes: string) {
   const typeImports: ImportType[] = []
