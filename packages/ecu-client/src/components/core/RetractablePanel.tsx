@@ -2,9 +2,9 @@ import { ReactNode, useCallback } from 'react'
 import { Div, DivProps, Tooltip } from 'honorable'
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md'
 
-import usePersistedState from '../../../hooks/usePersistedState'
+import usePersistedState from '../../hooks/usePersistedState'
 
-import xor from '../../../utils/xor'
+import xor from '../../utils/xor'
 
 type RetractablePanelProps = DivProps & {
   openPersistedStateKey: string
@@ -46,6 +46,7 @@ function RetractablePanel({ direction, openPersistedStateKey, openLabel, default
     >
       {wrapWithTooltip(
         <Div
+          xflex="x5"
           position="absolute"
           top={0}
           right={isRight ? 'calc(100% + 1px)' : null}
