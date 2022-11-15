@@ -54,7 +54,6 @@ function HierarchyBar() {
   const totalHierarchy = useMemo(() => getFlattenedHierarchy(hierarchy, hierarchyIds), [hierarchy, hierarchyIds])
   const actualHierarchy = useMemo(() => totalHierarchy.slice(0, totalHierarchy.length + componentDelta), [totalHierarchy, componentDelta])
   const previousHierarchy = usePreviousWithDefault(actualHierarchy, actualHierarchy)
-  console.log('hierarchyIds.length', hierarchyIds.length)
   const displayHierarchy = useMemo(() => hierarchyIds.length ? shouldAdjustComponentDelta ? previousHierarchy : actualHierarchy : [], [hierarchyIds, shouldAdjustComponentDelta, previousHierarchy, actualHierarchy])
 
   useEffect(() => {

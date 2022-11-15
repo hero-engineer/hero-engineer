@@ -11,10 +11,9 @@ import CreateComponentButton from './CreateComponentButton'
 import DeleteComponentButton from './DeleteComponentButton'
 import HierarchyBar from './HierarchyBar'
 import RetractablePanel from './layout/RetractablePanel'
-import TypesSection from './TypesSection'
-import ComponentTypesEditor from './ComponentTypesEditor'
-import ComponentImportsEditor from './ComponentImportsEditor'
 import AddComponentSection from './AddComponentSection'
+import ComponentTypesSection from './ComponentTypesSection'
+import ComponentImportsSection from './ComponentImportsSection'
 
 type OverlayProps = PropsWithChildren<any>
 
@@ -84,9 +83,8 @@ function Overlay({ children }: OverlayProps) {
             openPersistedStateKey="ecu-types-panel-open"
           >
             <Div minWidth={512}>
-              <ComponentImportsEditor />
-              <TypesSection />
-              <ComponentTypesEditor />
+              <ComponentImportsSection />
+              <ComponentTypesSection />
             </Div>
           </RetractablePanel>
         )}

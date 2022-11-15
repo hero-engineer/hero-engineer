@@ -155,6 +155,8 @@ function AddComponentSection() {
       >
         <Select
           menuOnTop
+          width="auto"
+          backgroundColor="background"
           value={hierarchyPosition}
           onChange={event => setHierarchyPosition(event.target.value)}
         >

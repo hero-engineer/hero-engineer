@@ -140,6 +140,26 @@ export default mergeTheme(defaultTheme, {
       borderRadius: borderRadii[borderRadius as keyof typeof borderRadii],
     },
   ],
+  Accordion: {
+    Root: [
+      ({ ghost }: any) => ghost && {
+        elevation: 0,
+        backgroundColor: 'transparent',
+      },
+    ],
+    Title: [
+      ({ ghost }: any) => ghost && {
+        paddingTop: 8,
+        paddingBottom: 8,
+      },
+    ],
+    Children: [
+      ({ ghost }: any) => ghost && {
+        paddingLeft: 0,
+        paddingRight: 0,
+      },
+    ],
+  },
   Button: {
     Root: [
       ({ ghost }: any) => ghost && {

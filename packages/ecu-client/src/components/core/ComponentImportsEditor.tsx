@@ -48,10 +48,20 @@ function ComponentImportsEditor() {
         multiline
         minRows={3}
         width="100%"
+        borderLeft="none"
+        borderRight="none"
+        borderRadius={0}
         value={rawImports}
         onChange={event => setRawImports(event.target.value)}
       />
-      <Button onClick={handleSave}>Save</Button>
+      <Div
+        xflex="x4"
+        mt={0.5}
+        px={1}
+      >
+        <Div flexGrow={1} />
+        <Button onClick={handleSave}>Save</Button>
+      </Div>
     </Div>
   )
 }
