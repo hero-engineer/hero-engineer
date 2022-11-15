@@ -15,11 +15,18 @@
   "homepage": "https://github.com/dherault/ecu#readme",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "commander": "^9.4.1",
     "ecu-client": "^1.0.1",
     "ecu-server": "^1.0.1"
-  }
+  },
+  "files": [
+    "build"
+  ],
+  "module": "./build/index.js",
+  "types": "./build/index.d.ts"
 }
