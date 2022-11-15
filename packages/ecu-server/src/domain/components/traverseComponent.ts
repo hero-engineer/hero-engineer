@@ -80,9 +80,9 @@ function postProcessHierarchy(hierarchy: TraverseComponentHierarchyTreeType) {
 function traverseComponent(componentAddress: string, targetHierarchyId = '', onSuccess: (paths: any[]) => void = () => {}): TraverseComponentReturnType {
   // console.log('traverseComponent', componentAddress, hierarchyIds)
 
-  const componentNode = getNodeByAddress<FunctionNodeType>(componentAddress)
+  const rootCoomponentNode = getNodeByAddress<FunctionNodeType>(componentAddress)
 
-  if (!componentNode) {
+  if (!rootCoomponentNode) {
     console.log(`No component node found for component ${componentAddress}`)
 
     return {
@@ -91,9 +91,9 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
     }
   }
 
-  const fileNode = getNodesBySecondNeighbourg<FileNodeType>(componentAddress, 'DeclaresFunction')[0]
+  const rootFileNode = getNodesBySecondNeighbourg<FileNodeType>(componentAddress, 'DeclaresFunction')[0]
 
-  if (!fileNode) {
+  if (!rootFileNode) {
     console.log(`No file node found for component ${componentAddress}`)
 
     return {
@@ -106,19 +106,19 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
   const rootHierarchy: TraverseComponentHierarchyTreeType = { // retval
     context: {
       useAst: true,
-      fileNode,
+      fileNode: rootFileNode,
       paths: [],
     },
     childrenContext: null,
-    fileAddress: fileNode.address,
-    componentAddress: componentNode.address,
-    onComponentAddress: componentNode.address,
-    componentName: componentNode.payload.name,
-    label: componentNode.payload.name,
+    fileAddress: rootFileNode.address,
+    componentAddress: rootCoomponentNode.address,
+    onComponentAddress: rootCoomponentNode.address,
+    componentName: rootCoomponentNode.payload.name,
+    label: rootCoomponentNode.payload.name,
     index: 0,
     hierarchyId: '',
     isChild: false,
-    isComponentAcceptingChildren: memoizedIsComponentAcceptingChildren(componentNode.address),
+    isComponentAcceptingChildren: memoizedIsComponentAcceptingChildren(rootCoomponentNode.address),
     children: [],
   }
   const componentNodes = getNodesByRole<FunctionNodeType>('Function').filter(n => n.payload.isComponent)
@@ -279,6 +279,8 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
       },
       JSXExpressionContainer(x) {
         if (!(x.node.expression.type === 'Identifier' && x.node.expression.name === 'children')) return
+        // Prevent traversing children if on root component
+        if (hierarchy.context.fileNode.address === rootFileNode.address) return
 
         // console.log('CHILDREN')
 
@@ -296,7 +298,7 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
 
   }
 
-  buildImportsRegistry(fileNode)
+  buildImportsRegistry(rootFileNode)
   dfs(rootHierarchy)
   postProcessHierarchy(rootHierarchy)
 
