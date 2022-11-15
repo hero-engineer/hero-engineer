@@ -13,9 +13,10 @@ type FileNodeType = {
   address: string
 }
 
-type ComponentAndFileType = {
+type ComponentReturnType = {
   component: FunctionNodeType
   file: FileNodeType
+  isComponentAcceptingChildren: boolean
 }
 
 export const HierarchyQuery = `
@@ -42,12 +43,13 @@ export const ComponentsQuery = `
           relativePath
         }
       }
+      isComponentAcceptingChildren
     }
   }
 `
 
 export type ComponentsQueryDataType = {
-  components: ComponentAndFileType[]
+  components: ComponentReturnType[]
 }
 
 export const ComponentQuery = `
@@ -69,7 +71,7 @@ export const ComponentQuery = `
 `
 
 export type ComponentQueryDataType = {
-  component: ComponentAndFileType
+  component: ComponentReturnType
 }
 
 export const GlobalTypesQuery = `

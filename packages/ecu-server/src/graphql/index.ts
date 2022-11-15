@@ -60,9 +60,10 @@ export const typeDefs = gql`
     payload: FunctionNodePayload
   }
 
-  type ComponentAndFile {
+  type ComponentReturnValue {
     component: FunctionNode!
     file: FileNode!
+    isComponentAcceptingChildren: Boolean!
   }
 
   type GlobalTypesReturnValue {
@@ -92,8 +93,8 @@ export const typeDefs = gql`
   }
 
   type Query {
-    component(sourceComponentAddress: String!): ComponentAndFile!
-    components: [ComponentAndFile]!
+    component(sourceComponentAddress: String!): ComponentReturnValue!
+    components: [ComponentReturnValue]!
     hierarchy(sourceComponentAddress: String!): String!
     globalTypes: GlobalTypesReturnValue!
     fileImports(sourceFileAddress: String!): FileImportsReturnValue!

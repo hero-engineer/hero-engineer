@@ -1,5 +1,6 @@
 import { Div } from 'ecu-client'
 
+import CoolDaddy from './CoolDaddy'
 import CoolDiv from './CoolDiv'
 
 function DualCoolDiv(props: any) {

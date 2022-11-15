@@ -148,66 +148,36 @@ function HierarchyBar() {
   }
 
   return (
-    <>
-      <Div
-        xflex="x4"
-        fontSize={12}
-        borderBottom="1px solid border"
-        userSelect="none"
-        gap={0.25}
-        p={0.5}
-      >
-        {displayHierarchy.map(({ label, isChild }, i, a) => (
-          <Fragment key={i + label}>
-            <Div onClick={() => handleClick(i)}>
-              {label}
-            </Div>
-            {i < a.length - 1 && (
-              <MdChevronRight />
-            )}
-            {i === a.length - 1 && isChild && (
-              <VscTypeHierarchySub
-                size={12}
-                title="child"
-              />
-            )}
-          </Fragment>
-        ))}
-        {displayHierarchy.length === 0 && (
-          <Div visibility="hidden">
-            -
+    <Div
+      xflex="x4"
+      fontSize={12}
+      borderBottom="1px solid border"
+      userSelect="none"
+      gap={0.25}
+      p={0.5}
+    >
+      {displayHierarchy.map(({ label, isChild }, i, a) => (
+        <Fragment key={i + label}>
+          <Div onClick={() => handleClick(i)}>
+            {label}
           </Div>
-        )}
-        {/* {JSON.stringify(hierarchy, null, 2)} */}
-      </Div>
-      {/* <Div
-        xflex="x4"
-        fontSize={12}
-        gap={0.25}
-        p={0.5}
-      > */}
-      {/* {isHierarchyOnComponent ? 'on component' : 'not on component'} */}
-      {/* {' / '} */}
-      {/* {componentDelta} */}
-      {/* {' --> '} */}
-      {/* {hierarchyIds.map(hierarchyId => (
-          <Div key={hierarchyId}>
-            {hierarchyId}
-            {' -->'}
-          </Div>
-        ))} */}
-      {/* {' / '} */}
-      {/* {componentRootHierarchyIds.map(hierarchyId => (
-          <Div
-            key={hierarchyId}
-            color="gold"
-          >
-            {hierarchyId}
-            {', '}
-          </Div>
-        ))} */}
-      {/* </Div> */}
-    </>
+          {i < a.length - 1 && (
+            <MdChevronRight />
+          )}
+          {i === a.length - 1 && isChild && (
+            <VscTypeHierarchySub
+              size={12}
+              title="Child"
+            />
+          )}
+        </Fragment>
+      ))}
+      {displayHierarchy.length === 0 && (
+        <Div visibility="hidden">
+          -
+        </Div>
+      )}
+    </Div>
   )
 }
 

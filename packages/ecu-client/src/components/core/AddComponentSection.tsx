@@ -3,6 +3,7 @@ import { useMutation, useQuery } from 'urql'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Button, Div, H3, Menu, MenuItem, Modal, P, Select } from 'honorable'
 import { TbRowInsertBottom } from 'react-icons/tb'
+import { VscTypeHierarchySub } from 'react-icons/vsc'
 
 import { hierarchyPositions, refetchKeys } from '../../constants'
 import { HierarchyPosition } from '../../types'
@@ -114,17 +115,32 @@ function AddComponentSection() {
       <Div
         xflex="y2s"
         flexGrow={1}
-        gap={0.5}
+        pt={0.5}
       >
+        <P
+          fontWeight="bold"
+          px={1}
+        >
+          Insert component
+        </P>
         <Menu ghost>
-          {componentsQueryResult.data.components.map(componentAndFile => (
+          {componentsQueryResult.data.components.map(x => (
             <MenuItem
               ghost
-              key={componentAndFile.component.address}
-              onClick={() => setSelectedComponentId(componentAndFile.component.address)}
-              backgroundColor={selectedComponentAddress === componentAndFile.component.address ? 'darken(background-light, 20)' : null}
+              key={x.component.address}
+              onClick={() => setSelectedComponentId(x.component.address)}
+              backgroundColor={selectedComponentAddress === x.component.address ? 'darken(background-light, 20)' : null}
             >
-              {componentAndFile.component.payload.name}
+              {x.component.payload.name}
+              {x.isComponentAcceptingChildren && (
+                <Div
+                  ml={0.5}
+                  xflex="x5"
+                  title="Component accepts children"
+                >
+                  <VscTypeHierarchySub />
+                </Div>
+              )}
             </MenuItem>
           ))}
         </Menu>
@@ -135,6 +151,7 @@ function AddComponentSection() {
         gap={0.5}
         px={0.5}
         pb={0.5}
+        mt={1}
       >
         <Select
           menuOnTop
