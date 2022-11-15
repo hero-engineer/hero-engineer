@@ -8,6 +8,8 @@ export const ecuRelativePath = '.ecu'
 
 export const ecuGraphFileName = 'ecu-graph.json'
 
+export const ecuHistoryFileName = 'ecu-history.json'
+
 export const globalTypesFileRelativePath = 'src/types.ts'
 
 export const globalTypesFileBegginingComment = `/* ---

@@ -22,7 +22,7 @@ type MultipleDivsPropsType = Record<string, never>;
 function MultipleDivs(props: MultipleDivsPropsType) {
   return (
     <>
-      <Div data-ecu="5bvSMz8gZQ:0">
+      <Div data-ecu="l-nRISr0f6:0">
         <CoolDaddy>
           <CoolDaddy>
             <CoolDiv />
@@ -30,7 +30,7 @@ function MultipleDivs(props: MultipleDivsPropsType) {
           </CoolDaddy>
         </CoolDaddy>
       </Div>
-      <Div data-ecu="5bvSMz8gZQ:1">
+      <Div data-ecu="l-nRISr0f6:1">
         <CoolDaddy>
           <CoolDiv />
           <CoolDaddy><CoolDiv /></CoolDaddy>
@@ -42,7 +42,7 @@ function MultipleDivs(props: MultipleDivsPropsType) {
           <CoolDiv />
           <CoolDiv />
           <CoolDiv />
-          <Div data-ecu="5bvSMz8gZQ:1_0">
+          <Div data-ecu="l-nRISr0f6:1_0">
             Yo
           </Div>
           <CoolDiv />
@@ -61,13 +61,13 @@ function MultipleDivs(props: MultipleDivsPropsType) {
           <CoolDiv />
         </CoolDaddy>
       </CoolDaddy>
-      <Div data-ecu="5bvSMz8gZQ:2">
-        <Div data-ecu="5bvSMz8gZQ:2_0">
+      <Div data-ecu="l-nRISr0f6:2">
+        <Div data-ecu="l-nRISr0f6:2_0">
           <CoolDaddy>
             <CoolDaddy>
               <CoolDiv />
               <CoolDaddy>
-                <Div data-ecu="5bvSMz8gZQ:2_0_0">
+                <Div data-ecu="l-nRISr0f6:2_0_0">
                   Darling
                 </Div>
               </CoolDaddy>
@@ -81,16 +81,16 @@ function MultipleDivs(props: MultipleDivsPropsType) {
       </Div>
       <DualCoolDiv />
       <DualCoolDiv />
-      <Div data-ecu="5bvSMz8gZQ:3">
-        <Div data-ecu="5bvSMz8gZQ:3_0">
+      <Div data-ecu="l-nRISr0f6:3">
+        <Div data-ecu="l-nRISr0f6:3_0">
           Dear component
         </Div>
-        <Div data-ecu="5bvSMz8gZQ:3_1">
+        <Div data-ecu="l-nRISr0f6:3_1">
           Hello
         </Div>
         <CoolDiv />
         <CoolDaddy>
-          <Div data-ecu="5bvSMz8gZQ:3_2">
+          <Div data-ecu="l-nRISr0f6:3_2">
             Darling
           </Div>
         </CoolDaddy>
