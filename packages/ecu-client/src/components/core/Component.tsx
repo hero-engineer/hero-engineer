@@ -47,13 +47,23 @@ function Component() {
 
   return (
     <>
-      <P fontWeight="bold">{component.payload.name}</P>
-      <P>{component.payload.relativePath}</P>
+      <Div
+        xflex="x4"
+        gap={0.5}
+      >
+        <P fontWeight="bold">{component.payload.name}</P>
+        <P
+          color="text-light"
+          fontSize={12}
+        >
+          {component.payload.relativePath}
+        </P>
+      </Div>
       <Div
         xflex="y2s"
         flexGrow={1}
         flexShrink={0}
-        mt={2}
+        pt={1}
         pb={6}
       >
         <ComponentLoader component={component} />
