@@ -1,21 +1,38 @@
-import { ReactNode, useCallback, useState } from 'react'
-import { Div, DivProps } from 'honorable'
+import { ReactNode, useCallback } from 'react'
+import { Div, DivProps, Tooltip } from 'honorable'
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md'
+
+import usePersistedState from '../../../hooks/usePersistedState'
 
 import xor from '../../../utils/xor'
 
 type RetractablePanelProps = DivProps & {
+  openPersistedStateKey: string
+  openLabel: string
   defaultOpen?: boolean
   direction: 'left' | 'right' | string
   openIcon?: ReactNode
 }
 
-function RetractablePanel({ direction, defaultOpen = false, openIcon = null, children, ...props }: RetractablePanelProps) {
-  const [open, setOpen] = useState(defaultOpen)
+function RetractablePanel({ direction, openPersistedStateKey, openLabel, defaultOpen = false, openIcon = null, children, ...props }: RetractablePanelProps) {
+  const [open, setOpen] = usePersistedState(openPersistedStateKey, defaultOpen)
 
-  const toggleOpen = useCallback(() => setOpen(x => !x), [])
+  const toggleOpen = useCallback(() => setOpen(x => !x), [setOpen])
   const isLeft = direction === 'left'
   const isRight = direction === 'right'
+
+  function wrapWithTooltip(node: ReactNode) {
+    if (open) return node
+
+    return (
+      <Tooltip
+        label={openLabel}
+        placement={isLeft ? 'right' : 'left'}
+      >
+        {node}
+      </Tooltip>
+    )
+  }
 
   return (
     <Div
@@ -27,21 +44,23 @@ function RetractablePanel({ direction, defaultOpen = false, openIcon = null, chi
       borderRight={isRight ? null : '1px solid border'}
       {...props}
     >
-      <Div
-        position="absolute"
-        top={0}
-        right={isRight ? 'calc(100% + 1px)' : null}
-        left={isLeft ? 'calc(100% + 1px)' : null}
-        backgroundColor="background-light"
-        onClick={toggleOpen}
-        borderLeft={isLeft ? null : '1px solid border'}
-        borderRight={isRight ? null : '1px solid border'}
-        borderBottom="1px solid border"
-        cursor="pointer"
-        p={0.5}
-      >
-        {xor(direction === 'left', open) ? isLeft ? openIcon || <MdChevronRight /> : <MdChevronRight /> : isRight ? openIcon || <MdChevronLeft /> : <MdChevronLeft />}
-      </Div>
+      {wrapWithTooltip(
+        <Div
+          position="absolute"
+          top={0}
+          right={isRight ? 'calc(100% + 1px)' : null}
+          left={isLeft ? 'calc(100% + 1px)' : null}
+          backgroundColor="background-light"
+          onClick={toggleOpen}
+          borderLeft={isLeft ? null : '1px solid border'}
+          borderRight={isRight ? null : '1px solid border'}
+          borderBottom="1px solid border"
+          cursor="pointer"
+          p={0.5}
+        >
+          {xor(direction === 'left', open) ? isLeft ? openIcon || <MdChevronRight /> : <MdChevronRight /> : isRight ? openIcon || <MdChevronLeft /> : <MdChevronLeft />}
+        </Div>
+      )}
       <Div
         xflex="y2s"
         height="100%"

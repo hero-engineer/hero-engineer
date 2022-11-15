@@ -59,7 +59,9 @@ function Overlay({ children }: OverlayProps) {
         {!!componentAddress && (
           <RetractablePanel
             direction="left"
+            openLabel="Insert component"
             openIcon={<TbRowInsertBottom />}
+            openPersistedStateKey="ecu-add-component-panel-open"
           >
             <AddComponentSection />
           </RetractablePanel>
@@ -77,7 +79,9 @@ function Overlay({ children }: OverlayProps) {
         {!!componentAddress && (
           <RetractablePanel
             direction="right"
+            openLabel="Imports, types and styles"
             openIcon={<BiNetworkChart />}
+            openPersistedStateKey="ecu-types-panel-open"
           >
             <Div minWidth={512}>
               <ComponentImportsEditor />
