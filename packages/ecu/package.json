@@ -1,6 +1,6 @@
 {
   "name": "ecu",
-  "version": "1.0.6",
+  "version": "1.0.22",
   "description": "A self-reprogramming shield for creating React app fast",
   "main": "src/index.js",
   "type": "module",
@@ -17,15 +17,19 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "prepublishOnly": "npm run build"
+    "zip-project-template": "zip -r project-template.zip ./project-template",
+    "prepublishOnly": "npm run zip-project-template && npm run build"
   },
   "dependencies": {
     "commander": "^9.4.1",
     "ecu-client": "^1.0.1",
-    "ecu-server": "^1.0.2"
+    "ecu-server": "^1.0.6",
+    "extract-zip": "^2.0.1",
+    "find-up": "^6.3.0"
   },
   "files": [
-    "build"
+    "build",
+    "project-template.zip"
   ],
   "module": "./build/index.js",
   "types": "./build/index.d.ts",
