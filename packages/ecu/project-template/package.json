@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "name": "ecu-app",
+  "scripts": {
+    "start": "npm run dev",
+    "serve": "ecu serve",
+    "dev": "(cd app && npm run dev)"
+  },
+  "devDependencies": {
+    "ecu": "^1.0.6",
+    "eslint": "^8.27.0",
+    "eslint-config-ecu": "^1.1.0"
+  }
+}

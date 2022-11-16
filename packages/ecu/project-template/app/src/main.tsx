@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom/client'
-import { EcuMaster } from 'ecu-client'
+import { EcuMaster } from 'ecu'
 
 import App from './App'
 
