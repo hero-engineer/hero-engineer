@@ -30,6 +30,6 @@
   "module": "./build/index.js",
   "types": "./build/index.d.ts",
   "bin": {
-    "ecu": "./build/index.js"
+    "ecu": "./build/cli.js"
   }
 }
