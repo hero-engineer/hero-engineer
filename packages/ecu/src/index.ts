@@ -2,6 +2,8 @@
 import { Command } from 'commander'
 import serve from 'ecu-server'
 
+export * from 'ecu-client'
+
 const program = new Command()
 
 program

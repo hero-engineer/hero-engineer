@@ -1,6 +1,6 @@
 {
   "name": "ecu",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A self-reprogramming shield for creating React app fast",
   "main": "src/index.js",
   "type": "module",
