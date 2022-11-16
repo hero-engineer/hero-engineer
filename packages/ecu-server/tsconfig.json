@@ -100,6 +100,10 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true
   },
+  "exclude": [
+    "scripts",
+    "build"
+  ],
   "ts-node": {
     "esm": true,
 		"experimentalResolver": true,
