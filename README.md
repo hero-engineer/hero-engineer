@@ -28,11 +28,17 @@ And much more!
 
 ## Development
 
-Run `npm i` in the root, `app`, `packages/ecu-client`, and `packages/ecu-server` directories.
+Run `npm i` in the root, `packages/ecu`, `packages/ecu-client`, and `packages/ecu-server` directories.
 
-Then run `npm run dev` in the `packages/ecu-server` and `packages/ecu-client` directories.
+Run `npm run dev` in the `packages/ecu`, `packages/ecu-server` and `packages/ecu-client` directories.
 
-Then run `npm run dev:app` in the root directory.
+Etheir:
+- To use the shared dev ecu app: `cd ..` then `git clone git@github.com:dherault/ecu-app.git` then `cd ecu-app` then `npm i` then `cd app` then `npm i`.
+- To use a blank new one: Create an empty git repository at `../ecu-app` (`cd .. && mkdir ecu-app && cd ecu-app && git init`). Run `npx ecu create` in `ecu-app` to create a new Ecu app.
+
+Go back to `../ecu` and run `npm run link`. You Ecu App at `../ecu-app` now uses the dev version of Ecu.
+
+Finally, in `../ecu-app` run `npm run serve` in a first terminal and `npm run dev` in another one. You can now open the link given by ViteJS to view the live app using Ecu. :tada:
 
 ## License
 
