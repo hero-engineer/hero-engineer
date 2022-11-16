@@ -15,7 +15,7 @@
   },
   "homepage": "https://github.com/dherault/ecu#readme",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --watch src --ext ts,tsx --exec \"npm run build\"",
     "build": "tsc",
     "zip-project-template": "zip -r project-template.zip ./project-template",
     "prepublishOnly": "npm run zip-project-template && npm run build"
