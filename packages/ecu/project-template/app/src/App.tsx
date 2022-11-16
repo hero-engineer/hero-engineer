@@ -17,7 +17,7 @@ type AppPropsType = Record<string, never>
 function App(props: AppPropsType) {
   return (
     <Div>
-      Edit me I'm famous3
+      Edit me I'm famous
     </Div>
   )
 }
