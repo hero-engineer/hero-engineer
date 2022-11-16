@@ -1,21 +1,21 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import { FunctionNodeType, HistoryMutationReturnType } from '../../types'
-import { appPath } from '../../configuration'
+import { FunctionNodeType, HistoryMutationReturnType } from '../../types.js'
+import { appPath } from '../../configuration.js'
 
-import createComponentTemplate from '../../templates/Component'
+import createComponentTemplate from '../../templates/Component.js'
 
-import composeHistoryMutation from '../../history/composeHistoryMutation'
+import composeHistoryMutation from '../../history/composeHistoryMutation.js'
 
-import { getNodesByFirstNeighbourg } from '../../graph'
-import addFile from '../../graph/add/addFile'
-import addFileDependencies from '../../graph/add/addFileDependencies'
+import { getNodesByFirstNeighbourg } from '../../graph/index.js'
+import addFile from '../../graph/add/addFile.js'
+import addFileDependencies from '../../graph/add/addFileDependencies.js'
 
-import updateDataEcuAttributes from '../../domain/components/updateDataEcuAttributes'
-import regenerate from '../../domain/regenerate'
+import updateDataEcuAttributes from '../../domain/components/updateDataEcuAttributes.js'
+import regenerate from '../../domain/regenerate.js'
 
-import capitalize from '../../utils/capitalize'
+import capitalize from '../../utils/capitalize.js'
 
 type CreateComponentMutationArgs = {
   name: string

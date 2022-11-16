@@ -1,6 +1,6 @@
-import { setHash } from '..'
+import { setHash } from '../index.js'
 
-import getAppHash from './getAppHash'
+import getAppHash from './getAppHash.js'
 
 async function updateGraphHash() {
   console.log('Updating graph hash')

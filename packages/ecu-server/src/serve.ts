@@ -1,8 +1,8 @@
 import { ApolloServer } from 'apollo-server'
 
-import { resolvers, typeDefs } from './graphql'
+import { resolvers, typeDefs } from './graphql/index.js'
 
-import buildGraph from './graph/build'
+import buildGraph from './graph/build/index.js'
 
 async function serve() {
   await buildGraph()

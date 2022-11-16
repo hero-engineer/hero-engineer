@@ -1,10 +1,10 @@
-import { FunctionNodeType } from '../../types'
+import { FunctionNodeType } from '../../types.js'
 
-import { ecuAcceptingChildrenComponentNames } from '../../configuration'
+import { ecuAcceptingChildrenComponentNames } from '../../configuration.js'
 
-import { getNodeByAddress, getNodesBySecondNeighbourg } from '../../graph'
+import { getNodeByAddress, getNodesBySecondNeighbourg } from '../../graph/index.js'
 
-import traverseTypes from '../types/traverseTypes'
+import traverseTypes from '../types/traverseTypes.js'
 
 function isComponentAcceptingChildren(componentAddress?: string, ecuComponentName?: string) {
   if (ecuComponentName) {

@@ -1,10 +1,10 @@
-import { FileNodeType, FunctionNodeType, ImpactedType, PostTraverseType } from '../types'
+import { FileNodeType, FunctionNodeType, ImpactedType, PostTraverseType } from '../types.js'
 
-import { getNodesByFirstNeighbourg } from '../graph'
+import { getNodesByFirstNeighbourg } from '../graph/index.js'
 
-import regenerate from './regenerate'
+import regenerate from './regenerate.js'
 
-import updateDataEcuAttributes from './components/updateDataEcuAttributes'
+import updateDataEcuAttributes from './components/updateDataEcuAttributes.js'
 
 type ProcessImpactedFileNodesResolveType = {
   impactedFileNode: FileNodeType | null

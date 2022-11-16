@@ -1,9 +1,9 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import { appPath, ecuHistoryFileName, ecuRelativePath } from '../configuration'
+import { appPath, ecuHistoryFileName, ecuRelativePath } from '../configuration.js'
 
-import getEcuHistoryFileContent from './getEcuHistoryFileContent'
+import getEcuHistoryFileContent from './getEcuHistoryFileContent.js'
 
 function appendToEcuHistoryFile(branchName: string) {
   const branchArray = getEcuHistoryFileContent()

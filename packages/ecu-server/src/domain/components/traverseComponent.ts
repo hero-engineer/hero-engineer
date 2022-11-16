@@ -15,23 +15,23 @@ import {
   ImpactedType,
   ImportsRegistry,
   IndexRegistryType,
-} from '../../types'
-import { ecuPropName } from '../../configuration'
+} from '../../types.js'
+import { ecuPropName } from '../../configuration.js'
 
 import {
   getNodeByAddress,
   getNodesByFirstNeighbourg,
   getNodesByRole,
   getNodesBySecondNeighbourg,
-} from '../../graph'
+} from '../../graph/index.js'
 
-import possiblyAddExtension from '../../utils/possiblyAddExtension'
+import possiblyAddExtension from '../../utils/possiblyAddExtension.js'
 
-import createHierarchyId from '../utils/createHierarchyId'
+import createHierarchyId from '../utils/createHierarchyId.js'
 
-import traverse from '../traverse'
+import traverse from '../traverse.js'
 
-import isComponentAcceptingChildren from './isComponentAcceptingChildren'
+import isComponentAcceptingChildren from './isComponentAcceptingChildren.js'
 
 type TraverseComponentReturnType = {
   impacted: ImpactedType[],

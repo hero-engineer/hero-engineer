@@ -1,7 +1,7 @@
-import { FileNodeType, TypeType } from '../../types'
+import { FileNodeType, TypeType } from '../../types.js'
 
-import traverse from '../traverse'
-import generate from '../generate'
+import traverse from '../traverse.js'
+import generate from '../generate.js'
 
 function traverseTypes(fileNode: FileNodeType) {
   const types: TypeType[] = []

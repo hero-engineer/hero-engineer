@@ -1,4 +1,4 @@
-import { ImportType } from './types'
+import { ImportType } from './types.js'
 
 export const appPath = '/Users/sven/dev/ecu/app'
 

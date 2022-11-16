@@ -1,4 +1,4 @@
-import { FunctionNodeType } from '../../types'
+import { FunctionNodeType } from '../../types.js'
 
 function createFunctionNode(data: FunctionNodeType): FunctionNodeType {
   return data

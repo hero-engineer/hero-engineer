@@ -1,10 +1,10 @@
-import { FileNodeType, FunctionNodeType, HierarchyPositionType, HistoryMutationReturnType } from '../../types'
+import { FileNodeType, FunctionNodeType, HierarchyPositionType, HistoryMutationReturnType } from '../../types.js'
 
-import { getNodeByAddress, getNodesBySecondNeighbourg } from '../../graph'
+import { getNodeByAddress, getNodesBySecondNeighbourg } from '../../graph/index.js'
 
-import compareCursors from '../../utils/compareCursors'
+import compareCursors from '../../utils/compareCursors.js'
 
-import composeHistoryMutation from '../../history/composeHistoryMutation'
+import composeHistoryMutation from '../../history/composeHistoryMutation.js'
 
 // import getComponentHierarchyCursors from '../../domain/traversal/getComponentHierarchyCursors'
 // import updateComponentHierarchy from '../../domain/traversal/updateComponentHierarchy'

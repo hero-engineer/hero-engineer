@@ -8,15 +8,15 @@ import {
   jsxOpeningFragment,
 } from '@babel/types'
 
-import { FileNodeType, FunctionNodeType, HierarchyPositionType, HistoryMutationReturnType } from '../../types'
+import { FileNodeType, FunctionNodeType, HierarchyPositionType, HistoryMutationReturnType } from '../../types.js'
 
-import { getNodeByAddress, getNodesBySecondNeighbourg } from '../../graph'
+import { getNodeByAddress, getNodesBySecondNeighbourg } from '../../graph/index.js'
 
-import composeHistoryMutation from '../../history/composeHistoryMutation'
+import composeHistoryMutation from '../../history/composeHistoryMutation.js'
 
-import createAddComponentPostTraverse from '../../domain/components/createAddComponentPostTraverse'
-import traverseComponent from '../../domain/components/traverseComponent'
-import processImpactedFileNodes from '../../domain/processImpactedFileNodes'
+import createAddComponentPostTraverse from '../../domain/components/createAddComponentPostTraverse.js'
+import traverseComponent from '../../domain/components/traverseComponent.js'
+import processImpactedFileNodes from '../../domain/processImpactedFileNodes.js'
 
 type AddComponentMutationArgs = {
   sourceComponentAddress: string

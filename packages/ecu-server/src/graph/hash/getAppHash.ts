@@ -1,6 +1,6 @@
 import { hashElement } from 'folder-hash'
 
-import { appPath } from '../../configuration'
+import { appPath } from '../../configuration.js'
 
 async function getAppHash() {
   const results = await hashElement(appPath, {

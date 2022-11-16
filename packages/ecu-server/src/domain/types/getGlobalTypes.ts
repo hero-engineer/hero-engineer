@@ -1,14 +1,14 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import { appPath, globalTypesFileBegginingComment, globalTypesFileRelativePath } from '../../configuration'
-import { FileNodeType } from '../../types'
+import { appPath, globalTypesFileBegginingComment, globalTypesFileRelativePath } from '../../configuration.js'
+import { FileNodeType } from '../../types.js'
 
-import { getNodesByRole } from '../../graph'
+import { getNodesByRole } from '../../graph/index.js'
 
-import removePaddingEmptyLines from '../code/removePaddingEmptyLines'
+import removePaddingEmptyLines from '../code/removePaddingEmptyLines.js'
 
-import traverseTypes from './traverseTypes'
+import traverseTypes from './traverseTypes.js'
 
 function getGlobalTypes() {
   const globalTypesFilePath = path.join(appPath, globalTypesFileRelativePath)

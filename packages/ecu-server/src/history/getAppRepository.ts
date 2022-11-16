@@ -5,7 +5,7 @@ import gitUserName from 'git-user-name'
 // @ts-expect-error
 import gitUserEmail from 'git-user-email-2'
 
-import { appPath } from '../configuration'
+import { appPath } from '../configuration.js'
 
 const gitDir = '.git'
 

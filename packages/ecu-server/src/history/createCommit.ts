@@ -1,6 +1,6 @@
 import * as git from 'isomorphic-git'
 
-import getAppRepository from './getAppRepository'
+import getAppRepository from './getAppRepository.js'
 
 async function createCommit(message: string) {
   console.log('___createCommit___')

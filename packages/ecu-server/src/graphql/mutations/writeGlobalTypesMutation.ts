@@ -1,11 +1,11 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import { FileNodeType, HistoryMutationReturnType } from '../../types'
-import { appPath, globalTypesFileBegginingComment, globalTypesFileRelativePath } from '../../configuration'
+import { FileNodeType, HistoryMutationReturnType } from '../../types.js'
+import { appPath, globalTypesFileBegginingComment, globalTypesFileRelativePath } from '../../configuration.js'
 
-import composeHistoryMutation from '../../history/composeHistoryMutation'
-import { getNodesByRole } from '../../graph'
+import composeHistoryMutation from '../../history/composeHistoryMutation.js'
+import { getNodesByRole } from '../../graph/index.js'
 
 type WriteGlobalTypesMutationArgs = {
   globalTypesFileContent: string

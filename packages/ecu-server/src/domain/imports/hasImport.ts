@@ -1,6 +1,6 @@
-import traverse from '../traverse'
+import { FileNodeType } from '../../types.js'
 
-import { FileNodeType } from '../../types'
+import traverse from '../traverse.js'
 
 function hasImport(fileNode: FileNodeType, importValue: string, importName: string) {
   const { ast } = fileNode.payload

@@ -2,16 +2,16 @@ import path from 'node:path'
 
 import shortId from 'shortid'
 
-import { appPath } from '../../configuration'
-import { FileNodeType, FunctionNodeType } from '../../types'
+import { appPath } from '../../configuration.js'
+import { FileNodeType, FunctionNodeType } from '../../types.js'
 
-import traverse from '../../domain/traverse'
+import traverse from '../../domain/traverse.js'
 
-import possiblyAddExtension from '../../utils/possiblyAddExtension'
+import possiblyAddExtension from '../../utils/possiblyAddExtension.js'
 
-import { addEdge, addNode, getNodesByRole } from '..'
+import { addEdge, addNode, getNodesByRole } from '../index.js'
 
-import createFunctionNode from '../models/createFunctionNode'
+import createFunctionNode from '../models/createFunctionNode.js'
 
 function addFileDependencies(fileNode: FileNodeType) {
   const { ast } = fileNode.payload

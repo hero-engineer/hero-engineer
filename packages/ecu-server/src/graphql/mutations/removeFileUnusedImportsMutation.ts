@@ -1,11 +1,11 @@
-import { FileNodeType, HistoryMutationReturnType } from '../../types'
+import { FileNodeType, HistoryMutationReturnType } from '../../types.js'
 
-import { getNodeByAddress } from '../../graph'
+import { getNodeByAddress } from '../../graph/index.js'
 
-import composeHistoryMutation from '../../history/composeHistoryMutation'
+import composeHistoryMutation from '../../history/composeHistoryMutation.js'
 
-import removeUnusedImports from '../../domain/imports/removeUnusedImports'
-import regenerate from '../../domain/regenerate'
+import removeUnusedImports from '../../domain/imports/removeUnusedImports.js'
+import regenerate from '../../domain/regenerate.js'
 
 type RemoveFileUnunsedImportsMutationArgs = {
   sourceFileAddress: string

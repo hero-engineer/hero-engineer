@@ -2,10 +2,10 @@ import fs from 'node:fs'
 
 import { ParseResult } from '@babel/core'
 
-import { FileNodeType } from '../types'
+import { FileNodeType } from '../types.js'
 
-import generate from './generate'
-import lintCode from './lintCode'
+import generate from './generate.js'
+import lintCode from './lintCode.js'
 
 async function regenerate(fileNode: FileNodeType, astOrCode: ParseResult | string) {
   let code = typeof astOrCode === 'string' ? astOrCode : generate(astOrCode).code

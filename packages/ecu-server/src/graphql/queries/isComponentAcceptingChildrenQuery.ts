@@ -1,4 +1,4 @@
-import isComponentAcceptingChildren from '../../domain/components/isComponentAcceptingChildren'
+import isComponentAcceptingChildren from '../../domain/components/isComponentAcceptingChildren.js'
 
 type IsComponentAcceptingChildrenQueryArgs = {
   sourceComponentAddress?: string

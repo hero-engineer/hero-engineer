@@ -9,9 +9,9 @@ import {
   stringLiteral,
 } from '@babel/types'
 
-import traverse from '../traverse'
+import { ImportType } from '../../types.js'
 
-import { ImportType } from '../../types'
+import traverse from '../traverse.js'
 
 function createImportSpecifier(importx: ImportType) {
   if (importx.type === 'ImportSpecifier') {

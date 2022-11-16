@@ -1,6 +1,6 @@
-import { GraphEdgeType, GraphNodeType } from '../types'
+import { GraphEdgeType, GraphNodeType } from '../types.js'
 
-import { getGraph, setGraph } from './getset'
+import { getGraph, setGraph } from './getset.js'
 
 /* --
   * GETTERS

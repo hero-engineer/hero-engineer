@@ -2,9 +2,9 @@ import path from 'node:path'
 
 import { ParseResult } from '@babel/core'
 
-import { FileNodeType, FunctionNodeType, ImportType, PostTraverseType } from '../../types'
+import { FileNodeType, FunctionNodeType, ImportType, PostTraverseType } from '../../types.js'
 
-import insertImports from '../imports/insertImports'
+import insertImports from '../imports/insertImports.js'
 
 function createAddComponentPostTraverse(componentNode: FunctionNodeType): PostTraverseType {
   // Add potential missing import of added component in the mutated file

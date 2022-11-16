@@ -1,7 +1,7 @@
-import { FunctionNodeType } from '../../types'
+import { FunctionNodeType } from '../../types.js'
 
-import { getNodeByAddress, getNodesBySecondNeighbourg } from '../../graph'
-import isComponentAcceptingChildren from '../../domain/components/isComponentAcceptingChildren'
+import { getNodeByAddress, getNodesBySecondNeighbourg } from '../../graph/index.js'
+import isComponentAcceptingChildren from '../../domain/components/isComponentAcceptingChildren.js'
 
 type ComponentQueryArgs = {
   sourceComponentAddress: string

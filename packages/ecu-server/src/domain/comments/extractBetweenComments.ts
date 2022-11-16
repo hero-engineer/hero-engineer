@@ -1,6 +1,6 @@
-import { FileNodeType } from '../../types'
+import { FileNodeType } from '../../types.js'
 
-import removePaddingEmptyLines from '../code/removePaddingEmptyLines'
+import removePaddingEmptyLines from '../code/removePaddingEmptyLines.js'
 
 function extractBetweenComments(fileNode: FileNodeType, startComment: string, endComment: string) {
   const { code } = fileNode.payload

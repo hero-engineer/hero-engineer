@@ -1,11 +1,10 @@
+import { externalModulesImports } from '../../configuration.js'
+import { ImportType } from '../../types.js'
 
-import { externalModulesImports } from '../../configuration'
-import { ImportType } from '../../types'
+import traverse from '../traverse.js'
+import parseCode from '../parseCode.js'
 
-import traverse from '../traverse'
-import parseCode from '../parseCode'
-
-import getGlobalTypes from './getGlobalTypes'
+import getGlobalTypes from './getGlobalTypes.js'
 
 function getTypesImports(rawTypes: string) {
   const typeImports: ImportType[] = []

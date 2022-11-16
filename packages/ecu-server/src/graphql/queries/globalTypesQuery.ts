@@ -1,4 +1,4 @@
-import getGlobalTypes from '../../domain/types/getGlobalTypes'
+import getGlobalTypes from '../../domain/types/getGlobalTypes.js'
 
 function globalTypesQuery() {
   console.log('__globalTypesQuery__')

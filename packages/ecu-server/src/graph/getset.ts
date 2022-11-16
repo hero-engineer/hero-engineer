@@ -1,11 +1,11 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import { GraphType } from '../types'
-import { appPath, ecuGraphFileName, ecuRelativePath } from '../configuration'
+import { GraphType } from '../types.js'
+import { appPath, ecuGraphFileName, ecuRelativePath } from '../configuration.js'
 
-import createFileNode from './models/createFileNode'
-import createFunctionNode from './models/createFunctionNode'
+import createFileNode from './models/createFileNode.js'
+import createFunctionNode from './models/createFunctionNode.js'
 
 function ensureEcuPathExistance() {
   const ecuPath = path.join(appPath, ecuRelativePath)

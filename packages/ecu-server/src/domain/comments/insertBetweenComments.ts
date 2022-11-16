@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 
-import { FileNodeType } from '../../types'
+import { FileNodeType } from '../../types.js'
 
 function insertBetweenComments(fileNode: FileNodeType, startComment: string, endComment: string, content: string) {
   const { code } = fileNode.payload

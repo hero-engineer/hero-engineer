@@ -1,12 +1,12 @@
-import { importsEndComment, importsStartComment } from '../../configuration'
-import { FileNodeType, HistoryMutationReturnType } from '../../types'
+import { importsEndComment, importsStartComment } from '../../configuration.js'
+import { FileNodeType, HistoryMutationReturnType } from '../../types.js'
 
-import { getNodeByAddress } from '../../graph'
+import { getNodeByAddress } from '../../graph/index.js'
 
-import composeHistoryMutation from '../../history/composeHistoryMutation'
+import composeHistoryMutation from '../../history/composeHistoryMutation.js'
 
-import insertBetweenComments from '../../domain/comments/insertBetweenComments'
-import regenerate from '../../domain/regenerate'
+import insertBetweenComments from '../../domain/comments/insertBetweenComments.js'
+import regenerate from '../../domain/regenerate.js'
 
 type WriteFileImportsMutationArgs = {
   sourceFileAddress: string

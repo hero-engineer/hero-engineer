@@ -3,8 +3,8 @@ import path from 'node:path'
 
 import * as git from 'isomorphic-git'
 
-import getAppRepository from './getAppRepository'
-import appendToEcuHistoryFile from './appendToEcuHistoryFile'
+import getAppRepository from './getAppRepository.js'
+import appendToEcuHistoryFile from './appendToEcuHistoryFile.js'
 
 async function undo() {
   const repository = await getAppRepository()

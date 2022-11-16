@@ -1,6 +1,6 @@
 import { ParseResult } from '@babel/core'
 
-import traverse from '../traverse'
+import traverse from '../traverse.js'
 
 function removeUnunsedImports(ast: ParseResult) {
   const identifierNames: string[] = []

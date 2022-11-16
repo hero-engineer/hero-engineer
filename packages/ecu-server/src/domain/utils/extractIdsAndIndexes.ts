@@ -1,4 +1,4 @@
-import extractIdAndIndex from './extractIdAndIndex'
+import extractIdAndIndex from './extractIdAndIndex.js'
 
 function extractIdsAndIndexes(hierarchyIds: string[]): [string[], number[]] {
   const ids: string[] = []

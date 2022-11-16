@@ -1,8 +1,8 @@
 import fs from 'node:fs'
 
-import { FileNodePayloadType, FileNodeType } from '../../types'
+import { FileNodePayloadType, FileNodeType } from '../../types.js'
 
-import parseCode from '../../domain/parseCode'
+import parseCode from '../../domain/parseCode.js'
 
 type CreateFileNodeDataType = Omit<FileNodeType, 'payload'> & { payload: Omit<FileNodePayloadType, 'code' | 'ast'> }
 

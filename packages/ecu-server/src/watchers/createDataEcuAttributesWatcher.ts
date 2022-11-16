@@ -1,9 +1,9 @@
-import { FileNodeType, FunctionNodeType } from '../types'
+import { FileNodeType, FunctionNodeType } from '../types.js'
 
-import { getNodesByRole, getNodesBySecondNeighbourg } from '../graph'
+import { getNodesByRole, getNodesBySecondNeighbourg } from '../graph/index.js'
 
-import regenerate from '../domain/regenerate'
-import updateDataEcuAttributes from '../domain/components/updateDataEcuAttributes'
+import regenerate from '../domain/regenerate.js'
+import updateDataEcuAttributes from '../domain/components/updateDataEcuAttributes.js'
 
 async function createDataEcuAttributesWatcher() {
   const componentNodes = getNodesByRole<FunctionNodeType>('Function').filter(node => node.payload.isComponent)

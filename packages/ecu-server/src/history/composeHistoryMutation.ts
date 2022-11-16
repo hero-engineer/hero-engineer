@@ -1,7 +1,7 @@
-import { HistoryMutationReturnType } from '../types'
-import updateGraphHash from '../graph/hash/updateGraphHash'
+import { HistoryMutationReturnType } from '../types.js'
+import updateGraphHash from '../graph/hash/updateGraphHash.js'
 
-import createCommit from './createCommit'
+import createCommit from './createCommit.js'
 
 function composeHistoryMutation(mutate: (...args: any[]) => Promise<HistoryMutationReturnType<any>>) {
   return async (...args: any[]) => {

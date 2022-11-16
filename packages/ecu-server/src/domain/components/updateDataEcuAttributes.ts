@@ -1,12 +1,12 @@
 import { JSXAttribute, jsxAttribute, jsxIdentifier, stringLiteral } from '@babel/types'
 import { ParseResult } from '@babel/core'
 
-import { FunctionNodeType } from '../../types'
-import { ecuPropName } from '../../configuration'
+import { FunctionNodeType } from '../../types.js'
+import { ecuPropName } from '../../configuration.js'
 
-import traverse from '../traverse'
+import traverse from '../traverse.js'
 
-import createHierarchyId from '../utils/createHierarchyId'
+import createHierarchyId from '../utils/createHierarchyId.js'
 
 function insertPropFactory(key: string, getValue: () => string) {
   return (path: any) => {

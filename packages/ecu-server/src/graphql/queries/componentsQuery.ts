@@ -1,7 +1,7 @@
-import { FunctionNodeType } from '../../types'
+import { FunctionNodeType } from '../../types.js'
 
-import { getNodesByRole, getNodesBySecondNeighbourg } from '../../graph'
-import isComponentAcceptingChildren from '../../domain/components/isComponentAcceptingChildren'
+import { getNodesByRole, getNodesBySecondNeighbourg } from '../../graph/index.js'
+import isComponentAcceptingChildren from '../../domain/components/isComponentAcceptingChildren.js'
 
 function componentsQuery() {
   return getNodesByRole<FunctionNodeType>('Function').filter(node => node.payload.isComponent).map(componentNode => {

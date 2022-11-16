@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import { appPath, ecuHistoryFileName, ecuRelativePath } from '../configuration'
+import { appPath, ecuHistoryFileName, ecuRelativePath } from '../configuration.js'
 
 function getEcuHistoryFileContent(): string[] {
   const ecuPath = path.join(appPath, ecuRelativePath)

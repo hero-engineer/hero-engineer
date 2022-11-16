@@ -2,10 +2,10 @@ import path from 'node:path'
 
 import shortId from 'shortid'
 
-import { appPath } from '../../configuration'
+import { appPath } from '../../configuration.js'
 
-import { addNode } from '..'
-import createFileNode from '../models/createFileNode'
+import { addNode } from '../index.js'
+import createFileNode from '../models/createFileNode.js'
 
 function addFile(filePath: string) {
   const relativePath = path.relative(appPath, filePath)

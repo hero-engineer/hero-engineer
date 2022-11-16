@@ -1,9 +1,9 @@
-import { typesEndComment, typesStartComment } from '../../configuration'
-import { FileNodeType } from '../../types'
+import { typesEndComment, typesStartComment } from '../../configuration.js'
+import { FileNodeType } from '../../types.js'
 
-import { getNodeByAddress } from '../../graph'
-import traverseTypes from '../../domain/types/traverseTypes'
-import extractBetweenComments from '../../domain/comments/extractBetweenComments'
+import { getNodeByAddress } from '../../graph/index.js'
+import traverseTypes from '../../domain/types/traverseTypes.js'
+import extractBetweenComments from '../../domain/comments/extractBetweenComments.js'
 
 type FileTypesQueryArgs = {
   sourceFileAddress: string
