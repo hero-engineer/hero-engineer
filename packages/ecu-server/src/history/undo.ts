@@ -3,11 +3,13 @@ import path from 'node:path'
 
 import * as git from 'isomorphic-git'
 
+import { appPath } from '../configuration.js'
+
 import getAppRepository from './getAppRepository.js'
 import appendToEcuHistoryFile from './appendToEcuHistoryFile.js'
 
 async function undo() {
-  const repository = await getAppRepository()
+  const repository = await getAppRepository(appPath)
   const undoBranchName = `undo-${Date.now()}`
   const enhancedRepository = { ...repository, ref: undoBranchName }
 

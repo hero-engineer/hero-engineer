@@ -1,3 +1,5 @@
-import serve from './serve.js'
+export { default as serve } from './serve.js'
 
-export default serve
+export { default as createCommit } from './history/createCommit.js'
+
+export { default as getGitAuthor } from './history/getGitAuthor.js'

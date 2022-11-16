@@ -1,6 +1,6 @@
 {
   "name": "ecu-server",
-  "version": "1.0.2",
+  "version": "1.0.6",
   "description": "A shield",
   "main": "build/index.js",
   "type": "module",

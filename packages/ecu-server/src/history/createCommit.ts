@@ -2,11 +2,11 @@ import * as git from 'isomorphic-git'
 
 import getAppRepository from './getAppRepository.js'
 
-async function createCommit(message: string) {
-  console.log('___createCommit___')
-
+async function createCommit(cwd: string, message: string) {
   try {
-    const repository = await getAppRepository()
+    const repository = await getAppRepository(cwd)
+
+    console.log('repository.dir', repository.dir)
 
     // git add . -A
     // https://isomorphic-git.org/docs/en/snippets#git-add-a-
