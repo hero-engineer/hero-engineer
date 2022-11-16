@@ -2,7 +2,7 @@ import { JSXAttribute, jsxAttribute, jsxIdentifier, stringLiteral } from '@babel
 import { ParseResult } from '@babel/core'
 
 import { FunctionNodeType } from '../../types.js'
-import { ecuPropName } from '../../configuration.js'
+import { ecuPackageName, ecuPropName } from '../../configuration.js'
 
 import traverse from '../traverse.js'
 
@@ -37,7 +37,7 @@ function updateDataEcuAttributes(componentNode: FunctionNodeType, ast: ParseResu
 
   traverse(ast, {
     ImportDeclaration(path: any) {
-      if (path.node.source.value === 'ecu-client') {
+      if (path.node.source.value === ecuPackageName) {
         importedEcuComponentNames.push(...path.node.specifiers.map((x: any) => x.local.name))
       }
     },

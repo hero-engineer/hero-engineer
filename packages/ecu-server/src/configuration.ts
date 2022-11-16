@@ -1,16 +1,17 @@
-import { fileURLToPath } from 'node:url'
-
-import { findUpSync } from 'find-up'
+import fs from 'node:fs'
+import path from 'node:path'
 
 import { ImportType } from './types.js'
 
-const __dirname = fileURLToPath(new URL('.', import.meta.url))
+const cwd = process.cwd()
 
-export const appPath = findUpSync('app', { cwd: __dirname, type: 'directory' })!
+export const appPath = path.join(cwd, 'app')
 
-if (!appPath) {
+if (!fs.existsSync(appPath)) {
   throw new Error('Could not find app directory, is your cwd a valid ecu project?')
 }
+
+export const ecuPackageName = 'ecu'
 
 export const ecuPropName = 'data-ecu'
 
