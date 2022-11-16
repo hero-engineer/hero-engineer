@@ -1,6 +1,6 @@
 {
   "name": "ecu",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A self-reprogramming shield for creating React app fast",
   "main": "src/index.js",
   "type": "module",
@@ -22,7 +22,7 @@
   "dependencies": {
     "commander": "^9.4.1",
     "ecu-client": "^1.0.1",
-    "ecu-server": "^1.0.1"
+    "ecu-server": "^1.0.2"
   },
   "files": [
     "build"

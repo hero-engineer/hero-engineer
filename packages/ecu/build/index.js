@@ -1,3 +1,4 @@
+#! /usr/bin/env node
 import { Command } from 'commander';
 import serve from 'ecu-server';
 const program = new Command();
