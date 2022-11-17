@@ -26,3 +26,7 @@
 .ecu-drop {
   outline: 1px solid deepskyblue;
 }
+
+.ecu-edited {
+  outline: 1px solid purple;
+}

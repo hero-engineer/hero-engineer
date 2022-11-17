@@ -234,6 +234,16 @@ export type WriteFileImportsMutationDataType = {
   writeFileImports: boolean
 }
 
+export const UpdateTextValueMutation = `
+  mutation ($targetHierarchyId: String!, $value: String!) {
+    updateTextValue (targetHierarchyId: $targetHierarchyId, value: $value)
+  }
+`
+
+export type UpdateTextValueMutationDataType = {
+  updateTextValue: boolean
+}
+
 export const UndoMutation = `
   mutation {
     undo

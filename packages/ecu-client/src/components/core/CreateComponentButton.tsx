@@ -18,11 +18,14 @@ function CreateComponentButton(props: any) {
 
     const results = await createComponent({ name })
 
+    setIsModalOpen(false)
+    setName('')
+
     if (!results.data) return
 
     const { file, component } = results.data.createComponent
 
-    navigate(`/_ecu_/component/${file.address}/$${component.address}`)
+    navigate(`/_ecu_/component/${file.address}/${component.address}`)
   }, [name, createComponent, navigate])
 
   return (

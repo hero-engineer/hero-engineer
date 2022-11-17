@@ -1,6 +1,6 @@
 import '../css/edition.css'
 
-import { MouseEvent, Ref, useCallback, useContext, useMemo, useRef } from 'react'
+import { MouseEvent, Ref, useCallback, useContext, useMemo, useRef, useState } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 
 import HierarchyContext from '../contexts/HierarchyContext'
@@ -38,12 +38,13 @@ function getHierarchyIds(element: EventTarget | HTMLElement) {
   return hierarchyIds.reverse()
 }
 
-function useEditionProps<T>(id: string, className = '') {
+function useEditionProps<T>(id: string, className = '', canBeEdited = false) {
   const rootRef = useRef<T>(null)
   const hierarchyId = useHierarchyId(id, rootRef)
   const { hierarchyIds, componentDelta, setEditionSearchParams } = useEditionSearchParams()
   const { hierarchy, setShouldAdjustComponentDelta } = useContext(HierarchyContext)
   const { setDragAndDrop } = useContext(DragAndDropContext)
+  const [edited, setEdited] = useState(false)
 
   const componentRootHierarchyIds = useMemo(() => getComponentRootHierarchyIds(hierarchy), [hierarchy])
 
@@ -64,7 +65,8 @@ function useEditionProps<T>(id: string, className = '') {
       isDragging: monitor.isDragging(),
       handlerId: monitor.getHandlerId(),
     }),
-  }), [setDragAndDrop])
+    canDrag: !edited,
+  }), [setDragAndDrop, edited])
 
   const [{ canDrop, isOverCurrent }, drop] = useDrop(() => ({
     accept: 'Node',
@@ -91,6 +93,10 @@ function useEditionProps<T>(id: string, className = '') {
     const ids = getHierarchyIds(event.target)
 
     if (areArraysEqual(hierarchyIds, ids) || (areArraysEqualAtStart(hierarchyIds, ids) && componentDelta < 0)) {
+      if (canBeEdited && componentDelta === 0) {
+        setEdited(true)
+      }
+
       setEditionSearchParams({
         componentDelta: Math.min(0, componentDelta + 1),
       })
@@ -117,7 +123,7 @@ function useEditionProps<T>(id: string, className = '') {
     })
 
     setShouldAdjustComponentDelta(true)
-  }, [hierarchyIds, componentDelta, setEditionSearchParams, setShouldAdjustComponentDelta])
+  }, [hierarchyIds, componentDelta, setEditionSearchParams, setShouldAdjustComponentDelta, canBeEdited])
 
   const generateClassName = useCallback(() => {
     let klassName = className
@@ -148,14 +154,20 @@ function useEditionProps<T>(id: string, className = '') {
       klassName += ' ecu-drop'
     }
 
+    if (edited) {
+      klassName += ' ecu-edited'
+    }
+
     return klassName.trim()
-  }, [className, hierarchyIds, hierarchyId, componentDelta, componentRootHierarchyIds, isDragging, canDrop, isOverCurrent])
+  }, [className, hierarchyIds, hierarchyId, componentDelta, componentRootHierarchyIds, isDragging, canDrop, isOverCurrent, edited])
 
   return {
     ref,
     hierarchyId,
     onClick: handleClick,
     className: generateClassName(),
+    edited,
+    setEdited,
   }
 }
 
