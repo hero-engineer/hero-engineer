@@ -1,4 +1,5 @@
 import createDataEcuAttributesWatcher from '../../watchers/createDataEcuAttributesWatcher.js'
+import deleteAllScreenshots from '../../watchers/deleteAllScreenshots.js'
 
 import { deleteGraph } from '../index.js'
 import { getGraph } from '../getset.js'
@@ -16,6 +17,7 @@ async function buildGraph() {
 
     deleteGraph()
     buildFilesGraph()
+    deleteAllScreenshots()
 
     await createDataEcuAttributesWatcher()
     await updateGraphHash()

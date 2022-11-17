@@ -17,6 +17,7 @@ import writeGlobalTypesMutation from './mutations/writeGlobalTypesMutation.js'
 import writeFileImportsMutation from './mutations/writeFileImportsMutation.js'
 import writeFileTypesMutation from './mutations/writeFileTypesMutation.js'
 import removeFileUnusedImportsMutation from './mutations/removeFileUnusedImportsMutation.js'
+import updateComponentScreenshotMutation from './mutations/updateComponentScreenshotMutation.js'
 import undoMutation from './mutations/undoMutation.js'
 import redoMutation from './mutations/redoMutation.js'
 import pushMutation from './mutations/pushMutation.js'
@@ -127,6 +128,8 @@ export const typeDefs = gql`
     writeGlobalTypes(globalTypesFileContent: String!): Boolean!
     writeFileTypes(sourceFileAddress: String!, rawTypes: String!): Boolean!
 
+    updateComponentScreenshot(sourceComponentAddress: String!, dataUrl: String!): Boolean!
+
     undo: Boolean!
     redo: Boolean!
     push: Boolean!
@@ -157,6 +160,8 @@ export const resolvers = {
     removeFileUnusedImports: removeFileUnusedImportsMutation,
     writeFileTypes: writeFileTypesMutation,
     writeGlobalTypes: writeGlobalTypesMutation,
+
+    updateComponentScreenshot: updateComponentScreenshotMutation,
 
     undo: undoMutation,
     redo: redoMutation,

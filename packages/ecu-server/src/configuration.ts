@@ -17,6 +17,8 @@ export const ecuPropName = 'data-ecu'
 
 export const ecuRelativePath = '.ecu'
 
+export const ecuScreenshotsRelativePath = 'screenshots'
+
 export const ecuGraphFileName = 'ecu-graph.json'
 
 export const ecuHistoryFileName = 'ecu-history.json'

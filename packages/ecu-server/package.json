@@ -30,10 +30,12 @@
     "@babel/types": "^7.20.2",
     "apollo-server": "^3.11.1",
     "eslint": "^8.27.0",
+    "express": "^4.18.2",
     "find-up": "^6.3.0",
     "folder-hash": "^4.0.2",
     "git-user-email-2": "^1.0.0",
     "git-user-name": "^2.0.0",
+    "sharp": "^0.31.2",
     "shortid": "^2.2.16"
   },
   "devDependencies": {
@@ -45,6 +47,7 @@
     "@types/git-user-email": "^0.2.0",
     "@types/git-user-name": "^2.0.1",
     "@types/lodash": "^4.14.189",
+    "@types/sharp": "^0.31.0",
     "@types/shortid": "^0.0.29",
     "nodemon": "^2.0.20",
     "ts-node": "^10.9.1",
