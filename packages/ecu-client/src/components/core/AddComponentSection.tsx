@@ -138,6 +138,7 @@ function AddComponentSection() {
       >
         <P
           fontWeight="bold"
+          userSelect="none"
           px={1}
           mb={0.5}
         >

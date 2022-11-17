@@ -4,6 +4,7 @@ import { Div, P } from 'honorable'
 import { RiNodeTree } from 'react-icons/ri'
 import { BiNetworkChart } from 'react-icons/bi'
 import { CgInsertBeforeR } from 'react-icons/cg'
+import { MdBrush } from 'react-icons/md'
 
 import ComponentsLinkButton from './ComponentsLinkButton'
 import CreateComponentButton from './CreateComponentButton'
@@ -16,6 +17,7 @@ import HierarchySection from './HierarchySection'
 import AddComponentSection from './AddComponentSection'
 import ComponentTypesSection from './ComponentTypesSection'
 import ComponentImportsSection from './ComponentImportsSection'
+import StylesSection from './StylesSection'
 
 type OverlayPropsType = PropsWithChildren<any>
 
@@ -89,7 +91,7 @@ function Overlay({ children }: OverlayPropsType) {
             openPersistedStateKey="ecu-right-panel-open"
             items={[
               {
-                label: 'Imports, types and styles',
+                label: 'Imports and types',
                 icon: <BiNetworkChart />,
                 children: (
                   <Div minWidth={512}>
@@ -97,6 +99,11 @@ function Overlay({ children }: OverlayPropsType) {
                     <ComponentTypesSection />
                   </Div>
                 ),
+              },
+              {
+                label: 'Styles',
+                icon: <MdBrush />,
+                children: <StylesSection />,
               },
             ]}
           />

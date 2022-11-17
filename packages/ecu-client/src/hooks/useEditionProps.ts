@@ -89,6 +89,7 @@ function useEditionProps<T>(id: string, className = '', canBeEdited = false) {
 
   const handleClick = useCallback((event: MouseEvent) => {
     if (event.detail < 2) return // Double click or more only
+    if (edited) return
 
     event.stopPropagation()
 
@@ -97,6 +98,8 @@ function useEditionProps<T>(id: string, className = '', canBeEdited = false) {
     if (areArraysEqual(hierarchyIds, ids) || (areArraysEqualAtStart(hierarchyIds, ids) && componentDelta < 0)) {
       if (canBeEdited && componentDelta === 0 && isHierarchyOnComponent(hierarchy, componentAddress)) {
         setEdited(true)
+
+        return
       }
 
       setEditionSearchParams({
@@ -125,7 +128,7 @@ function useEditionProps<T>(id: string, className = '', canBeEdited = false) {
     })
 
     setShouldAdjustComponentDelta(true)
-  }, [hierarchyIds, componentDelta, setEditionSearchParams, setShouldAdjustComponentDelta, canBeEdited, hierarchy, componentAddress])
+  }, [edited, hierarchyIds, componentDelta, setEditionSearchParams, setShouldAdjustComponentDelta, canBeEdited, hierarchy, componentAddress])
 
   const generateClassName = useCallback(() => {
     let klassName = className
