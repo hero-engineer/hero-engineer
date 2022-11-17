@@ -1,13 +1,15 @@
 import { memo } from 'react'
-import { useQuery } from 'urql'
 import { Link } from 'react-router-dom'
-import { H2, Li, Ul } from 'honorable'
+import { useQuery } from 'urql'
+import { Div, H1, Li, Ul } from 'honorable'
 
 import { refetchKeys } from '../../constants'
 
 import { ComponentsQuery, ComponentsQueryDataType } from '../../queries'
 
 import useRefetch from '../../hooks/useRefetch'
+
+import ComponentThumbnail from './ComponentThumbnail'
 
 function Components() {
   const [componentsQueryResult, refetchComponentsQuery] = useQuery<ComponentsQueryDataType>({
@@ -31,16 +33,25 @@ function Components() {
 
   return (
     <>
-      <H2>Components</H2>
-      <Ul mt={2}>
+      <H1>Components</H1>
+      <Div
+        mt={2}
+        xflex="x11"
+        gap={1}
+      >
         {components.map(componentAndFile => (
-          <Li key={componentAndFile.component.address}>
-            <Link to={`/_ecu_/component/${componentAndFile.file.address}/${componentAndFile.component.address}`}>
-              {componentAndFile.component.payload.name}
-            </Link>
-          </Li>
+          <Link
+            key={componentAndFile.component.address}
+            to={`/_ecu_/component/${componentAndFile.file.address}/${componentAndFile.component.address}`}
+            style={{ textDecoration: 'none' }}
+          >
+            <ComponentThumbnail
+              address={componentAndFile.component.address}
+              name={componentAndFile.component.payload.name}
+            />
+          </Link>
         ))}
-      </Ul>
+      </Div>
     </>
   )
 }

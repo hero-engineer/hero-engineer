@@ -244,6 +244,16 @@ export type UpdateTextValueMutationDataType = {
   updateTextValue: boolean
 }
 
+export const UpdateComponentScreenshotMutation = `
+  mutation ($sourceComponentAddress: String!, $dataUrl: String!) {
+    updateComponentScreenshot (sourceComponentAddress: $sourceComponentAddress, dataUrl: $dataUrl)
+  }
+`
+
+export type UpdateComponentScreenshotMutationDataType = {
+  updateComponentScreenshot: boolean
+}
+
 export const UndoMutation = `
   mutation {
     undo

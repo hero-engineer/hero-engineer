@@ -1,11 +1,12 @@
 import { PropsWithChildren, memo } from 'react'
 import { useParams } from 'react-router-dom'
-import { Div, P } from 'honorable'
+import { Div } from 'honorable'
 import { RiNodeTree } from 'react-icons/ri'
 import { BiNetworkChart } from 'react-icons/bi'
 import { CgInsertBeforeR } from 'react-icons/cg'
 import { MdBrush } from 'react-icons/md'
 
+import EcuButton from './EcuButton'
 import ComponentsLinkButton from './ComponentsLinkButton'
 import CreateComponentButton from './CreateComponentButton'
 import DeleteComponentButton from './DeleteComponentButton'
@@ -32,14 +33,7 @@ function Overlay({ children }: OverlayPropsType) {
         backgroundColor="background-light"
         borderBottom="1px solid border"
       >
-        <P
-          xflex="x5"
-          fontWeight="bold"
-          borderRight="1px solid border"
-          px={0.5}
-        >
-          Ecu
-        </P>
+        <EcuButton borderRight="1px solid border" />
         <ComponentsLinkButton borderRight="1px solid border" />
         <CreateComponentButton borderRight="1px solid border" />
         <DeleteComponentButton borderRight="1px solid border" />

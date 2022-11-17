@@ -1,11 +1,12 @@
-import { memo } from 'react'
-import { useQuery } from 'urql'
+import { memo, useCallback, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
+import { useMutation, useQuery } from 'urql'
 import { Div, P } from 'honorable'
+import html2canvas from 'html2canvas'
 
 import { refetchKeys } from '../../constants'
 
-import { ComponentQuery, ComponentQueryDataType } from '../../queries'
+import { ComponentQuery, ComponentQueryDataType, UpdateComponentScreenshotMutation, UpdateComponentScreenshotMutationDataType } from '../../queries'
 
 import useRefetch from '../../hooks/useRefetch'
 
@@ -13,8 +14,25 @@ import ComponentLoader from './ComponentLoader'
 import DragAndDropEndModal from './DragAndDropEndModal'
 import HierarchyBar from './HierarchyBar'
 
+function traverseElementToRemoveEcuClasses(element: HTMLElement) {
+  const classes: string[] = []
+
+  element.classList.forEach(klass => {
+    if (klass.startsWith('ecu-')) {
+      classes.push(klass)
+    }
+  })
+
+  classes.forEach(klass => element.classList.remove(klass))
+
+  for (const child of element.children) {
+    traverseElementToRemoveEcuClasses(child as HTMLElement)
+  }
+}
+
 function Component() {
   const { componentAddress = '' } = useParams()
+  const componentRef = useRef<HTMLDivElement>(null)
 
   const [componentQueryResult, refetchComponentQuery] = useQuery<ComponentQueryDataType>({
     query: ComponentQuery,
@@ -23,12 +41,47 @@ function Component() {
     },
     pause: !componentAddress,
   })
+  const [, updateComponentScreenshot] = useMutation<UpdateComponentScreenshotMutationDataType>(UpdateComponentScreenshotMutation)
 
-  useRefetch({
-    key: refetchKeys.component,
-    refetch: refetchComponentQuery,
-    skip: !componentAddress,
-  })
+  const takeScreenshot = useCallback(async () => {
+    if (!componentRef.current) return
+
+    const componentElement = componentRef.current.cloneNode(true) as HTMLElement
+
+    traverseElementToRemoveEcuClasses(componentElement)
+
+    // Hidden by overflow: hidden on layout
+    document.body.appendChild(componentElement)
+
+    const canvas = await html2canvas(componentElement)
+
+    // Cleanup
+    document.body.removeChild(componentElement)
+
+    const dataUrl = canvas.toDataURL('image/png')
+
+    await updateComponentScreenshot({
+      sourceComponentAddress: componentAddress,
+      dataUrl,
+    })
+  }, [updateComponentScreenshot, componentAddress])
+
+  useRefetch(
+    {
+      key: refetchKeys.component,
+      refetch: refetchComponentQuery,
+      skip: !componentAddress,
+    },
+    {
+      key: refetchKeys.hierarchy,
+      refetch: takeScreenshot,
+      skip: !componentAddress,
+    }
+  )
+
+  useEffect(() => {
+    setTimeout(takeScreenshot, 1000)
+  }, [takeScreenshot])
 
   if (componentQueryResult.error) {
     return null
@@ -59,6 +112,7 @@ function Component() {
       </Div>
       <HierarchyBar />
       <Div
+        ref={componentRef}
         xflex="y2s"
         flexGrow
         flexShrink={0}

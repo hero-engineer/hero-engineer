@@ -17,7 +17,7 @@ function getComponentRootHierarchyIds(flattenedHierarchy: HierarchyItemType[]) {
 
   function traverseHierarchy(hierarchyItem: HierarchyItemType) {
     // console.log('hierarchyItem.children', hierarchyItem.children)
-    hierarchyItem.children.forEach(child => {
+    hierarchyItem.children?.forEach(child => {
       if (child.hierarchyId) {
         componentRootHierarchyIds.push(child.hierarchyId)
 

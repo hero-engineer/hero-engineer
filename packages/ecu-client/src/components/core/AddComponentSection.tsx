@@ -181,8 +181,8 @@ function AddComponentSection() {
               <MenuItem
                 ghost
                 key={x.component.address}
-                onClick={() => handleComponentSelect(ecuAtomPrefix + x.component.address, x.isComponentAcceptingChildren)}
-                backgroundColor={selectedComponentAddress === ecuAtomPrefix + x.component.address ? 'darken(background-light, 20)' : null}
+                onClick={() => handleComponentSelect(x.component.address, x.isComponentAcceptingChildren)}
+                backgroundColor={selectedComponentAddress === x.component.address ? 'darken(background-light, 20)' : null}
               >
                 {x.component.payload.name}
                 {x.isComponentAcceptingChildren && isComponentAcceptingChildrenNode}

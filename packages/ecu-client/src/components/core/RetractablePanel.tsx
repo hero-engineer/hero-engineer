@@ -32,6 +32,7 @@ function RetractablePanel({ direction, openPersistedStateKey, defaultOpenIndex =
 
     return (
       <Tooltip
+        key={index}
         label={label}
         placement={isLeft ? 'right' : 'left'}
       >
