@@ -60,3 +60,5 @@ export const externalModulesImports: ImportType[] = [
 export const ecuAcceptingChildrenComponentNames = [
   'Div',
 ]
+
+export const ecuCommitPrefix = '[ecu] '

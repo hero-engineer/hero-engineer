@@ -95,3 +95,8 @@ export type TypeType = {
   declaration: string
   fileNodeAddress: string
 }
+
+export type EcuHistoryEntryType = {
+  branch: string
+  message: string
+}

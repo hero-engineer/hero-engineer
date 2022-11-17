@@ -34,7 +34,6 @@
     "folder-hash": "^4.0.2",
     "git-user-email-2": "^1.0.0",
     "git-user-name": "^2.0.0",
-    "isomorphic-git": "^1.21.0",
     "shortid": "^2.2.16"
   },
   "devDependencies": {

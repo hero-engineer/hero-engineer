@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import { FunctionNodeType, HistoryMutationReturnType } from '../../types.js'
+import { FileNodeType, FunctionNodeType, HistoryMutationReturnType } from '../../types.js'
 import { appPath } from '../../configuration.js'
 
 import createComponentTemplate from '../../templates/Component.js'
@@ -21,14 +21,25 @@ type CreateComponentMutationArgs = {
   name: string
 }
 
-async function createComponentMutation(_: any, { name }: CreateComponentMutationArgs): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
+type CreateComponentMutationReturnType = {
+  component: FunctionNodeType
+  file: FileNodeType
+}
+
+async function createComponentMutation(_: any, { name }: CreateComponentMutationArgs): Promise<HistoryMutationReturnType<CreateComponentMutationReturnType>> {
   if (!name) {
     throw new Error('Component name is required')
   }
 
   const validatedName = capitalize(name)
   const code = createComponentTemplate(validatedName)
-  const filePath = path.join(appPath, 'src', 'components', `${validatedName}.tsx`)
+  const componentsPath = path.join(appPath, 'src', 'components')
+
+  if (!fs.existsSync(componentsPath)) {
+    fs.mkdirSync(componentsPath)
+  }
+
+  const filePath = path.join(componentsPath, `${validatedName}.tsx`)
 
   fs.writeFileSync(filePath, code, 'utf8')
 
@@ -43,7 +54,10 @@ async function createComponentMutation(_: any, { name }: CreateComponentMutation
   await regenerate(fileNode, ast)
 
   return {
-    returnValue: componentNode,
+    returnValue: {
+      component: componentNode,
+      file: fileNode,
+    },
     description: `Create component ${validatedName}`,
   }
 }

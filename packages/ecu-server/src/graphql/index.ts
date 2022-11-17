@@ -15,6 +15,9 @@ import writeGlobalTypesMutation from './mutations/writeGlobalTypesMutation.js'
 import writeFileImportsMutation from './mutations/writeFileImportsMutation.js'
 import writeFileTypesMutation from './mutations/writeFileTypesMutation.js'
 import removeFileUnusedImportsMutation from './mutations/removeFileUnusedImportsMutation.js'
+import undoMutation from './mutations/undoMutation.js'
+import redoMutation from './mutations/redoMutation.js'
+import pushMutation from './mutations/pushMutation.js'
 
 export const typeDefs = gql`
 
@@ -92,6 +95,11 @@ export const typeDefs = gql`
     types: [Type]!
   }
 
+  type CreateComponentReturnValue {
+    component: FunctionNode!
+    file: FileNode!
+  }
+
   type Query {
     component(sourceComponentAddress: String!): ComponentReturnValue!
     components: [ComponentReturnValue]!
@@ -103,14 +111,19 @@ export const typeDefs = gql`
   }
 
   type Mutation {
-    createComponent(name: String!): FunctionNode!
+    createComponent(name: String!): CreateComponentReturnValue!
     addComponent(sourceComponentAddress: String!, targetComponentAddress: String!, targetHierarchyId: String!, hierarchyPosition: HierarchyPosition!, componentDelta: Int!): FunctionNode!
     deleteComponent(sourceComponentAddress: String!, targetHierarchyId: String!, componentDelta: Int!): FunctionNode!
     moveComponent(sourceComponentAddress: String!, sourceHierarchyId: String!, targetHierarchyId: String!, hierarchyPosition: HierarchyPosition!): [FunctionNode!]!
-    writeGlobalTypes(globalTypesFileContent: String!): Boolean!
+
     writeFileImports(sourceFileAddress: String!, rawImports: String!): Boolean!
-    writeFileTypes(sourceFileAddress: String!, rawTypes: String!): Boolean!
     removeFileUnusedImports(sourceFileAddress: String!): Boolean!
+    writeGlobalTypes(globalTypesFileContent: String!): Boolean!
+    writeFileTypes(sourceFileAddress: String!, rawTypes: String!): Boolean!
+
+    undo: Boolean!
+    redo: Boolean!
+    push: Boolean!
   }
 
 `
@@ -130,9 +143,14 @@ export const resolvers = {
     addComponent: addComponentMutation,
     deleteComponent: deleteComponentMutation,
     moveComponent: moveComponentMutation,
-    writeGlobalTypes: writeGlobalTypesMutation,
+
     writeFileImports: writeFileImportsMutation,
-    writeFileTypes: writeFileTypesMutation,
     removeFileUnusedImports: removeFileUnusedImportsMutation,
+    writeFileTypes: writeFileTypesMutation,
+    writeGlobalTypes: writeGlobalTypesMutation,
+
+    undo: undoMutation,
+    redo: redoMutation,
+    push: pushMutation,
   },
 }

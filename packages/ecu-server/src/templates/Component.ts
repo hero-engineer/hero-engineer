@@ -1,11 +1,26 @@
-export default (name: string) => `import { Div } from 'ecu-client'
+export default (name: string) => `/* --
+* IMPORTS START
+-- */
+import { Div } from 'ecu'
 
-function ${name}(props: any) {
-  return (
-    <Div>
-      Edit me I'm famous
-    </Div>
-  )
+/* --
+* IMPORTS END
+-- */
+/* --
+* TYPES START
+-- */
+type ${name}PropsType = Record<string, never>;
+
+/* --
+* TYPES END
+-- */
+
+function ${name}(props: ${name}PropsType) {
+return (
+  <Div>
+    Edit me I'm famous!
+  </Div>
+)
 }
 
 export default ${name}

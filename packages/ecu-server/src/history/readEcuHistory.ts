@@ -2,15 +2,16 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 import { appPath, ecuHistoryFileName, ecuRelativePath } from '../configuration.js'
+import { EcuHistoryEntryType } from '../types.js'
 
-function getEcuHistoryFileContent(): string[] {
+function readEcuHistory(): EcuHistoryEntryType[] {
   const ecuPath = path.join(appPath, ecuRelativePath)
 
   if (!fs.existsSync(ecuPath)) {
     fs.mkdirSync(ecuPath)
   }
 
-  const ecuHistoryFilePath = path.join(appPath, ecuRelativePath, ecuHistoryFileName)
+  const ecuHistoryFilePath = path.join(ecuPath, ecuHistoryFileName)
 
   if (!fs.existsSync(ecuHistoryFilePath)) {
     fs.writeFileSync(ecuHistoryFilePath, '[]')
@@ -26,9 +27,8 @@ function getEcuHistoryFileContent(): string[] {
   catch (error) {
     console.log(error)
 
+    return []
   }
-
-  return []
 }
 
-export default getEcuHistoryFileContent
+export default readEcuHistory

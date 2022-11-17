@@ -3,7 +3,9 @@ import updateGraphHash from '../graph/hash/updateGraphHash.js'
 
 import { appPath } from '../configuration.js'
 
-import createCommit from './createCommit.js'
+import commit from '../git/commit.js'
+
+import writeEcuHistory from './writeEcuHistory.js'
 
 function composeHistoryMutation(mutate: (...args: any[]) => Promise<HistoryMutationReturnType<any>>) {
   return async (...args: any[]) => {
@@ -11,7 +13,9 @@ function composeHistoryMutation(mutate: (...args: any[]) => Promise<HistoryMutat
 
     await updateGraphHash()
 
-    await createCommit(appPath, description)
+    writeEcuHistory([])
+
+    await commit(appPath, description)
 
     return returnValue
   }
