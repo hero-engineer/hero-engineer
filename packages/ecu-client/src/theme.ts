@@ -2,7 +2,8 @@ import { mergeTheme } from 'honorable'
 import defaultTheme from 'honorable-theme-default'
 import mpRecipe from 'honorable-recipe-mp'
 import gapRecipe from 'honorable-recipe-gap'
-import flexpad from 'flexpad'
+import mapperRecipe from 'honorable-recipe-mapper'
+import xflexRecipe from 'honorable-recipe-xflex'
 
 const borderRadii = {
   none: 0,
@@ -125,11 +126,9 @@ export default mergeTheme(defaultTheme, {
   global: [
     mpRecipe(),
     gapRecipe(),
-    ({ xflex }: any) => typeof xflex === 'string' && flexpad(xflex),
+    xflexRecipe(),
+    mapperRecipe('borderRadius', borderRadii),
     ({ flexGrow }: any) => flexGrow === true && ({ flexGrow: 1 }),
-    ({ borderRadius }: any) => typeof borderRadius === 'string' && typeof borderRadii[borderRadius as keyof typeof borderRadii] !== 'undefined' && {
-      borderRadius: borderRadii[borderRadius as keyof typeof borderRadii],
-    },
   ],
   Accordion: {
     Root: [
