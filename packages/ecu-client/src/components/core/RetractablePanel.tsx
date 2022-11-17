@@ -56,7 +56,7 @@ function RetractablePanel({ direction, openPersistedStateKey, defaultOpenIndex =
         <Div
           xflex="x5"
           position="absolute"
-          top={`calc(${index} * 33px)`}
+          top={openIndex === index ? 0 : `calc(${openIndex < index ? index : index + 1} * 33px)`}
           right={isRight ? 'calc(100% + 1px)' : null}
           left={isLeft ? 'calc(100% + 1px)' : null}
           backgroundColor="background-light"
