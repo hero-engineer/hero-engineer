@@ -17,7 +17,6 @@ function ContextualInformation({ scrollRef }: ContextualInformationPropsType) {
   const { contextualInformationElement, contextualInformationState } = useContext(ContextualInformationContext)
   const [position, setPosition] = useState<XYType>({ x: 0, y: 0 })
   const [isComponentNameVignetteVisible, setIsComponentNameVignetteVisible] = useState(false)
-
   const lastHierarchyItem = useMemo(() => hierarchy[hierarchy.length - 1], [hierarchy])
 
   const readPosition = useCallback(() => {
@@ -42,11 +41,17 @@ function ContextualInformation({ scrollRef }: ContextualInformationPropsType) {
     window.addEventListener('scroll', readPosition)
     scrollElement.addEventListener('scroll', readPosition)
 
+    const resizeObserver = new ResizeObserver(readPosition)
+
+    resizeObserver.observe(scrollElement)
+
     return () => {
       window.removeEventListener('resize', readPosition)
       window.removeEventListener('scroll', readPosition)
 
       scrollElement.removeEventListener('scroll', readPosition)
+
+      resizeObserver.disconnect()
     }
   }, [readPosition, scrollRef])
 
@@ -79,7 +84,6 @@ function ContextualInformation({ scrollRef }: ContextualInformationPropsType) {
       top={`calc(${position.y}px - 16px)`}
       left={`calc(${position.x}px - 1px)`}
       height={16}
-      fontSize={12}
       display={isComponentNameVignetteVisible ? 'flex' : 'none'}
       px={0.25}
       className={`ecu-contextual-information ${contextualInformationState.isEdited ? 'ecu-contextual-information-is-edited' : ''} ${contextualInformationState.isComponentRoot ? 'ecu-contextual-information-is-component-root' : ''}`}

@@ -1,10 +1,12 @@
-import { PropsWithChildren, memo } from 'react'
+import { PropsWithChildren, memo, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { Div } from 'honorable'
 import { RiNodeTree } from 'react-icons/ri'
 import { BiNetworkChart } from 'react-icons/bi'
 import { CgInsertBeforeR } from 'react-icons/cg'
 import { MdBrush } from 'react-icons/md'
+
+import useClearHierarchyIdsAndComponentDeltaOnClick from '../../hooks/useClearHierarchyIdsAndComponentDeltaOnClick'
 
 import EcuButton from './EcuButton'
 import ComponentsLinkButton from './ComponentsLinkButton'
@@ -24,6 +26,9 @@ type OverlayPropsType = PropsWithChildren<any>
 
 function Overlay({ children }: OverlayPropsType) {
   const { componentAddress = '' } = useParams()
+  const childrenRef = useRef<HTMLDivElement>(null)
+
+  useClearHierarchyIdsAndComponentDeltaOnClick(childrenRef)
 
   return (
     <>
@@ -43,7 +48,7 @@ function Overlay({ children }: OverlayPropsType) {
         <ViewAppButton borderLeft="1px solid border" />
       </Div>
       <Div
-        xflex="x1"
+        xflex="x4s"
         flexGrow
         height="calc(100vh - 32px)"
         maxHeight="calc(100vh - 32px)"
@@ -69,6 +74,7 @@ function Overlay({ children }: OverlayPropsType) {
           />
         )}
         <Div
+          ref={childrenRef}
           xflex="y2s"
           flexGrow
           maxHeight="100%"

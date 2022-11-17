@@ -10,7 +10,9 @@
 .ecu-contextual-information {
   z-index: 999999;
   color: white;
+  font-size: 12px;
   background-color: lightblue;
+  user-select: none;
 }
 
 .ecu-contextual-information-is-edited {

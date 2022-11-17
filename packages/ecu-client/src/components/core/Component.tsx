@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useRef } from 'react'
+import { memo, useCallback, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { useMutation, useQuery } from 'urql'
 import { Div, P } from 'honorable'
@@ -9,6 +9,7 @@ import { refetchKeys } from '../../constants'
 import { ComponentQuery, ComponentQueryDataType, UpdateComponentScreenshotMutation, UpdateComponentScreenshotMutationDataType } from '../../queries'
 
 import useRefetch from '../../hooks/useRefetch'
+import useClearHierarchyIdsAndComponentDeltaOnClick from '../../hooks/useClearHierarchyIdsAndComponentDeltaOnClick'
 
 import ComponentLoader from './ComponentLoader'
 import HierarchyBar from './HierarchyBar'
@@ -35,6 +36,9 @@ function Component() {
   const { componentAddress = '' } = useParams()
   const rootRef = useRef<HTMLDivElement>(null)
   const componentRef = useRef<HTMLDivElement>(null)
+
+  useClearHierarchyIdsAndComponentDeltaOnClick(rootRef)
+  useClearHierarchyIdsAndComponentDeltaOnClick(componentRef)
 
   const [componentQueryResult, refetchComponentQuery] = useQuery<ComponentQueryDataType>({
     query: ComponentQuery,
@@ -101,10 +105,11 @@ function Component() {
   return (
     <Div
       ref={rootRef}
-      xflex="y2s"
-      flexGrow
+      xflex="y2s" // No flexGrow for outside click to work
       maxHeight="100%"
       overflowY="auto"
+      px="1px" // To allow ecu-elected borders to be visible
+      userSelect="none"
     >
       <Div
         xflex="x4"
@@ -121,8 +126,7 @@ function Component() {
       <HierarchyBar />
       <Div
         ref={componentRef}
-        xflex="y2s"
-        flexGrow
+        xflex="y2s" // No flexGrow for outside click to work
         flexShrink={0}
         pt={1}
         pb={6}
