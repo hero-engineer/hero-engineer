@@ -1,18 +1,20 @@
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
 
-function usePersistedState<T>(key: string, defaultValue: T): [T, Dispatch<SetStateAction<T>>] {
+const identity = (x: any) => x
+
+function usePersistedState<T>(key: string, defaultValue: T, parser = identity): [T, Dispatch<SetStateAction<T>>] {
   const getLocalStorageValue = useCallback(() => {
     try {
       const item = localStorage.getItem(key)
 
-      if (item) return JSON.parse(item)
+      if (item) return parser(JSON.parse(item))
     }
     catch (error) {
       console.log('Error on localStorage.getItem of', key)
     }
 
     return defaultValue
-  }, [key, defaultValue])
+  }, [key, defaultValue, parser])
 
   const [state, setState] = useState<T>(getLocalStorageValue())
 

@@ -1,16 +1,18 @@
 import { PropsWithChildren, memo } from 'react'
 import { useParams } from 'react-router-dom'
 import { Div, P } from 'honorable'
+import { RiNodeTree } from 'react-icons/ri'
 import { BiNetworkChart } from 'react-icons/bi'
-import { TbRowInsertBottom } from 'react-icons/tb'
+import { CgInsertBeforeR } from 'react-icons/cg'
 
-import ViewAppButton from './ViewAppButton'
-import UndoRedoButtons from './UndoRedoButtons'
-import PushButton from './PushButton'
 import ComponentsLinkButton from './ComponentsLinkButton'
 import CreateComponentButton from './CreateComponentButton'
 import DeleteComponentButton from './DeleteComponentButton'
+import ViewAppButton from './ViewAppButton'
+import UndoRedoButtons from './UndoRedoButtons'
+import PushButton from './PushButton'
 import RetractablePanel from './RetractablePanel'
+import HierarchySection from './HierarchySection'
 import AddComponentSection from './AddComponentSection'
 import ComponentTypesSection from './ComponentTypesSection'
 import ComponentImportsSection from './ComponentImportsSection'
@@ -54,12 +56,21 @@ function Overlay({ children }: OverlayPropsType) {
         {!!componentAddress && (
           <RetractablePanel
             direction="left"
-            openLabel="Insert component"
-            openIcon={<TbRowInsertBottom />}
-            openPersistedStateKey="ecu-add-component-panel-open"
-          >
-            <AddComponentSection />
-          </RetractablePanel>
+            defaultOpenIndex={0}
+            openPersistedStateKey="ecu-left-panel-open"
+            items={[
+              {
+                label: 'Hierarchy',
+                icon: <RiNodeTree />,
+                children: <HierarchySection />,
+              },
+              {
+                label: 'Insert component',
+                icon: <CgInsertBeforeR />,
+                children: <AddComponentSection />,
+              },
+            ]}
+          />
         )}
         <Div
           xflex="y2s"
@@ -74,15 +85,21 @@ function Overlay({ children }: OverlayPropsType) {
         {!!componentAddress && (
           <RetractablePanel
             direction="right"
-            openLabel="Imports, types and styles"
-            openIcon={<BiNetworkChart />}
-            openPersistedStateKey="ecu-types-panel-open"
-          >
-            <Div minWidth={512}>
-              <ComponentImportsSection />
-              <ComponentTypesSection />
-            </Div>
-          </RetractablePanel>
+            defaultOpenIndex={0}
+            openPersistedStateKey="ecu-right-panel-open"
+            items={[
+              {
+                label: 'Imports, types and styles',
+                icon: <BiNetworkChart />,
+                children: (
+                  <Div minWidth={512}>
+                    <ComponentImportsSection />
+                    <ComponentTypesSection />
+                  </Div>
+                ),
+              },
+            ]}
+          />
         )}
       </Div>
     </>

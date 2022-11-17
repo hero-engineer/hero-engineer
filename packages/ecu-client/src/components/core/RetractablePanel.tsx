@@ -6,27 +6,33 @@ import usePersistedState from '../../hooks/usePersistedState'
 
 import xor from '../../utils/xor'
 
-type RetractablePanelPropsType = DivProps & {
-  openPersistedStateKey: string
-  openLabel: string
-  defaultOpen?: boolean
-  direction: 'left' | 'right' | string
-  openIcon?: ReactNode
+type RetractablePanelItemType = {
+  label: string
+  icon: ReactNode
+  children: ReactNode
 }
 
-function RetractablePanel({ direction, openPersistedStateKey, openLabel, defaultOpen = false, openIcon = null, children, ...props }: RetractablePanelPropsType) {
-  const [open, setOpen] = usePersistedState(openPersistedStateKey, defaultOpen)
+type RetractablePanelPropsType = DivProps & {
+  direction: 'left' | 'right' | string
+  openPersistedStateKey: string
+  defaultOpenIndex?: number
+  items: RetractablePanelItemType[]
+}
 
-  const toggleOpen = useCallback(() => setOpen(x => !x), [setOpen])
+function RetractablePanel({ direction, openPersistedStateKey, defaultOpenIndex = -1, items, ...props }: RetractablePanelPropsType) {
+  const [openIndex, setOpenIndex] = usePersistedState(openPersistedStateKey, defaultOpenIndex, (x: string) => parseInt(x))
+
   const isLeft = direction === 'left'
   const isRight = direction === 'right'
 
-  function wrapWithTooltip(node: ReactNode) {
-    if (open) return node
+  const toggleOpen = useCallback((openIndex: number) => setOpenIndex(x => x === openIndex ? -1 : openIndex), [setOpenIndex])
+
+  function wrapWithTooltip(index: number, label: string, node: ReactNode) {
+    if (openIndex === index) return node
 
     return (
       <Tooltip
-        label={openLabel}
+        label={label}
         placement={isLeft ? 'right' : 'left'}
       >
         {node}
@@ -37,38 +43,42 @@ function RetractablePanel({ direction, openPersistedStateKey, openLabel, default
   return (
     <Div
       position="relative"
-      width={open ? 'fit-content' : 0}
+      width={openIndex !== -1 ? 'fit-content' : 0}
       height="100%"
       backgroundColor="background-light"
       borderLeft={isLeft ? null : '1px solid border'}
       borderRight={isRight ? null : '1px solid border'}
       {...props}
     >
-      {wrapWithTooltip(
+      {items.map(({ label, icon }, index) => wrapWithTooltip(
+        index,
+        label,
         <Div
           xflex="x5"
           position="absolute"
-          top={0}
+          top={`calc(${index} * 33px)`}
           right={isRight ? 'calc(100% + 1px)' : null}
           left={isLeft ? 'calc(100% + 1px)' : null}
           backgroundColor="background-light"
-          onClick={toggleOpen}
+          onClick={() => toggleOpen(index)}
           borderLeft={isLeft ? null : '1px solid border'}
           borderRight={isRight ? null : '1px solid border'}
           borderBottom="1px solid border"
           cursor="pointer"
           p={0.5}
         >
-          {xor(direction === 'left', open) ? isLeft ? openIcon || <MdChevronRight /> : <MdChevronRight /> : isRight ? openIcon || <MdChevronLeft /> : <MdChevronLeft />}
+          {xor(isLeft, openIndex === index) ? isLeft ? icon || <MdChevronRight /> : <MdChevronRight /> : isRight ? icon || <MdChevronLeft /> : <MdChevronLeft />}
+        </Div>,
+      ))}
+      {items.map(({ children }, index) => (
+        <Div
+          xflex="y2s"
+          height="100%"
+          display={openIndex === index ? 'block' : 'none'}
+        >
+          {children}
         </Div>
-      )}
-      <Div
-        xflex="y2s"
-        height="100%"
-        visibility={open ? 'visible' : 'hidden'}
-      >
-        {children}
-      </Div>
+      ))}
     </Div>
   )
 }
