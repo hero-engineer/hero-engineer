@@ -20,9 +20,6 @@ function Components() {
     refetch: refetchComponentsQuery,
   })
 
-  if (componentsQueryResult.fetching) {
-    return null
-  }
   if (componentsQueryResult.error) {
     return null
   }

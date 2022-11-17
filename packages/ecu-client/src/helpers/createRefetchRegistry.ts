@@ -1,8 +1,15 @@
+import { refetchKeys } from '../constants'
+
 function createRefetchRegistry() {
   const registry: Record<string, Record<number, (options?: any) => void>> = {}
 
   function refetch(key: string) {
-    console.log('key', key, registry[key])
+    if (key === refetchKeys.all) {
+      Object.keys(registry).forEach(key => refetch(key))
+
+      return
+    }
+
     Object.values(registry[key] || {}).forEach(refetch => refetch({ requestPolicy: 'network-only' }))
   }
 

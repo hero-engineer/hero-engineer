@@ -29,9 +29,6 @@ function Component() {
     skip: !componentAddress,
   })
 
-  if (componentQueryResult.fetching) {
-    return null
-  }
   if (componentQueryResult.error) {
     return null
   }

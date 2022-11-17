@@ -138,6 +138,16 @@ export type IsComponentAcceptingChildrenQueryDataType = {
   isComponentAcceptingChildren: boolean
 }
 
+export const CanRedoQuery = `
+  query {
+    canRedo
+  }
+`
+
+export type CanRedoQueryDataType = {
+  canRedo: boolean
+}
+
 export const CreateComponentMutation = `
   mutation ($name: String!) {
     createComponent (name: $name) {

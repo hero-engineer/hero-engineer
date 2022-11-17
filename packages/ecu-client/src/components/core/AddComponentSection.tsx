@@ -97,9 +97,6 @@ function AddComponentSection() {
     navigate(`/_ecu_/component/${lastHierarchyItem.fileAddress}/${lastHierarchyItem.componentAddress}`)
   }, [navigate, lastHierarchyItem])
 
-  if (componentsQueryResult.fetching) {
-    return null
-  }
   if (componentsQueryResult.error) {
     return null
   }

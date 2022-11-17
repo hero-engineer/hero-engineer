@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { useMutation } from 'urql'
 import { Button, Tooltip } from 'honorable'
 import { GoRepoPush } from 'react-icons/go'
@@ -9,10 +9,14 @@ import {
 } from '../../queries'
 
 function PushButton() {
+  const [loading, setLoading] = useState(false)
+
   const [, pushMutation] = useMutation<PushMutationDataType>(PushMutation)
 
-  const handlePushClick = useCallback(() => {
-    pushMutation()
+  const handlePushClick = useCallback(async () => {
+    setLoading(true)
+    await pushMutation()
+    setLoading(false)
   }, [pushMutation])
 
   return (
@@ -24,6 +28,8 @@ function PushButton() {
         ghost
         borderLeft="1px solid border"
         onClick={handlePushClick}
+        loading={loading}
+        spinnerColor="text"
       >
         <GoRepoPush />
       </Button>
