@@ -16,11 +16,11 @@ It acts as a shield around your app to reprogram it as you create new components
 - Manage component imports
 - Manage component prop types
 - Manage global types
+- Undo/Redo
 
 ## Roadmap
 
 - Style components
-- Undo/Redo
 - Drag-and-drop components
 - State management
 
