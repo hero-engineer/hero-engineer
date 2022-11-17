@@ -10,7 +10,6 @@ import PushButton from './PushButton'
 import ComponentsLinkButton from './ComponentsLinkButton'
 import CreateComponentButton from './CreateComponentButton'
 import DeleteComponentButton from './DeleteComponentButton'
-import HierarchyBar from './HierarchyBar'
 import RetractablePanel from './RetractablePanel'
 import AddComponentSection from './AddComponentSection'
 import ComponentTypesSection from './ComponentTypesSection'
@@ -24,31 +23,26 @@ function Overlay({ children }: OverlayPropsType) {
   return (
     <>
       <Div
-        xflex="y2s"
+        xflex="x4s"
         flexShrink={0}
         backgroundColor="background-light"
+        borderBottom="1px solid border"
       >
-        <Div
-          xflex="x4s"
-          borderBottom="1px solid border"
+        <P
+          xflex="x5"
+          fontWeight="bold"
+          borderRight="1px solid border"
+          px={0.5}
         >
-          <P
-            xflex="x5"
-            fontWeight="bold"
-            borderRight="1px solid border"
-            px={0.5}
-          >
-            Ecu
-          </P>
-          <ComponentsLinkButton borderRight="1px solid border" />
-          <CreateComponentButton borderRight="1px solid border" />
-          <DeleteComponentButton borderRight="1px solid border" />
-          <Div flexGrow={1} />
-          <UndoRedoButtons />
-          <PushButton />
-          <ViewAppButton borderLeft="1px solid border" />
-        </Div>
-        <HierarchyBar />
+          Ecu
+        </P>
+        <ComponentsLinkButton borderRight="1px solid border" />
+        <CreateComponentButton borderRight="1px solid border" />
+        <DeleteComponentButton borderRight="1px solid border" />
+        <Div flexGrow={1} />
+        <UndoRedoButtons />
+        <PushButton />
+        <ViewAppButton borderLeft="1px solid border" />
       </Div>
       <Div
         xflex="x1"

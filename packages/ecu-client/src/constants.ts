@@ -17,3 +17,25 @@ export const refetchKeys = {
   fileTypes: 'fileTypes',
   canRedo: 'canRedo',
 }
+
+export const ecuAtoms = [
+  {
+    name: 'Div',
+    isComponentAcceptingChildren: true,
+  },
+  {
+    name: 'Text',
+    isComponentAcceptingChildren: false,
+  },
+]
+
+export const ecuAtomPrefix = '__ecu_atom__'
+
+export const ecuSpecials = [
+  {
+    name: 'children',
+    isComponentAcceptingChildren: false,
+  },
+]
+
+export const ecuSpecialPrefix = '__ecu_special__'

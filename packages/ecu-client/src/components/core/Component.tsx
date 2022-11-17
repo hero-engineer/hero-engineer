@@ -11,6 +11,7 @@ import useRefetch from '../../hooks/useRefetch'
 
 import ComponentLoader from './ComponentLoader'
 import DragAndDropEndModal from './DragAndDropEndModal'
+import HierarchyBar from './HierarchyBar'
 
 function Component() {
   const { componentAddress = '' } = useParams()
@@ -56,6 +57,7 @@ function Component() {
           {component.payload.relativePath}
         </P>
       </Div>
+      <HierarchyBar />
       <Div
         xflex="y2s"
         flexGrow={1}

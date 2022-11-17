@@ -151,10 +151,9 @@ function HierarchyBar() {
     <Div
       xflex="x4"
       fontSize={12}
-      borderBottom="1px solid border"
       userSelect="none"
       gap={0.25}
-      p={0.5}
+      py={0.5}
     >
       {displayHierarchy.map(({ label, isChild }, i, a) => (
         <Fragment key={i + label}>

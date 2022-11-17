@@ -85,10 +85,6 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
     }
   }, [hot])
 
-  if (editionClassName.includes('ecu-selected')) {
-    console.log('loading, edited', loading, edited)
-  }
-
   return (
     <div
       ref={finalRef}

@@ -1,11 +1,11 @@
 import { memo, useCallback, useContext, useMemo, useState } from 'react'
 import { useMutation, useQuery } from 'urql'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Button, Div, H3, Menu, MenuItem, Modal, P, Select } from 'honorable'
+import { Accordion, Button, Div, H3, Menu, MenuItem, Modal, P, Select } from 'honorable'
 import { TbRowInsertBottom } from 'react-icons/tb'
 import { VscTypeHierarchySub } from 'react-icons/vsc'
 
-import { hierarchyPositions, refetchKeys } from '../../constants'
+import { ecuAtomPrefix, ecuAtoms, ecuSpecialPrefix, ecuSpecials, hierarchyPositions, refetchKeys } from '../../constants'
 import { HierarchyPosition } from '../../types'
 
 import HierarchyContext from '../../contexts/HierarchyContext'
@@ -19,14 +19,19 @@ import isHierarchyOnComponent from '../../helpers/isHierarchyOnComponent'
 import getLastEditedHierarchyItem from '../../helpers/getLastEditedHierarchyItem'
 
 import capitalize from '../../utils/capitalize'
+import usePersistedState from '../../hooks/usePersistedState'
 
 function AddComponentSection() {
   const { componentAddress = '' } = useParams()
   const { hierarchyIds, componentDelta } = useEditionSearchParams()
   const { hierarchy } = useContext(HierarchyContext)
+  const [isAtomsAccordionExpanded, setIsAtomsAccordionExpanded] = usePersistedState('ecu-add-component-section-is-atoms-accordion-expanded', true)
+  const [isComponentsAccordionExpanded, setIsComponentsAccordionExpanded] = usePersistedState('ecu-add-component-section-is-components-accordion-expanded', true)
+  const [isSpecialAccordionExpanded, setIsSpecialAccordionExpanded] = usePersistedState('ecu-add-component-section-is-special-accordion-expanded', true)
   const [isComponentModalOpen, setIsComponentModalOpen] = useState(false)
   const [isChildrenModalOpen, setIsChildrenModalOpen] = useState(false)
   const [selectedComponentAddress, setSelectedComponentId] = useState('')
+  const [isSelectedComponentAcceptingChildren, setIsSelectedComponentAcceptingChildren] = useState(false)
   const [hierarchyPosition, setHierarchyPosition] = useState<HierarchyPosition>(hierarchyPositions[0])
 
   const lastEditedHierarchyItem = useMemo(() => getLastEditedHierarchyItem(hierarchy), [hierarchy])
@@ -45,14 +50,17 @@ function AddComponentSection() {
     skip: !componentAddress,
   })
 
+  const handleComponentSelect = useCallback((selectedComponentAddress: string, isSelectedComponentAcceptingChildren: boolean) => {
+    setSelectedComponentId(selectedComponentAddress)
+    setIsSelectedComponentAcceptingChildren(isSelectedComponentAcceptingChildren)
+  }, [])
+
   const handleAddComponentClick = useCallback(async () => {
-    if (!lastHierarchyItem.isComponentAcceptingChildren && hierarchyPosition === 'children') {
+    if (!isSelectedComponentAcceptingChildren && hierarchyPosition === 'children') {
       setIsChildrenModalOpen(true)
 
       return
     }
-
-    console.log('hierarchy[hierarchy.length - 1]', hierarchy[hierarchy.length - 1])
 
     if (!isHierarchyOnComponent(hierarchy, componentAddress)) {
       setIsComponentModalOpen(true)
@@ -70,7 +78,7 @@ function AddComponentSection() {
 
     refetch(refetchKeys.hierarchy)
   }, [
-    lastHierarchyItem,
+    isSelectedComponentAcceptingChildren,
     addComponent,
     componentAddress,
     componentDelta,
@@ -107,6 +115,16 @@ function AddComponentSection() {
     return null
   }
 
+  const isComponentAcceptingChildrenNode = (
+    <Div
+      ml={0.5}
+      xflex="x5"
+      title="Component accepts children"
+    >
+      <VscTypeHierarchySub />
+    </Div>
+  )
+
   return (
     <>
       <Div
@@ -117,30 +135,79 @@ function AddComponentSection() {
         <P
           fontWeight="bold"
           px={1}
+          mb={0.5}
         >
           Insert component
         </P>
-        <Menu ghost>
-          {componentsQueryResult.data.components.map(x => (
-            <MenuItem
-              ghost
-              key={x.component.address}
-              onClick={() => setSelectedComponentId(x.component.address)}
-              backgroundColor={selectedComponentAddress === x.component.address ? 'darken(background-light, 20)' : null}
-            >
-              {x.component.payload.name}
-              {x.isComponentAcceptingChildren && (
-                <Div
-                  ml={0.5}
-                  xflex="x5"
-                  title="Component accepts children"
-                >
-                  <VscTypeHierarchySub />
-                </Div>
-              )}
-            </MenuItem>
-          ))}
-        </Menu>
+        <Accordion
+          ghost
+          title="Atoms"
+          expanded={isAtomsAccordionExpanded}
+          onExpand={setIsAtomsAccordionExpanded}
+        >
+          <Menu
+            ghost
+            width="100%"
+          >
+            {ecuAtoms.map(ecuAtom => (
+              <MenuItem
+                ghost
+                key={ecuAtom.name}
+                onClick={() => handleComponentSelect(ecuAtom.name, ecuAtom.isComponentAcceptingChildren)}
+                backgroundColor={selectedComponentAddress === ecuAtom.name ? 'darken(background-light, 20)' : null}
+              >
+                {ecuAtom.name}
+                {ecuAtom.isComponentAcceptingChildren && isComponentAcceptingChildrenNode}
+              </MenuItem>
+            ))}
+          </Menu>
+        </Accordion>
+        <Accordion
+          ghost
+          title="Components"
+          expanded={isComponentsAccordionExpanded}
+          onExpand={setIsComponentsAccordionExpanded}
+        >
+          <Menu
+            ghost
+            width="100%"
+          >
+            {componentsQueryResult.data.components.map(x => (
+              <MenuItem
+                ghost
+                key={x.component.address}
+                onClick={() => handleComponentSelect(ecuAtomPrefix + x.component.address, x.isComponentAcceptingChildren)}
+                backgroundColor={selectedComponentAddress === ecuAtomPrefix + x.component.address ? 'darken(background-light, 20)' : null}
+              >
+                {x.component.payload.name}
+                {x.isComponentAcceptingChildren && isComponentAcceptingChildrenNode}
+              </MenuItem>
+            ))}
+          </Menu>
+        </Accordion>
+        <Accordion
+          ghost
+          title="Special"
+          expanded={isSpecialAccordionExpanded}
+          onExpand={setIsSpecialAccordionExpanded}
+        >
+          <Menu
+            ghost
+            width="100%"
+          >
+            {ecuSpecials.map(ecuSpecial => (
+              <MenuItem
+                ghost
+                key={ecuSpecial.name}
+                onClick={() => handleComponentSelect(ecuSpecialPrefix + ecuSpecial.name, ecuSpecial.isComponentAcceptingChildren)}
+                backgroundColor={selectedComponentAddress === ecuSpecialPrefix + ecuSpecial.name ? 'darken(background-light, 20)' : null}
+              >
+                {ecuSpecial.name}
+                {ecuSpecial.isComponentAcceptingChildren && isComponentAcceptingChildrenNode}
+              </MenuItem>
+            ))}
+          </Menu>
+        </Accordion>
       </Div>
       <Div
         xflex="x4"
