@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url'
 import { findUpSync } from 'find-up'
 import unzip from 'extract-zip'
 
-import { createCommit, getGitAuthor } from 'ecu-server'
+import { commit, getGitAuthor } from 'ecu-server'
 
 import installDependencies from './installDependencies.js'
 
@@ -61,7 +61,7 @@ async function createEcuTemplate() {
   console.log('Commiting...')
 
   // Perform initial commit
-  await createCommit(cwd, '[ecu] Create ecu project')
+  await commit(cwd, 'Create ecu project')
 }
 
 export default createEcuTemplate

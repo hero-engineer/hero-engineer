@@ -10,5 +10,5 @@ lerna-debug.log*
 node_modules
 *.local
 
-build/
+build
 .DS_Store
