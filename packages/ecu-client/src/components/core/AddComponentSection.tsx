@@ -126,7 +126,11 @@ function AddComponentSection() {
   )
 
   return (
-    <>
+    <Div
+      xflex="y2s"
+      flexGrow={1}
+      width={256 + 64}
+    >
       <Div
         xflex="y2s"
         flexGrow={1}
@@ -219,7 +223,7 @@ function AddComponentSection() {
       >
         <Select
           menuOnTop
-          width="auto"
+          flexGrow
           backgroundColor="background"
           value={hierarchyPosition}
           onChange={event => setHierarchyPosition(event.target.value)}
@@ -298,7 +302,7 @@ function AddComponentSection() {
           )}
         </Div>
       </Modal>
-    </>
+    </Div>
   )
 }
 

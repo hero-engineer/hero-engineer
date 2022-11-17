@@ -49,8 +49,8 @@ function Overlay({ children }: OverlayPropsType) {
       <Div
         xflex="x1"
         flexGrow={1}
-        height="calc(100vh - 64px)"
-        maxHeight="calc(100vh - 64px)"
+        height="calc(100vh - 32px)"
+        maxHeight="calc(100vh - 32px)"
         overflow="hidden"
       >
         {!!componentAddress && (

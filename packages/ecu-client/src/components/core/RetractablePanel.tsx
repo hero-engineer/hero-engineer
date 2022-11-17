@@ -54,9 +54,12 @@ function RetractablePanel({ direction, openPersistedStateKey, defaultOpenIndex =
         index,
         label,
         <Div
+          key={index}
           xflex="x5"
           position="absolute"
-          top={openIndex === index ? 0 : `calc(${openIndex < index ? index : index + 1} * 33px)`}
+          width={32}
+          height={32}
+          top={openIndex === index ? 0 : `calc(${openIndex < index ? index : index + 1} * 32px)`}
           right={isRight ? 'calc(100% + 1px)' : null}
           left={isLeft ? 'calc(100% + 1px)' : null}
           backgroundColor="background-light"
@@ -72,6 +75,7 @@ function RetractablePanel({ direction, openPersistedStateKey, defaultOpenIndex =
       ))}
       {items.map(({ children }, index) => (
         <Div
+          key={index}
           xflex="y2s"
           height="100%"
           display={openIndex === index ? 'block' : 'none'}
