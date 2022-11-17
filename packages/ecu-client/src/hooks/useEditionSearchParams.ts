@@ -19,7 +19,6 @@ function useEditionSearchParams() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const hierarchyIds = useMemo(() => hierarchyIdsRawIds, [hierarchyIdsString])
 
-  console.log('hierarchyIds', hierarchyIds)
   const setEditionSearchParams = useCallback((setter: SetterType) => {
     const componentDeltaValue = typeof setter.componentDelta === 'function' ? setter.componentDelta(componentDelta) : typeof setter.componentDelta === 'number' ? setter.componentDelta : componentDelta
     const hierarchyIdsValue = typeof setter.hierarchyIds === 'function' ? setter.hierarchyIds(hierarchyIds) : setter.hierarchyIds || hierarchyIds

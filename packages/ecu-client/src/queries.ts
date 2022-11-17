@@ -235,8 +235,8 @@ export type WriteFileImportsMutationDataType = {
 }
 
 export const UpdateTextValueMutation = `
-  mutation ($targetHierarchyId: String!, $value: String!) {
-    updateTextValue (targetHierarchyId: $targetHierarchyId, value: $value)
+  mutation ($sourceComponentAddress: String!, $targetHierarchyId: String!, $value: String!) {
+    updateTextValue (sourceComponentAddress: $sourceComponentAddress, targetHierarchyId: $targetHierarchyId, value: $value)
   }
 `
 

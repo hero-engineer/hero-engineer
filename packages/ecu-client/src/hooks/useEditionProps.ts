@@ -1,15 +1,16 @@
 import '../css/edition.css'
 
 import { MouseEvent, Ref, useCallback, useContext, useMemo, useRef, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { useDrag, useDrop } from 'react-dnd'
 
 import HierarchyContext from '../contexts/HierarchyContext'
 import DragAndDropContext from '../contexts/DragAndDropContext'
 
 import getComponentRootHierarchyIds from '../helpers/getComponentRootHierarchyIds'
+import isHierarchyOnComponent from '../helpers/isHierarchyOnComponent'
 
 import areArraysEqualAtStart from '../utils/areArraysEqualAtStart'
-
 import areArraysEqual from '../utils/areArraysEqual'
 
 import useForkedRef from './useForkedRef'
@@ -39,6 +40,7 @@ function getHierarchyIds(element: EventTarget | HTMLElement) {
 }
 
 function useEditionProps<T>(id: string, className = '', canBeEdited = false) {
+  const { componentAddress = '' } = useParams()
   const rootRef = useRef<T>(null)
   const hierarchyId = useHierarchyId(id, rootRef)
   const { hierarchyIds, componentDelta, setEditionSearchParams } = useEditionSearchParams()
@@ -93,7 +95,7 @@ function useEditionProps<T>(id: string, className = '', canBeEdited = false) {
     const ids = getHierarchyIds(event.target)
 
     if (areArraysEqual(hierarchyIds, ids) || (areArraysEqualAtStart(hierarchyIds, ids) && componentDelta < 0)) {
-      if (canBeEdited && componentDelta === 0) {
+      if (canBeEdited && componentDelta === 0 && isHierarchyOnComponent(hierarchy, componentAddress)) {
         setEdited(true)
       }
 
@@ -123,7 +125,7 @@ function useEditionProps<T>(id: string, className = '', canBeEdited = false) {
     })
 
     setShouldAdjustComponentDelta(true)
-  }, [hierarchyIds, componentDelta, setEditionSearchParams, setShouldAdjustComponentDelta, canBeEdited])
+  }, [hierarchyIds, componentDelta, setEditionSearchParams, setShouldAdjustComponentDelta, canBeEdited, hierarchy, componentAddress])
 
   const generateClassName = useCallback(() => {
     let klassName = className
