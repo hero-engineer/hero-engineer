@@ -34,10 +34,10 @@ Run `npm i` in the root, `packages/ecu`, `packages/ecu-client`, and `packages/ec
 Run `npm run dev` in the `packages/ecu`, `packages/ecu-server` and `packages/ecu-client` directories.
 
 Etheir:
-- Use the shared dev ecu app for a lot of boilerplate and use cases: `cd ..` then `git clone git@github.com:dherault/ecu-app.git` then `cd ecu-app` then `npm i` then `cd app` then `npm i`.
-- Use a blank new ecu app for a project creation developer experience: create an empty git repository at `../ecu-app` (`cd .. && mkdir ecu-app && cd ecu-app && git init`). Run `npx ecu create` in `ecu-app` to create a new Ecu app.
+- Use [the shared dev Ecu app](https://github.com/dherault/ecu-app) for a lot of boilerplate and use cases: `cd ..` then `git clone git@github.com:dherault/ecu-app.git` then `cd ecu-app` then `npm i` then `cd app` then `npm i`.
+- Use a blank new Ecu app for a project creation developer experience: create an empty git repository at `../ecu-app` (`cd .. && mkdir ecu-app && cd ecu-app && git init`). Run `npx ecu create` in `ecu-app`.
 
-Go back to `../ecu` and run `npm run link`. You Ecu App at `../ecu-app` now uses the dev version of Ecu.
+Go back to `../ecu` and run `npm run link`. You Ecu app at `../ecu-app` now uses the dev version of Ecu.
 
 Finally, in `../ecu-app` run `npm run serve` in a first terminal and `npm run dev` in another one. You can now open the link given by ViteJS to view the live app using Ecu. :tada:
 
