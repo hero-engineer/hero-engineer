@@ -68,7 +68,7 @@ function ComponentTypesEditor() {
           <A onClick={() => setIsModalOpen(true)}>
             Global types
           </A>
-          <Div flexGrow={1} />
+          <Div flexGrow />
           <Button onClick={handleSave}>Save</Button>
         </Div>
       </Div>

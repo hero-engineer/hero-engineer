@@ -60,7 +60,7 @@ function Component() {
       <HierarchyBar />
       <Div
         xflex="y2s"
-        flexGrow={1}
+        flexGrow
         flexShrink={0}
         pt={1}
         pb={6}

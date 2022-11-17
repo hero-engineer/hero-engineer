@@ -41,14 +41,14 @@ function Overlay({ children }: OverlayPropsType) {
         <ComponentsLinkButton borderRight="1px solid border" />
         <CreateComponentButton borderRight="1px solid border" />
         <DeleteComponentButton borderRight="1px solid border" />
-        <Div flexGrow={1} />
+        <Div flexGrow />
         <UndoRedoButtons />
         <PushButton />
         <ViewAppButton borderLeft="1px solid border" />
       </Div>
       <Div
         xflex="x1"
-        flexGrow={1}
+        flexGrow
         height="calc(100vh - 32px)"
         maxHeight="calc(100vh - 32px)"
         overflow="hidden"
@@ -74,7 +74,7 @@ function Overlay({ children }: OverlayPropsType) {
         )}
         <Div
           xflex="y2s"
-          flexGrow={1}
+          flexGrow
           maxHeight="100%"
           overflowY="auto"
           py={0.5}

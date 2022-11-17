@@ -128,12 +128,12 @@ function AddComponentSection() {
   return (
     <Div
       xflex="y2s"
-      flexGrow={1}
+      flexGrow
       width={256 + 64}
     >
       <Div
         xflex="y2s"
-        flexGrow={1}
+        flexGrow
         pt={0.5}
       >
         <P

@@ -59,7 +59,7 @@ function ComponentImportsEditor() {
         mt={0.5}
         px={1}
       >
-        <Div flexGrow={1} />
+        <Div flexGrow />
         <Button onClick={handleSave}>Save</Button>
       </Div>
     </Div>

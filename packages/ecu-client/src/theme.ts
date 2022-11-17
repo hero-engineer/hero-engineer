@@ -126,6 +126,7 @@ export default mergeTheme(defaultTheme, {
     mpRecipe(),
     gapRecipe(),
     ({ xflex }: any) => typeof xflex === 'string' && flexpad(xflex),
+    ({ flexGrow }: any) => flexGrow === true && ({ flexGrow: 1 }),
     ({ borderRadius }: any) => typeof borderRadius === 'string' && typeof borderRadii[borderRadius as keyof typeof borderRadii] !== 'undefined' && {
       borderRadius: borderRadii[borderRadius as keyof typeof borderRadii],
     },

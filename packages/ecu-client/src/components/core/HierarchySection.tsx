@@ -4,7 +4,7 @@ function HierarchySection() {
   return (
     <Div
       xflex="y2s"
-      flexGrow={1}
+      flexGrow
       width={256 + 64}
     >
       HierarchySection
