@@ -5,7 +5,7 @@ import gapRecipe from 'honorable-recipe-gap'
 import mapperRecipe from 'honorable-recipe-mapper'
 import xflexRecipe from 'honorable-recipe-xflex'
 
-const borderRadii = {
+const borderRadiuses = {
   none: 0,
   medium: 3,
   large: 6,
@@ -127,7 +127,7 @@ export default mergeTheme(defaultTheme, {
     mpRecipe(),
     gapRecipe(),
     xflexRecipe(),
-    mapperRecipe('borderRadius', borderRadii),
+    mapperRecipe('borderRadius', borderRadiuses),
     ({ flexGrow }: any) => flexGrow === true && ({ flexGrow: 1 }),
   ],
   Accordion: {
