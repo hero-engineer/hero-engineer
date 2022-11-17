@@ -1,8 +1,9 @@
-import { Dispatch, SetStateAction, createContext } from 'react'
+import { Dispatch, MouseEvent, SetStateAction, createContext } from 'react'
 
 export type ContextualInformationStateType = {
   isEdited: boolean
   isComponentRoot: boolean
+  rightClickEvent: MouseEvent | null
 }
 
 export type ContextualInformationContextType = {
@@ -18,6 +19,7 @@ export default createContext<ContextualInformationContextType>({
   contextualInformationState: {
     isEdited: false,
     isComponentRoot: false,
+    rightClickEvent: null,
   },
   setContextualInformationState: () => {},
 })

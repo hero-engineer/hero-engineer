@@ -25,11 +25,10 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
   const [loading, setLoading] = useState(false)
   const {
     ref: editionRef,
-    className: editionClassName,
     hierarchyId,
-    onClick,
     isEdited,
     setIsEdited,
+    editionProps,
   } = useEditionProps<HTMLDivElement>(ecuId, className, true)
   const inputRef = useRef<HTMLInputElement>(null)
   const finalRef = useForkedRef(ref, editionRef)
@@ -96,10 +95,7 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
   return (
     <div
       ref={finalRef}
-      className={editionClassName}
-      data-ecu={ecuId}
-      data-ecu-hierarchy={hierarchyId}
-      onClick={onClick}
+      {...editionProps}
     >
       {loading ? value : isEdited ? (
         <input

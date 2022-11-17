@@ -2,25 +2,25 @@ import { RefObject, useCallback, useContext, useEffect, useState } from 'react'
 
 import HotContext from '../contexts/HotContext'
 
-function getHierarchyId(targetElement: HTMLElement, targetId: string) {
+function getHierarchyId(targetElement: HTMLElement, targetEcuId: string) {
   const hierarchyIdsRegistry: Record<string, number> = {}
 
   let currentElement = targetElement
 
   while (currentElement) {
-    const id = currentElement.getAttribute('data-ecu')
+    const ecuId = currentElement.getAttribute('data-ecu')
 
-    if (!id) break
+    if (!ecuId) break
 
     currentElement = currentElement.parentElement as HTMLElement
   }
 
   function traverse(element: HTMLElement) {
-    const id = element.getAttribute('data-ecu')
+    const ecuId = element.getAttribute('data-ecu')
 
-    if (id) {
-      if (typeof hierarchyIdsRegistry[id] === 'undefined') hierarchyIdsRegistry[id] = 0
-      else hierarchyIdsRegistry[id]++
+    if (ecuId) {
+      if (typeof hierarchyIdsRegistry[ecuId] === 'undefined') hierarchyIdsRegistry[ecuId] = 0
+      else hierarchyIdsRegistry[ecuId]++
     }
 
     if (element === targetElement) return true
@@ -36,18 +36,18 @@ function getHierarchyId(targetElement: HTMLElement, targetId: string) {
 
   const found = traverse(currentElement)
 
-  return found ? `${targetId}:${hierarchyIdsRegistry[targetId]}` : targetId
+  return found ? `${targetEcuId}:${hierarchyIdsRegistry[targetEcuId]}` : targetEcuId
 }
 
-function useHierarchyId<T>(id: string, ref: RefObject<T>) {
+function useHierarchyId<T>(ecuId: string, ref: RefObject<T>) {
   const hot = useContext(HotContext)
   const [hierarchyId, setHierarchyId] = useState('')
 
   const updateHierarchyId = useCallback(() => {
     if (!ref?.current) return
 
-    setHierarchyId(getHierarchyId(ref.current as any as HTMLElement, id))
-  }, [id, ref])
+    setHierarchyId(getHierarchyId(ref.current as any as HTMLElement, ecuId))
+  }, [ecuId, ref])
 
   useEffect(() => {
     updateHierarchyId()

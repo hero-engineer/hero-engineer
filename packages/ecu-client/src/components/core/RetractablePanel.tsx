@@ -1,5 +1,5 @@
 import { ReactNode, useCallback } from 'react'
-import { Div, DivProps, Tooltip } from 'honorable'
+import { Button, Div, DivProps, Tooltip } from 'honorable'
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md'
 
 import usePersistedState from '../../hooks/usePersistedState'
@@ -54,25 +54,21 @@ function RetractablePanel({ direction, openPersistedStateKey, defaultOpenIndex =
       {items.map(({ label, icon }, index) => wrapWithTooltip(
         index,
         label,
-        <Div
+        <Button
+          ghost
           key={index}
-          xflex="x5"
           position="absolute"
-          width={32}
-          height={32}
-          top={openIndex === index ? 0 : `calc(${openIndex < index ? index : index + 1} * 32px)`}
-          right={isRight ? 'calc(100% + 1px)' : null}
-          left={isLeft ? 'calc(100% + 1px)' : null}
+          top={openIndex === index ? 0 : `calc(${openIndex < index ? index : index + 1} * 33px)`}
+          right={isRight ? openIndex === -1 ? '100%' : 'calc(100% + 1px)' : null}
+          left={isLeft ? openIndex === -1 ? '100%' : 'calc(100% + 1px)' : null}
           backgroundColor="background-light"
           onClick={() => toggleOpen(index)}
           borderLeft={isLeft ? null : '1px solid border'}
           borderRight={isRight ? null : '1px solid border'}
           borderBottom="1px solid border"
-          cursor="pointer"
-          p={0.5}
         >
           {xor(isLeft, openIndex === index) ? isLeft ? icon || <MdChevronRight /> : <MdChevronRight /> : isRight ? icon || <MdChevronLeft /> : <MdChevronLeft />}
-        </Div>,
+        </Button>,
       ))}
       {items.map(({ children }, index) => (
         <Div

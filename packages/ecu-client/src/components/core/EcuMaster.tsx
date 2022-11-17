@@ -42,7 +42,7 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
   const dragAndDropContextValue = useMemo<DragAndDropContextType>(() => ({ dragAndDrop, setDragAndDrop }), [dragAndDrop])
 
   const [contextualInformationElement, setContextualInformationElement] = useState<HTMLElement | null>(null)
-  const [contextualInformationState, setContextualInformationState] = useState<ContextualInformationStateType>({ isEdited: false, isComponentRoot: false })
+  const [contextualInformationState, setContextualInformationState] = useState<ContextualInformationStateType>({ isEdited: false, isComponentRoot: false, rightClickEvent: null })
   const contextualInformationContextValue = useMemo<ContextualInformationContextType>(() => ({ contextualInformationElement, setContextualInformationElement, contextualInformationState, setContextualInformationState }), [contextualInformationElement, contextualInformationState])
 
   return (

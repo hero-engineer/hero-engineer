@@ -13,6 +13,7 @@ function Layout() {
       height="100vh"
       maxHeight="100vh"
       position="relative"
+      onContextMenu={e => e.preventDefault()}
     >
       <Overlay>
         <Outlet />

@@ -40,21 +40,21 @@ function getHierarchyIds(element: EventTarget | HTMLElement) {
   return hierarchyIds.reverse()
 }
 
-function useEditionProps<T extends HTMLElement>(id: string, className = '', canBeEdited = false) {
+function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', canBeEdited = false) {
   const { componentAddress = '' } = useParams()
   const rootRef = useRef<T>(null)
-  const hierarchyId = useHierarchyId(id, rootRef)
+  const hierarchyId = useHierarchyId(ecuId, rootRef)
   const { hierarchyIds, componentDelta, setEditionSearchParams } = useEditionSearchParams()
   const { hierarchy, setShouldAdjustComponentDelta } = useContext(HierarchyContext)
   const { setDragAndDrop } = useContext(DragAndDropContext)
   const { setContextualInformationElement, setContextualInformationState } = useContext(ContextualInformationContext)
   const [isEdited, setIsEdited] = useState(false)
 
+  const isSelected = useMemo(() => componentDelta >= 0 && hierarchyIds.length && hierarchyId && hierarchyIds[hierarchyIds.length - 1] === hierarchyId, [componentDelta, hierarchyIds, hierarchyId])
   const componentRootHierarchyIds = useMemo(() => getComponentRootHierarchyIds(hierarchy), [hierarchy])
   const isComponentRoot = useMemo(() => componentDelta < 0 && componentRootHierarchyIds.some(x => x === hierarchyId), [componentDelta, componentRootHierarchyIds, hierarchyId])
   const isComponentRootFirstChild = useMemo(() => componentRootHierarchyIds.indexOf(hierarchyId) === 0, [componentRootHierarchyIds, hierarchyId])
   const isComponentRootLastChild = useMemo(() => componentRootHierarchyIds.indexOf(hierarchyId) === componentRootHierarchyIds.length - 1, [componentRootHierarchyIds, hierarchyId])
-  const isSelected = useMemo(() => componentDelta >= 0 && hierarchyIds.length && hierarchyId && hierarchyIds[hierarchyIds.length - 1] === hierarchyId, [componentDelta, hierarchyIds, hierarchyId])
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'Node',
@@ -79,11 +79,11 @@ function useEditionProps<T extends HTMLElement>(id: string, className = '', canB
   const [{ canDrop, isOverCurrent }, drop] = useDrop(() => ({
     accept: 'Node',
     drop: (_item, monitor) => {
-      const didDrop = monitor.didDrop()
+      if (monitor.didDrop()) return
 
-      if (didDrop) return
-
-      return { hierarchyIds: getHierarchyIds(rootRef.current as HTMLElement) }
+      return {
+        hierarchyIds: getHierarchyIds(rootRef.current as HTMLElement),
+      }
     },
     collect: monitor => ({
       isOverCurrent: monitor.isOver({ shallow: true }),
@@ -137,14 +137,24 @@ function useEditionProps<T extends HTMLElement>(id: string, className = '', canB
     setShouldAdjustComponentDelta(true)
   }, [
     isEdited,
+    canBeEdited,
     hierarchyIds,
+    hierarchy,
+    componentAddress,
     componentDelta,
     setEditionSearchParams,
     setShouldAdjustComponentDelta,
-    canBeEdited,
-    hierarchy,
-    componentAddress,
   ])
+
+  const handleContextMenu = useCallback((event: MouseEvent) => {
+    if (!(isSelected || isComponentRoot)) return
+
+    event.persist()
+    event.preventDefault()
+    event.stopPropagation()
+
+    setContextualInformationState(x => ({ ...x, rightClickEvent: event }))
+  }, [isSelected, isComponentRoot, setContextualInformationState])
 
   const generateClassName = useCallback(() => {
     let klassName = className
@@ -197,7 +207,6 @@ function useEditionProps<T extends HTMLElement>(id: string, className = '', canB
       setContextualInformationElement(rootRef.current)
       setContextualInformationState(x => ({ ...x, isEdited, isComponentRoot: isComponentRootFirstChild }))
     }
-
   }, [
     isSelected,
     isComponentRoot,
@@ -210,10 +219,15 @@ function useEditionProps<T extends HTMLElement>(id: string, className = '', canB
   return {
     ref,
     hierarchyId,
-    onClick: handleClick,
     isEdited,
     setIsEdited,
-    className: generateClassName(),
+    editionProps: {
+      onClick: handleClick,
+      onContextMenu: handleContextMenu,
+      className: generateClassName(),
+      'data-ecu': ecuId,
+      'data-ecu-hierarchy': hierarchyId,
+    },
   }
 }
 

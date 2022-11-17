@@ -150,7 +150,7 @@ export default mergeTheme(defaultTheme, {
     ],
     Title: [
       ({ ghost }: any) => ghost && {
-        height: 31, // To match the height of the RetractablePanel toggle icon of 32px - 1px border
+        height: 32, // To match the height of the RetractablePanel toggle icon of 33px - 1px border
         paddingTop: 0,
         paddingBottom: 0,
         fontWeight: 500,
@@ -173,13 +173,16 @@ export default mergeTheme(defaultTheme, {
         color: 'text',
         backgroundColor: 'transparent',
         ':hover': {
-          backgroundColor: 'darken(background-light, 5)',
+          backgroundColor: 'darken(background-light, 3)',
         },
         ':active': {
-          backgroundColor: 'darken(background-light, 10)',
+          backgroundColor: 'darken(background-light, 6)',
         },
         ':disabled': {
-          backgroundColor: 'darken(background-light, 15)',
+          backgroundColor: 'darken(background-light, 9)',
+          '&:hover': {
+            backgroundColor: 'darken(background-light, 9)',
+          },
         },
       },
     ],

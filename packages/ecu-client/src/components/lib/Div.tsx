@@ -11,19 +11,15 @@ type DivPropsType = HTMLProps<HTMLDivElement> & {
 function DivRef({ 'data-ecu': ecuId, className, children }: DivPropsType, ref: Ref<any>) {
   const {
     ref: editionRef,
-    className: editionClassName,
-    hierarchyId,
-    onClick,
+    editionProps,
   } = useEditionProps<HTMLDivElement>(ecuId, className)
+
   const finalRef = useForkedRef(ref, editionRef)
 
   return (
     <div
       ref={finalRef}
-      className={editionClassName}
-      data-ecu={ecuId}
-      data-ecu-hierarchy={hierarchyId}
-      onClick={onClick}
+      {...editionProps}
     >
       {children}
     </div>
