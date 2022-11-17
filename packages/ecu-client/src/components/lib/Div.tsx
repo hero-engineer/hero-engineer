@@ -1,15 +1,14 @@
-import { PropsWithChildren, Ref, forwardRef } from 'react'
+import { HTMLProps, Ref, forwardRef } from 'react'
 
 import useEditionProps from '../../hooks/useEditionProps'
 import useForkedRef from '../../hooks/useForkedRef'
 
-type DivProps = PropsWithChildren<{
+type DivPropsType = HTMLProps<HTMLDivElement> & {
   'data-ecu': string
-  className?: string
-}>
+}
 
 // TODO use a preprocessor before production build to replace Div with a regular Div
-function DivRef({ 'data-ecu': ecuId, className, children }: DivProps, ref: Ref<any>) {
+function DivRef({ 'data-ecu': ecuId, className, children }: DivPropsType, ref: Ref<any>) {
   const {
     ref: editionRef,
     className: editionClassName,

@@ -2,9 +2,9 @@ import { PropsWithChildren, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from 'honorable'
 
-type WithEcuHomeButtonProps = PropsWithChildren<any>
+type WithEcuHomeButtonPropsType = PropsWithChildren<any>
 
-function WithEcuHomeButton({ children }: WithEcuHomeButtonProps) {
+function WithEcuHomeButton({ children }: WithEcuHomeButtonPropsType) {
   const [displayed, setDisplayed] = useState(true)
 
   return (

@@ -1,5 +1,6 @@
 import '../../css/common.css'
 
+import { ViteHotContext } from 'vite/types/hot'
 import { PropsWithChildren, memo, useMemo, useState } from 'react'
 import { Provider } from 'urql'
 import { DndProvider } from 'react-dnd'
@@ -22,12 +23,12 @@ import createRefetchRegistry from '../../helpers/createRefetchRegistry'
 import Router from './Router'
 import WithEcuHomeButton from './WithEcuHomeButton'
 
-type EcuMasterProps = PropsWithChildren<{
+type EcuMasterPropsType = PropsWithChildren<{
   mode?: string
-  hot?: any
+  hot?: ViteHotContext | null
 }>
 
-function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps) {
+function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterPropsType) {
   const { refetch, register } = createRefetchRegistry()
   const refetchContextValue = useMemo<RefetchContextType>(() => ({ refetch, register }), [refetch, register])
 

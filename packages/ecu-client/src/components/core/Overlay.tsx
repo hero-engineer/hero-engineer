@@ -16,9 +16,9 @@ import AddComponentSection from './AddComponentSection'
 import ComponentTypesSection from './ComponentTypesSection'
 import ComponentImportsSection from './ComponentImportsSection'
 
-type OverlayProps = PropsWithChildren<any>
+type OverlayPropsType = PropsWithChildren<any>
 
-function Overlay({ children }: OverlayProps) {
+function Overlay({ children }: OverlayPropsType) {
   const { componentAddress = '' } = useParams()
 
   return (

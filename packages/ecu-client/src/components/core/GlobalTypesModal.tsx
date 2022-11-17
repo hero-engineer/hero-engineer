@@ -6,12 +6,12 @@ import GlobalTypesContext from '../../contexts/GlobalTypesContext'
 
 import { GlobalTypesQuery, GlobalTypesQueryDataType, WriteGlobalTypesMutation, WriteGlobalTypesMutationDataType } from '../../queries'
 
-type GlobalTypesModalProps = {
+type GlobalTypesModalPropsType = {
   open: boolean
   onClose: () => void
 }
 
-function GlobalTypesModal({ open, onClose }: GlobalTypesModalProps) {
+function GlobalTypesModal({ open, onClose }: GlobalTypesModalPropsType) {
   const { setGlobalTypes } = useContext(GlobalTypesContext)
   const [content, setContent] = useState('')
 

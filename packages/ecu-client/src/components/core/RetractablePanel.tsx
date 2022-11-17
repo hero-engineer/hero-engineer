@@ -6,7 +6,7 @@ import usePersistedState from '../../hooks/usePersistedState'
 
 import xor from '../../utils/xor'
 
-type RetractablePanelProps = DivProps & {
+type RetractablePanelPropsType = DivProps & {
   openPersistedStateKey: string
   openLabel: string
   defaultOpen?: boolean
@@ -14,7 +14,7 @@ type RetractablePanelProps = DivProps & {
   openIcon?: ReactNode
 }
 
-function RetractablePanel({ direction, openPersistedStateKey, openLabel, defaultOpen = false, openIcon = null, children, ...props }: RetractablePanelProps) {
+function RetractablePanel({ direction, openPersistedStateKey, openLabel, defaultOpen = false, openIcon = null, children, ...props }: RetractablePanelPropsType) {
   const [open, setOpen] = usePersistedState(openPersistedStateKey, defaultOpen)
 
   const toggleOpen = useCallback(() => setOpen(x => !x), [setOpen])
