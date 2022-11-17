@@ -78,7 +78,7 @@ function RetractablePanel({ direction, openPersistedStateKey, defaultOpenIndex =
           key={index}
           xflex="y2s"
           height="100%"
-          display={openIndex === index ? 'block' : 'none'}
+          display={openIndex === index ? 'flex' : 'none'}
         >
           {children}
         </Div>
