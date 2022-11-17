@@ -34,8 +34,8 @@ Run `npm i` in the root, `packages/ecu`, `packages/ecu-client`, and `packages/ec
 Run `npm run dev` in the `packages/ecu`, `packages/ecu-server` and `packages/ecu-client` directories.
 
 Etheir:
-- To use the shared dev ecu app: `cd ..` then `git clone git@github.com:dherault/ecu-app.git` then `cd ecu-app` then `npm i` then `cd app` then `npm i`.
-- To use a blank new one: Create an empty git repository at `../ecu-app` (`cd .. && mkdir ecu-app && cd ecu-app && git init`). Run `npx ecu create` in `ecu-app` to create a new Ecu app.
+- Use the shared dev ecu app for a lot of boilerplate and use cases: `cd ..` then `git clone git@github.com:dherault/ecu-app.git` then `cd ecu-app` then `npm i` then `cd app` then `npm i`.
+- Use a blank new ecu app for a project creation developer experience: create an empty git repository at `../ecu-app` (`cd .. && mkdir ecu-app && cd ecu-app && git init`). Run `npx ecu create` in `ecu-app` to create a new Ecu app.
 
 Go back to `../ecu` and run `npm run link`. You Ecu App at `../ecu-app` now uses the dev version of Ecu.
 
