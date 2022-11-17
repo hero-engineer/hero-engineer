@@ -47,7 +47,7 @@ function UndoRedoButtons() {
     <Div xflex="x4">
       <Tooltip
         label="Undo"
-        placement="bottom"
+        placement="bottom-end"
       >
         <Button
           ghost
@@ -61,7 +61,7 @@ function UndoRedoButtons() {
       </Tooltip>
       <Tooltip
         label="Redo"
-        placement="bottom"
+        placement="bottom-end"
       >
         <Button
           ghost

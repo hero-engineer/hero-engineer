@@ -62,7 +62,7 @@ function DeleteComponentButton(props: any) {
     <>
       <Tooltip
         label="Delete component"
-        placement="bottom"
+        placement="bottom-start"
       >
         <Button
           ghost

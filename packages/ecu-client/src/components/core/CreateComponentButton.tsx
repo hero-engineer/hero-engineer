@@ -32,7 +32,7 @@ function CreateComponentButton(props: any) {
     <>
       <Tooltip
         label="Create component"
-        placement="bottom"
+        placement="bottom-start"
       >
         <Button
           ghost
