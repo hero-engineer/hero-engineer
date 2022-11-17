@@ -1,7 +1,7 @@
 export default (name: string) => `/* --
 * IMPORTS START
 -- */
-import { Div } from 'ecu'
+import { Text } from 'ecu'
 
 /* --
 * IMPORTS END
@@ -17,9 +17,9 @@ type ${name}PropsType = Record<string, never>;
 
 function ${name}(props: ${name}PropsType) {
 return (
-  <Div>
+  <Text>
     Edit me I'm famous!
-  </Div>
+  </Text>
 )
 }
 
