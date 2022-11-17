@@ -2,12 +2,15 @@ import { HTMLProps, KeyboardEvent, Ref, forwardRef, useCallback, useContext, use
 import { useParams } from 'react-router-dom'
 import { useMutation } from 'urql'
 
+import { refetchKeys } from '../../constants'
+
 import { UpdateTextValueMutation, UpdateTextValueMutationDataType } from '../../queries'
 
 import HotContext from '../../contexts/HotContext'
 
 import useEditionProps from '../../hooks/useEditionProps'
 import useForkedRef from '../../hooks/useForkedRef'
+import useRefetch from '../../hooks/useRefetch'
 
 type TextPropsType = HTMLProps<HTMLDivElement> & {
   'data-ecu': string
@@ -33,6 +36,8 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
 
   const [, updateTextValueMutation] = useMutation<UpdateTextValueMutationDataType>(UpdateTextValueMutation)
 
+  const refetch = useRefetch()
+
   const handleBlur = useCallback(async () => {
     if (value === children) {
       setEdited(false)
@@ -52,7 +57,10 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
     if (mutationResult.error) {
       setLoading(false)
     }
-  }, [updateTextValueMutation, componentAddress, hierarchyId, value, children, setEdited])
+    else {
+      refetch(refetchKeys.componentScreenshot)
+    }
+  }, [updateTextValueMutation, componentAddress, hierarchyId, value, children, setEdited, refetch])
 
   const handleKeyDown = useCallback((event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' || event.key === 'Tab') {

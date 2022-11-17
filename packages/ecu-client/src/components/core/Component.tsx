@@ -66,6 +66,10 @@ function Component() {
     })
   }, [updateComponentScreenshot, componentAddress])
 
+  const takeScreenshotWithTimeout = useCallback(() => {
+    setTimeout(takeScreenshot, 1000)
+  }, [takeScreenshot])
+
   useRefetch(
     {
       key: refetchKeys.component,
@@ -73,15 +77,11 @@ function Component() {
       skip: !componentAddress,
     },
     {
-      key: refetchKeys.hierarchy,
-      refetch: takeScreenshot,
+      key: refetchKeys.componentScreenshot,
+      refetch: takeScreenshotWithTimeout,
       skip: !componentAddress,
     }
   )
-
-  useEffect(() => {
-    setTimeout(takeScreenshot, 1000)
-  }, [takeScreenshot])
 
   if (componentQueryResult.error) {
     return null

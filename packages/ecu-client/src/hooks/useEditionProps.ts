@@ -83,7 +83,8 @@ function useEditionProps<T>(id: string, className = '', canBeEdited = false) {
       isOverCurrent: monitor.isOver({ shallow: true }),
       canDrop: monitor.canDrop(),
     }),
-  }), [])
+    canDrop: () => !edited,
+  }), [edited])
 
   const ref = useForkedRef(rootRef, useForkedRef(drag, drop)) as Ref<T>
 

@@ -12,6 +12,7 @@ export const refetchKeys = {
   hierarchy: 'hierarchy',
   component: 'component',
   components: 'components',
+  componentScreenshot: 'componentScreenshot',
   isComponentAcceptingChildren: 'isComponentAcceptingChildren',
   fileImports: 'fileImports',
   fileTypes: 'fileTypes',

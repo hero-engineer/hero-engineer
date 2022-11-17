@@ -46,6 +46,7 @@ function DeleteComponentButton(props: any) {
     })
 
     refetch(refetchKeys.hierarchy)
+    refetch(refetchKeys.componentScreenshot)
   }, [hierarchy, componentDelta, componentAddress, deleteComponent, hierarchyIds, setEditionSearchParams, refetch])
 
   const navigateToLastEditedComponent = useCallback(() => {

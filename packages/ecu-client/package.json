@@ -15,7 +15,7 @@
   "scripts": {
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "dev": "vite build --watch",
+    "dev": "loopa infinity vite build --watch",
     "prepublishOnly": "MINIFY_BUILD=true npm run build"
   },
   "dependencies": {
@@ -40,6 +40,7 @@
     "@types/react-dom": "^18.0.9",
     "@vitejs/plugin-react": "^2.2.0",
     "cssnano": "^5.1.14",
+    "loopa": "^1.2.1",
     "nodemon": "^2.0.20",
     "postcss-import": "^15.0.0",
     "postcss-nested": "^6.0.0",

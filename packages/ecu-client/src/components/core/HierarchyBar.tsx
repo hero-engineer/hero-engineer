@@ -41,10 +41,11 @@ function HierarchyBar() {
     variables: {
       sourceComponentAddress: componentAddress,
     },
+    requestPolicy: 'network-only',
     pause: !componentAddress,
   })
 
-  useRefetch({
+  const refetch = useRefetch({
     key: refetchKeys.hierarchy,
     refetch: refetchHierarchyQuery,
     skip: !componentAddress,
@@ -55,14 +56,6 @@ function HierarchyBar() {
   const actualHierarchy = useMemo(() => totalHierarchy.slice(0, totalHierarchy.length + componentDelta), [totalHierarchy, componentDelta])
   const previousHierarchy = usePreviousWithDefault(actualHierarchy, actualHierarchy)
   const displayHierarchy = useMemo(() => hierarchyIds.length ? shouldAdjustComponentDelta ? previousHierarchy : actualHierarchy : [], [hierarchyIds, shouldAdjustComponentDelta, previousHierarchy, actualHierarchy])
-
-  useEffect(() => {
-    setTotalHierarchy(totalHierarchy)
-    setHierarchy(actualHierarchy)
-  }, [totalHierarchy, actualHierarchy, setTotalHierarchy, setHierarchy])
-
-  // console.log('previousHierarchy', previousHierarchy)
-  // console.log('hierarchy', hierarchy)
 
   const handleClick = useCallback((index: number) => {
     // console.log('___handleClick', actualHierarchy.map(x => x.label), index)
@@ -110,6 +103,11 @@ function HierarchyBar() {
   }, [actualHierarchy, totalHierarchy, setEditionSearchParams])
 
   useEffect(() => {
+    setTotalHierarchy(totalHierarchy)
+    setHierarchy(actualHierarchy)
+  }, [totalHierarchy, actualHierarchy, setTotalHierarchy, setHierarchy])
+
+  useEffect(() => {
     if (!shouldAdjustComponentDelta) return
 
     setShouldAdjustComponentDelta(false)
@@ -142,6 +140,10 @@ function HierarchyBar() {
       componentDelta: nextDelta,
     })
   }, [shouldAdjustComponentDelta, totalHierarchy, previousHierarchy, actualHierarchy, setEditionSearchParams, setShouldAdjustComponentDelta])
+
+  useEffect(() => {
+    refetch(refetchKeys.componentScreenshot)
+  }, [refetch, hierarchyQueryResult.data?.hierarchy])
 
   if (!componentAddress) {
     return null
