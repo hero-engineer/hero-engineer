@@ -33,7 +33,7 @@ function Components() {
 
   return (
     <>
-      <H1>Components</H1>
+      <H1 mt={1}>Components</H1>
       <Div
         mt={2}
         xflex="x11"

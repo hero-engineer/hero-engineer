@@ -6,3 +6,17 @@
   border: none;
   outline: none;
 }
+
+.ecu-contextual-information {
+  z-index: 999999;
+  color: white;
+  background-color: lightblue;
+}
+
+.ecu-contextual-information-is-edited {
+  background-color: purple;
+}
+
+.ecu-contextual-information-is-component-root {
+  background-color: gold;
+}

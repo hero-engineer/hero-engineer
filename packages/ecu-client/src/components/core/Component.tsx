@@ -11,8 +11,9 @@ import { ComponentQuery, ComponentQueryDataType, UpdateComponentScreenshotMutati
 import useRefetch from '../../hooks/useRefetch'
 
 import ComponentLoader from './ComponentLoader'
-import DragAndDropEndModal from './DragAndDropEndModal'
 import HierarchyBar from './HierarchyBar'
+import ContextualInformation from './ContextualInformation'
+import DragAndDropEndModal from './DragAndDropEndModal'
 
 function traverseElementToRemoveEcuClasses(element: HTMLElement) {
   const classes: string[] = []
@@ -32,6 +33,7 @@ function traverseElementToRemoveEcuClasses(element: HTMLElement) {
 
 function Component() {
   const { componentAddress = '' } = useParams()
+  const rootRef = useRef<HTMLDivElement>(null)
   const componentRef = useRef<HTMLDivElement>(null)
 
   const [componentQueryResult, refetchComponentQuery] = useQuery<ComponentQueryDataType>({
@@ -97,7 +99,13 @@ function Component() {
   }
 
   return (
-    <>
+    <Div
+      ref={rootRef}
+      xflex="y2s"
+      flexGrow
+      maxHeight="100%"
+      overflowY="auto"
+    >
       <Div
         xflex="x4"
         gap={0.5}
@@ -121,8 +129,9 @@ function Component() {
       >
         <ComponentLoader component={component} />
       </Div>
+      <ContextualInformation scrollRef={rootRef} />
       <DragAndDropEndModal />
-    </>
+    </Div>
   )
 }
 

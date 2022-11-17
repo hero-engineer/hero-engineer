@@ -15,6 +15,7 @@ import HotContext from '../../contexts/HotContext'
 import RefetchContext, { RefetchContextType } from '../../contexts/RefetchContext'
 import HierarchyContext, { HierarchyContextType } from '../../contexts/HierarchyContext'
 import DragAndDropContext, { DragAndDropContextType, DragAndDropType } from '../../contexts/DragAndDropContext'
+import ContextualInformationContext, { ContextualInformationContextType, ContextualInformationStateType } from '../../contexts/ContextualInformationContext'
 
 import { HierarchyItemType } from '../../types'
 
@@ -40,6 +41,10 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
   const [dragAndDrop, setDragAndDrop] = useState<DragAndDropType>({ sourceHierarchyIds: [], targetHierarchyIds: [] })
   const dragAndDropContextValue = useMemo<DragAndDropContextType>(() => ({ dragAndDrop, setDragAndDrop }), [dragAndDrop])
 
+  const [contextualInformationElement, setContextualInformationElement] = useState<HTMLElement | null>(null)
+  const [contextualInformationState, setContextualInformationState] = useState<ContextualInformationStateType>({ isEdited: false, isComponentRoot: false })
+  const contextualInformationContextValue = useMemo<ContextualInformationContextType>(() => ({ contextualInformationElement, setContextualInformationElement, contextualInformationState, setContextualInformationState }), [contextualInformationElement, contextualInformationState])
+
   return (
     <Provider value={client}>
       <DndProvider backend={HTML5Backend}>
@@ -50,11 +55,13 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
               <RefetchContext.Provider value={refetchContextValue}>
                 <HierarchyContext.Provider value={hierarchyContextValue}>
                   <DragAndDropContext.Provider value={dragAndDropContextValue}>
-                    <Router>
-                      <WithEcuHomeButton>
-                        {children}
-                      </WithEcuHomeButton>
-                    </Router>
+                    <ContextualInformationContext.Provider value={contextualInformationContextValue}>
+                      <Router>
+                        <WithEcuHomeButton>
+                          {children}
+                        </WithEcuHomeButton>
+                      </Router>
+                    </ContextualInformationContext.Provider>
                   </DragAndDropContext.Provider>
                 </HierarchyContext.Provider>
               </RefetchContext.Provider>

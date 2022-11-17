@@ -28,8 +28,8 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
     className: editionClassName,
     hierarchyId,
     onClick,
-    edited,
-    setEdited,
+    isEdited,
+    setIsEdited,
   } = useEditionProps<HTMLDivElement>(ecuId, className, true)
   const inputRef = useRef<HTMLInputElement>(null)
   const finalRef = useForkedRef(ref, editionRef)
@@ -40,13 +40,13 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
 
   const handleBlur = useCallback(async () => {
     if (value === children) {
-      setEdited(false)
+      setIsEdited(false)
 
       return
     }
 
     setLoading(true)
-    setEdited(false)
+    setIsEdited(false)
 
     const mutationResult = await updateTextValueMutation({
       sourceComponentAddress: componentAddress,
@@ -60,7 +60,7 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
     else {
       refetch(refetchKeys.componentScreenshot)
     }
-  }, [updateTextValueMutation, componentAddress, hierarchyId, value, children, setEdited, refetch])
+  }, [updateTextValueMutation, componentAddress, hierarchyId, value, children, setIsEdited, refetch])
 
   const handleKeyDown = useCallback((event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' || event.key === 'Tab') {
@@ -71,17 +71,17 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
     if (event.key === 'Escape') {
       event.preventDefault()
       event.stopPropagation()
-      setEdited(false)
+      setIsEdited(false)
       setValue(children)
     }
-  }, [handleBlur, setEdited, children])
+  }, [handleBlur, setIsEdited, children])
 
   useEffect(() => {
-    if (!(edited && inputRef.current)) return
+    if (!(isEdited && inputRef.current)) return
 
     inputRef.current.focus()
     inputRef.current.select()
-  }, [edited])
+  }, [isEdited])
 
   useEffect(() => {
     if (hot) {
@@ -101,7 +101,7 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
       data-ecu-hierarchy={hierarchyId}
       onClick={onClick}
     >
-      {loading ? value : edited ? (
+      {loading ? value : isEdited ? (
         <input
           ref={inputRef}
           value={value}

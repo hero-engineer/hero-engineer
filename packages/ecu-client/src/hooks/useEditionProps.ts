@@ -1,11 +1,12 @@
 import '../css/edition.css'
 
-import { MouseEvent, Ref, useCallback, useContext, useMemo, useRef, useState } from 'react'
+import { MouseEvent, Ref, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDrag, useDrop } from 'react-dnd'
 
 import HierarchyContext from '../contexts/HierarchyContext'
 import DragAndDropContext from '../contexts/DragAndDropContext'
+import ContextualInformationContext from '../contexts/ContextualInformationContext'
 
 import getComponentRootHierarchyIds from '../helpers/getComponentRootHierarchyIds'
 import isHierarchyOnComponent from '../helpers/isHierarchyOnComponent'
@@ -39,16 +40,21 @@ function getHierarchyIds(element: EventTarget | HTMLElement) {
   return hierarchyIds.reverse()
 }
 
-function useEditionProps<T>(id: string, className = '', canBeEdited = false) {
+function useEditionProps<T extends HTMLElement>(id: string, className = '', canBeEdited = false) {
   const { componentAddress = '' } = useParams()
   const rootRef = useRef<T>(null)
   const hierarchyId = useHierarchyId(id, rootRef)
   const { hierarchyIds, componentDelta, setEditionSearchParams } = useEditionSearchParams()
   const { hierarchy, setShouldAdjustComponentDelta } = useContext(HierarchyContext)
   const { setDragAndDrop } = useContext(DragAndDropContext)
-  const [edited, setEdited] = useState(false)
+  const { setContextualInformationElement, setContextualInformationState } = useContext(ContextualInformationContext)
+  const [isEdited, setIsEdited] = useState(false)
 
   const componentRootHierarchyIds = useMemo(() => getComponentRootHierarchyIds(hierarchy), [hierarchy])
+  const isComponentRoot = useMemo(() => componentDelta < 0 && componentRootHierarchyIds.some(x => x === hierarchyId), [componentDelta, componentRootHierarchyIds, hierarchyId])
+  const isComponentRootFirstChild = useMemo(() => componentRootHierarchyIds.indexOf(hierarchyId) === 0, [componentRootHierarchyIds, hierarchyId])
+  const isComponentRootLastChild = useMemo(() => componentRootHierarchyIds.indexOf(hierarchyId) === componentRootHierarchyIds.length - 1, [componentRootHierarchyIds, hierarchyId])
+  const isSelected = useMemo(() => componentDelta >= 0 && hierarchyIds.length && hierarchyId && hierarchyIds[hierarchyIds.length - 1] === hierarchyId, [componentDelta, hierarchyIds, hierarchyId])
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'Node',
@@ -67,8 +73,8 @@ function useEditionProps<T>(id: string, className = '', canBeEdited = false) {
       isDragging: monitor.isDragging(),
       handlerId: monitor.getHandlerId(),
     }),
-    canDrag: !edited,
-  }), [setDragAndDrop, edited])
+    canDrag: !isEdited,
+  }), [setDragAndDrop, isEdited])
 
   const [{ canDrop, isOverCurrent }, drop] = useDrop(() => ({
     accept: 'Node',
@@ -83,14 +89,14 @@ function useEditionProps<T>(id: string, className = '', canBeEdited = false) {
       isOverCurrent: monitor.isOver({ shallow: true }),
       canDrop: monitor.canDrop(),
     }),
-    canDrop: () => !edited,
-  }), [edited])
+    canDrop: () => !isEdited,
+  }), [isEdited])
 
   const ref = useForkedRef(rootRef, useForkedRef(drag, drop)) as Ref<T>
 
   const handleClick = useCallback((event: MouseEvent) => {
     if (event.detail < 2) return // Double click or more only
-    if (edited) return
+    if (isEdited) return
 
     event.stopPropagation()
 
@@ -98,7 +104,7 @@ function useEditionProps<T>(id: string, className = '', canBeEdited = false) {
 
     if (areArraysEqual(hierarchyIds, ids) || (areArraysEqualAtStart(hierarchyIds, ids) && componentDelta < 0)) {
       if (canBeEdited && componentDelta === 0 && isHierarchyOnComponent(hierarchy, componentAddress)) {
-        setEdited(true)
+        setIsEdited(true)
 
         return
       }
@@ -129,26 +135,33 @@ function useEditionProps<T>(id: string, className = '', canBeEdited = false) {
     })
 
     setShouldAdjustComponentDelta(true)
-  }, [edited, hierarchyIds, componentDelta, setEditionSearchParams, setShouldAdjustComponentDelta, canBeEdited, hierarchy, componentAddress])
+  }, [
+    isEdited,
+    hierarchyIds,
+    componentDelta,
+    setEditionSearchParams,
+    setShouldAdjustComponentDelta,
+    canBeEdited,
+    hierarchy,
+    componentAddress,
+  ])
 
   const generateClassName = useCallback(() => {
     let klassName = className
 
-    if (componentDelta < 0 && componentRootHierarchyIds.some(x => x === hierarchyId)) {
+    if (isComponentRoot) {
       klassName += ' ecu-selected-root'
 
-      const index = componentRootHierarchyIds.indexOf(hierarchyId)
-
-      if (index === 0) {
+      if (isComponentRootFirstChild) {
         klassName += ' ecu-selected-root-first'
       }
 
-      if (index === componentRootHierarchyIds.length - 1) {
+      if (isComponentRootLastChild) {
         klassName += ' ecu-selected-root-last'
       }
     }
 
-    if (componentDelta >= 0 && hierarchyIds.length && hierarchyId && hierarchyIds[hierarchyIds.length - 1] === hierarchyId) {
+    if (isSelected) {
       klassName += ' ecu-selected'
     }
 
@@ -160,20 +173,47 @@ function useEditionProps<T>(id: string, className = '', canBeEdited = false) {
       klassName += ' ecu-drop'
     }
 
-    if (edited) {
+    if (isEdited) {
       klassName += ' ecu-edited'
     }
 
     return klassName.trim()
-  }, [className, hierarchyIds, hierarchyId, componentDelta, componentRootHierarchyIds, isDragging, canDrop, isOverCurrent, edited])
+  }, [
+    className,
+    isComponentRoot,
+    isComponentRootFirstChild,
+    isComponentRootLastChild,
+    isSelected,
+    isDragging,
+    canDrop,
+    isOverCurrent,
+    isEdited,
+  ])
+
+  useEffect(() => {
+    if (!rootRef.current) return
+
+    if (isSelected || (isComponentRoot && isComponentRootFirstChild)) {
+      setContextualInformationElement(rootRef.current)
+      setContextualInformationState(x => ({ ...x, isEdited, isComponentRoot: isComponentRootFirstChild }))
+    }
+
+  }, [
+    isSelected,
+    isComponentRoot,
+    isComponentRootFirstChild,
+    isEdited,
+    setContextualInformationElement,
+    setContextualInformationState,
+  ])
 
   return {
     ref,
     hierarchyId,
     onClick: handleClick,
+    isEdited,
+    setIsEdited,
     className: generateClassName(),
-    edited,
-    setEdited,
   }
 }
 

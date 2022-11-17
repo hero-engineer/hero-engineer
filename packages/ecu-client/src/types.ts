@@ -1,3 +1,8 @@
+export type XYType = {
+  x: number
+  y: number
+}
+
 export type HierarchyPosition = 'before' | 'after' | 'children' | 'parent'
 
 export type HierarchyItemType = {

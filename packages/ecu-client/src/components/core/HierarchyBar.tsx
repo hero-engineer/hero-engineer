@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom'
 import { useQuery } from 'urql'
 import { Div } from 'honorable'
 import { MdChevronRight } from 'react-icons/md'
-import { VscTypeHierarchySub } from 'react-icons/vsc'
 
 import { refetchKeys } from '../../constants'
 import { HierarchyItemType } from '../../types'
@@ -29,6 +28,18 @@ function getHierarchyDelta(hierarchy: HierarchyItemType[]) {
   })
 
   return delta
+}
+
+function isSelectedComponentParent(hierarchy: HierarchyItemType[], currentHierarchyItem: HierarchyItemType) {
+  const selectedHierarchyItem = hierarchy[hierarchy.length - 1]
+
+  if (!selectedHierarchyItem) return false
+  if (selectedHierarchyItem === currentHierarchyItem) return false
+
+  const rightIndex = hierarchy.length - [...hierarchy].reverse().findIndex(x => x.componentName === currentHierarchyItem.componentName) - 1
+  const currentIndex = hierarchy.indexOf(currentHierarchyItem)
+
+  return rightIndex === currentIndex && selectedHierarchyItem.onComponentAddress === currentHierarchyItem.componentAddress
 }
 
 function HierarchyBar() {
@@ -58,8 +69,6 @@ function HierarchyBar() {
   const displayHierarchy = useMemo(() => hierarchyIds.length ? shouldAdjustComponentDelta ? previousHierarchy : actualHierarchy : [], [hierarchyIds, shouldAdjustComponentDelta, previousHierarchy, actualHierarchy])
 
   const handleClick = useCallback((index: number) => {
-    // console.log('___handleClick', actualHierarchy.map(x => x.label), index)
-
     // If clicked on a Component node link, ...
     if (actualHierarchy[index].componentAddress) {
       // Reduce the hierarchyIds to the closest next DOM node
@@ -75,9 +84,6 @@ function HierarchyBar() {
 
       const lastHierarchyId = nextHierarchyIds[nextHierarchyIds.length - 1]
       const nextComponentDelta = index - totalHierarchy.findIndex(x => x.hierarchyId === lastHierarchyId)
-
-      // console.log('totalHierarchy', totalHierarchy)
-      // console.log('nextComponentDelta', nextComponentDelta)
 
       setEditionSearchParams({
         hierarchyIds: nextHierarchyIds,
@@ -112,8 +118,6 @@ function HierarchyBar() {
 
     setShouldAdjustComponentDelta(false)
 
-    // console.log('areArraysEqual(previousHierarchy, hierarchy)', areArraysEqual(previousHierarchy, actualHierarchy))
-
     if (areArraysEqual(previousHierarchy, actualHierarchy)) return
 
     const commonHierarchy: HierarchyItemType[] = []
@@ -129,12 +133,6 @@ function HierarchyBar() {
 
     const workingHierarchyPart = totalHierarchy.slice(commonHierarchy.length, -1)
     const nextDelta = workingHierarchyPart.length ? getHierarchyDelta(workingHierarchyPart) : 0
-
-    // console.log('previousHierarchy', previousHierarchy)
-    // console.log('totalHierarchy', totalHierarchy)
-    // console.log('commonHierarchy', commonHierarchy)
-    // console.log('workingHierarchyPart', workingHierarchyPart)
-    // console.log('nextDelta', nextDelta)
 
     setEditionSearchParams({
       componentDelta: nextDelta,
@@ -157,19 +155,18 @@ function HierarchyBar() {
       gap={0.25}
       py={0.5}
     >
-      {displayHierarchy.map(({ label, isChild }, i, a) => (
-        <Fragment key={i + label}>
-          <Div onClick={() => handleClick(i)}>
-            {label}
+      {displayHierarchy.map((hierarchyItem, i, a) => (
+        <Fragment key={i + hierarchyItem.label}>
+          <Div
+            onClick={() => handleClick(i)}
+            textUnderlineOffset={1.5}
+            textDecoration={isSelectedComponentParent(a, hierarchyItem) ? 'underline' : 'none'}
+            title={isSelectedComponentParent(a, hierarchyItem) ? 'Parent of the seelected component' : undefined}
+          >
+            {hierarchyItem.label}
           </Div>
           {i < a.length - 1 && (
             <MdChevronRight />
-          )}
-          {i === a.length - 1 && isChild && (
-            <VscTypeHierarchySub
-              size={12}
-              title="Child"
-            />
           )}
         </Fragment>
       ))}

@@ -2,7 +2,7 @@ import { H1 } from 'honorable'
 
 function Home() {
   return (
-    <H1>Ecu</H1>
+    <H1 mt={1}>Ecu</H1>
   )
 }
 
