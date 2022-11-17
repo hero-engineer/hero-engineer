@@ -12,6 +12,7 @@ import createComponentMutation from './mutations/createComponentMutation.js'
 import addComponentMutation from './mutations/addComponentMutation.js'
 import deleteComponentMutation from './mutations/deleteComponentMutation.js'
 import moveComponentMutation from './mutations/moveComponentMutation.js'
+import updateTextValueMutation from './mutations/updateTextValueMutation.js'
 import writeGlobalTypesMutation from './mutations/writeGlobalTypesMutation.js'
 import writeFileImportsMutation from './mutations/writeFileImportsMutation.js'
 import writeFileTypesMutation from './mutations/writeFileTypesMutation.js'
@@ -119,6 +120,8 @@ export const typeDefs = gql`
     deleteComponent(sourceComponentAddress: String!, targetHierarchyId: String!, componentDelta: Int!): FunctionNode!
     moveComponent(sourceComponentAddress: String!, sourceHierarchyId: String!, targetHierarchyId: String!, hierarchyPosition: HierarchyPosition!): [FunctionNode!]!
 
+    updateTextValue(sourceComponentAddress: String!, targetHierarchyId: String!, value: String!): Boolean!
+
     writeFileImports(sourceFileAddress: String!, rawImports: String!): Boolean!
     removeFileUnusedImports(sourceFileAddress: String!): Boolean!
     writeGlobalTypes(globalTypesFileContent: String!): Boolean!
@@ -147,6 +150,8 @@ export const resolvers = {
     addComponent: addComponentMutation,
     deleteComponent: deleteComponentMutation,
     moveComponent: moveComponentMutation,
+
+    updateTextValue: updateTextValueMutation,
 
     writeFileImports: writeFileImportsMutation,
     removeFileUnusedImports: removeFileUnusedImportsMutation,
