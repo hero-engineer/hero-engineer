@@ -51,7 +51,7 @@ function DeleteComponentButton(props: any) {
   const navigateToLastEditedComponent = useCallback(() => {
     setIsModalOpen(false)
 
-    navigate(`/__ecu__/component/${lastEditedHierarchyItem?.componentAddress}`)
+    navigate(`/_ecu_/component/${lastEditedHierarchyItem?.componentAddress}`)
   }, [navigate, lastEditedHierarchyItem])
 
   if (!componentAddress) {

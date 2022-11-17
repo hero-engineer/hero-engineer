@@ -86,7 +86,7 @@ function AddComponentSection() {
 
     if (!lastEditedHierarchyItem) return
 
-    navigate(`/__ecu__/component/${lastEditedHierarchyItem.fileAddress}/${lastEditedHierarchyItem.componentAddress}`)
+    navigate(`/_ecu_/component/${lastEditedHierarchyItem.fileAddress}/${lastEditedHierarchyItem.componentAddress}`)
   }, [navigate, lastEditedHierarchyItem])
 
   const navigateToLastHierarchyItem = useCallback(() => {
@@ -94,7 +94,7 @@ function AddComponentSection() {
 
     if (!lastHierarchyItem) return
 
-    navigate(`/__ecu__/component/${lastHierarchyItem.fileAddress}/${lastHierarchyItem.componentAddress}`)
+    navigate(`/_ecu_/component/${lastHierarchyItem.fileAddress}/${lastHierarchyItem.componentAddress}`)
   }, [navigate, lastHierarchyItem])
 
   if (componentsQueryResult.fetching) {

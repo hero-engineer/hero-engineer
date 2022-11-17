@@ -38,7 +38,7 @@ function Components() {
       <Ul mt={2}>
         {components.map(componentAndFile => (
           <Li key={componentAndFile.component.address}>
-            <Link to={`/__ecu__/component/${componentAndFile.file.address}/${componentAndFile.component.address}`}>
+            <Link to={`/_ecu_/component/${componentAndFile.file.address}/${componentAndFile.component.address}`}>
               {componentAndFile.component.payload.name}
             </Link>
           </Li>

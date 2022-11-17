@@ -15,7 +15,7 @@ function WithEcuHomeButton({ children }: WithEcuHomeButtonProps) {
           top={16}
           right={16}
           as={Link}
-          to="/__ecu__/components"
+          to="/_ecu_/components"
         >
           Ecu
         </Button>

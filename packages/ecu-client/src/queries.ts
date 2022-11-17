@@ -141,13 +141,21 @@ export type IsComponentAcceptingChildrenQueryDataType = {
 export const CreateComponentMutation = `
   mutation ($name: String!) {
     createComponent (name: $name) {
-      address
+      component {
+        address
+      }
+      file {
+        address
+      }
     }
   }
 `
 
 export type CreateComponentMutationDataType = {
-  createComponent: FileNodeType
+  createComponent: {
+    component: FunctionNodeType
+    file: FileNodeType
+  }
 }
 
 export const AddComponentMutation = `
@@ -214,4 +222,34 @@ export const WriteFileImportsMutation = `
 
 export type WriteFileImportsMutationDataType = {
   writeFileImports: boolean
+}
+
+export const UndoMutation = `
+  mutation {
+    undo
+  }
+`
+
+export type UndoMutationDataType = {
+  undo: boolean
+}
+
+export const RedoMutation = `
+  mutation {
+    redo
+  }
+`
+
+export type RedoMutationDataType = {
+  undo: boolean
+}
+
+export const PushMutation = `
+  mutation {
+    push
+  }
+`
+
+export type PushMutationDataType = {
+  push: boolean
 }

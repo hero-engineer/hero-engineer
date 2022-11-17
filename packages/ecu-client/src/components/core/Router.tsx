@@ -10,7 +10,7 @@ function Router({ children }: any) {
     <BrowserRouter>
       <Routes>
         <Route
-          path="/__ecu__"
+          path="/_ecu_"
           element={<Layout />}
         >
           <Route

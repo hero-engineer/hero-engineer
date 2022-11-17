@@ -16,6 +16,7 @@ export default defineConfig({
   build: {
     minify: process.env.MINIFY_BUILD === 'true',
     sourcemap: true,
+    outDir: 'build',
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
       name: 'ecu-client',

@@ -6,6 +6,7 @@ import { TbRowInsertBottom } from 'react-icons/tb'
 
 import ViewAppButton from './ViewAppButton'
 import UndoRedoButtons from './UndoRedoButtons'
+import PushButton from './PushButton'
 import ComponentsLinkButton from './ComponentsLinkButton'
 import CreateComponentButton from './CreateComponentButton'
 import DeleteComponentButton from './DeleteComponentButton'
@@ -44,6 +45,7 @@ function Overlay({ children }: OverlayProps) {
           <DeleteComponentButton borderRight="1px solid border" />
           <Div flexGrow={1} />
           <UndoRedoButtons />
+          <PushButton />
           <ViewAppButton borderLeft="1px solid border" />
         </Div>
         <HierarchyBar />

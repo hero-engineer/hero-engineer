@@ -20,7 +20,9 @@ function CreateComponentButton(props: any) {
 
     if (!results.data) return
 
-    navigate(`/__ecu__/component/${results.data.createComponent.address}`)
+    const { file, component } = results.data.createComponent
+
+    navigate(`/_ecu_/component/${file.address}/$${component.address}`)
   }, [name, createComponent, navigate])
 
   return (
