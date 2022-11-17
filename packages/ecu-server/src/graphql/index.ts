@@ -7,6 +7,7 @@ import globalTypesQuery from './queries/globalTypesQuery.js'
 import fileImportsQuery from './queries/fileImportsQuery.js'
 import fileTypesQuery from './queries/fileTypesQuery.js'
 import isComponentAcceptingChildrenQuery from './queries/isComponentAcceptingChildrenQuery.js'
+import canRedoQuery from './queries/canRedoQuery.js'
 import createComponentMutation from './mutations/createComponentMutation.js'
 import addComponentMutation from './mutations/addComponentMutation.js'
 import deleteComponentMutation from './mutations/deleteComponentMutation.js'
@@ -108,6 +109,8 @@ export const typeDefs = gql`
     fileImports(sourceFileAddress: String!): FileImportsReturnValue!
     fileTypes(sourceFileAddress: String!): FileTypesReturnValue!
     isComponentAcceptingChildren(sourceComponentAddress: String, ecuComponentName: String): Boolean!
+
+    canRedo: Boolean!
   }
 
   type Mutation {
@@ -137,6 +140,7 @@ export const resolvers = {
     fileImports: fileImportsQuery,
     fileTypes: fileTypesQuery,
     isComponentAcceptingChildren: isComponentAcceptingChildrenQuery,
+    canRedo: canRedoQuery,
   },
   Mutation: {
     createComponent: createComponentMutation,

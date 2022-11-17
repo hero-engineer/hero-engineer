@@ -26,6 +26,10 @@ async function undo() {
     throw new Error('Cannot undo non-ecu commit')
   }
 
+  if (message === `${ecuCommitPrefix}Create ecu project`) {
+    throw new Error('End of ecu history')
+  }
+
   try {
     const historyArray = readEcuHistory()
 
