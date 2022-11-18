@@ -1,3 +1,6 @@
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
 import { ApolloServer } from 'apollo-server'
 import express from 'express'
 
@@ -23,9 +26,11 @@ async function serve() {
     console.log(`🚀 Ecu GraphQL server ready at ${url}`)
   })
 
+  const __dirname = fileURLToPath(new URL('.', import.meta.url))
   const app = express()
 
-  app.use(express.static(getEcuLocation()))
+  app.use('/.ecu', express.static(getEcuLocation()))
+  app.use('/emojis', express.static(path.join(__dirname, '../data/emojis')))
 
   app.listen(4001)
 
