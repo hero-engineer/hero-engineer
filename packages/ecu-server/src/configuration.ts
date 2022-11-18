@@ -46,6 +46,22 @@ export const typesEndComment = `/* --
   * TYPES END
 -- */`
 
+export const emojiStartComment = `/* --
+  * EMOJI START
+-- */`
+
+export const emojiEndComment = `/* --
+  * EMOJI END
+-- */`
+
+export const descriptionStartComment = `/* --
+  * DESCRIPTION START
+-- */`
+
+export const descriptionEndComment = `/* --
+  * DESCRIPTION END
+-- */`
+
 export const externalModulesImports: ImportType[] = [
   {
     name: 'PropsWithChildren',

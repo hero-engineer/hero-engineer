@@ -15,7 +15,7 @@ type DeleteComponentMutationArgs = {
 }
 
 async function deleteComponentMutation(_: any, { sourceComponentAddress, targetHierarchyId, componentDelta }: DeleteComponentMutationArgs): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
-  console.log('___deleteComponentMutation___')
+  console.log('__deleteComponentMutation__')
 
   const componentNode = getNodeByAddress<FunctionNodeType>(sourceComponentAddress)
 

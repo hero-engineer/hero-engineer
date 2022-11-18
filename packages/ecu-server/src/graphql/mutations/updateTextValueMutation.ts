@@ -16,7 +16,7 @@ type UpdateTextValueMutationArgs = {
 }
 
 async function updateTextValueMutation(_: any, { sourceComponentAddress, targetHierarchyId, value }: UpdateTextValueMutationArgs): Promise<HistoryMutationReturnType<boolean>> {
-  console.log('___updateTextValueMutation___')
+  console.log('__updateTextValueMutation__')
 
   const sourceComponentNode = getNodeByAddress(sourceComponentAddress)
 

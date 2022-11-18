@@ -18,7 +18,7 @@ function ensureEcuPathExistance() {
 }
 
 function replacer(key: string, value: any) {
-  if (key === 'ast' || key === 'code') {
+  if (key === 'ast' || key === 'code' || key === 'description' || key === 'emoji') {
     return null
   }
 

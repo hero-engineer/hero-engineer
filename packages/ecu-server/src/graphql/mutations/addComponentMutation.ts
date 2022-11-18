@@ -27,7 +27,7 @@ type AddComponentMutationArgs = {
 }
 
 async function addComponentMutation(_: any, { sourceComponentAddress, targetComponentAddress, targetHierarchyId, hierarchyPosition, componentDelta }: AddComponentMutationArgs): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
-  console.log('___addComponentMutation___')
+  console.log('__addComponentMutation__')
 
   const sourceComponentNode = getNodeByAddress(sourceComponentAddress)
 

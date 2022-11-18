@@ -20,7 +20,7 @@ function fileImportsQuery(_: any, { sourceFileAddress }: FileImportsQueryArgs) {
 
   return {
     imports: traverseImports(fileNode),
-    rawImports: extractBetweenComments(fileNode, importsStartComment, importsEndComment),
+    rawImports: extractBetweenComments(fileNode.payload.code, importsStartComment, importsEndComment),
   }
 }
 

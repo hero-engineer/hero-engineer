@@ -189,7 +189,7 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
   let shouldStopDfs = false
 
   function dfs(hierarchy: TraverseComponentHierarchyTreeType, useChildrenPath = false) {
-    console.log('-->', hierarchy.componentName, useChildrenPath ? 'children path' : '')
+    // console.log('-->', hierarchy.componentName, useChildrenPath ? 'children path' : '')
 
     if (shouldStopDfs) return
 
@@ -216,7 +216,7 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
         const onComponentAddress = hasChildrenPath ? hierarchy.childrenContext!.onComponentAddress! : hierarchy.componentAddress || hierarchy.onComponentAddress
         const hierarchyId = getComponentHierarchyId(x.node)
 
-        console.log('JSXElement', componentName)
+        // console.log('JSXElement', componentName)
 
         // hierarchyId found means we're at an ecu-client Component
         if (hierarchyId) {
@@ -289,7 +289,7 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
         // Prevent traversing children if on root component
         if (hierarchy.context.fileNode.address === rootFileNode.address) return
 
-        console.log('CHILDREN')
+        // console.log('CHILDREN')
 
         dfs(hierarchy, true)
       },
@@ -298,11 +298,11 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
     if (shouldStopDfs) return
 
     if (!hasChildrenPath) {
-      console.log('About to traverse children of', hierarchy.label)
+      // console.log('About to traverse children of', hierarchy.label)
       hierarchy.children.forEach(childHierarchy => {
         dfs(childHierarchy)
       })
-      console.log('End traversal of', hierarchy.label)
+      // console.log('End traversal of', hierarchy.label)
     }
 
   }

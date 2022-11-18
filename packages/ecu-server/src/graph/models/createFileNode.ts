@@ -3,6 +3,8 @@ import fs from 'node:fs'
 import { FileNodePayloadType, FileNodeType } from '../../types.js'
 
 import parseCode from '../../domain/parseCode.js'
+import extractDescription from '../../domain/comments/extractDescription.js'
+import extractEmoji from '../../domain/comments/extractEmoji.js'
 
 type CreateFileNodeDataType = Omit<FileNodeType, 'payload'> & { payload: Omit<FileNodePayloadType, 'code' | 'ast'> }
 
@@ -16,6 +18,12 @@ function createFileNode(data: CreateFileNodeDataType): FileNodeType {
       },
       get ast() {
         return parseCode(this.code)
+      },
+      get description() {
+        return extractDescription(this.code)
+      },
+      get emoji() {
+        return extractEmoji(this.code)
       },
     },
   }

@@ -8,13 +8,13 @@ import composeHistoryMutation from '../../history/composeHistoryMutation.js'
 import insertBetweenComments from '../../domain/comments/insertBetweenComments.js'
 import regenerate from '../../domain/regenerate.js'
 
-type WriteFileImportsMutationArgs = {
+type UpdateFileImportsMutationArgs = {
   sourceFileAddress: string
   rawImports: string
 }
 
-async function writeFileImportsMutation(_: any, { sourceFileAddress, rawImports }: WriteFileImportsMutationArgs): Promise<HistoryMutationReturnType<boolean>> {
-  console.log('___writeFileImportsMutation___')
+async function updateFileImportsMutation(_: any, { sourceFileAddress, rawImports }: UpdateFileImportsMutationArgs): Promise<HistoryMutationReturnType<boolean>> {
+  console.log('__updateFileImportsMutation__')
 
   const fileNode = getNodeByAddress<FileNodeType>(sourceFileAddress)
 
@@ -22,7 +22,9 @@ async function writeFileImportsMutation(_: any, { sourceFileAddress, rawImports 
     throw new Error(`File ${sourceFileAddress} not found`)
   }
 
-  const code = insertBetweenComments(fileNode, importsStartComment, importsEndComment, rawImports)
+  let { code } = fileNode.payload
+
+  code = insertBetweenComments(code, importsStartComment, importsEndComment, rawImports)
 
   if (!code) {
     throw new Error(`Imports start or end comment not found for component ${sourceFileAddress}`)
@@ -32,8 +34,8 @@ async function writeFileImportsMutation(_: any, { sourceFileAddress, rawImports 
 
   return {
     returnValue: true,
-    description: `Write imports for file ${fileNode.payload.name}`,
+    description: `Update imports for file ${fileNode.payload.name}`,
   }
 }
 
-export default composeHistoryMutation(writeFileImportsMutation)
+export default composeHistoryMutation(updateFileImportsMutation)

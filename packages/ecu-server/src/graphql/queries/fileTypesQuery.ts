@@ -20,7 +20,7 @@ function fileTypesQuery(_: any, { sourceFileAddress }: FileTypesQueryArgs) {
 
   return {
     types: traverseTypes(fileNode),
-    rawTypes: extractBetweenComments(fileNode, typesStartComment, typesEndComment),
+    rawTypes: extractBetweenComments(fileNode.payload.code, typesStartComment, typesEndComment),
   }
 }
 

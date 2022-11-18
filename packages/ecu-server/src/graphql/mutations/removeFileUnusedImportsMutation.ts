@@ -12,7 +12,7 @@ type RemoveFileUnunsedImportsMutationArgs = {
 }
 
 async function removeFileUnunsedImportsMutation(_: any, { sourceFileAddress }: RemoveFileUnunsedImportsMutationArgs): Promise<HistoryMutationReturnType<boolean>> {
-  console.log('___removeFileUnunsedImportsMutation___')
+  console.log('__removeFileUnunsedImportsMutation__')
 
   const fileNode = getNodeByAddress<FileNodeType>(sourceFileAddress)
 

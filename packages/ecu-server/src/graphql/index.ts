@@ -13,10 +13,11 @@ import addComponentMutation from './mutations/addComponentMutation.js'
 import deleteComponentMutation from './mutations/deleteComponentMutation.js'
 import moveComponentMutation from './mutations/moveComponentMutation.js'
 import updateTextValueMutation from './mutations/updateTextValueMutation.js'
-import writeGlobalTypesMutation from './mutations/writeGlobalTypesMutation.js'
-import writeFileImportsMutation from './mutations/writeFileImportsMutation.js'
-import writeFileTypesMutation from './mutations/writeFileTypesMutation.js'
+import updateFileDescriptionMutation from './mutations/updateFileDescriptionMutation.js'
+import updateFileImportsMutation from './mutations/updateFileImportsMutation.js'
+import updateFileTypesMutation from './mutations/updateFileTypesMutation.js'
 import removeFileUnusedImportsMutation from './mutations/removeFileUnusedImportsMutation.js'
+import updateGlobalTypesMutation from './mutations/updateGlobalTypesMutation.js'
 import updateComponentScreenshotMutation from './mutations/updateComponentScreenshotMutation.js'
 import undoMutation from './mutations/undoMutation.js'
 import redoMutation from './mutations/redoMutation.js'
@@ -44,6 +45,8 @@ export const typeDefs = gql`
     path: String!
     relativePath: String!
     text: String!
+    description: String!
+    emoji: String!
   }
 
   type FileNode {
@@ -123,10 +126,11 @@ export const typeDefs = gql`
 
     updateTextValue(sourceComponentAddress: String!, targetHierarchyId: String!, value: String!): Boolean!
 
-    writeFileImports(sourceFileAddress: String!, rawImports: String!): Boolean!
+    updateFileDescription(sourceFileAddress: String!, description: String!, emoji: String!): Boolean!
+    updateFileImports(sourceFileAddress: String!, rawImports: String!): Boolean!
     removeFileUnusedImports(sourceFileAddress: String!): Boolean!
-    writeGlobalTypes(globalTypesFileContent: String!): Boolean!
-    writeFileTypes(sourceFileAddress: String!, rawTypes: String!): Boolean!
+    updateGlobalTypes(globalTypesFileContent: String!): Boolean!
+    updateFileTypes(sourceFileAddress: String!, rawTypes: String!): Boolean!
 
     updateComponentScreenshot(sourceComponentAddress: String!, dataUrl: String!): Boolean!
 
@@ -156,10 +160,11 @@ export const resolvers = {
 
     updateTextValue: updateTextValueMutation,
 
-    writeFileImports: writeFileImportsMutation,
+    updateFileDescription: updateFileDescriptionMutation,
+    updateFileImports: updateFileImportsMutation,
     removeFileUnusedImports: removeFileUnusedImportsMutation,
-    writeFileTypes: writeFileTypesMutation,
-    writeGlobalTypes: writeGlobalTypesMutation,
+    updateFileTypes: updateFileTypesMutation,
+    updateGlobalTypes: updateGlobalTypesMutation,
 
     updateComponentScreenshot: updateComponentScreenshotMutation,
 
