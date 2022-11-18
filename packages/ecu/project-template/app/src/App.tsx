@@ -13,6 +13,24 @@ type AppPropsType = Record<string, never>
 /* --
   * TYPES END
 -- */
+/* --
+  * EMOJI START
+-- */
+/*
+:cyclone:
+*/
+/* --
+  * EMOJI END
+-- */
+/* --
+  * DESCRIPTION START
+-- */
+/*
+The app's entry point
+*/
+/* --
+  * DESCRIPTION END
+-- */
 
 function App(props: AppPropsType) {
   return (
