@@ -5,18 +5,21 @@ import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 
+const isProductionBuild = process.env.PRODUCTION_BUILD === 'true'
+
 export default defineConfig({
   plugins: [
     react({ jsxRuntime: 'classic' }),
     cssInjectedByJsPlugin(),
-    dts({
+    isProductionBuild && dts({
       insertTypesEntry: true,
     }),
   ],
   build: {
-    minify: process.env.MINIFY_BUILD === 'true',
+    minify: isProductionBuild,
     sourcemap: true,
     outDir: 'build',
+    emptyOutDir: isProductionBuild,
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
       name: 'ecu-client',

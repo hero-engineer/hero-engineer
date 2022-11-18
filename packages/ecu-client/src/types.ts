@@ -1,3 +1,23 @@
+export type FunctionNodeType = {
+  address: string
+  payload: {
+    name: string
+    path: string
+    relativePath: string
+  }
+}
+
+export type FileNodeType = {
+  address: string
+  payload: {
+    name: string
+    path: string
+    relativePath: string
+    emoji: string
+    description: string
+  }
+}
+
 export type XYType = {
   x: number
   y: number

@@ -4,7 +4,7 @@ import { Button, Div, H3, Input, Modal } from 'honorable'
 
 import GlobalTypesContext from '../../contexts/GlobalTypesContext'
 
-import { GlobalTypesQuery, GlobalTypesQueryDataType, WriteGlobalTypesMutation, WriteGlobalTypesMutationDataType } from '../../queries'
+import { GlobalTypesQuery, GlobalTypesQueryDataType, UpdateGlobalTypesMutation, UpdateGlobalTypesMutationDataType } from '../../queries'
 
 type GlobalTypesModalPropsType = {
   open: boolean
@@ -18,17 +18,17 @@ function GlobalTypesModal({ open, onClose }: GlobalTypesModalPropsType) {
   const [globalTypesQueryResult, refetchGlobalTypes] = useQuery<GlobalTypesQueryDataType>({
     query: GlobalTypesQuery,
   })
-  const [, writeGlobalTypes] = useMutation<WriteGlobalTypesMutationDataType>(WriteGlobalTypesMutation)
+  const [, updateGlobalTypes] = useMutation<UpdateGlobalTypesMutationDataType>(UpdateGlobalTypesMutation)
 
   const globalTypesFileContent = useMemo(() => globalTypesQueryResult.data?.globalTypes.globalTypesFileContent ?? '', [globalTypesQueryResult.data])
 
   const handleSave = useCallback(async () => {
-    await writeGlobalTypes({
+    await updateGlobalTypes({
       globalTypesFileContent: content,
     })
 
     onClose()
-  }, [writeGlobalTypes, content, onClose])
+  }, [updateGlobalTypes, content, onClose])
 
   useEffect(() => {
     setContent(globalTypesFileContent)

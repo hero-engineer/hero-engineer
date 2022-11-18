@@ -1,23 +1,14 @@
-import { ImportType, TypeType } from './types'
-
-type FunctionNodeType = {
-  address: string
-  payload: {
-    name: string
-    path: string
-    relativePath: string
-  }
-}
-
-type FileNodeType = {
-  address: string
-}
+import { FileNodeType, FunctionNodeType, ImportType, TypeType } from './types'
 
 type ComponentReturnType = {
   component: FunctionNodeType
   file: FileNodeType
   isComponentAcceptingChildren: boolean
 }
+
+/* --
+  * QUERIES
+-- */
 
 export const HierarchyQuery = `
   query ($sourceComponentAddress: String!) {
@@ -34,6 +25,13 @@ export const ComponentsQuery = `
     components {
       file {
         address
+        payload {
+          name
+          path
+          relativePath
+          emoji
+          description
+        }
       }
       component {
         address
@@ -57,6 +55,13 @@ export const ComponentQuery = `
     component (sourceComponentAddress: $sourceComponentAddress) {
       file {
         address
+        payload {
+          name
+          path
+          relativePath
+          emoji
+          description
+        }
       }
       component {
         address
@@ -148,6 +153,10 @@ export type CanRedoQueryDataType = {
   canRedo: boolean
 }
 
+/* --
+  * MUTATIONS
+-- */
+
 export const CreateComponentMutation = `
   mutation ($name: String!) {
     createComponent (name: $name) {
@@ -204,34 +213,34 @@ export type MoveComponentMutationDataType = {
   moveComponent: FileNodeType
 }
 
-export const WriteGlobalTypesMutation = `
+export const UpdateGlobalTypesMutation = `
   mutation ($globalTypesFileContent: String!) {
-    writeGlobalTypes (globalTypesFileContent: $globalTypesFileContent)
+    updateGlobalTypes (globalTypesFileContent: $globalTypesFileContent)
   }
 `
 
-export type WriteGlobalTypesMutationDataType = {
-  writeGlobalTypes: boolean
+export type UpdateGlobalTypesMutationDataType = {
+  updateGlobalTypes: boolean
 }
 
-export const WriteFileTypesMutation = `
+export const UpdateFileTypesMutation = `
   mutation ($sourceFileAddress: String!, $rawTypes: String!) {
-    writeFileTypes (sourceFileAddress: $sourceFileAddress, rawTypes: $rawTypes)
+    updateFileTypes (sourceFileAddress: $sourceFileAddress, rawTypes: $rawTypes)
   }
 `
 
-export type WriteFileTypesMutationDataType = {
-  writeFileTypes: boolean
+export type UpdateFileTypesMutationDataType = {
+  updateFileTypes: boolean
 }
 
-export const WriteFileImportsMutation = `
+export const UpdateFileImportsMutation = `
   mutation ($sourceFileAddress: String!, $rawImports: String!) {
-    writeFileImports (sourceFileAddress: $sourceFileAddress, rawImports: $rawImports)
+    updateFileImports (sourceFileAddress: $sourceFileAddress, rawImports: $rawImports)
   }
 `
 
-export type WriteFileImportsMutationDataType = {
-  writeFileImports: boolean
+export type UpdateFileImportsMutationDataType = {
+  updateFileImports: boolean
 }
 
 export const UpdateTextValueMutation = `
@@ -242,6 +251,16 @@ export const UpdateTextValueMutation = `
 
 export type UpdateTextValueMutationDataType = {
   updateTextValue: boolean
+}
+
+export const UpdateFileDescriptionMutation = `
+  mutation ($sourceFileAddress: String!, $description: String!,  $emoji: String!) {
+    updateFileDescription (sourceFileAddress: $sourceFileAddress, description: $description, emoji: $emoji)
+  }
+`
+
+export type UpdateFileDescriptionMutationDataType = {
+  updateFileDescription: boolean
 }
 
 export const UpdateComponentScreenshotMutation = `

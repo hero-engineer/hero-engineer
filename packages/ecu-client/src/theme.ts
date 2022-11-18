@@ -227,43 +227,58 @@ export default mergeTheme(defaultTheme, {
   H1: {
     Root: [
       {
-        fontSize: 48,
+        fontSize: '3rem',
       },
     ],
   },
   H2: {
     Root: [
       {
-        fontSize: 40,
+        fontSize: '2.5rem',
       },
     ],
   },
   H3: {
     Root: [
       {
-        fontSize: 32,
+        fontSize: '2rem',
       },
     ],
   },
   H4: {
     Root: [
       {
-        fontSize: 24,
+        fontSize: '1.5rem',
       },
     ],
   },
   H5: {
     Root: [
       {
-        fontSize: 18,
+        fontSize: '1.125rem',
       },
     ],
   },
   H6: {
     Root: [
       {
-        fontSize: 12,
+        fontSize: '1rem',
       },
+    ],
+  },
+  Input: {
+    Root: [
+      ({ ghost }: any) => ghost && ({
+        paddingLeft: 0,
+        paddingRight: 0,
+        minHeight: 0,
+      }),
+    ],
+    TextArea: [
+      ({ ghost }: any) => ghost && ({
+        paddingTop: 0,
+        paddingBottom: 0,
+      }),
     ],
   },
 })

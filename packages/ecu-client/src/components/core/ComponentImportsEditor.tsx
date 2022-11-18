@@ -5,7 +5,7 @@ import { Button, Div, Input } from 'honorable'
 
 import { refetchKeys } from '../../constants'
 
-import { FileImportsQuery, FileImportsQueryDataType, WriteFileImportsMutation, WriteFileImportsMutationDataType } from '../../queries'
+import { FileImportsQuery, FileImportsQueryDataType, UpdateFileImportsMutation, UpdateFileImportsMutationDataType } from '../../queries'
 
 import useRefetch from '../../hooks/useRefetch'
 
@@ -19,7 +19,7 @@ function ComponentImportsEditor() {
       sourceFileAddress: fileAddress,
     },
   })
-  const [, writeFileImports] = useMutation<WriteFileImportsMutationDataType>(WriteFileImportsMutation)
+  const [, updateFileImports] = useMutation<UpdateFileImportsMutationDataType>(UpdateFileImportsMutation)
 
   useRefetch({
     key: refetchKeys.fileImports,
@@ -28,11 +28,11 @@ function ComponentImportsEditor() {
   })
 
   const handleSave = useCallback(() => {
-    writeFileImports({
+    updateFileImports({
       sourceFileAddress: fileAddress,
       rawImports,
     })
-  }, [writeFileImports, fileAddress, rawImports])
+  }, [updateFileImports, fileAddress, rawImports])
 
   useEffect(() => {
     if (!fileImportsQueryResult.data?.fileImports) {

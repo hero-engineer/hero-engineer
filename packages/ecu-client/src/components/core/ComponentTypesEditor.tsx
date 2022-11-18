@@ -5,7 +5,7 @@ import { A, Button, Div, Input } from 'honorable'
 
 import { refetchKeys } from '../../constants'
 
-import { FileTypesQuery, FileTypesQueryDataType, WriteFileTypesMutation, WriteFileTypesMutationDataType } from '../../queries'
+import { FileTypesQuery, FileTypesQueryDataType, UpdateFileTypesMutation, UpdateFileTypesMutationDataType } from '../../queries'
 
 import useRefetch from '../../hooks/useRefetch'
 
@@ -22,7 +22,7 @@ function ComponentTypesEditor() {
       sourceFileAddress: fileAddress,
     },
   })
-  const [, writeFileTypes] = useMutation<WriteFileTypesMutationDataType>(WriteFileTypesMutation)
+  const [, updateFileTypes] = useMutation<UpdateFileTypesMutationDataType>(UpdateFileTypesMutation)
 
   const refetch = useRefetch({
     key: refetchKeys.fileTypes,
@@ -31,7 +31,7 @@ function ComponentTypesEditor() {
   })
 
   const handleSave = useCallback(async () => {
-    await writeFileTypes({
+    await updateFileTypes({
       sourceFileAddress: fileAddress,
       rawTypes,
     })
@@ -39,7 +39,7 @@ function ComponentTypesEditor() {
     console.log('refetch about to be called')
 
     refetch(refetchKeys.fileImports)
-  }, [writeFileTypes, fileAddress, rawTypes, refetch])
+  }, [updateFileTypes, fileAddress, rawTypes, refetch])
 
   useEffect(() => {
     if (!fileTypesQueryResult.data?.fileTypes) return

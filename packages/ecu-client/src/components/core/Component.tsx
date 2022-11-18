@@ -1,12 +1,19 @@
-import { memo, useCallback, useRef } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useMutation, useQuery } from 'urql'
-import { Div, P } from 'honorable'
+import { Div, H4, Input, P, useOutsideClick } from 'honorable'
 import html2canvas from 'html2canvas'
 
 import { refetchKeys } from '../../constants'
 
-import { ComponentQuery, ComponentQueryDataType, UpdateComponentScreenshotMutation, UpdateComponentScreenshotMutationDataType } from '../../queries'
+import {
+  ComponentQuery,
+  ComponentQueryDataType,
+  UpdateComponentScreenshotMutation,
+  UpdateComponentScreenshotMutationDataType,
+  UpdateFileDescriptionMutation,
+  UpdateFileDescriptionMutationDataType,
+} from '../../queries'
 
 import useRefetch from '../../hooks/useRefetch'
 import useClearHierarchyIdsAndComponentDeltaOnClick from '../../hooks/useClearHierarchyIdsAndComponentDeltaOnClick'
@@ -15,6 +22,7 @@ import ComponentLoader from './ComponentLoader'
 import HierarchyBar from './HierarchyBar'
 import ContextualInformation from './ContextualInformation'
 import DragAndDropEndModal from './DragAndDropEndModal'
+import EmojiPicker from './EmojiPicker'
 
 function traverseElementToRemoveEcuClasses(element: HTMLElement) {
   const classes: string[] = []
@@ -33,9 +41,13 @@ function traverseElementToRemoveEcuClasses(element: HTMLElement) {
 }
 
 function Component() {
-  const { componentAddress = '' } = useParams()
+  const { fileAddress = '', componentAddress = '' } = useParams()
   const rootRef = useRef<HTMLDivElement>(null)
   const componentRef = useRef<HTMLDivElement>(null)
+  const descriptionRef = useRef<HTMLParagraphElement>(null)
+  const [emoji, setEmoji] = useState('')
+  const [description, setDescription] = useState('')
+  const [isEditingDescription, setIsEditingDescription] = useState(false)
 
   useClearHierarchyIdsAndComponentDeltaOnClick(rootRef)
   useClearHierarchyIdsAndComponentDeltaOnClick(componentRef)
@@ -47,6 +59,7 @@ function Component() {
     },
     pause: !componentAddress,
   })
+  const [, updateFileDescription] = useMutation<UpdateFileDescriptionMutationDataType>(UpdateFileDescriptionMutation)
   const [, updateComponentScreenshot] = useMutation<UpdateComponentScreenshotMutationDataType>(UpdateComponentScreenshotMutation)
 
   const takeScreenshot = useCallback(async () => {
@@ -59,7 +72,7 @@ function Component() {
     // Hidden by overflow: hidden on layout
     document.body.appendChild(componentElement)
 
-    const canvas = await html2canvas(componentElement)
+    const canvas = await html2canvas(componentElement, { logging: false })
 
     // Cleanup
     document.body.removeChild(componentElement)
@@ -76,6 +89,33 @@ function Component() {
     setTimeout(takeScreenshot, 1000)
   }, [takeScreenshot])
 
+  const handleDescriptionSubmit = useCallback(async () => {
+    if (!isEditingDescription) return
+
+    setIsEditingDescription(false)
+
+    if (description === componentQueryResult.data?.component?.file.payload.description && emoji === componentQueryResult.data?.component?.file.payload.emoji) return
+
+    await updateFileDescription({
+      sourceFileAddress: fileAddress,
+      description,
+      emoji,
+    })
+
+    // No refetch of component as file would reload the ComponentLoader
+    // TODO investigate
+  }, [
+    isEditingDescription,
+    updateFileDescription,
+    fileAddress,
+    description,
+    emoji,
+    componentQueryResult.data?.component?.file.payload.description,
+    componentQueryResult.data?.component?.file.payload.emoji,
+  ])
+
+  useOutsideClick(descriptionRef, handleDescriptionSubmit)
+
   useRefetch(
     {
       key: refetchKeys.component,
@@ -89,6 +129,13 @@ function Component() {
     }
   )
 
+  useEffect(() => {
+    if (!componentQueryResult.data) return
+
+    setDescription(componentQueryResult.data.component?.file.payload.description ?? '')
+    setEmoji(componentQueryResult.data.component?.file.payload.emoji ?? '')
+  }, [componentQueryResult.data])
+
   if (componentQueryResult.error) {
     return null
   }
@@ -96,7 +143,7 @@ function Component() {
     return null
   }
 
-  const { component } = componentQueryResult.data.component
+  const { component, file } = componentQueryResult.data.component
 
   if (!component) {
     return null
@@ -114,16 +161,41 @@ function Component() {
       <Div
         xflex="x4"
         gap={0.5}
+        mt={0.75}
       >
-        <P fontWeight="bold">{component.payload.name}</P>
-        <P
-          color="text-light"
-          fontSize={12}
-        >
-          {component.payload.relativePath}
-        </P>
+        <EmojiPicker emoji={file.payload.emoji} />
+        <H4>{component.payload.name}</H4>
+        <HierarchyBar />
       </Div>
-      <HierarchyBar />
+      <P
+        color="text-light"
+        fontSize={12}
+        mt={1}
+      >
+        {component.payload.relativePath}
+      </P>
+      <P
+        ref={descriptionRef}
+        color="text-light"
+        cursor="pointer"
+        minHeight={19} // To match the Input min-height
+        mt={0.5}
+        onClick={() => setIsEditingDescription(true)}
+      >
+        {isEditingDescription ? (
+          <Input
+            ghost
+            multiline
+            autoFocus
+            value={description}
+            onChange={e => setDescription(e.target.value)}
+            placeholder="..."
+            width="100%"
+            color="text-light"
+            border="none"
+          />
+        ) : description || 'Click to add a description'}
+      </P>
       <Div
         ref={componentRef}
         xflex="y2s" // No flexGrow for outside click to work

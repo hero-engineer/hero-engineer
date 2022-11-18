@@ -6,6 +6,8 @@ import { Provider } from 'urql'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { CssBaseline, ThemeProvider } from 'honorable'
+import data from '@emoji-mart/data'
+import { init } from 'emoji-mart'
 
 import client from '../../client'
 import theme from '../../theme'
@@ -23,6 +25,8 @@ import createRefetchRegistry from '../../helpers/createRefetchRegistry'
 
 import Router from './Router'
 import WithEcuHomeButton from './WithEcuHomeButton'
+
+init({ data })
 
 type EcuMasterPropsType = PropsWithChildren<{
   mode?: string
