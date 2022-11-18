@@ -1,9 +1,12 @@
-import { useState } from 'react'
-import ExternalEmojiPicker, {
-  Emoji,
-  EmojiStyle,
-} from 'emoji-picker-react'
+import { useCallback, useRef, useState } from 'react'
+import ExternalEmojiPicker from 'emoji-picker-react'
 import { Div, Tooltip } from 'honorable'
+
+import getEmojiUrl from '../../helpers/getEmojiUrl'
+
+import useOutsideClick from '../../hooks/useOutsideClick'
+
+import Emoji from './Emoji'
 
 type EmojiPickerPropsType= {
   emoji: string
@@ -11,9 +14,15 @@ type EmojiPickerPropsType= {
 }
 
 function EmojiPicker({ emoji, setEmoji }: EmojiPickerPropsType) {
+  const emojisRef = useRef<HTMLDivElement>(null)
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false)
 
-  console.log('emoji', emoji)
+  const handleEmojiClose = useCallback(() => {
+    setIsEmojiPickerOpen(false)
+  }, [])
+
+  console.log('emojisRef.current', emojisRef.current)
+  useOutsideClick(emojisRef, handleEmojiClose, true)
 
   return (
     <Div
@@ -31,27 +40,30 @@ function EmojiPicker({ emoji, setEmoji }: EmojiPickerPropsType) {
         >
           <Emoji
             size={32}
-            unified={emoji || '26aa'}
-            emojiStyle={EmojiStyle.APPLE}
+            emoji={emoji || '26aa'}
           />
         </Div>
       </Tooltip>
       {isEmojiPickerOpen && (
         <Div
+          ref={emojisRef}
           xflex="x5"
           position="absolute"
-          top="100%"
+          top="calc(100% + 8px)"
           left={0}
         >
-          <ExternalEmojiPicker
-            autoFocusSearch
-            onEmojiClick={console.log}
-            emojiStyle={EmojiStyle.APPLE}
-          />
+          Foo
         </Div>
       )}
     </Div>
   )
 }
 
+/*
+<ExternalEmojiPicker
+            autoFocusSearch
+            onEmojiClick={console.log}
+            getEmojiUrl={getEmojiUrl}
+          />
+*/
 export default EmojiPicker

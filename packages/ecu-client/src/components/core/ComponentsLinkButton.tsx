@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Tooltip } from 'honorable'
 import { CgComponents } from 'react-icons/cg'
@@ -21,4 +20,4 @@ function ComponentsLinkButton(props: any) {
   )
 }
 
-export default memo(ComponentsLinkButton)
+export default ComponentsLinkButton

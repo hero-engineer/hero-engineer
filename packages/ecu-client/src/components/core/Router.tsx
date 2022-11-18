@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 import Home from './Home'
@@ -40,4 +39,4 @@ function Router({ children }: any) {
   )
 }
 
-export default memo(Router)
+export default Router

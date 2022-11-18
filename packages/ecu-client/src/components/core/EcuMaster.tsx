@@ -1,7 +1,7 @@
 import '../../css/common.css'
 
 import { ViteHotContext } from 'vite/types/hot'
-import { PropsWithChildren, memo, useMemo, useState } from 'react'
+import { PropsWithChildren, useMemo, useState } from 'react'
 import { Provider } from 'urql'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -73,4 +73,4 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
   )
 }
 
-export default memo(EcuMaster)
+export default EcuMaster

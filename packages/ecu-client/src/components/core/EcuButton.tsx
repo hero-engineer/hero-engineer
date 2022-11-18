@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Tooltip } from 'honorable'
 import { GiRosaShield } from 'react-icons/gi'
@@ -21,4 +20,4 @@ function EcuButton(props: any) {
   )
 }
 
-export default memo(EcuButton)
+export default EcuButton

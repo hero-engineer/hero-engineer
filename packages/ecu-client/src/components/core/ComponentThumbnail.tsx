@@ -8,7 +8,9 @@ type ComponentThumbnailPropsType = {
 
 function ComponentThumbnail({ address, name }: ComponentThumbnailPropsType) {
   const handleImageError = useCallback((event: SyntheticEvent<HTMLImageElement, Event>) => {
-    event.currentTarget.src = 'http://localhost:4001/component.svg'
+    if (event.currentTarget.src !== 'http://localhost:4001/.ecu/component.svg') {
+      event.currentTarget.src = 'http://localhost:4001/.ecu/component.svg'
+    }
   }, [])
 
   return (
@@ -24,7 +26,7 @@ function ComponentThumbnail({ address, name }: ComponentThumbnailPropsType) {
       p={1}
     >
       <Img
-        src={`http://localhost:4001/screenshots/${address}.png`}
+        src={`http://localhost:4001/.ecu/screenshots/${address}.png`}
         width="100%"
         height="calc(100% - 16px - 18px)"
         objectFit="contain"

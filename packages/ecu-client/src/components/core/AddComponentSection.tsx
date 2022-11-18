@@ -1,4 +1,4 @@
-import { memo, useCallback, useContext, useMemo, useState } from 'react'
+import { useCallback, useContext, useMemo, useState } from 'react'
 import { useMutation, useQuery } from 'urql'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Accordion, Button, Div, H3, Menu, MenuItem, Modal, P, Select } from 'honorable'
@@ -159,8 +159,8 @@ function AddComponentSection() {
               <MenuItem
                 ghost
                 key={ecuAtom.name}
-                onClick={() => handleComponentSelect(ecuAtom.name, ecuAtom.isComponentAcceptingChildren)}
-                backgroundColor={selectedComponentAddress === ecuAtom.name ? 'darken(background-light, 20)' : null}
+                onClick={() => handleComponentSelect(ecuAtomPrefix + ecuAtom.name, ecuAtom.isComponentAcceptingChildren)}
+                backgroundColor={selectedComponentAddress === ecuAtomPrefix + ecuAtom.name ? 'darken(background-light, 20)' : null}
               >
                 {ecuAtom.name}
                 {ecuAtom.isComponentAcceptingChildren && isComponentAcceptingChildrenNode}
@@ -308,4 +308,4 @@ function AddComponentSection() {
   )
 }
 
-export default memo(AddComponentSection)
+export default AddComponentSection

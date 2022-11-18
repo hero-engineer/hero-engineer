@@ -1,4 +1,4 @@
-import { Fragment, memo, useCallback, useContext, useEffect, useMemo } from 'react'
+import { Fragment, useCallback, useContext, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useQuery } from 'urql'
 import { Div } from 'honorable'
@@ -179,4 +179,4 @@ function HierarchyBar() {
   )
 }
 
-export default memo(HierarchyBar)
+export default HierarchyBar

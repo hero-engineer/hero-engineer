@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useMutation, useQuery } from 'urql'
 import { Div, H4, Input, P, useOutsideClick } from 'honorable'
@@ -156,7 +156,8 @@ function Component() {
   return (
     <Div
       ref={rootRef}
-      xflex="y2s" // No flexGrow for outside click to work
+      xflex="y2s"
+      flexGrow={1}
       maxHeight="100%"
       overflowY="auto"
       px="1px" // To allow ecu-elected borders to be visible
@@ -219,4 +220,4 @@ function Component() {
   )
 }
 
-export default memo(Component)
+export default Component

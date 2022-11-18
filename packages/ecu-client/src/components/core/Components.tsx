@@ -1,7 +1,6 @@
-import { memo } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from 'urql'
-import { Div, H1, Li, Ul } from 'honorable'
+import { Div, H1 } from 'honorable'
 
 import { refetchKeys } from '../../constants'
 
@@ -56,4 +55,4 @@ function Components() {
   )
 }
 
-export default memo(Components)
+export default Components

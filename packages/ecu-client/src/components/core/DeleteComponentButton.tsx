@@ -1,4 +1,4 @@
-import { memo, useCallback, useContext, useMemo, useState } from 'react'
+import { useCallback, useContext, useMemo, useState } from 'react'
 import { useMutation } from 'urql'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Button, Div, H3, Modal, P, Tooltip } from 'honorable'
@@ -113,4 +113,4 @@ function DeleteComponentButton(props: any) {
   )
 }
 
-export default memo(DeleteComponentButton)
+export default DeleteComponentButton

@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useMutation } from 'urql'
 import { useNavigate } from 'react-router-dom'
 import { Button, Div, H2, Input, Modal, Tooltip } from 'honorable'
@@ -71,4 +71,4 @@ function CreateComponentButton(props: any) {
   )
 }
 
-export default memo(CreateComponentButton)
+export default CreateComponentButton
