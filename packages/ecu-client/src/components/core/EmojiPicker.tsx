@@ -1,36 +1,56 @@
 import { useState } from 'react'
-import data from '@emoji-mart/data'
-// @ts-expect-error
-import Picker from '@emoji-mart/react'
-
+import ExternalEmojiPicker, {
+  Emoji,
+  EmojiStyle,
+} from 'emoji-picker-react'
 import { Div, Tooltip } from 'honorable'
-
-import Emoji from './Emoji'
 
 type EmojiPickerPropsType= {
   emoji: string
+  setEmoji: (emoji: string) => void
 }
 
-function EmojiPicker({ emoji }: EmojiPickerPropsType) {
+function EmojiPicker({ emoji, setEmoji }: EmojiPickerPropsType) {
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false)
 
+  console.log('emoji', emoji)
+
   return (
-    // @ts-ignore
-    <Tooltip
-      label="Pick an emoji for this file"
-      placement="bottom-start"
+    <Div
+      xflex="x5"
+      position="relative"
     >
-      <Div
-        xflex="x5"
-        cursor="pointer"
+      <Tooltip
+        label="Pick an emoji for this file"
+        placement="bottom-start"
       >
-        <Emoji
-          emoji=":white_circle:"
-          // @ts-expect-error
-          size="1.5rem"
-        />
-      </Div>
-    </Tooltip>
+        <Div
+          xflex="x5"
+          cursor="pointer"
+          onClick={() => setIsEmojiPickerOpen(true)}
+        >
+          <Emoji
+            size={32}
+            unified={emoji || '26aa'}
+            emojiStyle={EmojiStyle.APPLE}
+          />
+        </Div>
+      </Tooltip>
+      {isEmojiPickerOpen && (
+        <Div
+          xflex="x5"
+          position="absolute"
+          top="100%"
+          left={0}
+        >
+          <ExternalEmojiPicker
+            autoFocusSearch
+            onEmojiClick={console.log}
+            emojiStyle={EmojiStyle.APPLE}
+          />
+        </Div>
+      )}
+    </Div>
   )
 }
 

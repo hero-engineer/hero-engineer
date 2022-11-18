@@ -89,6 +89,23 @@ function Component() {
     setTimeout(takeScreenshot, 1000)
   }, [takeScreenshot])
 
+  const refetch = useRefetch(
+    {
+      key: refetchKeys.component,
+      refetch: refetchComponentQuery,
+      skip: !componentAddress,
+    },
+    {
+      key: refetchKeys.componentScreenshot,
+      refetch: takeScreenshotWithTimeout,
+      skip: !componentAddress,
+    }
+  )
+
+  const handleEditDescription = useCallback(() => {
+    setIsEditingDescription(true)
+  }, [])
+
   const handleDescriptionSubmit = useCallback(async () => {
     if (!isEditingDescription) return
 
@@ -102,8 +119,7 @@ function Component() {
       emoji,
     })
 
-    // No refetch of component as file would reload the ComponentLoader
-    // TODO investigate
+    refetch(refetchKeys.components)
   }, [
     isEditingDescription,
     updateFileDescription,
@@ -112,22 +128,10 @@ function Component() {
     emoji,
     componentQueryResult.data?.component?.file.payload.description,
     componentQueryResult.data?.component?.file.payload.emoji,
+    refetch,
   ])
 
   useOutsideClick(descriptionRef, handleDescriptionSubmit)
-
-  useRefetch(
-    {
-      key: refetchKeys.component,
-      refetch: refetchComponentQuery,
-      skip: !componentAddress,
-    },
-    {
-      key: refetchKeys.componentScreenshot,
-      refetch: takeScreenshotWithTimeout,
-      skip: !componentAddress,
-    }
-  )
 
   useEffect(() => {
     if (!componentQueryResult.data) return
@@ -163,7 +167,10 @@ function Component() {
         gap={0.5}
         mt={0.75}
       >
-        <EmojiPicker emoji={file.payload.emoji} />
+        <EmojiPicker
+          emoji={file.payload.emoji}
+          setEmoji={setEmoji}
+        />
         <H4>{component.payload.name}</H4>
         <HierarchyBar />
       </Div>
@@ -180,10 +187,11 @@ function Component() {
         cursor="pointer"
         minHeight={19} // To match the Input min-height
         mt={0.5}
-        onClick={() => setIsEditingDescription(true)}
+        onClick={handleEditDescription}
       >
         {isEditingDescription ? (
           <Input
+            inputProps={{ ref: (x: HTMLInputElement) => x?.select() }}
             ghost
             multiline
             autoFocus
