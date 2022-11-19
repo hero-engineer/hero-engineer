@@ -4,6 +4,8 @@ import { MouseEvent, Ref, useCallback, useContext, useEffect, useMemo, useRef, u
 import { useParams } from 'react-router-dom'
 import { useDrag, useDrop } from 'react-dnd'
 
+import { HierarchyItemType } from '../types'
+
 import HierarchyContext from '../contexts/HierarchyContext'
 import DragAndDropContext from '../contexts/DragAndDropContext'
 import ContextualInformationContext from '../contexts/ContextualInformationContext'
@@ -38,6 +40,36 @@ function getHierarchyIds(element: EventTarget | HTMLElement) {
   }
 
   return hierarchyIds.reverse()
+}
+
+function belongsToComponentRoot(hierarchy: HierarchyItemType[], componentRootHierarchyIds: string[], hierarchyId: string) {
+  function traverseHierarchy(hierarchy: HierarchyItemType[], parentHierarchyIds: string[] = []): string[] | false {
+    for (const item of hierarchy) {
+      const nextParentHierarchyIds = [...parentHierarchyIds]
+
+      if (item.hierarchyId === hierarchyId) return nextParentHierarchyIds
+
+      if (item.hierarchyId) {
+        nextParentHierarchyIds.push(item.hierarchyId)
+      }
+
+      if (item.children) {
+        const childParentHierarchyIds = traverseHierarchy(item.children, nextParentHierarchyIds)
+
+        if (childParentHierarchyIds) return childParentHierarchyIds
+      }
+    }
+
+    return false
+  }
+
+  const parentHierarchyIds = traverseHierarchy(hierarchy)
+
+  if (parentHierarchyIds) {
+    return parentHierarchyIds.some(x => componentRootHierarchyIds.includes(x))
+  }
+
+  return false
 }
 
 function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', canBeEdited = false) {
@@ -116,6 +148,9 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
       return
     }
 
+    // If the clicked element belongs to a component root, we need to adjust the component delta +1
+    const shouldIncreaseComponentDelta = !!(hierarchyIds.length && componentRootHierarchyIds.includes(hierarchyIds[hierarchyIds.length - 1]) && componentRootHierarchyIds.includes(hierarchyId)) || belongsToComponentRoot(hierarchy, componentRootHierarchyIds, hierarchyId)
+
     setEditionSearchParams({
       hierarchyIds: x => {
         const nextHierarchyIds: string[] = []
@@ -132,14 +167,17 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
 
         return nextHierarchyIds
       },
+      componentDelta: shouldIncreaseComponentDelta ? Math.min(0, componentDelta + 1) : componentDelta,
     })
 
-    setShouldAdjustComponentDelta(true)
+    setShouldAdjustComponentDelta(!shouldIncreaseComponentDelta)
   }, [
     isEdited,
     canBeEdited,
+    hierarchyId,
     hierarchyIds,
     hierarchy,
+    componentRootHierarchyIds,
     componentAddress,
     componentDelta,
     setEditionSearchParams,
