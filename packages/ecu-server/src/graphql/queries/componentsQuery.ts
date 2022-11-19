@@ -4,6 +4,8 @@ import { getNodesByRole, getNodesBySecondNeighbourg } from '../../graph/index.js
 import isComponentAcceptingChildren from '../../domain/components/isComponentAcceptingChildren.js'
 
 function componentsQuery() {
+  console.log('__componentsQuery__')
+
   return getNodesByRole<FunctionNodeType>('Function').filter(node => node.payload.isComponent).map(componentNode => {
     const fileNode = getNodesBySecondNeighbourg(componentNode.address, 'DeclaresFunction')[0]
 

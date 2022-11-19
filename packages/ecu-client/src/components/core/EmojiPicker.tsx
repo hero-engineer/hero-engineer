@@ -21,8 +21,7 @@ function EmojiPicker({ emoji, setEmoji }: EmojiPickerPropsType) {
     setIsEmojiPickerOpen(false)
   }, [])
 
-  console.log('emojisRef.current', emojisRef.current)
-  useOutsideClick(emojisRef, handleEmojiClose, true)
+  useOutsideClick(emojisRef.current, handleEmojiClose, true)
 
   return (
     <Div

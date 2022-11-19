@@ -1,7 +1,11 @@
-import { Suspense, lazy } from 'react'
+import { Suspense, lazy, memo } from 'react'
 
-function ComponentLoader({ component }: any) {
-  const Component = lazy(() => import(/* @vite-ignore */ /* webpackIgnore: true */ component.payload.path))
+type ComponentLoaderPropsType = {
+  componentPath: string
+}
+
+function ComponentLoader({ componentPath }: ComponentLoaderPropsType) {
+  const Component = lazy(() => import(/* @vite-ignore */ /* webpackIgnore: true */ componentPath))
 
   return (
     <Suspense fallback={<>Loading...</>}>
@@ -10,4 +14,4 @@ function ComponentLoader({ component }: any) {
   )
 }
 
-export default ComponentLoader
+export default memo(ComponentLoader)

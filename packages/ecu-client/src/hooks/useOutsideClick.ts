@@ -1,26 +1,24 @@
-import { RefObject, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
-function useOutsideClick(ref: RefObject<HTMLElement>, handler: (event: MouseEvent | TouchEvent) => void, preventFirstFire = false) {
+function useOutsideClick(el: HTMLElement | null, handler: (event: MouseEvent | TouchEvent) => void, preventFirstFire = false) {
   const [firstFire, setFirstFire] = useState(true)
 
   useEffect(() => {
-    function handleClick(event: MouseEvent | TouchEvent) {
-      console.log('firstFire', firstFire)
+    if (!el) return
 
-      if (!ref.current && preventFirstFire) {
-        console.log('reset')
+    function handleClick(event: MouseEvent | TouchEvent) {
+      if (!el && preventFirstFire && !firstFire) {
         setFirstFire(true)
 
         return
       }
-      if (!ref.current || ref.current.contains(event.target as Node)) return
-
-      if (preventFirstFire && firstFire) {
-        console.log('prevented')
+      if (!el || el.contains(event.target as Node)) return
+      if (firstFire && preventFirstFire) {
         setFirstFire(false)
 
         return
       }
+
       handler(event)
     }
 
@@ -31,9 +29,7 @@ function useOutsideClick(ref: RefObject<HTMLElement>, handler: (event: MouseEven
       document.removeEventListener('click', handleClick)
       document.removeEventListener('touchstart', handleClick)
     }
-  // Do not add [ref, handler] here as may cause a bug where only the last useOutsideClick works
-  // eslint-disable-next-line
-  }, [ref.current, handler, preventFirstFire, firstFire])
+  }, [el, handler, firstFire, preventFirstFire])
 }
 
 export default useOutsideClick

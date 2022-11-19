@@ -212,7 +212,7 @@ function Component() {
         pt={1}
         pb={6}
       >
-        <ComponentLoader component={component} />
+        <ComponentLoader componentPath={component.payload.path} />
       </Div>
       <ContextualInformation scrollRef={rootRef} />
       <DragAndDropEndModal />
