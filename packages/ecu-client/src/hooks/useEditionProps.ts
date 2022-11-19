@@ -53,11 +53,9 @@ function belongsToComponentRoot(hierarchy: HierarchyItemType[], componentRootHie
         nextParentHierarchyIds.push(item.hierarchyId)
       }
 
-      if (item.children) {
-        const childParentHierarchyIds = traverseHierarchy(item.children, nextParentHierarchyIds)
+      const childParentHierarchyIds = traverseHierarchy(item.children, nextParentHierarchyIds)
 
-        if (childParentHierarchyIds) return childParentHierarchyIds
-      }
+      if (childParentHierarchyIds) return childParentHierarchyIds
     }
 
     return false
