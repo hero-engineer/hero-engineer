@@ -17,8 +17,6 @@ import useRefetch from '../../hooks/useRefetch'
 
 import getFlattenedHierarchy from '../../helpers/getFlattenedHierarchy'
 
-import areArraysEqual from '../../utils/areArraysEqual'
-
 function getHierarchyDelta(hierarchy: HierarchyItemType[]) {
   let delta = 0
 
