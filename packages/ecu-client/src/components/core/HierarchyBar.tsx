@@ -109,9 +109,9 @@ function HierarchyBar() {
   }, [actualHierarchy, totalHierarchy, setEditionSearchParams])
 
   useEffect(() => {
-    setTotalHierarchy(totalHierarchy)
+    setTotalHierarchy(hierarchy)
     setHierarchy(actualHierarchy)
-  }, [totalHierarchy, actualHierarchy, setTotalHierarchy, setHierarchy])
+  }, [hierarchy, actualHierarchy, setTotalHierarchy, setHierarchy])
 
   useEffect(() => {
     if (!shouldAdjustComponentDelta) return

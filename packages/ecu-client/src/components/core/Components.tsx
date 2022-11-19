@@ -47,6 +47,8 @@ function Components() {
             <ComponentThumbnail
               address={componentAndFile.component.address}
               name={componentAndFile.component.payload.name}
+              description={componentAndFile.file.payload.description}
+              emoji={componentAndFile.file.payload.emoji}
             />
           </Link>
         ))}

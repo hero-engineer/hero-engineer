@@ -34,7 +34,7 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
   const refetchContextValue = useMemo<RefetchContextType>(() => ({ refetch, register }), [refetch, register])
 
   const [hierarchy, setHierarchy] = useState<HierarchyItemType[]>([])
-  const [totalHierarchy, setTotalHierarchy] = useState<HierarchyItemType[]>([])
+  const [totalHierarchy, setTotalHierarchy] = useState<HierarchyItemType| null>(null)
   const [shouldAdjustComponentDelta, setShouldAdjustComponentDelta] = useState(false)
   const hierarchyContextValue = useMemo<HierarchyContextType>(() => ({ hierarchy, setHierarchy, totalHierarchy, setTotalHierarchy, shouldAdjustComponentDelta, setShouldAdjustComponentDelta }), [hierarchy, totalHierarchy, shouldAdjustComponentDelta])
 

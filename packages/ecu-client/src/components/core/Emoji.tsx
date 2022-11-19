@@ -7,7 +7,9 @@ type EmojiPropsType = {
   size?: number
 }
 
-function Emoji({ emoji, size }: EmojiPropsType) {
+function Emoji({ emoji, size = 16 }: EmojiPropsType) {
+  if (!emoji) return null
+
   return (
     <ExternalEmoji
       unified={emoji}
