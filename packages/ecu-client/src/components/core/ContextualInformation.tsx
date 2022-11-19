@@ -1,6 +1,6 @@
 import { RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Div, Menu, useOutsideClick } from 'honorable'
+import { Div, Menu, WithOutsideClick, useOutsideClick } from 'honorable'
 
 import { XYType } from '../../types'
 
@@ -66,16 +66,20 @@ function ContextualInformation({ scrollRef }: ContextualInformationPropsType) {
     const { pageX, pageY } = contextualInformationState.rightClickEvent
 
     return (
-      <Menu
-        ref={contextualMenuRef}
-        position="fixed"
-        top={pageY}
-        left={pageX}
+      <WithOutsideClick
+        onOutsideClick={closeContextualMenu}
       >
-        Foo
-      </Menu>
+        <Menu
+          ref={contextualMenuRef}
+          position="fixed"
+          top={pageY}
+          left={pageX}
+        >
+          Foo
+        </Menu>
+      </WithOutsideClick>
     )
-  }, [contextualInformationState.rightClickEvent])
+  }, [contextualInformationState.rightClickEvent, closeContextualMenu])
 
   useEffect(() => {
     if (!scrollRef.current) return
@@ -120,8 +124,6 @@ function ContextualInformation({ scrollRef }: ContextualInformationPropsType) {
       observer.disconnect()
     }
   }, [contextualInformationElement, scrollRef])
-
-  useOutsideClick(contextualMenuRef, closeContextualMenu)
 
   if (!componentAddress) return null
 

@@ -1,27 +1,28 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useState } from 'react'
 import ExternalEmojiPicker from 'emoji-picker-react'
-import { Div, Tooltip } from 'honorable'
+import { Div, Tooltip, WithOutsideClick } from 'honorable'
 
 import getEmojiUrl from '../../helpers/getEmojiUrl'
-
-import useOutsideClick from '../../hooks/useOutsideClick'
 
 import Emoji from './Emoji'
 
 type EmojiPickerPropsType= {
   emoji: string
   setEmoji: (emoji: string) => void
+  size?: number
 }
 
-function EmojiPicker({ emoji, setEmoji }: EmojiPickerPropsType) {
-  const emojisRef = useRef<HTMLDivElement>(null)
+function EmojiPicker({ emoji, setEmoji, size = 24 }: EmojiPickerPropsType) {
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false)
 
   const handleEmojiClose = useCallback(() => {
     setIsEmojiPickerOpen(false)
   }, [])
 
-  useOutsideClick(emojisRef.current, handleEmojiClose, true)
+  const handleEmojiSelect = useCallback((emojiObject: any) => {
+    setEmoji(emojiObject.unified)
+    handleEmojiClose()
+  }, [setEmoji, handleEmojiClose])
 
   return (
     <Div
@@ -38,31 +39,32 @@ function EmojiPicker({ emoji, setEmoji }: EmojiPickerPropsType) {
           onClick={() => setIsEmojiPickerOpen(true)}
         >
           <Emoji
-            size={32}
+            size={size}
             emoji={emoji || '26aa'}
           />
         </Div>
       </Tooltip>
       {isEmojiPickerOpen && (
-        <Div
-          ref={emojisRef}
-          xflex="x5"
-          position="absolute"
-          top="calc(100% + 8px)"
-          left={0}
+        <WithOutsideClick
+          preventFirstFire
+          onOutsideClick={handleEmojiClose}
         >
-          Foo
-        </Div>
+          <Div
+            xflex="x5"
+            position="absolute"
+            top="calc(100% + 8px)"
+            left={0}
+          >
+            <ExternalEmojiPicker
+              autoFocusSearch
+              onEmojiClick={handleEmojiSelect}
+              getEmojiUrl={getEmojiUrl}
+            />
+          </Div>
+        </WithOutsideClick>
       )}
     </Div>
   )
 }
 
-/*
-<ExternalEmojiPicker
-            autoFocusSearch
-            onEmojiClick={console.log}
-            getEmojiUrl={getEmojiUrl}
-          />
-*/
 export default EmojiPicker

@@ -45,6 +45,7 @@ function Component() {
   const rootRef = useRef<HTMLDivElement>(null)
   const componentRef = useRef<HTMLDivElement>(null)
   const descriptionRef = useRef<HTMLParagraphElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
   const [emoji, setEmoji] = useState('')
   const [description, setDescription] = useState('')
   const [isEditingDescription, setIsEditingDescription] = useState(false)
@@ -107,8 +108,6 @@ function Component() {
   }, [])
 
   const handleDescriptionSubmit = useCallback(async () => {
-    if (!isEditingDescription) return
-
     setIsEditingDescription(false)
 
     if (description === componentQueryResult.data?.component?.file.payload.description && emoji === componentQueryResult.data?.component?.file.payload.emoji) return
@@ -121,7 +120,6 @@ function Component() {
 
     refetch(refetchKeys.components)
   }, [
-    isEditingDescription,
     updateFileDescription,
     fileAddress,
     description,
@@ -140,6 +138,13 @@ function Component() {
     setEmoji(componentQueryResult.data.component?.file.payload.emoji ?? '')
   }, [componentQueryResult.data])
 
+  useEffect(() => {
+    if (!inputRef.current) return
+
+    inputRef.current.select()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inputRef.current])
+
   if (componentQueryResult.error) {
     return null
   }
@@ -147,7 +152,7 @@ function Component() {
     return null
   }
 
-  const { component, file } = componentQueryResult.data.component
+  const { component } = componentQueryResult.data.component
 
   if (!component) {
     return null
@@ -169,7 +174,7 @@ function Component() {
         mt={0.75}
       >
         <EmojiPicker
-          emoji={file.payload.emoji}
+          emoji={emoji}
           setEmoji={setEmoji}
         />
         <H4>{component.payload.name}</H4>
@@ -192,7 +197,7 @@ function Component() {
       >
         {isEditingDescription ? (
           <Input
-            inputProps={{ ref: (x: HTMLInputElement) => x?.select() }}
+            inputProps={{ ref: inputRef }}
             ghost
             multiline
             autoFocus
