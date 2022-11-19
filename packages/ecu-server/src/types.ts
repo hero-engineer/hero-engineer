@@ -78,6 +78,7 @@ export type PostTraverseType = (fileNode: FileNodeType, ast: ParseResult) => voi
 export type IndexRegistryType = Record<string, number>
 
 export type HierarchyTreeType = {
+  id: string
   label: string
   index: number
   fileAddress: string

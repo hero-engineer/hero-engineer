@@ -7,6 +7,7 @@ import {
   StringLiteral,
 } from '@babel/types'
 import { NodePath } from '@babel/traverse'
+import shortId from 'shortid'
 
 import {
   FileNodeType,
@@ -104,6 +105,7 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
 
   const impacted: ImpactedType[] = [] // retval
   const rootHierarchy: TraverseComponentHierarchyTreeType = { // retval
+    id: shortId(),
     context: {
       useAst: true,
       fileNode: rootFileNode,
@@ -221,6 +223,7 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
         // hierarchyId found means we're at an ecu-client Component
         if (hierarchyId) {
           hierarchy.children.push({
+            id: shortId(),
             context: {
               fileNode,
               paths: nextPaths,
@@ -253,6 +256,7 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
 
             if (componentNode) {
               hierarchy.children.push({
+                id: shortId(),
                 context: {
                   useAst: true,
                   fileNode: componentFileNode,
