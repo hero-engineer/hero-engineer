@@ -118,12 +118,10 @@ function HierarchyBar() {
 
     setShouldAdjustComponentDelta(false)
 
-    if (areArraysEqual(previousHierarchy, actualHierarchy)) return
-
     const commonHierarchy: HierarchyItemType[] = []
 
     for (let i = 0; i < previousHierarchy.length; i++) {
-      if (JSON.stringify(previousHierarchy[i]) === JSON.stringify(actualHierarchy[i])) {
+      if (previousHierarchy[i].id === totalHierarchy[i].id) {
         commonHierarchy.push(previousHierarchy[i])
       }
       else {
@@ -137,7 +135,13 @@ function HierarchyBar() {
     setEditionSearchParams({
       componentDelta: nextDelta,
     })
-  }, [shouldAdjustComponentDelta, totalHierarchy, previousHierarchy, actualHierarchy, setEditionSearchParams, setShouldAdjustComponentDelta])
+  }, [
+    shouldAdjustComponentDelta,
+    previousHierarchy,
+    totalHierarchy,
+    setEditionSearchParams,
+    setShouldAdjustComponentDelta,
+  ])
 
   useEffect(() => {
     refetch(refetchKeys.componentScreenshot)

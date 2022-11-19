@@ -26,6 +26,7 @@ export type XYType = {
 export type HierarchyPosition = 'before' | 'after' | 'children' | 'parent'
 
 export type HierarchyItemType = {
+  id: string
   label: string
   index: number
   fileAddress: string
