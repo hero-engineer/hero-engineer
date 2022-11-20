@@ -5,7 +5,7 @@ import { getNodesByRole, getNodesBySecondNeighbourg } from '../graph/index.js'
 import regenerate from '../domain/regenerate.js'
 import updateDataEcuAttributes from '../domain/components/updateDataEcuAttributes.js'
 
-async function createDataEcuAttributesWatcher() {
+async function createDataEcuAttributes() {
   const componentNodes = getNodesByRole<FunctionNodeType>('Function').filter(node => node.payload.isComponent)
 
   await Promise.all(componentNodes.map(async componentNode => {
@@ -21,4 +21,4 @@ async function createDataEcuAttributesWatcher() {
   }))
 }
 
-export default createDataEcuAttributesWatcher
+export default createDataEcuAttributes

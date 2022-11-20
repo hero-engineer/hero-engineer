@@ -6,8 +6,8 @@ import getEcuScreenshotsLocation from '../helpers/getEcuScreenshotsLocation.js'
 function deleteAllScreenshots() {
   const ecuScreeshotsLocation = getEcuScreenshotsLocation()
 
-  fs.readdirSync(ecuScreeshotsLocation).forEach(file => {
-    fs.unlinkSync(path.join(ecuScreeshotsLocation, file))
+  fs.readdirSync(ecuScreeshotsLocation).forEach(fileName => {
+    fs.unlinkSync(path.join(ecuScreeshotsLocation, fileName))
   })
 }
 

@@ -2,20 +2,12 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 import { GraphType } from '../types.js'
-import { appPath, ecuGraphFileName, ecuRelativePath } from '../configuration.js'
+import { ecuGraphFileName } from '../configuration.js'
+
+import getEcuLocation from '../helpers/getEcuLocation.js'
 
 import createFileNode from './models/createFileNode.js'
 import createFunctionNode from './models/createFunctionNode.js'
-
-function ensureEcuPathExistance() {
-  const ecuPath = path.join(appPath, ecuRelativePath)
-
-  if (!fs.existsSync(ecuPath)) {
-    fs.mkdirSync(ecuPath, { recursive: true })
-  }
-
-  return ecuPath
-}
 
 function replacer(key: string, value: any) {
   if (key === 'ast' || key === 'code' || key === 'description' || key === 'emoji') {
@@ -26,10 +18,10 @@ function replacer(key: string, value: any) {
 }
 
 export function getGraph(): GraphType {
-  const ecuPath = ensureEcuPathExistance()
-  const ecuGraphFilePath = path.join(ecuPath, ecuGraphFileName)
+  const ecuLocation = getEcuLocation()
+  const ecuGraphFileLocation = path.join(ecuLocation, ecuGraphFileName)
 
-  if (!fs.existsSync(ecuGraphFilePath)) {
+  if (!fs.existsSync(ecuGraphFileLocation)) {
     return {
       hash: '',
       nodes: {},
@@ -37,21 +29,20 @@ export function getGraph(): GraphType {
     }
   }
 
-  const ecuGraphFile = fs.readFileSync(ecuGraphFilePath, 'utf8')
-
+  const ecuGraphFile = fs.readFileSync(ecuGraphFileLocation, 'utf8')
   const graph = JSON.parse(ecuGraphFile) as GraphType
 
-  Object.entries(graph.nodes).forEach(([key, value]) => {
-    if (value.role === 'File') graph.nodes[key] = createFileNode(value)
-    if (value.role === 'Function') graph.nodes[key] = createFunctionNode(value)
+  Object.entries(graph.nodes).forEach(([address, node]) => {
+    if (node.role === 'File') graph.nodes[address] = createFileNode(node)
+    if (node.role === 'Function') graph.nodes[address] = createFunctionNode(node)
   })
 
   return graph
 }
 
 export function setGraph(graph: GraphType) {
-  const ecuPath = ensureEcuPathExistance()
-  const ecuGraphFilePath = path.join(ecuPath, ecuGraphFileName)
+  const ecuLocation = getEcuLocation()
+  const ecuGraphFileLocation = path.join(ecuLocation, ecuGraphFileName)
 
-  fs.writeFileSync(ecuGraphFilePath, JSON.stringify(graph, replacer, 2), 'utf8')
+  fs.writeFileSync(ecuGraphFileLocation, JSON.stringify(graph, replacer, 2), 'utf8')
 }
