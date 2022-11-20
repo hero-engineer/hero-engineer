@@ -1,4 +1,4 @@
-# ecu
+# Ecu
 
 A self-reprogramming shield for React apps
 
