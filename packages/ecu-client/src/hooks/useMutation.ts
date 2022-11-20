@@ -5,7 +5,7 @@ import { TypedDocumentNode, useMutation as externalUseMutation } from 'urql'
 import SnackbarContext from '../contexts/SnackBarContext'
 
 function useMutation<T>(args: string | DocumentNode | TypedDocumentNode) {
-  const { snackBarItems, setSnackBarItems } = useContext(SnackbarContext)
+  const { snackBarItems, appendSnackBarItem } = useContext(SnackbarContext)
   const [id, setId] = useState(0)
   const [retval0, retval1] = externalUseMutation<T>(args)
 
@@ -15,15 +15,12 @@ function useMutation<T>(args: string | DocumentNode | TypedDocumentNode) {
     if (!error) return
     if (snackBarItems.some(x => x.id === id)) return
 
-    setSnackBarItems(x => [
-      ...x,
-      {
-        id,
-        content: error.message,
-        severity: 'error',
-      },
-    ])
-  }, [retval0, id, snackBarItems, setSnackBarItems])
+    appendSnackBarItem({
+      id,
+      content: error.message,
+      severity: 'error',
+    })
+  }, [retval0, id, snackBarItems, appendSnackBarItem])
 
   const handleMutation = useCallback((args: any) => {
     setId(Date.now())

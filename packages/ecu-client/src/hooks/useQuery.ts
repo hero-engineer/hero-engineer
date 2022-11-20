@@ -4,7 +4,7 @@ import { UseQueryArgs, useQuery as externalUseQuery } from 'urql'
 import SnackbarContext from '../contexts/SnackBarContext'
 
 function useQuery<T>(args: UseQueryArgs) {
-  const { snackBarItems, setSnackBarItems } = useContext(SnackbarContext)
+  const { snackBarItems, appendSnackBarItem } = useContext(SnackbarContext)
   const [id, setId] = useState(Math.random())
   const [retval0, retval1] = externalUseQuery<T>(args)
 
@@ -14,15 +14,12 @@ function useQuery<T>(args: UseQueryArgs) {
     if (!error) return
     if (snackBarItems.some(x => x.id === id)) return
 
-    setSnackBarItems(x => [
-      ...x,
-      {
-        id,
-        content: error.message,
-        severity: 'error',
-      },
-    ])
-  }, [retval0, id, snackBarItems, setSnackBarItems])
+    appendSnackBarItem({
+      id,
+      content: error.message,
+      severity: 'error',
+    })
+  }, [retval0, id, snackBarItems, appendSnackBarItem])
 
   const handleRefetch = useCallback((args: any) => {
     setId(Date.now())

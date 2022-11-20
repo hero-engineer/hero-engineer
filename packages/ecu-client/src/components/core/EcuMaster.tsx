@@ -1,7 +1,7 @@
 import '../../css/common.css'
 
 import { ViteHotContext } from 'vite/types/hot'
-import { PropsWithChildren, useMemo, useState } from 'react'
+import { PropsWithChildren, useCallback, useMemo, useState } from 'react'
 import { Provider } from 'urql'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -36,7 +36,8 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
   const refetchContextValue = useMemo<RefetchContextType>(() => ({ refetch, register }), [refetch, register])
 
   const [snackBarItems, setSnackBarItems] = useState<SnackBarItemType[]>([])
-  const snackBarContextValue = useMemo<SnackBarContextType>(() => ({ snackBarItems, setSnackBarItems }), [snackBarItems])
+  const appendSnackBarItem = useCallback((item: SnackBarItemType) => setSnackBarItems(x => [...x, item]), [])
+  const snackBarContextValue = useMemo<SnackBarContextType>(() => ({ snackBarItems, setSnackBarItems, appendSnackBarItem }), [snackBarItems, appendSnackBarItem])
 
   const [hierarchy, setHierarchy] = useState<HierarchyItemType[]>([])
   const [totalHierarchy, setTotalHierarchy] = useState<HierarchyItemType| null>(null)
