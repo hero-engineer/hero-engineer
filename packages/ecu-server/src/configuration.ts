@@ -1,4 +1,3 @@
-import fs from 'node:fs'
 import path from 'node:path'
 
 import { ImportType } from './types.js'
@@ -6,10 +5,6 @@ import { ImportType } from './types.js'
 const cwd = process.cwd()
 
 export const appPath = path.join(cwd, 'app')
-
-if (!fs.existsSync(appPath)) {
-  throw new Error('Could not find app directory, is your cwd a valid ecu project?')
-}
 
 export const ecuPackageName = 'ecu'
 
