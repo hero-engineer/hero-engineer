@@ -49,6 +49,7 @@ function Component() {
   const inputRef = useRef<HTMLInputElement>(null)
   const [emoji, setEmoji] = useState('')
   const [description, setDescription] = useState('')
+  const [isMetadataSet, setIsMetadataSet] = useState(false)
   const [isEditingDescription, setIsEditingDescription] = useState(false)
 
   useClearHierarchyIdsAndComponentDeltaOnClick(rootRef)
@@ -112,6 +113,7 @@ function Component() {
   const handleDescriptionSubmit = useCallback(async () => {
     setIsEditingDescription(false)
 
+    if (!isMetadataSet) return
     if (description === componentQueryResult.data?.component?.file.payload.description && emoji === componentQueryResult.data?.component?.file.payload.emoji) return
 
     await updateFileDescription({
@@ -122,12 +124,13 @@ function Component() {
 
     refetch(refetchKeys.components)
   }, [
-    updateFileDescription,
+    isMetadataSet,
     fileAddress,
     description,
     emoji,
     componentQueryResult.data?.component?.file.payload.description,
     componentQueryResult.data?.component?.file.payload.emoji,
+    updateFileDescription,
     refetch,
   ])
 
@@ -138,6 +141,7 @@ function Component() {
 
     setDescription(componentQueryResult.data.component?.file.payload.description ?? '')
     setEmoji(componentQueryResult.data.component?.file.payload.emoji ?? '')
+    setIsMetadataSet(true)
   }, [componentQueryResult.data])
 
   // Select the content of the description input when editing
