@@ -20,7 +20,7 @@ import ContextualInformationContext, { ContextualInformationContextType, Context
 
 import { HierarchyItemType, SnackBarItemType } from '../../types'
 
-import createRefetchRegistry from '../../helpers/createRefetchRegistry'
+import useCreateRefetchRegistry from '../../hooks/useCreateRefetchRegistry'
 
 import Router from './Router'
 import WithEcuHomeButton from './WithEcuHomeButton'
@@ -32,7 +32,7 @@ type EcuMasterPropsType = PropsWithChildren<{
 
 // The master component that wraps the entire application
 function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterPropsType) {
-  const { refetch, register } = createRefetchRegistry()
+  const { refetch, register } = useCreateRefetchRegistry()
   const refetchContextValue = useMemo<RefetchContextType>(() => ({ refetch, register }), [refetch, register])
 
   const [snackBarItems, setSnackBarItems] = useState<SnackBarItemType[]>([])
