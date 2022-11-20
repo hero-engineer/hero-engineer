@@ -4,7 +4,7 @@ import RefetchContext from '../contexts/RefetchContext'
 
 type RefetchArgType = {
   key: string
-  refetch: () => void
+  refetch: (options?: any) => void
   skip?: boolean
 }
 

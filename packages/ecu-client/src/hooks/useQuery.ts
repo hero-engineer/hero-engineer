@@ -1,9 +1,9 @@
 import { useCallback, useContext, useEffect, useState } from 'react'
-import { UseQueryArgs, useQuery as externalUseQuery } from 'urql'
+import { UseQueryArgs, UseQueryState, useQuery as externalUseQuery } from 'urql'
 
 import SnackbarContext from '../contexts/SnackBarContext'
 
-function useQuery<T>(args: UseQueryArgs) {
+function useQuery<T>(args: UseQueryArgs): [UseQueryState<T>, (args: any) => void] {
   const { snackBarItems, appendSnackBarItem } = useContext(SnackbarContext)
   const [id, setId] = useState(Math.random())
   const [retval0, retval1] = externalUseQuery<T>(args)
@@ -21,10 +21,10 @@ function useQuery<T>(args: UseQueryArgs) {
     })
   }, [retval0, id, snackBarItems, appendSnackBarItem])
 
-  const handleRefetch = useCallback((args: any) => {
+  const handleRefetch = useCallback((options?: any) => {
     setId(Date.now())
 
-    return retval1(args)
+    return retval1(options)
   }, [retval1])
 
   return [retval0, handleRefetch]

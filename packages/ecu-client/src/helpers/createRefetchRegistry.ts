@@ -14,7 +14,7 @@ function createRefetchRegistry() {
     Object.values(registry[key] || {}).forEach(refetch => refetch({ requestPolicy: 'network-only' }))
   }
 
-  function register(key: string, refetch: () => void) {
+  function register(key: string, refetch: (options?: any) => void) {
     if (!registry[key]) registry[key] = {}
 
     const index = Math.random()
