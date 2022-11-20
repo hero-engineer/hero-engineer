@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction, createContext } from 'react'
 
 export type DragAndDropType = {
-  sourceHierarchyIds: string[]
-  targetHierarchyIds: string[]
+  sourceHierarchyId: string
+  targetHierarchyId: string
 }
 
 export type DragAndDropContextType = {
@@ -12,8 +12,8 @@ export type DragAndDropContextType = {
 
 export default createContext<DragAndDropContextType>({
   dragAndDrop: {
-    sourceHierarchyIds: [],
-    targetHierarchyIds: [],
+    sourceHierarchyId: '',
+    targetHierarchyId: '',
   },
   setDragAndDrop: () => {},
 })

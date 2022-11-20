@@ -19,7 +19,7 @@ import useHierarchyId from './useHierarchyId'
 import useEditionSearchParams from './useEditionSearchParams'
 
 type DropResult = {
-  hierarchyIds: string[]
+  hierarchyId: string
 }
 
 function getHierarchyIds(element: EventTarget | HTMLElement) {
@@ -59,14 +59,14 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'Node',
-    item: () => ({ hierarchyIds: getHierarchyIds(rootRef.current as HTMLElement) }),
+    item: () => ({ hierarchyId }),
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult<DropResult>()
 
       if (item && dropResult) {
         setDragAndDrop({
-          sourceHierarchyIds: item.hierarchyIds,
-          targetHierarchyIds: dropResult.hierarchyIds,
+          sourceHierarchyId: item.hierarchyId,
+          targetHierarchyId: dropResult.hierarchyId,
         })
       }
     },
@@ -75,15 +75,17 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
       handlerId: monitor.getHandlerId(),
     }),
     canDrag: !isEdited,
-  }), [setDragAndDrop, isEdited])
+  }), [setDragAndDrop, isEdited, hierarchyId])
 
   const [{ canDrop, isOverCurrent }, drop] = useDrop(() => ({
     accept: 'Node',
     drop: (_item, monitor) => {
       if (monitor.didDrop()) return
 
+      const dropHierarchyIds = getHierarchyIds(rootRef.current as HTMLElement)
+
       return {
-        hierarchyIds: getHierarchyIds(rootRef.current as HTMLElement),
+        hierarchyId: dropHierarchyIds[dropHierarchyIds.length - 1],
       }
     },
     collect: monitor => ({

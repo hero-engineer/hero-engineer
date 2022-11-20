@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { Outlet } from 'react-router-dom'
 import { Div } from 'honorable'
 
@@ -22,4 +23,4 @@ function Layout() {
   )
 }
 
-export default Layout
+export default memo(Layout)

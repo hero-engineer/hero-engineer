@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { Div } from 'honorable'
 
 // The styles section
@@ -14,4 +15,4 @@ function StylesSection() {
   )
 }
 
-export default StylesSection
+export default memo(StylesSection)

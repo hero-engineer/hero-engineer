@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from 'react'
+import { memo, useCallback, useContext, useState } from 'react'
 import { useMutation } from 'urql'
 import { Button, Div, H2, Modal } from 'honorable'
 
@@ -23,16 +23,16 @@ function DragAndDropEndModal() {
   const clearDragAndDrop = useCallback(() => {
     setHierarchyPosition('before')
     setDragAndDrop({
-      sourceHierarchyIds: [],
-      targetHierarchyIds: [],
+      sourceHierarchyId: '',
+      targetHierarchyId: '',
     })
   }, [setDragAndDrop])
 
   const submitDragAndDrop = useCallback(async () => {
     await moveComponent({
       sourceComponentAddress: componentAddress,
-      sourceHierarchyId: dragAndDrop.sourceHierarchyIds[dragAndDrop.sourceHierarchyIds.length - 1],
-      targetHierarchyId: dragAndDrop.targetHierarchyIds[dragAndDrop.targetHierarchyIds.length - 1],
+      sourceHierarchyId: dragAndDrop.sourceHierarchyId,
+      targetHierarchyId: dragAndDrop.targetHierarchyId,
       hierarchyPosition,
     })
 
@@ -45,7 +45,7 @@ function DragAndDropEndModal() {
 
   return (
     <Modal
-      open={!!(dragAndDrop.sourceHierarchyIds.length && dragAndDrop.targetHierarchyIds.length)}
+      open={!!(dragAndDrop.sourceHierarchyId && dragAndDrop.targetHierarchyId)}
       onClose={clearDragAndDrop}
     >
       <H2>Complete component move</H2>
@@ -80,4 +80,4 @@ function DragAndDropEndModal() {
   )
 }
 
-export default DragAndDropEndModal
+export default memo(DragAndDropEndModal)

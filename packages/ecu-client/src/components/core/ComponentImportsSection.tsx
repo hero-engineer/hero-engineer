@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { Accordion } from 'honorable'
 
 import usePersistedState from '../../hooks/usePersistedState'
@@ -21,4 +22,4 @@ function ComponentImportsSection() {
   )
 }
 
-export default ComponentImportsSection
+export default memo(ComponentImportsSection)

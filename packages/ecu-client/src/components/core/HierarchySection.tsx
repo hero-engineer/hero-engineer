@@ -1,4 +1,4 @@
-import { useCallback, useContext } from 'react'
+import { memo, useCallback, useContext } from 'react'
 import { Div, P, TreeView } from 'honorable'
 
 import HierarchyContext from '../../contexts/HierarchyContext'
@@ -54,4 +54,4 @@ function HierarchySection() {
   )
 }
 
-export default HierarchySection
+export default memo(HierarchySection)

@@ -1,4 +1,4 @@
-import { PropsWithChildren, useRef } from 'react'
+import { PropsWithChildren, memo, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { Div } from 'honorable'
 import { RiNodeTree } from 'react-icons/ri'
@@ -116,4 +116,4 @@ function Overlay({ children }: OverlayPropsType) {
   )
 }
 
-export default Overlay
+export default memo(Overlay)
