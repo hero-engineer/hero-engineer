@@ -4,6 +4,7 @@ import { serve } from 'ecu-server'
 
 import createEcuTemplate from './create/index.js'
 
+// The Ecu cli
 const program = new Command()
 
 program
