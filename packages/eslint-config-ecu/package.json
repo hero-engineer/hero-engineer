@@ -1,7 +1,7 @@
 {
   "name": "eslint-config-ecu",
   "version": "1.1.0",
-  "description": "Am ecu-compatible ESlint config",
+  "description": "An ecu-compatible ESlint config",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
