@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { useMutation, useQuery } from 'urql'
+
 import { Button, Div, Input } from 'honorable'
 
 import { refetchKeys } from '../../constants'
 
 import { FileImportsQuery, FileImportsQueryDataType, UpdateFileImportsMutation, UpdateFileImportsMutationDataType } from '../../queries'
 
+import useQuery from '../../hooks/useQuery'
+import useMutation from '../../hooks/useMutation'
 import useRefetch from '../../hooks/useRefetch'
 
 // Component imports editor

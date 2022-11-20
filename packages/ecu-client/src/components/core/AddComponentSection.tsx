@@ -1,5 +1,5 @@
 import { useCallback, useContext, useMemo, useState } from 'react'
-import { useMutation, useQuery } from 'urql'
+
 import { useNavigate, useParams } from 'react-router-dom'
 import { Accordion, Button, Div, H3, Menu, MenuItem, Modal, P, Select } from 'honorable'
 import { TbRowInsertBottom } from 'react-icons/tb'
@@ -10,6 +10,8 @@ import { HierarchyPosition } from '../../types'
 
 import HierarchyContext from '../../contexts/HierarchyContext'
 
+import useMutation from '../../hooks/useMutation'
+import useQuery from '../../hooks/useQuery'
 import useEditionSearchParams from '../../hooks/useEditionSearchParams'
 import useRefetch from '../../hooks/useRefetch'
 

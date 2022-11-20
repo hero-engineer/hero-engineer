@@ -8,6 +8,7 @@ import { MdBrush } from 'react-icons/md'
 
 import useClearHierarchyIdsAndComponentDeltaOnClick from '../../hooks/useClearHierarchyIdsAndComponentDeltaOnClick'
 
+import SnackBar from './SnackBar'
 import EcuButton from './EcuButton'
 import ComponentsLinkButton from './ComponentsLinkButton'
 import CreateComponentButton from './CreateComponentButton'
@@ -110,6 +111,7 @@ function Overlay({ children }: OverlayPropsType) {
           />
         )}
       </Div>
+      <SnackBar />
     </>
   )
 }

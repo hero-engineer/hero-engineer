@@ -1,7 +1,10 @@
 import { useCallback, useState } from 'react'
-import { useMutation, useQuery } from 'urql'
+
 import { Button, Div, Tooltip } from 'honorable'
+
 import { BiRedo, BiUndo } from 'react-icons/bi'
+
+import { refetchKeys } from '../../constants'
 
 import {
   CanRedoQuery,
@@ -12,8 +15,9 @@ import {
   UndoMutationDataType,
 } from '../../queries'
 
+import useQuery from '../../hooks/useQuery'
+import useMutation from '../../hooks/useMutation'
 import useRefetch from '../../hooks/useRefetch'
-import { refetchKeys } from '../../constants'
 
 // The undo/redo buttons
 function UndoRedoButtons() {

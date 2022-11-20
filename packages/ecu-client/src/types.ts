@@ -52,3 +52,11 @@ export type ImportType = {
   source: string
   type: ImportSpecifierType
 }
+
+export type SnackBarItemType = {
+  id: number
+  content: string
+  severity: 'success' | 'info' | 'warning' | 'error'
+  actionLinkTo?: string
+  cleared?: boolean
+}
