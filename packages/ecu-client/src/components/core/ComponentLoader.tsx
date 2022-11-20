@@ -9,7 +9,7 @@ function ComponentLoader({ componentPath }: ComponentLoaderPropsType) {
   const Component = lazy(() => import(/* @vite-ignore */ /* webpackIgnore: true */ componentPath))
 
   return (
-    <Suspense fallback={<>Loading...</>}>
+    <Suspense>
       <Component />
     </Suspense>
   )
