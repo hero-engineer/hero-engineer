@@ -16,9 +16,6 @@ type AppPropsType = Record<string, never>
 /* --
   * EMOJI START
 -- */
-/*
-:cyclone:
-*/
 /* --
   * EMOJI END
 -- */

@@ -1,6 +1,6 @@
 {
   "name": "ecu",
-  "version": "1.0.24",
+  "version": "1.0.27",
   "description": "A self-reprogramming shield for creating React app fast",
   "main": "src/index.js",
   "type": "module",
@@ -17,13 +17,14 @@
   "scripts": {
     "dev": "nodemon --watch src --ext ts,tsx --exec \"npm run build\"",
     "build": "tsc",
+    "update-project-template-package": "node ./scripts/updateProjectTemplatePackage.js",
     "zip-project-template": "zip -r project-template.zip ./project-template",
-    "prepublishOnly": "npm run zip-project-template && npm run build"
+    "prepublishOnly": "npm run update-project-template-package && npm run zip-project-template && npm run build"
   },
   "dependencies": {
     "commander": "^9.4.1",
     "ecu-client": "^1.0.2",
-    "ecu-server": "^1.0.8",
+    "ecu-server": "^1.0.9",
     "extract-zip": "^2.0.1",
     "find-up": "^6.3.0"
   },
