@@ -8,6 +8,7 @@ import {
   PushMutationDataType,
 } from '../../queries'
 
+// The git push button
 function PushButton() {
   const [loading, setLoading] = useState(false)
 

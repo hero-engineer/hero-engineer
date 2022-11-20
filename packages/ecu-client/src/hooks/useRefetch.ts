@@ -8,6 +8,8 @@ type RefetchArgType = {
   skip?: boolean
 }
 
+// Register a refetch function to the refetch registry
+// Return the refetch function from context
 function useRefetch(...args: RefetchArgType[]) {
   const { refetch, register } = useContext(RefetchContext)
 

@@ -40,6 +40,9 @@ function isSelectedComponentParent(hierarchy: HierarchyItemType[], currentHierar
   return rightIndex === currentIndex && selectedHierarchyItem.onComponentAddress === currentHierarchyItem.componentAddress
 }
 
+// The hierarchy bar component has 2 purposes:
+// - Display the hierarchy of the current component
+// - Update it
 function HierarchyBar() {
   const { componentAddress = '' } = useParams()
   const { hierarchyIds, componentDelta, setEditionSearchParams } = useEditionSearchParams()
@@ -111,6 +114,7 @@ function HierarchyBar() {
     setHierarchy(actualHierarchy)
   }, [hierarchy, actualHierarchy, setTotalHierarchy, setHierarchy])
 
+  // Adjust component delta when hierarchyIds change
   useEffect(() => {
     if (!shouldAdjustComponentDelta) return
 
@@ -141,6 +145,7 @@ function HierarchyBar() {
     setShouldAdjustComponentDelta,
   ])
 
+  // Take a new screenshot when the hierarchy changes
   useEffect(() => {
     refetch(refetchKeys.componentScreenshot)
   }, [refetch, hierarchyQueryResult.data?.hierarchy])

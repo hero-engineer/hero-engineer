@@ -22,6 +22,7 @@ function bfs(hierarchy: HierarchyItemType, goalHierarchyId: string) {
   return []
 }
 
+// Flattens the hierarchy
 function getFlattenedHierarchy(hierarchy: HierarchyItemType, hierarchyIds: string[]) {
   return bfs(hierarchy, hierarchyIds[hierarchyIds.length - 1])
 }

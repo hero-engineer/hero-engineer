@@ -7,6 +7,7 @@ type DivPropsType = HTMLProps<HTMLDivElement> & {
   'data-ecu': string
 }
 
+// A div component
 // TODO use a preprocessor before production build to replace Div with a regular Div
 function DivRef({ 'data-ecu': ecuId, className, children }: DivPropsType, ref: Ref<any>) {
   const {

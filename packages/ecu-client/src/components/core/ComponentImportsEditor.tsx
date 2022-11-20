@@ -9,6 +9,8 @@ import { FileImportsQuery, FileImportsQueryDataType, UpdateFileImportsMutation, 
 
 import useRefetch from '../../hooks/useRefetch'
 
+// Component imports editor
+// Displayed in the right panel
 function ComponentImportsEditor() {
   const { fileAddress = '' } = useParams()
   const [rawImports, setRawImports] = useState('')

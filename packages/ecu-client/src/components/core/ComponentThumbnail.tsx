@@ -6,11 +6,11 @@ import Emoji from './Emoji'
 type ComponentThumbnailPropsType = {
   address: string
   name: string
-  description: string
   emoji: string
 }
 
-function ComponentThumbnail({ address, name, description, emoji }: ComponentThumbnailPropsType) {
+// A card for the components scene
+function ComponentThumbnail({ address, name, emoji }: ComponentThumbnailPropsType) {
   const handleImageError = useCallback((event: SyntheticEvent<HTMLImageElement, Event>) => {
     if (event.currentTarget.src !== 'http://localhost:4001/.ecu/component.svg') {
       event.currentTarget.src = 'http://localhost:4001/.ecu/component.svg'

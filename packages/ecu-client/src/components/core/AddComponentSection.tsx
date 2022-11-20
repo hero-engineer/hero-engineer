@@ -21,6 +21,8 @@ import getLastEditedHierarchyItem from '../../helpers/getLastEditedHierarchyItem
 import capitalize from '../../utils/capitalize'
 import usePersistedState from '../../hooks/usePersistedState'
 
+// Displayed in the left panel
+// Section to insert a component in the hierarchy
 function AddComponentSection() {
   const { componentAddress = '' } = useParams()
   const { hierarchyIds, componentDelta } = useEditionSearchParams()

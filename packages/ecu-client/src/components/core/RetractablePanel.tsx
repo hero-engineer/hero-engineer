@@ -19,6 +19,7 @@ type RetractablePanelPropsType = DivProps & {
   items: RetractablePanelItemType[]
 }
 
+// A panel that can be opened and closed on the side of the screen
 function RetractablePanel({ direction, openPersistedStateKey, defaultOpenIndex = -1, items, ...props }: RetractablePanelPropsType) {
   const [openIndex, setOpenIndex] = usePersistedState(openPersistedStateKey, defaultOpenIndex, (x: string) => parseInt(x))
 

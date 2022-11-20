@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'reac
 
 const identity = (x: any) => x
 
+// useState with localStorage persistence
 function usePersistedState<T>(key: string, defaultValue: T, parser = identity): [T, Dispatch<SetStateAction<T>>] {
   const getLocalStorageValue = useCallback(() => {
     try {

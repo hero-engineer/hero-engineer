@@ -11,6 +11,8 @@ import useRefetch from '../../hooks/useRefetch'
 
 import GlobalTypesModal from './GlobalTypesModal'
 
+// The component types editor
+// Displayed in the right panel
 function ComponentTypesEditor() {
   const { fileAddress = '' } = useParams()
   const [rawTypes, setRawTypes] = useState('')

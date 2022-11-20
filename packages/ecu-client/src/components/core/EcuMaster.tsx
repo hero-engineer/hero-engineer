@@ -29,6 +29,7 @@ type EcuMasterPropsType = PropsWithChildren<{
   hot?: ViteHotContext | null
 }>
 
+// The master component that wraps the entire application
 function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterPropsType) {
   const { refetch, register } = createRefetchRegistry()
   const refetchContextValue = useMemo<RefetchContextType>(() => ({ refetch, register }), [refetch, register])

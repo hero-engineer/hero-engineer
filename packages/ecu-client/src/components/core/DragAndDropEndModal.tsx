@@ -12,6 +12,7 @@ import { MoveComponentMutation, MoveComponentMutationDataType } from '../../quer
 
 import capitalize from '../../utils/capitalize'
 
+// A modal that informs that a dnd operation is not possible
 function DragAndDropEndModal() {
   const { componentAddress = '' } = useParams()
   const { dragAndDrop, setDragAndDrop } = useContext(DragAndDropContext)

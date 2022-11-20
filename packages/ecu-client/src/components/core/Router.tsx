@@ -1,10 +1,12 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
-import Home from './Home'
-import Component from './Component'
-import Components from './Components'
+import Home from '../scenes/Home'
+import Component from '../scenes/Component'
+import Components from '../scenes/Components'
+
 import Layout from './Layout'
 
+// The Ecu router
 function Router({ children }: any) {
   return (
     <BrowserRouter>

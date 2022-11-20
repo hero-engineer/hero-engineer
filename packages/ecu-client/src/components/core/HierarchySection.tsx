@@ -4,6 +4,8 @@ import { Div, P, TreeView } from 'honorable'
 import HierarchyContext from '../../contexts/HierarchyContext'
 import { HierarchyItemType } from '../../types'
 
+// The hierarchy section
+// Displayed in the left panel
 function HierarchySection() {
   const { totalHierarchy } = useContext(HierarchyContext)
 

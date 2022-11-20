@@ -12,6 +12,7 @@ type EmojiPickerPropsType= {
   size?: number
 }
 
+// An emoji picker component for a file
 function EmojiPicker({ emoji, setEmoji, size = 24 }: EmojiPickerPropsType) {
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false)
 

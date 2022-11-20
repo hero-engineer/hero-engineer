@@ -40,6 +40,7 @@ function getHierarchyIds(element: EventTarget | HTMLElement) {
   return hierarchyIds.reverse()
 }
 
+// Return common edition props for lib components
 function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', canBeEdited = false) {
   const { componentAddress = '' } = useParams()
   const rootRef = useRef<T>(null)

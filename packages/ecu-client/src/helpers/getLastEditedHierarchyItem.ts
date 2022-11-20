@@ -1,5 +1,6 @@
 import { HierarchyItemType } from '../types'
 
+// Get the last hierarchyItem with a componentName
 function getLastEditedHierarchyItem(hierarchy: HierarchyItemType[]) {
   const reversedHierarchy = [...hierarchy].reverse()
 

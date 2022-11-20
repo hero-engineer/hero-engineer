@@ -39,6 +39,7 @@ function getHierarchyId(targetElement: HTMLElement, targetEcuId: string) {
   return found ? `${targetEcuId}:${hierarchyIdsRegistry[targetEcuId]}` : targetEcuId
 }
 
+// Return a hierarchyId from an ecuId
 function useHierarchyId<T>(ecuId: string, ref: RefObject<T>) {
   const hot = useContext(HotContext)
   const [hierarchyId, setHierarchyId] = useState('')

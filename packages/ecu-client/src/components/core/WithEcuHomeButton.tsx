@@ -4,6 +4,7 @@ import { Button } from 'honorable'
 
 type WithEcuHomeButtonPropsType = PropsWithChildren<any>
 
+// A wrapper that displays a button that links to the home scene
 function WithEcuHomeButton({ children }: WithEcuHomeButtonPropsType) {
   const [displayed, setDisplayed] = useState(true)
 

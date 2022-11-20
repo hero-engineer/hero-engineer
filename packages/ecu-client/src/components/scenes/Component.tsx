@@ -18,11 +18,11 @@ import {
 import useRefetch from '../../hooks/useRefetch'
 import useClearHierarchyIdsAndComponentDeltaOnClick from '../../hooks/useClearHierarchyIdsAndComponentDeltaOnClick'
 
-import ComponentLoader from './ComponentLoader'
-import HierarchyBar from './HierarchyBar'
-import ContextualInformation from './ContextualInformation'
-import DragAndDropEndModal from './DragAndDropEndModal'
-import EmojiPicker from './EmojiPicker'
+import ComponentLoader from '../core/ComponentLoader'
+import HierarchyBar from '../core/HierarchyBar'
+import ContextualInformation from '../core/ContextualInformation'
+import DragAndDropEndModal from '../core/DragAndDropEndModal'
+import EmojiPicker from '../core/EmojiPicker'
 
 function traverseElementToRemoveEcuClasses(element: HTMLElement) {
   const classes: string[] = []
@@ -40,6 +40,7 @@ function traverseElementToRemoveEcuClasses(element: HTMLElement) {
   }
 }
 
+// Component scene
 function Component() {
   const { fileAddress = '', componentAddress = '' } = useParams()
   const rootRef = useRef<HTMLDivElement>(null)
@@ -63,6 +64,7 @@ function Component() {
   const [, updateFileDescription] = useMutation<UpdateFileDescriptionMutationDataType>(UpdateFileDescriptionMutation)
   const [, updateComponentScreenshot] = useMutation<UpdateComponentScreenshotMutationDataType>(UpdateComponentScreenshotMutation)
 
+  // Take a screenshot of the current component
   const takeScreenshot = useCallback(async () => {
     if (!componentRef.current) return
 
@@ -138,6 +140,7 @@ function Component() {
     setEmoji(componentQueryResult.data.component?.file.payload.emoji ?? '')
   }, [componentQueryResult.data])
 
+  // Select the content of the description input when editing
   useEffect(() => {
     if (!inputRef.current) return
 

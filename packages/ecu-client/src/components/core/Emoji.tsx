@@ -7,6 +7,7 @@ type EmojiPropsType = {
   size?: number
 }
 
+// An emoji component
 function Emoji({ emoji, size = 16 }: EmojiPropsType) {
   if (!emoji) return null
 

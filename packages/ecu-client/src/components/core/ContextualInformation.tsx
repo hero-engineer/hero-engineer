@@ -1,6 +1,6 @@
 import { RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Div, Menu, WithOutsideClick, useOutsideClick } from 'honorable'
+import { Div, Menu, WithOutsideClick } from 'honorable'
 
 import { XYType } from '../../types'
 
@@ -11,6 +11,9 @@ type ContextualInformationPropsType = {
   scrollRef: RefObject<HTMLElement>
 }
 
+// Displays:
+// - the context menu on component
+// - the component name vignette
 function ContextualInformation({ scrollRef }: ContextualInformationPropsType) {
   const { componentAddress = '' } = useParams()
   const contextualMenuRef = useRef<HTMLDivElement>(null)

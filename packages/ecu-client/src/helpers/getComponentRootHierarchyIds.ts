@@ -1,5 +1,6 @@
 import { HierarchyItemType } from '../types'
 
+// Get the root hierarchyIds for a hierarchy
 function getComponentRootHierarchyIds(flattenedHierarchy: HierarchyItemType[]) {
   const componentRootHierarchyIds: string[] = []
 
@@ -9,14 +10,11 @@ function getComponentRootHierarchyIds(flattenedHierarchy: HierarchyItemType[]) {
 
   const lastHierarchyItem = flattenedHierarchy[flattenedHierarchy.length - 1]
 
-  // console.log('lastHierarchyItem', lastHierarchyItem)
-
   if (lastHierarchyItem.hierarchyId) {
     return componentRootHierarchyIds
   }
 
   function traverseHierarchy(hierarchyItem: HierarchyItemType) {
-    // console.log('hierarchyItem.children', hierarchyItem.children)
     hierarchyItem.children?.forEach(child => {
       if (child.hierarchyId) {
         componentRootHierarchyIds.push(child.hierarchyId)

@@ -11,6 +11,7 @@ type GlobalTypesModalPropsType = {
   onClose: () => void
 }
 
+// The global types modal
 function GlobalTypesModal({ open, onClose }: GlobalTypesModalPropsType) {
   const { setGlobalTypes } = useContext(GlobalTypesContext)
   const [content, setContent] = useState('')

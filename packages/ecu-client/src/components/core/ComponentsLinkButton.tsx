@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { Button, Tooltip } from 'honorable'
 import { CgComponents } from 'react-icons/cg'
 
+// A button that links to the components scene
 function ComponentsLinkButton(props: any) {
   return (
     <Tooltip

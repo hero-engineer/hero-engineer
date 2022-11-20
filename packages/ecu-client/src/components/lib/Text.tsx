@@ -17,6 +17,7 @@ type TextPropsType = HTMLProps<HTMLDivElement> & {
   children: string
 }
 
+// A text component
 // TODO use a preprocessor before production build to replace Text with a regular Div
 function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref: Ref<any>) {
   const { componentAddress = '' } = useParams()

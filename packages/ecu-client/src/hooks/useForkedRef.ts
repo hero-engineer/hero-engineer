@@ -9,6 +9,7 @@ function setRef<T>(
   else if (ref) ref.current = value
 }
 
+// TODO export from honorable
 export default function useForkedRef<InstanceA, InstanceB>(
   refA: Ref<InstanceA> | null | undefined,
   refB: Ref<InstanceB> | null | undefined,

@@ -9,6 +9,7 @@ type SetterType = {
 const hierarchyIdsKey = 'hierarchyIds'
 const componentDeltaKey = 'componentDelta'
 
+// Get/set edition search parameters
 function useEditionSearchParams() {
   const [searchParams, setSearchParams] = useSearchParams()
 

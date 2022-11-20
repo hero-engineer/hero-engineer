@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { Button, Tooltip } from 'honorable'
 import { MdOutlineExitToApp } from 'react-icons/md'
 
+// A button that links to the working application
 function ViewAppButton(props: any) {
   return (
     <Tooltip

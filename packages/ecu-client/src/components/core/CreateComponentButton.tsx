@@ -6,6 +6,7 @@ import { AiOutlinePlus } from 'react-icons/ai'
 
 import { CreateComponentMutation, CreateComponentMutationDataType } from '../../queries'
 
+// A button that pops a modal for creating a new component
 function CreateComponentButton(props: any) {
   const [name, setName] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)

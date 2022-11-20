@@ -1,5 +1,6 @@
 import { refetchKeys } from '../constants'
 
+// Create a refetch registry to handle query refetching
 function createRefetchRegistry() {
   const registry: Record<string, Record<number, (options?: any) => void>> = {}
 

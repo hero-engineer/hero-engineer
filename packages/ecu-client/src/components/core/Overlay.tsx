@@ -24,6 +24,7 @@ import StylesSection from './StylesSection'
 
 type OverlayPropsType = PropsWithChildren<any>
 
+// The whole ecu overlay
 function Overlay({ children }: OverlayPropsType) {
   const { componentAddress = '' } = useParams()
   const childrenRef = useRef<HTMLDivElement>(null)

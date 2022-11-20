@@ -8,8 +8,9 @@ import { ComponentsQuery, ComponentsQueryDataType } from '../../queries'
 
 import useRefetch from '../../hooks/useRefetch'
 
-import ComponentThumbnail from './ComponentThumbnail'
+import ComponentThumbnail from '../core/ComponentThumbnail'
 
+// Components scene
 function Components() {
   const [componentsQueryResult, refetchComponentsQuery] = useQuery<ComponentsQueryDataType>({
     query: ComponentsQuery,
@@ -47,7 +48,6 @@ function Components() {
             <ComponentThumbnail
               address={componentAndFile.component.address}
               name={componentAndFile.component.payload.name}
-              description={componentAndFile.file.payload.description}
               emoji={componentAndFile.file.payload.emoji}
             />
           </Link>

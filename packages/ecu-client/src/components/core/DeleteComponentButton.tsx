@@ -16,6 +16,7 @@ import useRefetch from '../../hooks/useRefetch'
 import isHierarchyOnComponent from '../../helpers/isHierarchyOnComponent'
 import getLastEditedHierarchyItem from '../../helpers/getLastEditedHierarchyItem'
 
+// TODO : deprecate in favor of context menu
 function DeleteComponentButton(props: any) {
   const { componentAddress = '' } = useParams()
   const { hierarchyIds, componentDelta, setEditionSearchParams } = useEditionSearchParams()

@@ -1,5 +1,7 @@
 import { Div } from 'honorable'
 
+// The styles section
+// Displayed in the right panel
 function StylesSection() {
   return (
     <Div
