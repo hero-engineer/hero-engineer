@@ -1,5 +1,7 @@
 import { Suspense, lazy, memo } from 'react'
 
+import WithIsComponentRefreshingLayer from './WithIsComponentRefreshingLayer'
+
 type ComponentLoaderPropsType = {
   componentPath: string
 }
@@ -10,7 +12,9 @@ function ComponentLoader({ componentPath }: ComponentLoaderPropsType) {
 
   return (
     <Suspense>
-      <Component />
+      <WithIsComponentRefreshingLayer>
+        <Component />
+      </WithIsComponentRefreshingLayer>
     </Suspense>
   )
 }

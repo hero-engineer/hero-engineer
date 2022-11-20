@@ -13,6 +13,7 @@ import theme from '../../theme'
 import ModeContext from '../../contexts/ModeContext'
 import HotContext from '../../contexts/HotContext'
 import SnackBarContext, { SnackBarContextType } from '../../contexts/SnackBarContext'
+import IsComponentRefreshingContext, { IsComponentRefreshingContextType } from '../../contexts/IsComponentRefreshingContext'
 import RefetchContext, { RefetchContextType } from '../../contexts/RefetchContext'
 import HierarchyContext, { HierarchyContextType } from '../../contexts/HierarchyContext'
 import DragAndDropContext, { DragAndDropContextType, DragAndDropType } from '../../contexts/DragAndDropContext'
@@ -39,6 +40,9 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
   const appendSnackBarItem = useCallback((item: SnackBarItemType) => setSnackBarItems(x => [...x, item]), [])
   const snackBarContextValue = useMemo<SnackBarContextType>(() => ({ snackBarItems, setSnackBarItems, appendSnackBarItem }), [snackBarItems, appendSnackBarItem])
 
+  const [isComponentRefreshing, setIsComponentRefreshing] = useState(false)
+  const isComponnentRefreshingContextValue = useMemo<IsComponentRefreshingContextType>(() => ({ isComponentRefreshing, setIsComponentRefreshing }), [isComponentRefreshing, setIsComponentRefreshing])
+
   const [hierarchy, setHierarchy] = useState<HierarchyItemType[]>([])
   const [totalHierarchy, setTotalHierarchy] = useState<HierarchyItemType| null>(null)
   const [shouldAdjustComponentDelta, setShouldAdjustComponentDelta] = useState(false)
@@ -60,17 +64,19 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
             <HotContext.Provider value={hot}>
               <RefetchContext.Provider value={refetchContextValue}>
                 <SnackBarContext.Provider value={snackBarContextValue}>
-                  <HierarchyContext.Provider value={hierarchyContextValue}>
-                    <DragAndDropContext.Provider value={dragAndDropContextValue}>
-                      <ContextualInformationContext.Provider value={contextualInformationContextValue}>
-                        <Router>
-                          <WithEcuHomeButton>
-                            {children}
-                          </WithEcuHomeButton>
-                        </Router>
-                      </ContextualInformationContext.Provider>
-                    </DragAndDropContext.Provider>
-                  </HierarchyContext.Provider>
+                  <IsComponentRefreshingContext.Provider value={isComponnentRefreshingContextValue}>
+                    <HierarchyContext.Provider value={hierarchyContextValue}>
+                      <DragAndDropContext.Provider value={dragAndDropContextValue}>
+                        <ContextualInformationContext.Provider value={contextualInformationContextValue}>
+                          <Router>
+                            <WithEcuHomeButton>
+                              {children}
+                            </WithEcuHomeButton>
+                          </Router>
+                        </ContextualInformationContext.Provider>
+                      </DragAndDropContext.Provider>
+                    </HierarchyContext.Provider>
+                  </IsComponentRefreshingContext.Provider>
                 </SnackBarContext.Provider>
               </RefetchContext.Provider>
             </HotContext.Provider>

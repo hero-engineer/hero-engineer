@@ -15,6 +15,7 @@ import { DeleteComponentMutation, DeleteComponentMutationDataType } from '../../
 
 import useEditionSearchParams from '../../hooks/useEditionSearchParams'
 import useRefetch from '../../hooks/useRefetch'
+import useIsComponentRefreshingMutation from '../../hooks/useIsComponentRefreshingMutation'
 
 import isHierarchyOnComponent from '../../helpers/isHierarchyOnComponent'
 import getLastEditedHierarchyItem from '../../helpers/getLastEditedHierarchyItem'
@@ -40,7 +41,7 @@ function ContextualInformation({ scrollRef }: ContextualInformationPropsType) {
   const lastHierarchyItem = useMemo(() => hierarchy[hierarchy.length - 1], [hierarchy])
   const lastEditedHierarchyItem = useMemo(() => getLastEditedHierarchyItem(hierarchy), [hierarchy])
 
-  const [, deleteComponent] = useMutation<DeleteComponentMutationDataType>(DeleteComponentMutation)
+  const [, deleteComponent] = useIsComponentRefreshingMutation(useMutation<DeleteComponentMutationDataType>(DeleteComponentMutation))
 
   const refetch = useRefetch()
 
@@ -65,6 +66,7 @@ function ContextualInformation({ scrollRef }: ContextualInformationPropsType) {
 
     setEditionSearchParams({
       hierarchyIds: [],
+      componentDelta: 0,
     })
 
     refetch(refetchKeys.hierarchy)

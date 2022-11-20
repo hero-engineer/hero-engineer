@@ -14,8 +14,9 @@ import useMutation from '../../hooks/useMutation'
 import useQuery from '../../hooks/useQuery'
 import useEditionSearchParams from '../../hooks/useEditionSearchParams'
 import useRefetch from '../../hooks/useRefetch'
+import useIsComponentRefreshingMutation from '../../hooks/useIsComponentRefreshingMutation'
 
-import { AddComponentMutation, ComponentsQuery, ComponentsQueryDataType } from '../../queries'
+import { AddComponentMutation, AddComponentMutationDataType, ComponentsQuery, ComponentsQueryDataType } from '../../queries'
 
 import isHierarchyOnComponent from '../../helpers/isHierarchyOnComponent'
 import getLastEditedHierarchyItem from '../../helpers/getLastEditedHierarchyItem'
@@ -46,7 +47,7 @@ function AddComponentSection() {
   const [componentsQueryResult, refetchComponentsQuery] = useQuery<ComponentsQueryDataType>({
     query: ComponentsQuery,
   })
-  const [, addComponent] = useMutation(AddComponentMutation)
+  const [, addComponent] = useIsComponentRefreshingMutation(useMutation<AddComponentMutationDataType>(AddComponentMutation))
 
   const refetch = useRefetch({
     key: refetchKeys.components,

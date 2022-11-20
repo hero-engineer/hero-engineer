@@ -1,10 +1,12 @@
 import { DocumentNode } from 'graphql'
 import { useCallback, useContext, useEffect, useState } from 'react'
-import { TypedDocumentNode, UseMutationState, useMutation as externalUseMutation } from 'urql'
+import { AnyVariables, OperationContext, OperationResult, TypedDocumentNode, UseMutationState, useMutation as externalUseMutation } from 'urql'
 
 import SnackbarContext from '../contexts/SnackBarContext'
 
-function useMutation<T>(args: string | DocumentNode | TypedDocumentNode): [UseMutationState<T>, (args: any) => void] {
+type MutateType<T, V extends AnyVariables = AnyVariables> = (variables: V, context?: Partial<OperationContext>) => Promise<OperationResult<T, V>>
+
+function useMutation<T>(args: string | DocumentNode | TypedDocumentNode): [UseMutationState<T>, MutateType<T>] {
   const { snackBarItems, appendSnackBarItem } = useContext(SnackbarContext)
   const [id, setId] = useState(0)
   const [retval0, retval1] = externalUseMutation<T>(args)

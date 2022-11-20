@@ -17,6 +17,7 @@ import {
 
 import useRefetch from '../../hooks/useRefetch'
 import useClearHierarchyIdsAndComponentDeltaOnClick from '../../hooks/useClearHierarchyIdsAndComponentDeltaOnClick'
+import useIsComponentRefreshingQuery from '../../hooks/useIsComponentRefreshingQuery'
 
 import ComponentLoader from '../core/ComponentLoader'
 import HierarchyBar from '../core/HierarchyBar'
@@ -55,13 +56,13 @@ function Component() {
   useClearHierarchyIdsAndComponentDeltaOnClick(rootRef)
   useClearHierarchyIdsAndComponentDeltaOnClick(componentRef)
 
-  const [componentQueryResult, refetchComponentQuery] = useQuery<ComponentQueryDataType>({
+  const [componentQueryResult, refetchComponentQuery] = useIsComponentRefreshingQuery(useQuery<ComponentQueryDataType>({
     query: ComponentQuery,
     variables: {
       sourceComponentAddress: componentAddress,
     },
     pause: !componentAddress,
-  })
+  }))
   const [, updateFileDescription] = useMutation<UpdateFileDescriptionMutationDataType>(UpdateFileDescriptionMutation)
   const [, updateComponentScreenshot] = useMutation<UpdateComponentScreenshotMutationDataType>(UpdateComponentScreenshotMutation)
 
