@@ -81,7 +81,6 @@ function AddComponentSection() {
     })
 
     refetch(refetchKeys.hierarchy)
-    refetch(refetchKeys.componentScreenshot)
   }, [
     isSelectedComponentAcceptingChildren,
     addComponent,

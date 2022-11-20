@@ -12,7 +12,6 @@ import SnackBar from './SnackBar'
 import EcuButton from './EcuButton'
 import ComponentsLinkButton from './ComponentsLinkButton'
 import CreateComponentButton from './CreateComponentButton'
-import DeleteComponentButton from './DeleteComponentButton'
 import ViewAppButton from './ViewAppButton'
 import UndoRedoButtons from './UndoRedoButtons'
 import PushButton from './PushButton'
@@ -43,7 +42,6 @@ function Overlay({ children }: OverlayPropsType) {
         <EcuButton borderRight="1px solid border" />
         <ComponentsLinkButton borderRight="1px solid border" />
         <CreateComponentButton borderRight="1px solid border" />
-        <DeleteComponentButton borderRight="1px solid border" />
         <Div flexGrow />
         <UndoRedoButtons />
         <PushButton />
