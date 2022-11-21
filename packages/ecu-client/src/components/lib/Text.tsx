@@ -1,6 +1,9 @@
-import { HTMLProps, KeyboardEvent, Ref, forwardRef, useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { HTMLProps, KeyboardEvent, Ref, forwardRef, useCallback, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useMutation } from 'urql'
+import TextareaAutosize from 'react-textarea-autosize'
+
+import { WithOutsideClick } from 'honorable'
 
 import { refetchKeys } from '../../constants'
 
@@ -31,7 +34,7 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
     setIsEdited,
     editionProps,
   } = useEditionProps<HTMLDivElement>(ecuId, className, true)
-  const inputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<HTMLTextAreaElement>(null)
   const finalRef = useForkedRef(ref, editionRef)
 
   const [, updateTextValueMutation] = useMutation<UpdateTextValueMutationDataType>(UpdateTextValueMutation)
@@ -62,8 +65,8 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
     }
   }, [updateTextValueMutation, componentAddress, hierarchyId, value, children, setIsEdited, refetch])
 
-  const handleKeyDown = useCallback((event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter' || event.key === 'Tab') {
+  const handleKeyDown = useCallback((event: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (((event.shiftKey || event.ctrlKey || event.metaKey) && event.key === 'Enter') || event.key === 'Tab') {
       event.preventDefault()
       event.stopPropagation()
       handleBlur()
@@ -80,12 +83,12 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
     setValue(children)
   }, [children])
 
-  useEffect(() => {
-    if (!(isEdited && inputRef.current)) return
+  // useEffect(() => {
+  //   if (!(isEdited && inputRef.current)) return
 
-    inputRef.current.focus()
-    inputRef.current.select()
-  }, [isEdited])
+  //   inputRef.current.focus()
+  //   inputRef.current.select()
+  // }, [isEdited])
 
   useEffect(() => {
     if (hot) {
@@ -103,14 +106,18 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
       {...editionProps}
     >
       {loading ? value : isEdited ? (
-        <input
-          ref={inputRef}
-          value={value}
-          onChange={e => setValue(e.target.value)}
-          onKeyDown={handleKeyDown}
-          onBlur={handleBlur}
-          className="ecu-text-input"
-        />
+        <WithOutsideClick
+          onOutsideClick={handleBlur}
+        >
+          <TextareaAutosize
+            ref={inputRef}
+            value={value}
+            onChange={e => setValue(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onBlur={handleBlur}
+            className="ecu-text-input"
+          />
+        </WithOutsideClick>
       ) : children}
     </div>
   )

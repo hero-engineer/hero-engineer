@@ -1,3 +1,7 @@
+.ecu-can-be-edited {
+  white-space: pre-wrap;
+}
+
 .ecu-selected-root {
   border-left: 1px solid gold;
   border-right: 1px solid gold;

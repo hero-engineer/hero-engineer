@@ -1,6 +1,6 @@
 import '../css/edition.css'
 
-import { MouseEvent, Ref, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { CSSProperties, MouseEvent, Ref, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDrag, useDrop } from 'react-dnd'
 
@@ -38,6 +38,12 @@ function getHierarchyIds(element: EventTarget | HTMLElement) {
   }
 
   return hierarchyIds.reverse()
+}
+
+const editionEditedStyles: CSSProperties = {
+  display: 'flex', // To wrap text-area-autosize correctly
+  flexDirection: 'column',
+  minHeight: 19, // To match text-area-autosize height
 }
 
 // Return common edition props for lib components
@@ -170,11 +176,11 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   ])
 
   const generateClassName = useCallback(() => {
-    let klassName = 'ecu-outline-none '
+    let klassName = className
 
-    klassName += className
-
-    klassName = klassName.trim()
+    if (canBeEdited) {
+      klassName += ' ecu-can-be-edited'
+    }
 
     if (isComponentRoot) {
       klassName += ' ecu-selected-root'
@@ -207,6 +213,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
     return klassName.trim()
   }, [
     className,
+    canBeEdited,
     isComponentRoot,
     isComponentRootFirstChild,
     isComponentRootLastChild,
@@ -252,6 +259,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
       className: generateClassName(),
       'data-ecu': ecuId,
       'data-ecu-hierarchy': hierarchyId,
+      style: canBeEdited ? editionEditedStyles : undefined,
     },
   }
 }

@@ -34,6 +34,7 @@
     "react-dnd-html5-backend": "^16.0.1",
     "react-icons": "^4.6.0",
     "react-router-dom": "^6.4.3",
+    "react-textarea-autosize": "^8.4.0",
     "urql": "^3.0.3"
   },
   "devDependencies": {

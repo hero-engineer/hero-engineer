@@ -5,6 +5,8 @@
   padding: 0;
   border: none;
   outline: none;
+  color: var(--color-text);
+  resize: none;
 }
 
 .ecu-contextual-information {
