@@ -159,8 +159,22 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
     setContextualInformationState(x => ({ ...x, rightClickEvent: event }))
   }, [isSelected, isComponentRoot, setContextualInformationState])
 
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
+    if (canBeEdited && isSelected && event.key === 'Enter') {
+      setIsEdited(true)
+    }
+  }, [
+    canBeEdited,
+    isSelected,
+    setIsEdited,
+  ])
+
   const generateClassName = useCallback(() => {
-    let klassName = className
+    let klassName = 'ecu-outline-none '
+
+    klassName += className
+
+    klassName = klassName.trim()
 
     if (isComponentRoot) {
       klassName += ' ecu-selected-root'
@@ -202,6 +216,14 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
     isOverCurrent,
     isEdited,
   ])
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [handleKeyDown])
 
   useEffect(() => {
     if (!rootRef.current) return
