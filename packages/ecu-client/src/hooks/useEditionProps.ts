@@ -1,6 +1,6 @@
 import '../css/edition.css'
 
-import { CSSProperties, MouseEvent, Ref, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { MouseEvent, Ref, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDrag, useDrop } from 'react-dnd'
 
@@ -40,19 +40,13 @@ function getHierarchyIds(element: EventTarget | HTMLElement) {
   return hierarchyIds.reverse()
 }
 
-const editionEditedStyles: CSSProperties = {
-  display: 'flex', // To wrap text-area-autosize correctly
-  flexDirection: 'column',
-  minHeight: 19, // To match text-area-autosize height
-}
-
 // Return common edition props for lib components
 function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', canBeEdited = false) {
   const { componentAddress = '' } = useParams()
   const rootRef = useRef<T>(null)
   const hierarchyId = useHierarchyId(ecuId, rootRef)
   const { hierarchyIds, componentDelta, setEditionSearchParams } = useEditionSearchParams()
-  const { hierarchy, setShouldAdjustComponentDelta } = useContext(HierarchyContext)
+  const { hierarchy, shouldAdjustComponentDelta, setShouldAdjustComponentDelta } = useContext(HierarchyContext)
   const { setDragAndDrop } = useContext(DragAndDropContext)
   const { setContextualInformationElement, setContextualInformationState } = useContext(ContextualInformationContext)
   const [isEdited, setIsEdited] = useState(false)
@@ -182,6 +176,8 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
       klassName += ' ecu-can-be-edited'
     }
 
+    if (shouldAdjustComponentDelta) return klassName
+
     if (isComponentRoot) {
       klassName += ' ecu-selected-root'
 
@@ -213,6 +209,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
     return klassName.trim()
   }, [
     className,
+    shouldAdjustComponentDelta,
     canBeEdited,
     isComponentRoot,
     isComponentRootFirstChild,
@@ -259,7 +256,6 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
       className: generateClassName(),
       'data-ecu': ecuId,
       'data-ecu-hierarchy': hierarchyId,
-      style: canBeEdited ? editionEditedStyles : undefined,
     },
   }
 }

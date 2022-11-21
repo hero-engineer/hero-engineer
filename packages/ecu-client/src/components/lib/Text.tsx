@@ -20,6 +20,8 @@ type TextPropsType = HTMLProps<HTMLDivElement> & {
   children: string
 }
 
+const appendCarriageReturn = (x: string) => typeof x === 'string' ? `${x}\n` : x
+
 // A text component
 // TODO use a preprocessor before production build to replace Text with a regular Div
 function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref: Ref<any>) {
@@ -105,7 +107,7 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
       ref={finalRef}
       {...editionProps}
     >
-      {loading ? value : isEdited ? (
+      {loading ? appendCarriageReturn(value) : isEdited ? (
         <WithOutsideClick
           onOutsideClick={handleBlur}
         >
@@ -118,7 +120,7 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
             className="ecu-text-input"
           />
         </WithOutsideClick>
-      ) : children}
+      ) : appendCarriageReturn(children)}
     </div>
   )
 }
