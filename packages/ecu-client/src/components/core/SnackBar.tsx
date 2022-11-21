@@ -48,6 +48,7 @@ function SnackBar() {
     >
       {snackBarItems.filter(x => !x.cleared).map(x => (
         <Div
+          elevation={1}
           backgroundColor="background"
           borderBottom={`1px solid ${severityToBorderColor[x.severity]}`}
           borderRadius="large"

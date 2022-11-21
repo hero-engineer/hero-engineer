@@ -8,15 +8,15 @@
 }
 
 .ecu-contextual-information {
-  z-index: 999999;
+  background-color: var(--color-primary);
   color: white;
   font-size: 12px;
-  background-color: lightskyblue;
+  z-index: 999999;
   user-select: none;
 }
 
 .ecu-contextual-information-is-edited {
-  background-color: purple;
+  background-color: darkorchid;
 }
 
 .ecu-contextual-information-is-component-root {

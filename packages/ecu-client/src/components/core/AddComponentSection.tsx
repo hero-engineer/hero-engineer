@@ -34,7 +34,8 @@ function AddComponentSection() {
   const [isComponentsAccordionExpanded, setIsComponentsAccordionExpanded] = usePersistedState('ecu-add-component-section-is-components-accordion-expanded', true)
   const [isSpecialAccordionExpanded, setIsSpecialAccordionExpanded] = usePersistedState('ecu-add-component-section-is-special-accordion-expanded', true)
   const [isComponentModalOpen, setIsComponentModalOpen] = useState(false)
-  const [isChildrenModalOpen, setIsChildrenModalOpen] = useState(false)
+  const [isParentModalOpen, setIsParentModalOpen] = useState(false)
+  const [selectedComponentName, setSelectedComponentName] = useState('')
   const [selectedComponentAddress, setSelectedComponentId] = useState('')
   const [isSelectedComponentAcceptingChildren, setIsSelectedComponentAcceptingChildren] = useState(false)
   const [hierarchyPosition, setHierarchyPosition] = useState<HierarchyPosition>(hierarchyPositions[0])
@@ -55,14 +56,15 @@ function AddComponentSection() {
     skip: !componentAddress,
   })
 
-  const handleComponentSelect = useCallback((selectedComponentAddress: string, isSelectedComponentAcceptingChildren: boolean) => {
+  const handleComponentSelect = useCallback((selectedComponentAddress: string, selectedComponentName: string, isSelectedComponentAcceptingChildren: boolean) => {
     setSelectedComponentId(selectedComponentAddress)
+    setSelectedComponentName(selectedComponentName)
     setIsSelectedComponentAcceptingChildren(isSelectedComponentAcceptingChildren)
   }, [])
 
   const handleAddComponentClick = useCallback(async () => {
-    if (!isSelectedComponentAcceptingChildren && hierarchyPosition === 'children') {
-      setIsChildrenModalOpen(true)
+    if (!isSelectedComponentAcceptingChildren && hierarchyPosition === 'parent') {
+      setIsParentModalOpen(true)
 
       return
     }
@@ -103,7 +105,7 @@ function AddComponentSection() {
   }, [navigate, lastEditedHierarchyItem])
 
   const navigateToLastHierarchyItem = useCallback(() => {
-    setIsChildrenModalOpen(false)
+    setIsParentModalOpen(false)
 
     if (!lastHierarchyItem) return
 
@@ -163,7 +165,7 @@ function AddComponentSection() {
               <MenuItem
                 ghost
                 key={ecuAtom.name}
-                onClick={() => handleComponentSelect(ecuAtomPrefix + ecuAtom.name, ecuAtom.isComponentAcceptingChildren)}
+                onClick={() => handleComponentSelect(ecuAtomPrefix + ecuAtom.name, ecuAtom.name, ecuAtom.isComponentAcceptingChildren)}
                 backgroundColor={selectedComponentAddress === ecuAtomPrefix + ecuAtom.name ? 'darken(background-light, 20)' : null}
               >
                 {ecuAtom.name}
@@ -186,7 +188,7 @@ function AddComponentSection() {
               <MenuItem
                 ghost
                 key={x.component.address}
-                onClick={() => handleComponentSelect(x.component.address, x.isComponentAcceptingChildren)}
+                onClick={() => handleComponentSelect(x.component.address, x.component.payload.name, x.isComponentAcceptingChildren)}
                 backgroundColor={selectedComponentAddress === x.component.address ? 'darken(background-light, 20)' : null}
               >
                 {x.component.payload.name}
@@ -209,7 +211,7 @@ function AddComponentSection() {
               <MenuItem
                 ghost
                 key={ecuSpecial.name}
-                onClick={() => handleComponentSelect(ecuSpecialPrefix + ecuSpecial.name, ecuSpecial.isComponentAcceptingChildren)}
+                onClick={() => handleComponentSelect(ecuSpecialPrefix + ecuSpecial.name, ecuSpecial.name, ecuSpecial.isComponentAcceptingChildren)}
                 backgroundColor={selectedComponentAddress === ecuSpecialPrefix + ecuSpecial.name ? 'darken(background-light, 20)' : null}
               >
                 {ecuSpecial.name}
@@ -282,12 +284,12 @@ function AddComponentSection() {
         </Div>
       </Modal>
       <Modal
-        open={isChildrenModalOpen}
-        onClose={() => setIsChildrenModalOpen(false)}
+        open={isParentModalOpen}
+        onClose={() => setIsParentModalOpen(false)}
       >
         <H3>Cannot insert component</H3>
         <P mt={2}>
-          {lastHierarchyItem?.componentName}
+          {selectedComponentName}
           {' '}
           is not accepting children.
         </P>
@@ -296,10 +298,10 @@ function AddComponentSection() {
           mt={2}
           gap={0.5}
         >
-          <Button onClick={() => setIsChildrenModalOpen(false)}>
+          <Button onClick={() => setIsParentModalOpen(false)}>
             Close
           </Button>
-          {!!lastHierarchyItem?.componentAddress && (
+          {lastHierarchyItem?.componentAddress === selectedComponentAddress && (
             <Button onClick={navigateToLastHierarchyItem}>
               Go to
               {' '}

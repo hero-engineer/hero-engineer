@@ -16,7 +16,7 @@
 }
 
 .ecu-selected {
-  outline: 1px solid lightskyblue;
+  outline: 1px solid var(--color-primary);
 }
 
 .ecu-drag {
@@ -28,5 +28,5 @@
 }
 
 .ecu-edited {
-  outline: 1px solid purple;
+  outline: 1px solid darkorchid;
 }
