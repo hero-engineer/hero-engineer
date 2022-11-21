@@ -6,7 +6,7 @@ import { FileNodeType, FunctionNodeType, ImportType, PostTraverseType } from '..
 
 import insertImports from '../imports/insertImports.js'
 
-function createAddComponentPostTraverse(componentNode: FunctionNodeType): PostTraverseType {
+function createAddUserComponentPostTraverse(componentNode: FunctionNodeType): PostTraverseType {
   // Add potential missing import of added component in the mutated file
   return (fileNode: FileNodeType, ast: ParseResult) => {
     if (componentNode.payload.path === fileNode.payload.path) return
@@ -28,4 +28,4 @@ function createAddComponentPostTraverse(componentNode: FunctionNodeType): PostTr
   }
 }
 
-export default createAddComponentPostTraverse
+export default createAddUserComponentPostTraverse

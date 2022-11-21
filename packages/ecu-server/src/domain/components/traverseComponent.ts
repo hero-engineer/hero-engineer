@@ -16,6 +16,7 @@ import {
   ImpactedType,
   ImportsRegistry,
   IndexRegistryType,
+  TraverseComponentOnSuccessType,
 } from '../../types.js'
 import { ecuPropName } from '../../configuration.js'
 
@@ -52,31 +53,6 @@ type TraverseComponentHierarchyTreeType = Omit<HierarchyTreeType, 'children'> & 
   children: TraverseComponentHierarchyTreeType[]
 }
 
-const isComponentAcceptingChildrenMemoryHashSeparator = '___'
-const isComponentAcceptingChildrenMemory = new Map()
-
-function memoizedIsComponentAcceptingChildren(componentAddress: string, ecuComponentName = '') {
-  const hash = `${componentAddress}${isComponentAcceptingChildrenMemoryHashSeparator}${ecuComponentName}`
-
-  if (isComponentAcceptingChildrenMemory.has(hash)) {
-    return isComponentAcceptingChildrenMemory.get(hash)
-  }
-
-  const retval = isComponentAcceptingChildren(componentAddress, ecuComponentName)
-
-  isComponentAcceptingChildrenMemory.set(hash, retval)
-
-  return retval
-}
-
-const fileEmojiMemory: Record<string, string> = {}
-
-function memoizedFileEmoji(fileNode: FileNodeType) {
-  if (fileEmojiMemory[fileNode.address]) return fileEmojiMemory[fileNode.address]
-
-  return fileEmojiMemory[fileNode.address] = fileNode.payload.emoji
-}
-
 function postProcessHierarchy(hierarchy: TraverseComponentHierarchyTreeType) {
   // @ts-expect-error
   delete hierarchy.context
@@ -86,8 +62,12 @@ function postProcessHierarchy(hierarchy: TraverseComponentHierarchyTreeType) {
   hierarchy.children.forEach(postProcessHierarchy)
 }
 
-function traverseComponent(componentAddress: string, targetHierarchyId = '', onSuccess: (paths: any[]) => void = () => {}): TraverseComponentReturnType {
+function traverseComponent(componentAddress: string, targetHierarchyId = '', onSuccess: TraverseComponentOnSuccessType = () => {}): TraverseComponentReturnType {
   // console.log('traverseComponent', componentAddress, hierarchyIds)
+
+  /* --
+    * PRE CHECKS
+  -- */
 
   const rootCoomponentNode = getNodeByAddress<FunctionNodeType>(componentAddress)
 
@@ -110,6 +90,39 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
       hierarchy: null,
     }
   }
+
+  /* --
+    * MEMOIZATION
+  -- */
+
+  const isComponentAcceptingChildrenMemoryHashSeparator = '___'
+  const isComponentAcceptingChildrenMemory = new Map()
+
+  function memoizedIsComponentAcceptingChildren(componentAddress: string, ecuComponentName = '') {
+    const hash = `${componentAddress}${isComponentAcceptingChildrenMemoryHashSeparator}${ecuComponentName}`
+
+    if (isComponentAcceptingChildrenMemory.has(hash)) {
+      return isComponentAcceptingChildrenMemory.get(hash)
+    }
+
+    const retval = isComponentAcceptingChildren(componentAddress, ecuComponentName)
+
+    isComponentAcceptingChildrenMemory.set(hash, retval)
+
+    return retval
+  }
+
+  const fileEmojiMemory: Record<string, string> = {}
+
+  function memoizedFileEmoji(fileNode: FileNodeType) {
+    if (fileEmojiMemory[fileNode.address]) return fileEmojiMemory[fileNode.address]
+
+    return fileEmojiMemory[fileNode.address] = fileNode.payload.emoji
+  }
+
+  /* --
+    * RETURN VALUES AND STATE
+  -- */
 
   const impacted: ImpactedType[] = [] // retval
   const rootHierarchy: TraverseComponentHierarchyTreeType = { // retval
@@ -135,6 +148,10 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
   const componentNodes = getNodesByRole<FunctionNodeType>('Function').filter(n => n.payload.isComponent)
   const importsRegistry: ImportsRegistry = {}
   const lastingIndexRegistry: IndexRegistryType = {}
+
+  /* --
+    * HELPERS
+  -- */
 
   function buildImportsRegistry(fileNode: FileNodeType) {
     // Build the importsRegistry for the file
@@ -196,6 +213,10 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
 
     return getNodesBySecondNeighbourg<FileNodeType>(nextComponentNode.address, 'DeclaresFunction')[0]
   }
+
+  /* --
+    * DEPTH FIRST SEARCH TRAVERSAL
+  -- */
 
   let shouldStopDfs = false
 
@@ -319,8 +340,11 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
       })
       // console.log('End traversal of', hierarchy.label)
     }
-
   }
+
+  /* --
+    * EXECUTION AND RETURN
+  -- */
 
   buildImportsRegistry(rootFileNode)
   dfs(rootHierarchy)

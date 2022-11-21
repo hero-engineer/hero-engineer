@@ -1,14 +1,16 @@
 import path from 'node:path'
 
-import { ImportType } from './types.js'
+import { jsxText } from '@babel/types'
 
-const cwd = process.cwd()
+import { AtomType, ImportType } from './types.js'
 
-export const appPath = path.join(cwd, 'app')
+export const appPath = path.join(process.cwd(), 'app')
 
 export const ecuPackageName = 'ecu'
 
 export const ecuPropName = 'data-ecu'
+
+export const ecuCommitPrefix = '[ecu] '
 
 export const ecuRelativePath = '.ecu'
 
@@ -70,8 +72,24 @@ export const externalModulesImports: ImportType[] = [
   },
 ]
 
+export const ecuAtomPrefix = '__ecu_atom__'
+
+export const ecuAtoms: AtomType[] = [
+  {
+    id: `${ecuAtomPrefix}Div`,
+    name: 'Div',
+    isComponentAcceptingChildren: true,
+    defaultChildren: [],
+  },
+  {
+    id: `${ecuAtomPrefix}Text`,
+    name: 'Text',
+    isComponentAcceptingChildren: false,
+    defaultChildren: [jsxText("Edit me I'm a Text")],
+  },
+]
+
+// TODO Deprecate
 export const ecuAcceptingChildrenComponentNames = [
   'Div',
 ]
-
-export const ecuCommitPrefix = '[ecu] '

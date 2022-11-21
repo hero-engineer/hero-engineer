@@ -1,20 +1,19 @@
 import {
-  jsxClosingElement,
-  jsxClosingFragment,
-  jsxElement,
-  jsxFragment,
-  jsxIdentifier,
-  jsxOpeningElement,
-  jsxOpeningFragment,
-} from '@babel/types'
+  FunctionNodeType,
+  HierarchyPositionType,
+  HistoryMutationReturnType,
+  PostTraverseType,
+  TraverseComponentOnSuccessType,
+} from '../../types.js'
+import { ecuAtomPrefix, ecuAtoms } from '../../configuration.js'
 
-import { FileNodeType, FunctionNodeType, HierarchyPositionType, HistoryMutationReturnType } from '../../types.js'
-
-import { getNodeByAddress, getNodesBySecondNeighbourg } from '../../graph/index.js'
+import { getNodeByAddress } from '../../graph/index.js'
 
 import composeHistoryMutation from '../../history/composeHistoryMutation.js'
 
-import createAddComponentPostTraverse from '../../domain/components/createAddComponentPostTraverse.js'
+import createAddComponentOnSuccess from '../../domain/components/createAddComponentOnSuccess.js'
+import createAddUserComponentPostTraverse from '../../domain/components/createAddUserComponentPostTraverse.js'
+import createAddAtomComponentPostTraverse from '../../domain/components/createAddAtomComponentPostTraverse.js'
 import traverseComponent from '../../domain/components/traverseComponent.js'
 import processImpactedFileNodes from '../../domain/processImpactedFileNodes.js'
 
@@ -35,68 +34,40 @@ async function addComponentMutation(_: any, { sourceComponentAddress, targetComp
     throw new Error(`Component with id ${sourceComponentAddress} not found`)
   }
 
-  const targetComponentNode = getNodeByAddress(targetComponentAddress)
+  let name = ''
+  let postTraverse: PostTraverseType
+  let onSuccess: TraverseComponentOnSuccessType
 
-  if (!targetComponentNode) {
-    throw new Error(`Component with id ${targetComponentAddress} not found`)
+  if (targetComponentAddress.startsWith(ecuAtomPrefix)) {
+    const targetAtom = ecuAtoms.find(x => x.id === targetComponentAddress)
+
+    if (!targetAtom) {
+      throw new Error(`Atom with id ${targetComponentAddress} not found`)
+    }
+
+    name = targetAtom.name
+    postTraverse = createAddAtomComponentPostTraverse(targetAtom)
+    onSuccess = createAddComponentOnSuccess(targetAtom.name, targetAtom.defaultChildren, hierarchyPosition, componentDelta)
   }
+  else {
+    const targetComponentNode = getNodeByAddress(targetComponentAddress)
 
-  const fileNode = getNodesBySecondNeighbourg<FileNodeType>(sourceComponentNode.address, 'DeclaresFunction')[0]
+    if (!targetComponentNode) {
+      throw new Error(`Component with id ${targetComponentAddress} not found`)
+    }
 
-  if (!fileNode) {
-    throw new Error(`File for component with id ${sourceComponentAddress} not found`)
+    name = targetComponentNode.payload.name
+    postTraverse = createAddUserComponentPostTraverse(targetComponentNode)
+    onSuccess = createAddComponentOnSuccess(targetComponentNode.payload.name, [], hierarchyPosition, componentDelta)
   }
-
-  function onSuccess(paths: any[]) {
-    const finalPath = paths[paths.length - 1 + componentDelta]
-
-    if (hierarchyPosition === 'before') {
-      let inserted: any = jsxElement(jsxOpeningElement(jsxIdentifier(targetComponentNode.payload.name), [], true), null, [], true)
-
-      if (finalPath.parent.type !== 'JSXElement' && finalPath.parent.type !== 'JSXFragment') {
-        inserted = jsxFragment(jsxOpeningFragment(), jsxClosingFragment(), [inserted, finalPath.node])
-
-        finalPath.replaceWith(inserted)
-      }
-      else {
-        finalPath.insertBefore(inserted)
-      }
-    }
-    else if (hierarchyPosition === 'after') {
-      let inserted: any = jsxElement(jsxOpeningElement(jsxIdentifier(targetComponentNode.payload.name), [], true), null, [], true)
-
-      if (finalPath.parent.type !== 'JSXElement' && finalPath.parent.type !== 'JSXFragment') {
-        inserted = jsxFragment(jsxOpeningFragment(), jsxClosingFragment(), [finalPath.node, inserted])
-
-        finalPath.replaceWith(inserted)
-      }
-      else {
-        finalPath.insertAfter(inserted)
-      }
-    }
-    else if (hierarchyPosition === 'children') {
-      const inserted = jsxElement(jsxOpeningElement(jsxIdentifier(targetComponentNode.payload.name), [], true), null, [], true)
-
-      finalPath.node.children.push(inserted)
-    }
-    else if (hierarchyPosition === 'parent') {
-      const identifier = jsxIdentifier(targetComponentNode.payload.name)
-      const inserted = jsxElement(jsxOpeningElement(identifier, [], false), jsxClosingElement(identifier), [finalPath.node], false)
-
-      finalPath.replaceWith(inserted)
-    }
-  }
-
-  const postTraverse = createAddComponentPostTraverse(targetComponentNode)
 
   try {
     const { impacted } = traverseComponent(sourceComponentAddress, targetHierarchyId, onSuccess)
-
     const { impactedComponentNode } = await processImpactedFileNodes(impacted, postTraverse, true)
 
     return {
       returnValue: impactedComponentNode,
-      description: `Add component ${targetComponentNode.payload.name} to ${sourceComponentNode.payload.name}`,
+      description: `Add component ${name} to ${sourceComponentNode.payload.name}`,
     }
   }
   catch (error) {

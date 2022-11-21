@@ -1,3 +1,10 @@
+import {
+  JSXElement,
+  JSXExpressionContainer,
+  JSXFragment,
+  JSXSpreadChild,
+  JSXText,
+} from '@babel/types'
 import { ParseResult } from '@babel/core'
 
 export type Particule<PayloadType = any, StateType = any> = {
@@ -104,3 +111,12 @@ export type EcuHistoryEntryType = {
   branch: string
   message: string
 }
+
+export type AtomType = {
+  id: string
+  name: string
+  isComponentAcceptingChildren: boolean
+  defaultChildren: (JSXText | JSXExpressionContainer | JSXSpreadChild | JSXElement | JSXFragment)[]
+}
+
+export type TraverseComponentOnSuccessType = (paths: any[]) => void
