@@ -30,6 +30,8 @@ export type FileNodePayloadType = {
   relativePath: string
   code: string
   ast: ParseResult
+  description: string
+  emoji: string
 }
 
 export type FileNodeType = Particule<FileNodePayloadType>
@@ -82,6 +84,7 @@ export type HierarchyTreeType = {
   label: string
   index: number
   fileAddress: string
+  fileEmoji: string
   componentName: string
   onComponentAddress: string
   componentAddress: string

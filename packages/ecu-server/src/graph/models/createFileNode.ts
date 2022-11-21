@@ -6,7 +6,7 @@ import parseCode from '../../domain/parseCode.js'
 import extractDescription from '../../domain/comments/extractDescription.js'
 import extractEmoji from '../../domain/comments/extractEmoji.js'
 
-type CreateFileNodeDataType = Omit<FileNodeType, 'payload'> & { payload: Omit<FileNodePayloadType, 'code' | 'ast'> }
+type CreateFileNodeDataType = Omit<FileNodeType, 'payload'> & { payload: Omit<FileNodePayloadType, 'code' | 'ast' | 'description' | 'emoji'> }
 
 function createFileNode(data: CreateFileNodeDataType): FileNodeType {
   return {

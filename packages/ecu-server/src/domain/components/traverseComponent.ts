@@ -69,6 +69,14 @@ function memoizedIsComponentAcceptingChildren(componentAddress: string, ecuCompo
   return retval
 }
 
+const fileEmojiMemory: Record<string, string> = {}
+
+function memoizedFileEmoji(fileNode: FileNodeType) {
+  if (fileEmojiMemory[fileNode.address]) return fileEmojiMemory[fileNode.address]
+
+  return fileEmojiMemory[fileNode.address] = fileNode.payload.emoji
+}
+
 function postProcessHierarchy(hierarchy: TraverseComponentHierarchyTreeType) {
   // @ts-expect-error
   delete hierarchy.context
@@ -113,6 +121,7 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
     },
     childrenContext: null,
     fileAddress: rootFileNode.address,
+    fileEmoji: memoizedFileEmoji(rootFileNode),
     componentAddress: rootCoomponentNode.address,
     onComponentAddress: rootCoomponentNode.address,
     componentName: rootCoomponentNode.payload.name,
@@ -229,7 +238,8 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
               paths: nextPaths,
             },
             childrenContext: hierarchy.childrenContext,
-            fileAddress: fileNode.address,
+            fileAddress: '', // TODO: fileAddress
+            fileEmoji: '',
             componentAddress: '',
             onComponentAddress,
             componentName,
@@ -268,6 +278,7 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
                   paths: [x],
                 },
                 fileAddress: componentFileNode.address,
+                fileEmoji: memoizedFileEmoji(componentFileNode),
                 componentAddress: componentNode.address,
                 onComponentAddress,
                 componentName,
