@@ -77,6 +77,10 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
   }, [handleBlur, setIsEdited, children])
 
   useEffect(() => {
+    setValue(children)
+  }, [children])
+
+  useEffect(() => {
     if (!(isEdited && inputRef.current)) return
 
     inputRef.current.focus()
