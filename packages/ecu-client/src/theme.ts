@@ -12,16 +12,16 @@ const borderRadiuses = {
 }
 
 const blue = {
-  50: '#eff9ff',
-  100: '#def1ff',
-  200: '#b6e5ff',
-  300: '#75d3ff',
-  400: '#2cbdff',
-  500: '#00aaff',
-  600: '#0083d4',
-  700: '#0068ab',
-  800: '#00588d',
-  900: '#064974',
+  50: '#7e97ff',
+  100: '#748dff',
+  200: '#6a83ff',
+  300: '#6079ff',
+  400: '#566fff',
+  500: '#4c65f5',
+  600: '#425beb',
+  700: '#3851e1',
+  800: '#2e47d7',
+  900: '#243dcd',
 }
 
 const yellow = {
@@ -116,6 +116,8 @@ export default mergeTheme(defaultTheme, {
   },
   colors: {
     primary: 'blue.500',
+    'background-light': '#fafcff',
+    border: 'darken(background-light, 10)',
     blue,
     green,
     yellow,
@@ -165,23 +167,30 @@ export default mergeTheme(defaultTheme, {
   },
   Button: {
     Root: [
-      ({ ghost }: any) => ghost && {
+      {
+        borderRadius: 'medium',
         minHeight: 0,
+        paddingTop: 8,
+        paddingBottom: 8,
+        paddingLeft: 12,
+        paddingRight: 12,
+      },
+      ({ ghost }: any) => ghost && {
         paddingLeft: 8,
         paddingRight: 8,
         borderRadius: 0,
         color: 'text',
         backgroundColor: 'transparent',
         ':hover': {
-          backgroundColor: 'darken(background-light, 3)',
+          backgroundColor: 'darken(background-light, 2)',
         },
         ':active': {
-          backgroundColor: 'darken(background-light, 6)',
+          backgroundColor: 'darken(background-light, 4)',
         },
         ':disabled': {
-          backgroundColor: 'darken(background-light, 9)',
+          backgroundColor: 'darken(background-light, 6)',
           '&:hover': {
-            backgroundColor: 'darken(background-light, 9)',
+            backgroundColor: 'darken(background-light, 6)',
           },
         },
       },
@@ -279,6 +288,15 @@ export default mergeTheme(defaultTheme, {
         paddingTop: 0,
         paddingBottom: 0,
       }),
+    ],
+  },
+  Tooltip: {
+    Root: [
+      {
+        backgroundColor: 'background-light',
+        color: 'text',
+        border: '1px solid border',
+      },
     ],
   },
 })

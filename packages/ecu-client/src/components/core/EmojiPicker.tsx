@@ -55,6 +55,7 @@ function EmojiPicker({ emoji, setEmoji, size = 24 }: EmojiPickerPropsType) {
             position="absolute"
             top="calc(100% + 8px)"
             left={0}
+            zIndex={999999}
           >
             <ExternalEmojiPicker
               autoFocusSearch
