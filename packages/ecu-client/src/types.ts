@@ -30,6 +30,7 @@ export type HierarchyItemType = {
   label: string
   index: number
   fileAddress: string
+  fileEmoji: string
   componentName: string
   onComponentAddress: string
   componentAddress?: string
