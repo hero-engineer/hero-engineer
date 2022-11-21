@@ -1,4 +1,4 @@
-import { jsxText } from '@babel/types'
+import { Expression, JSXExpressionContainer, JSXText, expressionStatement, jsxExpressionContainer, jsxText, stringLiteral } from '@babel/types'
 
 import { HistoryMutationReturnType } from '../../types.js'
 
@@ -27,7 +27,9 @@ async function updateTextValueMutation(_: any, { sourceComponentAddress, targetH
   function onSuccess(paths: any[]) {
     const finalPath = paths[paths.length - 1]
 
-    finalPath.node.children = [jsxText(value)]
+    const child = value.includes('\n') ? jsxExpressionContainer(stringLiteral(value)) : jsxText(value)
+
+    finalPath.node.children = [child]
   }
 
   try {
