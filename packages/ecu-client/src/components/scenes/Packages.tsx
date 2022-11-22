@@ -1,16 +1,17 @@
 import { useMemo, useState } from 'react'
 import { Button, Div, H1, Q, Spinner } from 'honorable'
 
-import useQuery from '../../hooks/useQuery'
-
-import AddPackageModal from '../core/AddPackageModal'
-import PackagesTable from '../core/PackagesTable'
+import { refetchKeys } from '../../constants'
 import { PackagesQuery, PackagesQueryDataType, PackagesUpdatesQuery, PackagesUpdatesQueryDataType } from '../../queries'
+
+import useQuery from '../../hooks/useQuery'
+import useRefetch from '../../hooks/useRefetch'
+
+import AddPackageButton from '../core/AddPackageButton'
+import PackagesTable from '../core/PackagesTable'
 
 // Packages scene
 function Packages() {
-  const [isAddPackageModalOpen, setIsAddPackageModalOpen] = useState(false)
-
   const [packagesQueryResult, refetchPackagesQuery] = useQuery<PackagesQueryDataType>({
     query: PackagesQuery,
   })
@@ -23,6 +24,17 @@ function Packages() {
   const packagesUpdates = useMemo(() => packagesUpdatesQueryResult.data?.packagesUpdates ?? [], [packagesUpdatesQueryResult.data])
   const dependencies = useMemo(() => packages.filter(pkg => pkg.type === 'dependencies'), [packages])
   const devDependencies = useMemo(() => packages.filter(pkg => pkg.type === 'devDependencies'), [packages])
+
+  useRefetch(
+    {
+      key: refetchKeys.packages,
+      refetch: refetchPackagesQuery,
+    },
+    {
+      key: refetchKeys.packagesUpdates,
+      refetch: refetchPackagesUpdatesQuery,
+    }
+  )
 
   return (
     <>
@@ -38,9 +50,7 @@ function Packages() {
         gap={0.5}
         mt={2}
       >
-        <Button onClick={() => setIsAddPackageModalOpen(true)}>
-          Add package
-        </Button>
+        <AddPackageButton />
       </Div>
       <Div mt={2}>
         <Div
@@ -65,10 +75,6 @@ function Packages() {
           updatedPackages={packagesUpdates}
         />
       </Div>
-      <AddPackageModal
-        open={isAddPackageModalOpen}
-        onClose={() => setIsAddPackageModalOpen(false)}
-      />
     </>
   )
 }

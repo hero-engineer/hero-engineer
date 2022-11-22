@@ -17,6 +17,8 @@ export const refetchKeys = {
   fileImports: 'fileImports',
   fileTypes: 'fileTypes',
   canRedo: 'canRedo',
+  packages: 'packages',
+  packagesUpdates: 'packagesUpdates',
 }
 
 export const ecuAtoms = [

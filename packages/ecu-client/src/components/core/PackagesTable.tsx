@@ -81,8 +81,10 @@ function PackageTableRow({ pkg, updatedPackages }: PackageTableRowPropsType) {
   }, [mutate, value])
 
   const handleDelete = useCallback(() => {
+    if (!window.confirm(`Are you sure you want to uninstall ${pkg.name} from your ${pkg.type === 'devDependencies' ? 'devD' : 'd'}ependencies?`)) return
+
     mutate('')
-  }, [mutate])
+  }, [mutate, pkg])
 
   const handleUpdate = useCallback(() => {
     if (!updatedPackage) return
