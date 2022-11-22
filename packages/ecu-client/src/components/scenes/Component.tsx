@@ -29,7 +29,8 @@ function traverseElementToRemoveEcuClasses(element: HTMLElement) {
   const classes: string[] = []
 
   element.classList.forEach(klass => {
-    if (klass.startsWith('ecu-')) {
+    // HACK Ignore ecu-can-be-edited for now
+    if (klass.startsWith('ecu-') && klass !== 'ecu-can-be-edited') {
       classes.push(klass)
     }
   })
