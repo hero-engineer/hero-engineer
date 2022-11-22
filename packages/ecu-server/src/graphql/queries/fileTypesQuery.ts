@@ -9,7 +9,7 @@ type FileTypesQueryArgsType = {
   sourceFileAddress: string
 }
 
-function fileTypesQuery(_: any, { sourceFileAddress }: FileTypesQueryArgs) {
+function fileTypesQuery(_: any, { sourceFileAddress }: FileTypesQueryArgsType) {
   console.log('__fileTypesQuery__')
 
   const fileNode = getNodeByAddress<FileNodeType>(sourceFileAddress)

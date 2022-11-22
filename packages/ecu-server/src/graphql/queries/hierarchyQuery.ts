@@ -4,7 +4,7 @@ type HierarchyQueryArgsType = {
   sourceComponentAddress: string
 }
 
-function hierarchyQuery(_: any, { sourceComponentAddress }: HierarchyQueryArgs) {
+function hierarchyQuery(_: any, { sourceComponentAddress }: HierarchyQueryArgsType) {
   console.log('__hierarchyQuery__')
 
   // TODO remove try catch

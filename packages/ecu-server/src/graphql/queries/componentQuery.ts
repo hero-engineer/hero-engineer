@@ -7,7 +7,7 @@ type ComponentQueryArgsType = {
   sourceComponentAddress: string
 }
 
-function componentQuery(_: any, { sourceComponentAddress }: ComponentQueryArgs) {
+function componentQuery(_: any, { sourceComponentAddress }: ComponentQueryArgsType) {
   const componentNode = getNodeByAddress<FunctionNodeType>(sourceComponentAddress)
 
   if (!componentNode) {

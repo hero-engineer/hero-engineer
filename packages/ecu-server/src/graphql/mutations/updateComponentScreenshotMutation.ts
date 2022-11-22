@@ -13,7 +13,7 @@ type UpdateComponentScreenshotMutationArgsType = {
   dataUrl: string
 }
 
-async function updateComponentScreenshotMutation(_: any, { sourceComponentAddress, dataUrl }: UpdateComponentScreenshotMutationArgs) {
+async function updateComponentScreenshotMutation(_: any, { sourceComponentAddress, dataUrl }: UpdateComponentScreenshotMutationArgsType) {
   console.log('__updateComponentScreenshotMutation__')
 
   const componentNode = getNodeByAddress<FunctionNodeType>(sourceComponentAddress)
