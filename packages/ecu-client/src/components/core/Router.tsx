@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Home from '../scenes/Home'
 import Component from '../scenes/Component'
 import Components from '../scenes/Components'
+import Packages from '../scenes/Packages'
 
 import Layout from './Layout'
 
@@ -26,6 +27,10 @@ function Router({ children }: any) {
           <Route
             path="component/:fileAddress/:componentAddress"
             element={<Component />}
+          />
+          <Route
+            path="packages"
+            element={<Packages />}
           />
           <Route
             path="*"

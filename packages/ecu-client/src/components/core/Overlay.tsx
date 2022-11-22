@@ -12,9 +12,10 @@ import SnackBar from './SnackBar'
 import EcuButton from './EcuButton'
 import ComponentsLinkButton from './ComponentsLinkButton'
 import CreateComponentButton from './CreateComponentButton'
-import ViewAppButton from './ViewAppButton'
+import PackagesLinkButton from './PackagesLinkButton'
 import UndoRedoButtons from './UndoRedoButtons'
 import PushButton from './PushButton'
+import ViewAppButton from './ViewAppButton'
 import RetractablePanel from './RetractablePanel'
 import HierarchySection from './HierarchySection'
 import AddComponentSection from './AddComponentSection'
@@ -42,6 +43,7 @@ function Overlay({ children }: OverlayPropsType) {
         <EcuButton borderRight="1px solid border" />
         <ComponentsLinkButton borderRight="1px solid border" />
         <CreateComponentButton borderRight="1px solid border" />
+        <PackagesLinkButton borderRight="1px solid border" />
         <Div flexGrow />
         <UndoRedoButtons />
         <PushButton />
