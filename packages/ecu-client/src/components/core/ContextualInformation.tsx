@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Button, Div, H3, Menu, MenuItem, Modal, P, WithOutsideClick } from 'honorable'
 
 import { useMutation } from 'urql'
-import { TbTrash } from 'react-icons/tb'
+import { SlTrash } from 'react-icons/sl'
 
 import HierarchyContext from '../../contexts/HierarchyContext'
 import ContextualInformationContext from '../../contexts/ContextualInformationContext'
@@ -143,9 +143,13 @@ function ContextualInformation({ scrollRef }: ContextualInformationPropsType) {
             value="delete"
             onClick={handleDeleteComponentClick}
           >
-            <TbTrash />
-            {' '}
-            Delete component
+            <Div
+              xflex="x4"
+              gap={0.5}
+            >
+              <SlTrash />
+              Delete component
+            </Div>
           </MenuItem>
         </Menu>
       </WithOutsideClick>
@@ -246,7 +250,10 @@ function ContextualInformation({ scrollRef }: ContextualInformationPropsType) {
           mt={2}
           gap={0.5}
         >
-          <Button onClick={() => setIsDeleteModalOpen(false)}>
+          <Button
+            secondary
+            onClick={() => setIsDeleteModalOpen(false)}
+          >
             Close
           </Button>
           <Button onClick={navigateToLastEditedComponent}>

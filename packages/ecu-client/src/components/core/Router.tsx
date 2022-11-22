@@ -6,6 +6,7 @@ import Components from '../scenes/Components'
 import Packages from '../scenes/Packages'
 
 import Layout from './Layout'
+import ResponsiveLayout from './ResponsiveLayout'
 
 // The Ecu router
 function Router({ children }: any) {
@@ -13,16 +14,24 @@ function Router({ children }: any) {
     <BrowserRouter>
       <Routes>
         <Route
-          path="/_ecu_"
+          path="_ecu_"
           element={<Layout />}
         >
           <Route
             index
-            element={<Home />}
+            element={(
+              <ResponsiveLayout>
+                <Home />
+              </ResponsiveLayout>
+            )}
           />
           <Route
             path="components"
-            element={<Components />}
+            element={(
+              <ResponsiveLayout>
+                <Components />
+              </ResponsiveLayout>
+            )}
           />
           <Route
             path="component/:fileAddress/:componentAddress"
@@ -30,7 +39,11 @@ function Router({ children }: any) {
           />
           <Route
             path="packages"
-            element={<Packages />}
+            element={(
+              <ResponsiveLayout>
+                <Packages />
+              </ResponsiveLayout>
+            )}
           />
           <Route
             path="*"

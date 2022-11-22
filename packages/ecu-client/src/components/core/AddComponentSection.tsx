@@ -288,7 +288,10 @@ function AddComponentSection() {
           mt={2}
           gap={0.5}
         >
-          <Button onClick={() => setIsComponentModalOpen(false)}>
+          <Button
+            secondary
+            onClick={() => setIsComponentModalOpen(false)}
+          >
             Close
           </Button>
           <Button onClick={navigateToLastEditedComponent}>
@@ -313,7 +316,10 @@ function AddComponentSection() {
           mt={2}
           gap={0.5}
         >
-          <Button onClick={() => setIsParentModalOpen(false)}>
+          <Button
+            secondary
+            onClick={() => setIsParentModalOpen(false)}
+          >
             Close
           </Button>
           {!selectedComponentAddress.startsWith(ecuAtomPrefix) && !selectedComponentAddress.startsWith(ecuSpecialPrefix) && (

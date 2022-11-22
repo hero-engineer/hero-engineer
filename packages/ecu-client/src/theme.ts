@@ -132,6 +132,13 @@ export default mergeTheme(defaultTheme, {
     mapperRecipe('borderRadius', borderRadiuses),
     ({ flexGrow }: any) => flexGrow === true && ({ flexGrow: 1 }),
   ],
+  Div: {
+    Root: [
+      ({ cell }: any) => cell && {
+        padding: 16,
+      },
+    ],
+  },
   Accordion: {
     Root: [
       ({ ghost }: any) => ghost && {
@@ -178,6 +185,17 @@ export default mergeTheme(defaultTheme, {
         paddingLeft: 12,
         paddingRight: 12,
       },
+      ({ secondary }: any) => secondary && {
+        backgroundColor: 'transparent',
+        color: 'primary',
+        border: '1px solid primary',
+        '&:hover': {
+          backgroundColor: 'transparency(primary, 88)',
+        },
+        '&:active': {
+          backgroundColor: 'transparency(primary, 82)',
+        },
+      },
       ({ ghost }: any) => ghost && {
         paddingLeft: 8,
         paddingRight: 8,
@@ -195,6 +213,15 @@ export default mergeTheme(defaultTheme, {
           '&:hover': {
             backgroundColor: 'darken(background-light, 6)',
           },
+        },
+      },
+      ({ danger }: any) => danger && {
+        backgroundColor: 'red.500',
+        '&:hover': {
+          backgroundColor: 'red.600',
+        },
+        '&:active': {
+          backgroundColor: 'red.700',
         },
       },
     ],
@@ -315,6 +342,16 @@ export default mergeTheme(defaultTheme, {
     Root: [
       {
         margin: 0,
+      },
+    ],
+  },
+  Switch: {
+    Control: [
+      {
+        backgroundColor: 'darken(background-light, 8)',
+      },
+      ({ checked }: any) => checked && {
+        backgroundColor: 'primary',
       },
     ],
   },

@@ -171,7 +171,7 @@ function Component() {
     <Div
       ref={rootRef}
       xflex="y2s"
-      flexGrow={1}
+      flexGrow
       maxHeight="100%"
       overflowY="auto"
       px="1px" // To allow ecu-elected borders to be visible

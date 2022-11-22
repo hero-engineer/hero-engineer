@@ -1,4 +1,4 @@
-import { FileNodeType, FunctionNodeType, ImportType, TypeType } from './types'
+import { FileNodeType, FunctionNodeType, ImportType, PackageType, TypeType } from './types'
 
 type ComponentReturnType = {
   component: FunctionNodeType
@@ -151,6 +151,34 @@ export const CanRedoQuery = `
 
 export type CanRedoQueryDataType = {
   canRedo: boolean
+}
+
+export const PackagesQuery = `
+  query {
+    packages {
+      name
+      version
+      type
+    }
+  }
+`
+
+export type PackagesQueryDataType = {
+  packages: PackageType[]
+}
+
+export const PackagesUpdatesQuery = `
+  query {
+    packagesUpdates {
+      name
+      version
+      type
+    }
+  }
+`
+
+export type PackagesUpdatesQueryDataType = {
+  packagesUpdates: PackageType[]
 }
 
 /* --

@@ -62,3 +62,9 @@ export type SnackBarItemType = {
   actionLinkTo?: string
   cleared?: boolean
 }
+
+export type PackageType = {
+  name: string
+  version: string
+  type: 'dependencies' | 'devDependencies'
+}
