@@ -7,6 +7,8 @@ import globalTypesQuery from './queries/globalTypesQuery.js'
 import fileImportsQuery from './queries/fileImportsQuery.js'
 import fileTypesQuery from './queries/fileTypesQuery.js'
 import isComponentAcceptingChildrenQuery from './queries/isComponentAcceptingChildrenQuery.js'
+import packagesQuery from './queries/packagesQuery.js'
+import packagesUpdatesQuery from './queries/packagesUpdatesQuery.js'
 import canRedoQuery from './queries/canRedoQuery.js'
 import createComponentMutation from './mutations/createComponentMutation.js'
 import addComponentMutation from './mutations/addComponentMutation.js'
@@ -91,6 +93,12 @@ export const typeDefs = gql`
     fileNodeAddress: String!
   }
 
+  type Package {
+    name: String!
+    version: String!
+    type: String!
+  }
+
   type FileImportsReturnValue {
     rawImports: String!
     imports: [Import]!
@@ -114,6 +122,9 @@ export const typeDefs = gql`
     fileImports(sourceFileAddress: String!): FileImportsReturnValue!
     fileTypes(sourceFileAddress: String!): FileTypesReturnValue!
     isComponentAcceptingChildren(sourceComponentAddress: String, ecuComponentName: String): Boolean!
+
+    packages: [Package]!
+    packagesUpdates: [Package]!
 
     canRedo: Boolean!
   }
@@ -150,6 +161,10 @@ export const resolvers = {
     fileImports: fileImportsQuery,
     fileTypes: fileTypesQuery,
     isComponentAcceptingChildren: isComponentAcceptingChildrenQuery,
+
+    packages: packagesQuery,
+    packagesUpdates: packagesUpdatesQuery,
+
     canRedo: canRedoQuery,
   },
   Mutation: {

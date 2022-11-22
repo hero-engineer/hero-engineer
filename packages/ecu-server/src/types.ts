@@ -121,3 +121,9 @@ export type AtomType = {
 }
 
 export type TraverseComponentOnSuccessType = (paths: any[]) => void
+
+export type PackageType = {
+  name: string
+  version: string
+  type: 'dependencies' | 'devDependencies'
+}
