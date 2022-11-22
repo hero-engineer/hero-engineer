@@ -1,5 +1,12 @@
 import { FormEvent, useCallback, useState } from 'react'
-import { Button, Div, Form, H3, Input, Modal, Switch } from 'honorable'
+import { Button, Div, Form, H3, Input, Label, Modal, Switch } from 'honorable'
+
+import { refetchKeys } from '../../constants'
+
+import { InstallOrUpdatePackageMutation, InstallOrUpdatePackageMutationDataType } from '../../queries'
+
+import useMutation from '../../hooks/useMutation'
+import useRefetch from '../../hooks/useRefetch'
 
 function AddPackageButton() {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -7,13 +14,31 @@ function AddPackageButton() {
   const [name, setName] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = useCallback((event: FormEvent) => {
+  const [, updateOrInstallPackage] = useMutation<InstallOrUpdatePackageMutationDataType>(InstallOrUpdatePackageMutation)
+
+  const refetch = useRefetch()
+
+  const handleSubmit = useCallback(async (event: FormEvent) => {
     event.preventDefault()
 
-    console.log('submit', name, isDevDepenndency)
+    if (!name) return
 
+    setIsModalOpen(false)
     setIsLoading(true)
-  }, [name, isDevDepenndency])
+
+    await updateOrInstallPackage({
+      name,
+      version: '',
+      type: isDevDepenndency ? 'devDependencies' : 'dependencies',
+      shouldDelete: false,
+    })
+
+    setIsLoading(false)
+    setName('')
+
+    refetch(refetchKeys.packages)
+    refetch(refetchKeys.packagesUpdates)
+  }, [name, isDevDepenndency, updateOrInstallPackage, refetch])
 
   return (
     <>
@@ -39,6 +64,9 @@ function AddPackageButton() {
           >
             devDependecies
           </Switch>
+          <Label mt={2}>
+            Use @ to install a specific version. E.g. lodash@4.0.0
+          </Label>
           <Input
             autoFocus
             width="100%"
@@ -49,7 +77,7 @@ function AddPackageButton() {
             )}
             value={name}
             onChange={event => setName(event.target.value)}
-            mt={2}
+            mt={0.25}
           />
           <Div
             xflex="x6"
@@ -65,6 +93,7 @@ function AddPackageButton() {
             <Button
               type="submit"
               onClick={handleSubmit}
+              disabled={!name}
             >
               Run
             </Button>

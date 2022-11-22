@@ -5,6 +5,12 @@ import { CiEdit } from 'react-icons/ci'
 import { VscRunAbove } from 'react-icons/vsc'
 
 import { PackageType } from '../../types'
+import { refetchKeys } from '../../constants'
+
+import { InstallOrUpdatePackageMutation, InstallOrUpdatePackageMutationDataType } from '../../queries'
+
+import useMutation from '../../hooks/useMutation'
+import useRefetch from '../../hooks/useRefetch'
 
 type PackagesTablePropsType = {
   packages: PackageType[]
@@ -65,14 +71,28 @@ function PackageTableRow({ pkg, updatedPackages }: PackageTableRowPropsType) {
   const [isLoading, setIsLoading] = useState(false)
   const updatedPackage = updatedPackages.find(x => x.name === pkg.name)
 
+  const [, updateOrInstallPackage] = useMutation<InstallOrUpdatePackageMutationDataType>(InstallOrUpdatePackageMutation)
+
+  const refetch = useRefetch()
+
   const mutate = useCallback(async (nextVersion: string) => {
     if (nextVersion === pkg.version) return
 
     setIsLoading(true)
     setIsEditing(false)
 
+    await updateOrInstallPackage({
+      name: pkg.name,
+      version: nextVersion,
+      shouldDelete: !nextVersion,
+      type: pkg.type,
+    })
+
     setIsLoading(false)
-  }, [pkg])
+
+    refetch(refetchKeys.packages)
+    refetch(refetchKeys.packagesUpdates)
+  }, [pkg, updateOrInstallPackage, refetch])
 
   const handleSubmit = useCallback((event: FormEvent) => {
     event.preventDefault()
@@ -146,13 +166,16 @@ function PackageTableRow({ pkg, updatedPackages }: PackageTableRowPropsType) {
         <Button
           danger
           onClick={handleDelete}
+          loading={isLoading}
         >
           <SlTrash />
         </Button>
         {updatedPackage && (
           <Button
             secondary
+            spinnerColor="primary"
             onClick={handleUpdate}
+            loading={isLoading}
           >
             Update to
             {' '}

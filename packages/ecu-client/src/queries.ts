@@ -291,6 +291,16 @@ export type UpdateFileDescriptionMutationDataType = {
   updateFileDescription: boolean
 }
 
+export const InstallOrUpdatePackageMutation = `
+  mutation ($name: String!, $version: String!, $type: String!, $shouldDelete: Boolean!) {
+    installOrUpdatePackage (name: $name, version: $version, type: $type, shouldDelete: $shouldDelete)
+  }
+`
+
+export type InstallOrUpdatePackageMutationDataType = {
+  installOrUpdatePackage: boolean
+}
+
 export const UpdateComponentScreenshotMutation = `
   mutation ($sourceComponentAddress: String!, $dataUrl: String!) {
     updateComponentScreenshot (sourceComponentAddress: $sourceComponentAddress, dataUrl: $dataUrl)

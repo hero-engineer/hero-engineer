@@ -132,6 +132,9 @@ export default mergeTheme(defaultTheme, {
     mapperRecipe('borderRadius', borderRadiuses),
     ({ flexGrow }: any) => flexGrow === true && ({ flexGrow: 1 }),
   ],
+  /* --
+   * Tags
+  --*/
   Div: {
     Root: [
       ({ cell }: any) => cell && {
@@ -139,6 +142,74 @@ export default mergeTheme(defaultTheme, {
       },
     ],
   },
+  Label: {
+    Root: [
+      {
+        fontSize: 14,
+        color: 'text-light',
+        marginBottom: 0,
+      },
+    ],
+  },
+  H1: {
+    Root: [
+      {
+        fontSize: '3rem',
+      },
+    ],
+  },
+  H2: {
+    Root: [
+      {
+        fontSize: '2.5rem',
+      },
+    ],
+  },
+  H3: {
+    Root: [
+      {
+        fontSize: '2rem',
+      },
+    ],
+  },
+  H4: {
+    Root: [
+      {
+        fontSize: '1.5rem',
+      },
+    ],
+  },
+  H5: {
+    Root: [
+      {
+        fontSize: '1.125rem',
+      },
+    ],
+  },
+  H6: {
+    Root: [
+      {
+        fontSize: '1rem',
+      },
+    ],
+  },
+  Ol: {
+    Root: [
+      {
+        margin: 0,
+      },
+    ],
+  },
+  Ul: {
+    Root: [
+      {
+        margin: 0,
+      },
+    ],
+  },
+  /* --
+   * Components
+  --*/
   Accordion: {
     Root: [
       ({ ghost }: any) => ghost && {
@@ -195,6 +266,12 @@ export default mergeTheme(defaultTheme, {
         '&:active': {
           backgroundColor: 'transparency(primary, 82)',
         },
+        ':disabled': {
+          backgroundColor: 'transparency(primary, 76)',
+          ':hover': {
+            backgroundColor: 'transparency(primary, 76)',
+          },
+        },
       },
       ({ ghost }: any) => ghost && {
         paddingLeft: 8,
@@ -226,48 +303,6 @@ export default mergeTheme(defaultTheme, {
       },
     ],
   },
-  H1: {
-    Root: [
-      {
-        fontSize: '3rem',
-      },
-    ],
-  },
-  H2: {
-    Root: [
-      {
-        fontSize: '2.5rem',
-      },
-    ],
-  },
-  H3: {
-    Root: [
-      {
-        fontSize: '2rem',
-      },
-    ],
-  },
-  H4: {
-    Root: [
-      {
-        fontSize: '1.5rem',
-      },
-    ],
-  },
-  H5: {
-    Root: [
-      {
-        fontSize: '1.125rem',
-      },
-    ],
-  },
-  H6: {
-    Root: [
-      {
-        fontSize: '1rem',
-      },
-    ],
-  },
   Input: {
     Root: [
       ({ ghost }: any) => ghost && ({
@@ -281,13 +316,6 @@ export default mergeTheme(defaultTheme, {
         paddingTop: 0,
         paddingBottom: 0,
       }),
-    ],
-  },
-  Label: {
-    Root: [
-      {
-        marginBottom: 0,
-      },
     ],
   },
   Menu: {
@@ -328,20 +356,6 @@ export default mergeTheme(defaultTheme, {
         backgroundColor: 'background-light',
         color: 'text',
         border: '1px solid border',
-      },
-    ],
-  },
-  Ul: {
-    Root: [
-      {
-        margin: 0,
-      },
-    ],
-  },
-  Ol: {
-    Root: [
-      {
-        margin: 0,
       },
     ],
   },
