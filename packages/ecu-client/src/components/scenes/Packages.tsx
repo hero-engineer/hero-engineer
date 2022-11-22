@@ -53,27 +53,35 @@ function Packages() {
         <AddPackageButton />
       </Div>
       <Div mt={2}>
-        <Div
-          fontWeight={500}
-          mb={0.5}
-        >
-          Dependencies
-        </Div>
-        <PackagesTable
-          packages={dependencies}
-          updatedPackages={packagesUpdates}
-        />
-        <Div
-          fontWeight={500}
-          mt={2}
-          mb={0.5}
-        >
-          Dev dependencies
-        </Div>
-        <PackagesTable
-          packages={devDependencies}
-          updatedPackages={packagesUpdates}
-        />
+        {!!dependencies.length && (
+          <>
+            <Div
+              fontWeight={500}
+              mb={0.5}
+            >
+              Dependencies
+            </Div>
+            <PackagesTable
+              packages={dependencies}
+              updatedPackages={packagesUpdates}
+            />
+          </>
+        )}
+        {!!devDependencies.length && (
+          <>
+            <Div
+              fontWeight={500}
+              mt={2}
+              mb={0.5}
+            >
+              Dev dependencies
+            </Div>
+            <PackagesTable
+              packages={devDependencies}
+              updatedPackages={packagesUpdates}
+            />
+          </>
+        )}
       </Div>
     </>
   )
