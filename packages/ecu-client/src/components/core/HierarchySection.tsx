@@ -1,6 +1,6 @@
 import '../../css/HierarchySection.css'
 
-import { MouseEvent, memo, useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { MouseEvent, memo, useCallback, useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { A, Div, Input, P, TreeView, WithOutsideClick } from 'honorable'
 import { BiCaretRight } from 'react-icons/bi'
@@ -17,7 +17,7 @@ import HierarchyContext from '../../contexts/HierarchyContext'
 import useMutation from '../../hooks/useMutation'
 import useRefetch from '../../hooks/useRefetch'
 
-import useEditionSearchParams from '../../hooks/useEditionSearchParams'
+import xor from '../../utils/xor'
 
 import Emoji from './Emoji'
 
@@ -53,17 +53,25 @@ function HierarchySection() {
       xflex="y2s"
       flexGrow
       width={256 + 64}
-      px={1}
+      overflowY="auto"
     >
       <P
         fontWeight="bold"
         userSelect="none"
+        px={1}
         mt={0.5}
         mb={0.5}
       >
         Hierarchy
       </P>
-      {renderHierarchyItem(totalHierarchy)}
+      <Div
+        flexGrow
+        overflowY="auto"
+        pb={2}
+        pl={1}
+      >
+        {renderHierarchyItem(totalHierarchy)}
+      </Div>
     </Div>
   )
 }
@@ -116,6 +124,8 @@ function HierarchyLabel({ hierarchyItem, collapsed }: HierarchyLabelPropsType) {
   }, [])
 
   const handleUpdateDisplayName = useCallback(async () => {
+    if (hierarchyItem.isRoot || hierarchyItem.onComponentAddress !== componentAddress) return
+
     setIsLoadingDisplayName(true)
     setIsEditingDisplayName(false)
     setSelected(false)
@@ -124,11 +134,17 @@ function HierarchyLabel({ hierarchyItem, collapsed }: HierarchyLabelPropsType) {
 
     if (!hierarchyId) return
 
+    let value = displayName.trim()
+
+    setDisplayName(value)
+
+    if (value === hierarchyItem.label) value = ''
+
     await updateHierarchyDisplayName({
       sourceComponentAddress: componentAddress,
       targetHierarchyId: hierarchyId,
       componentDelta,
-      value: displayName,
+      value,
     })
 
     refetch(refetchKeys.hierarchy)
@@ -191,9 +207,9 @@ function HierarchyLabel({ hierarchyItem, collapsed }: HierarchyLabelPropsType) {
           />
         </WithOutsideClick>
       ) : isLoadingDisplayName
-        ? displayName
-        : hierarchyItem.displayName || hierarchyItem.label || '?'}
-      {!isEditingDisplayName && (isLoadingDisplayName || !!hierarchyItem.displayName) && (
+        ? displayName || hierarchyItem.label
+        : hierarchyItem.displayName || hierarchyItem.label}
+      {!hierarchyItem.isRoot && !isEditingDisplayName && !(isLoadingDisplayName && !displayName) && ((isLoadingDisplayName && !!displayName) || !!hierarchyItem.displayName) && (
         <Div
           color="text-light"
           fontSize={10}>
@@ -205,6 +221,7 @@ function HierarchyLabel({ hierarchyItem, collapsed }: HierarchyLabelPropsType) {
           onClick={handleEditDisplayName}
           fontSize={12}
           className="ecu-hierarchy-label-edit"
+          px={0.25}
         >
           <VscEdit />
         </A>
