@@ -207,7 +207,7 @@ function Component() {
         {isEditingDescription ? (
           <Input
             inputProps={{ ref: inputRef }}
-            ghost
+            bare
             multiline
             autoFocus
             value={description}
@@ -215,7 +215,6 @@ function Component() {
             placeholder="..."
             width="100%"
             color="text-light"
-            border="none"
           />
         ) : description || 'Click to add a description'}
       </P>

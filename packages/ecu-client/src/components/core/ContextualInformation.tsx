@@ -111,7 +111,7 @@ function ContextualInformation({ scrollRef }: ContextualInformationPropsType) {
         px={0.25}
         className={`ecu-contextual-information ${contextualInformationState.isEdited ? 'ecu-contextual-information-is-edited' : ''} ${contextualInformationState.isComponentRoot ? 'ecu-contextual-information-is-component-root' : ''}`}
       >
-        {lastHierarchyItem.componentName}
+        {lastHierarchyItem.displayName ? `${lastHierarchyItem.displayName} [${lastHierarchyItem.componentName}]` : lastHierarchyItem.componentName}
       </Div>
     )
   }, [

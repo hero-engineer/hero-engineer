@@ -105,6 +105,8 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
 
     const ids = getHierarchyIds(event.target)
 
+    if (!ids.length) return
+
     if (areArraysEqual(hierarchyIds, ids) || (areArraysEqualAtStart(hierarchyIds, ids) && componentDelta < 0)) {
       if (canBeEdited && componentDelta === 0 && isHierarchyOnComponent(hierarchy, componentAddress)) {
         setIsEdited(true)
@@ -158,18 +160,8 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
     setContextualInformationState(x => ({ ...x, rightClickEvent: event }))
   }, [isSelected, isComponentRoot, setContextualInformationState])
 
-  const handleKeyDown = useCallback((event: KeyboardEvent) => {
-    if (canBeEdited && isSelected && event.key === 'Enter') {
-      setIsEdited(true)
-    }
-  }, [
-    canBeEdited,
-    isSelected,
-    setIsEdited,
-  ])
-
   const generateClassName = useCallback(() => {
-    let klassName = className
+    let klassName = `ecu-edition-no-outline ${className}`
 
     if (canBeEdited) {
       klassName += ' ecu-can-be-edited'
@@ -221,14 +213,6 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   ])
 
   useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown)
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [handleKeyDown])
-
-  useEffect(() => {
     if (!rootRef.current) return
 
     if (isSelected || (isComponentRoot && isComponentRootFirstChild)) {
@@ -247,6 +231,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   return {
     ref,
     hierarchyId,
+    isSelected,
     isEdited,
     setIsEdited,
     editionProps: {

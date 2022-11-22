@@ -312,11 +312,6 @@ export default mergeTheme(defaultTheme, {
   },
   Input: {
     Root: [
-      ({ ghost }: any) => ghost && ({
-        paddingLeft: 0,
-        paddingRight: 0,
-        minHeight: 0,
-      }),
       ({ bare }: any) => bare && ({
         paddingLeft: 0,
         paddingRight: 0,
@@ -333,7 +328,7 @@ export default mergeTheme(defaultTheme, {
       }),
     ],
     TextArea: [
-      ({ ghost }: any) => ghost && ({
+      ({ bare }: any) => bare && ({
         paddingTop: 0,
         paddingBottom: 0,
       }),

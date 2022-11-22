@@ -1,9 +1,8 @@
-import { HTMLProps, KeyboardEvent, Ref, forwardRef, useCallback, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { HTMLProps, KeyboardEvent, Ref, forwardRef, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useMutation } from 'urql'
-import TextareaAutosize from 'react-textarea-autosize'
 
-import { WithOutsideClick } from 'honorable'
+import { Input, WithOutsideClick } from 'honorable'
 
 import { refetchKeys } from '../../constants'
 
@@ -32,6 +31,7 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
   const {
     ref: editionRef,
     hierarchyId,
+    isSelected,
     isEdited,
     setIsEdited,
     editionProps,
@@ -44,14 +44,11 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
   const refetch = useRefetch()
 
   const handleBlur = useCallback(async () => {
-    if (value === children) {
-      setIsEdited(false)
+    setIsEdited(false)
 
-      return
-    }
+    if (value === children) return
 
     setLoading(true)
-    setIsEdited(false)
 
     const mutationResult = await updateTextValueMutation({
       sourceComponentAddress: componentAddress,
@@ -67,7 +64,16 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
     }
   }, [updateTextValueMutation, componentAddress, hierarchyId, value, children, setIsEdited, refetch])
 
-  const handleKeyDown = useCallback((event: KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
+    if (isSelected && event.key === 'Enter') {
+      setIsEdited(true)
+    }
+  }, [
+    isSelected,
+    setIsEdited,
+  ])
+
+  const handleInputKeyDown = useCallback((event: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (((event.shiftKey || event.ctrlKey || event.metaKey) && event.key === 'Enter') || event.key === 'Tab') {
       event.preventDefault()
       event.stopPropagation()
@@ -85,12 +91,13 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
     setValue(children)
   }, [children])
 
-  // useEffect(() => {
-  //   if (!(isEdited && inputRef.current)) return
+  // Select the content of the input when editing
+  useEffect(() => {
+    if (!inputRef.current) return
 
-  //   inputRef.current.focus()
-  //   inputRef.current.select()
-  // }, [isEdited])
+    inputRef.current.select()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inputRef.current])
 
   useEffect(() => {
     if (hot) {
@@ -106,16 +113,21 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
     <div
       ref={finalRef}
       {...editionProps}
+      tabIndex={-1}
+      onKeyDown={handleKeyDown}
     >
       {loading ? appendCarriageReturn(value) : isEdited ? (
         <WithOutsideClick
           onOutsideClick={handleBlur}
         >
-          <TextareaAutosize
-            ref={inputRef}
+          <Input
+            inputProps={{ ref: inputRef }}
+            bare
+            multiline
+            autoFocus
             value={value}
-            onChange={e => setValue(e.target.value)}
-            onKeyDown={handleKeyDown}
+            onChange={event => setValue(event.target.value)}
+            onKeyDown={handleInputKeyDown}
             onBlur={handleBlur}
             className="ecu-text-input"
           />

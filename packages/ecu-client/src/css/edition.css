@@ -1,3 +1,7 @@
+.ecu-edition-no-outline {
+  outline: none;
+}
+
 .ecu-can-be-edited {
   white-space: pre-wrap;
   display: flex;
