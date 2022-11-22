@@ -1,4 +1,5 @@
-import { Expression, JSXExpressionContainer, JSXText, expressionStatement, jsxExpressionContainer, jsxText, stringLiteral } from '@babel/types'
+import { JSXElement, jsxExpressionContainer, jsxText, stringLiteral } from '@babel/types'
+import { NodePath } from '@babel/traverse'
 
 import { HistoryMutationReturnType } from '../../types.js'
 
@@ -24,7 +25,7 @@ async function updateTextValueMutation(_: any, { sourceComponentAddress, targetH
     throw new Error(`Component with id ${sourceComponentAddress} not found`)
   }
 
-  function onSuccess(paths: any[]) {
+  function onSuccess(paths: NodePath<JSXElement>[]) {
     const finalPath = paths[paths.length - 1]
 
     const child = value.includes('\n') ? jsxExpressionContainer(stringLiteral(value)) : jsxText(value)

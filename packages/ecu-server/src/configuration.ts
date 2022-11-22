@@ -22,6 +22,8 @@ export const ecuHistoryFileName = 'ecu-history.json'
 
 export const globalTypesFileRelativePath = 'src/types.ts'
 
+export const ecuDisplayNameCommentPrefix = 'ecu-display-name '
+
 export const globalTypesFileBegginingComment = `/* ---
   Please do not delete this file
   as it is needed by the ecu core engine

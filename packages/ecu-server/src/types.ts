@@ -5,7 +5,7 @@ import {
   JSXSpreadChild,
   JSXText,
 } from '@babel/types'
-import { ParseResult } from '@babel/core'
+import { NodePath, ParseResult } from '@babel/core'
 
 export type Particule<PayloadType = any, StateType = any> = {
   // A unique address for this particule
@@ -89,6 +89,7 @@ export type IndexRegistryType = Record<string, number>
 export type HierarchyTreeType = {
   id: string
   label: string
+  displayName: string
   index: number
   fileAddress: string
   fileEmoji: string
@@ -120,7 +121,7 @@ export type AtomType = {
   defaultChildren: (JSXText | JSXExpressionContainer | JSXSpreadChild | JSXElement | JSXFragment)[]
 }
 
-export type TraverseComponentOnSuccessType = (paths: any[]) => void
+export type TraverseComponentOnSuccessType = (paths: NodePath<JSXElement>[]) => void
 
 export type PackageType = {
   name: string

@@ -14,6 +14,7 @@ import createComponentMutation from './mutations/createComponentMutation.js'
 import addComponentMutation from './mutations/addComponentMutation.js'
 import deleteComponentMutation from './mutations/deleteComponentMutation.js'
 import moveComponentMutation from './mutations/moveComponentMutation.js'
+import updateHierarchyDisplayNameMutation from './mutations/updateHierarchyDisplayNameMutation.js'
 import updateTextValueMutation from './mutations/updateTextValueMutation.js'
 import updateFileDescriptionMutation from './mutations/updateFileDescriptionMutation.js'
 import updateFileImportsMutation from './mutations/updateFileImportsMutation.js'
@@ -136,6 +137,8 @@ export const typeDefs = gql`
     deleteComponent(sourceComponentAddress: String!, targetHierarchyId: String!, componentDelta: Int!): FunctionNode!
     moveComponent(sourceComponentAddress: String!, sourceHierarchyId: String!, targetHierarchyId: String!, hierarchyPosition: HierarchyPosition!): [FunctionNode!]!
 
+    updateHierarchyDisplayName(sourceComponentAddress: String!, targetHierarchyId: String!, componentDelta: Int!, value: String!): Boolean!
+
     updateTextValue(sourceComponentAddress: String!, targetHierarchyId: String!, value: String!): Boolean!
 
     updateFileDescription(sourceFileAddress: String!, description: String!, emoji: String!): Boolean!
@@ -175,6 +178,8 @@ export const resolvers = {
     addComponent: addComponentMutation,
     deleteComponent: deleteComponentMutation,
     moveComponent: moveComponentMutation,
+
+    updateHierarchyDisplayName: updateHierarchyDisplayNameMutation,
 
     updateTextValue: updateTextValueMutation,
 

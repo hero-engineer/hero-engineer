@@ -1,3 +1,4 @@
+import { NodePath } from '@babel/traverse'
 import {
   JSXElement,
   JSXExpressionContainer,
@@ -16,7 +17,7 @@ import {
 import { HierarchyPositionType } from '../../types.js'
 
 function createAddComponentOnSuccess(targetComponentName: string, targetComponentChildren: (JSXText | JSXExpressionContainer | JSXSpreadChild | JSXElement | JSXFragment)[], hierarchyPosition: HierarchyPositionType, componentDelta: number) {
-  return function onSuccess(paths: any[]) {
+  return function onSuccess(paths: NodePath<JSXElement>[]) {
     const finalPath = paths[paths.length - 1 + componentDelta]
     const identifier = jsxIdentifier(targetComponentName)
     const hasChildren = targetComponentChildren.length > 0

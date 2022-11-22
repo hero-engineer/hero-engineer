@@ -33,6 +33,7 @@ import createHierarchyId from '../utils/createHierarchyId.js'
 
 import traverse from '../traverse.js'
 
+import traverseDisplayName from './traverseDisplayName.js'
 import isComponentAcceptingChildren from './isComponentAcceptingChildren.js'
 
 type TraverseComponentReturnType = {
@@ -132,6 +133,7 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
     onComponentAddress: rootCoomponentNode.address,
     componentName: rootCoomponentNode.payload.name,
     label: rootCoomponentNode.payload.name,
+    displayName: rootCoomponentNode.payload.name,
     index: 0,
     hierarchyId: '',
     isRoot: true,
@@ -260,6 +262,7 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
             componentName,
             index,
             label: `${componentName}[${index}]`,
+            displayName: traverseDisplayName(x),
             hierarchyId,
             isRoot: false,
             isChild: !hasAst,
@@ -300,6 +303,7 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
                 componentName,
                 index,
                 label: `${componentName}[${index}]`,
+                displayName: traverseDisplayName(x),
                 hierarchyId: '',
                 isRoot: false,
                 isChild: !hasAst,
