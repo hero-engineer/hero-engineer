@@ -1,6 +1,6 @@
 export type DeferredPromiseType<T> = {
   promise: Promise<T>
-  resolve: (value?: any) => void
+  resolve: (value: T) => void
   reject: (reason?: any) => void
 }
 

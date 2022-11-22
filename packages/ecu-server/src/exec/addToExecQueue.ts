@@ -1,48 +1,38 @@
-import { execSync } from 'node:child_process'
-
-import { appPath } from '../configuration.js'
-
-import commit from '../git/commit.js'
-
 import createDeferredPromise, { DeferredPromiseType } from '../utils/createDeferredPromise.js'
 
-type ExecQueueItem = {
-  cmd: string
-  commitMessage: string
-  deferedPromise: DeferredPromiseType<boolean>
+type ExecQueueItem<T> = {
+  handler: () => Promise<T>
+  deferedPromise: DeferredPromiseType<T>
 }
 
 let isFlushing = false
-const execQueue: ExecQueueItem[] = []
+const execQueue: ExecQueueItem<any>[] = []
 
-async function addToExecQueue(cmd:string, commitMessage: string) {
-  const deferedPromise = createDeferredPromise<boolean>()
+async function addToExecQueue<T>(handler: () => Promise<T>) {
+  const deferedPromise = createDeferredPromise<T>()
 
   execQueue.push({
-    cmd,
-    commitMessage,
+    handler,
     deferedPromise,
   })
 
-  flushExecQueue()
+  flushExecQueue<T>()
 
   return deferedPromise.promise
 }
 
-async function flushExecQueue() {
+async function flushExecQueue<T>() {
   if (!execQueue.length) return
   if (isFlushing) return
 
   isFlushing = true
 
-  const { cmd, commitMessage, deferedPromise } = execQueue.shift() as ExecQueueItem
+  const { handler, deferedPromise } = execQueue.shift() as ExecQueueItem<T>
 
   try {
-    execSync(cmd, { cwd: appPath, stdio: 'inherit' })
+    const retval = await handler()
 
-    await commit(appPath, commitMessage)
-
-    deferedPromise.resolve(true)
+    deferedPromise.resolve(retval)
   }
   catch (error) {
     deferedPromise.reject(error)
