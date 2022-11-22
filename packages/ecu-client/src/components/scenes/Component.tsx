@@ -123,7 +123,7 @@ function Component() {
       emoji,
     })
 
-    refetch(refetchKeys.components)
+    refetch(refetchKeys.component)
   }, [
     isMetadataSet,
     fileAddress,
