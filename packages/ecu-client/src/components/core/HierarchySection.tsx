@@ -24,8 +24,10 @@ import Emoji from './Emoji'
 // The hierarchy section
 // Displayed in the left panel
 function HierarchySection() {
-  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
   const { totalHierarchy } = useContext(HierarchyContext)
+
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
+  const [isFetching, setIsFetching] = useState(false)
 
   const renderHierarchyItem = useCallback((hierarchyItem: HierarchyItemType | null) => {
     if (!(hierarchyItem && hierarchyItem.label)) return null
@@ -39,6 +41,8 @@ function HierarchySection() {
           <HierarchyLabel
             hierarchyItem={hierarchyItem}
             collapsed={collapsed[hierarchyItem.id]}
+            isFetching={isFetching}
+            setIsFetching={setIsFetching}
           />
         )}
         onExpand={expanded => setCollapsed(x => ({ ...x, [hierarchyItem.id]: !expanded }))}
@@ -46,7 +50,7 @@ function HierarchySection() {
         {hierarchyItem.children.map(renderHierarchyItem)}
       </TreeView>
     )
-  }, [collapsed])
+  }, [collapsed, isFetching])
 
   return (
     <Div
@@ -103,9 +107,11 @@ function getComponentDeltaAndHierarchyId(hierarchyItem: HierarchyItemType, compo
 type HierarchyLabelPropsType = {
   hierarchyItem: HierarchyItemType
   collapsed: boolean
+  isFetching: boolean
+  setIsFetching: (isFetching: boolean) => void
 }
 
-function HierarchyLabel({ hierarchyItem, collapsed }: HierarchyLabelPropsType) {
+function HierarchyLabel({ hierarchyItem, collapsed, isFetching, setIsFetching }: HierarchyLabelPropsType) {
   const { componentAddress = '' } = useParams()
 
   const [displayName, setDisplayName] = useState(hierarchyItem.displayName || hierarchyItem.label || '')
@@ -124,9 +130,8 @@ function HierarchyLabel({ hierarchyItem, collapsed }: HierarchyLabelPropsType) {
   }, [])
 
   const handleUpdateDisplayName = useCallback(async () => {
-    if (hierarchyItem.isRoot || hierarchyItem.onComponentAddress !== componentAddress) return
+    if (isFetching || hierarchyItem.isRoot || hierarchyItem.onComponentAddress !== componentAddress) return
 
-    setIsLoadingDisplayName(true)
     setIsEditingDisplayName(false)
     setSelected(false)
 
@@ -140,6 +145,9 @@ function HierarchyLabel({ hierarchyItem, collapsed }: HierarchyLabelPropsType) {
 
     if (value === hierarchyItem.label) value = ''
 
+    setIsLoadingDisplayName(true)
+    setIsFetching(true)
+
     await updateHierarchyDisplayName({
       sourceComponentAddress: componentAddress,
       targetHierarchyId: hierarchyId,
@@ -147,12 +155,16 @@ function HierarchyLabel({ hierarchyItem, collapsed }: HierarchyLabelPropsType) {
       value,
     })
 
+    setIsFetching(false)
+
     refetch(refetchKeys.hierarchy)
   }, [
+    isFetching,
     hierarchyItem,
     updateHierarchyDisplayName,
     componentAddress,
     displayName,
+    setIsFetching,
     refetch,
   ])
 
@@ -216,7 +228,7 @@ function HierarchyLabel({ hierarchyItem, collapsed }: HierarchyLabelPropsType) {
           {hierarchyItem.label}
         </Div>
       )}
-      {!isEditingDisplayName && !hierarchyItem.isRoot && hierarchyItem.onComponentAddress === componentAddress && (
+      {!isFetching && !isEditingDisplayName && !hierarchyItem.isRoot && hierarchyItem.onComponentAddress === componentAddress && (
         <A
           onClick={handleEditDisplayName}
           fontSize={12}
