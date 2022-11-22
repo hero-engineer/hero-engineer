@@ -13,7 +13,8 @@ function AddPackageModal({ open, onClose }: AddPackageModalPropsType) {
   const handleSubmit = useCallback((event: FormEvent) => {
     event.preventDefault()
 
-  }, [])
+    console.log('submit', name, isDevDepenndency)
+  }, [name, isDevDepenndency])
 
   return (
     <Modal
@@ -49,7 +50,10 @@ function AddPackageModal({ open, onClose }: AddPackageModalPropsType) {
           gap={0.5}
           mt={2}
         >
-          <Button onClick={onClose}>
+          <Button
+            type="reset"
+            onClick={onClose}
+          >
             Cancel
           </Button>
           <Button
