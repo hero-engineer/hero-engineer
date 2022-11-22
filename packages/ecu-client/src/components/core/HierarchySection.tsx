@@ -68,6 +68,30 @@ function HierarchySection() {
   )
 }
 
+type GetComponentDeltaAndHierarchyIdReturnType = {
+  componentDelta: number
+  hierarchyId: string
+}
+
+function getComponentDeltaAndHierarchyId(hierarchyItem: HierarchyItemType, componentDelta = 0): GetComponentDeltaAndHierarchyIdReturnType | null {
+  if (hierarchyItem.hierarchyId) {
+    return {
+      componentDelta,
+      hierarchyId: hierarchyItem.hierarchyId,
+    }
+  }
+
+  const nextComponentDelta = componentDelta - 1
+
+  for (const child of hierarchyItem.children) {
+    const retval = getComponentDeltaAndHierarchyId(child, nextComponentDelta)
+
+    if (retval !== null) return retval
+  }
+
+  return null
+}
+
 type HierarchyLabelPropsType = {
   hierarchyItem: HierarchyItemType
   collapsed: boolean
@@ -75,7 +99,6 @@ type HierarchyLabelPropsType = {
 
 function HierarchyLabel({ hierarchyItem, collapsed }: HierarchyLabelPropsType) {
   const { componentAddress = '' } = useParams()
-  const { componentDelta } = useEditionSearchParams()
 
   const [displayName, setDisplayName] = useState(hierarchyItem.displayName || hierarchyItem.label || '')
   const [isEditingDisplayName, setIsEditingDisplayName] = useState(false)
@@ -97,19 +120,22 @@ function HierarchyLabel({ hierarchyItem, collapsed }: HierarchyLabelPropsType) {
     setIsEditingDisplayName(false)
     setSelected(false)
 
+    const { componentDelta, hierarchyId } = getComponentDeltaAndHierarchyId(hierarchyItem) || {}
+
+    if (!hierarchyId) return
+
     await updateHierarchyDisplayName({
       sourceComponentAddress: componentAddress,
-      targetHierarchyId: hierarchyItem.hierarchyId,
+      targetHierarchyId: hierarchyId,
       componentDelta,
       value: displayName,
     })
 
     refetch(refetchKeys.hierarchy)
   }, [
+    hierarchyItem,
     updateHierarchyDisplayName,
     componentAddress,
-    hierarchyItem.hierarchyId,
-    componentDelta,
     displayName,
     refetch,
   ])
@@ -167,7 +193,14 @@ function HierarchyLabel({ hierarchyItem, collapsed }: HierarchyLabelPropsType) {
       ) : isLoadingDisplayName
         ? displayName
         : hierarchyItem.displayName || hierarchyItem.label || '?'}
-      {!isEditingDisplayName && (
+      {!isEditingDisplayName && (isLoadingDisplayName || !!hierarchyItem.displayName) && (
+        <Div
+          color="text-light"
+          fontSize={10}>
+          {hierarchyItem.label}
+        </Div>
+      )}
+      {!isEditingDisplayName && !hierarchyItem.isRoot && hierarchyItem.onComponentAddress === componentAddress && (
         <A
           onClick={handleEditDisplayName}
           fontSize={12}
