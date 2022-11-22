@@ -20,7 +20,7 @@
   "homepage": "https://github.com/dherault/ecu#readme",
   "devDependencies": {
     "eslint": "^8.28.0",
-    "eslint-config-ecu": "^1.1.0",
+    "eslint-config-ecu": "^1.2.0",
     "rimraf": "^3.0.2",
     "typescript": "^4.9.3"
   }
