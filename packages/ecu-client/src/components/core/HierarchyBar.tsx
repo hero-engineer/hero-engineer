@@ -46,7 +46,7 @@ function isSelectedComponentParent(hierarchy: HierarchyItemType[], currentHierar
 function HierarchyBar() {
   const { componentAddress = '' } = useParams()
   const { hierarchyIds, componentDelta, setEditionSearchParams } = useEditionSearchParams()
-  const { shouldAdjustComponentDelta, setShouldAdjustComponentDelta, setHierarchy, setTotalHierarchy } = useContext(HierarchyContext)
+  const { setHierarchy, setTotalHierarchy } = useContext(HierarchyContext)
 
   const [hierarchyQueryResult, refetchHierarchyQuery] = useQuery<HierarchyQueryDataType>({
     query: HierarchyQuery,
@@ -67,7 +67,7 @@ function HierarchyBar() {
   const totalHierarchy = useMemo(() => getFlattenedHierarchy(hierarchy, hierarchyIds), [hierarchy, hierarchyIds])
   const actualHierarchy = useMemo(() => totalHierarchy.slice(0, totalHierarchy.length + componentDelta), [totalHierarchy, componentDelta])
   const previousHierarchy = usePreviousWithDefault(actualHierarchy, actualHierarchy)
-  const displayHierarchy = useMemo(() => hierarchyIds.length ? shouldAdjustComponentDelta ? previousHierarchy : actualHierarchy : [], [hierarchyIds, shouldAdjustComponentDelta, previousHierarchy, actualHierarchy])
+  const displayHierarchy = useMemo(() => hierarchyIds.length ? componentDelta > 0 ? previousHierarchy : actualHierarchy : [], [hierarchyIds, componentDelta, previousHierarchy, actualHierarchy])
 
   const handleClick = useCallback((index: number) => {
     // If clicked on a Component node link, ...
@@ -116,9 +116,7 @@ function HierarchyBar() {
 
   // Adjust component delta when hierarchyIds change
   useEffect(() => {
-    if (!shouldAdjustComponentDelta) return
-
-    setShouldAdjustComponentDelta(false)
+    if (componentDelta <= 0) return
 
     const commonHierarchy: HierarchyItemType[] = []
 
@@ -138,11 +136,10 @@ function HierarchyBar() {
       componentDelta: nextDelta,
     })
   }, [
-    shouldAdjustComponentDelta,
+    componentDelta,
     previousHierarchy,
     totalHierarchy,
     setEditionSearchParams,
-    setShouldAdjustComponentDelta,
   ])
 
   // Take a new screenshot when the hierarchy changes

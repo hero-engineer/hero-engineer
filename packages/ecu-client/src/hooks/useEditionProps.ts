@@ -46,7 +46,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   const rootRef = useRef<T>(null)
   const hierarchyId = useHierarchyId(ecuId, rootRef)
   const { hierarchyIds, componentDelta, setEditionSearchParams } = useEditionSearchParams()
-  const { hierarchy, shouldAdjustComponentDelta, setShouldAdjustComponentDelta } = useContext(HierarchyContext)
+  const { hierarchy } = useContext(HierarchyContext)
   const { setDragAndDrop } = useContext(DragAndDropContext)
   const { setContextualInformationElement, setContextualInformationState } = useContext(ContextualInformationContext)
   const [isEdited, setIsEdited] = useState(false)
@@ -119,8 +119,6 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
       return
     }
 
-    console.log('1')
-
     setEditionSearchParams({
       hierarchyIds: x => {
         const nextHierarchyIds: string[] = []
@@ -137,9 +135,8 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
 
         return nextHierarchyIds
       },
+      componentDelta: 1,
     })
-
-    setShouldAdjustComponentDelta(true)
   }, [
     isEdited,
     canBeEdited,
@@ -148,7 +145,6 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
     componentAddress,
     componentDelta,
     setEditionSearchParams,
-    setShouldAdjustComponentDelta,
   ])
 
   const handleContextMenu = useCallback((event: MouseEvent) => {
@@ -178,7 +174,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
       klassName += ' ecu-can-be-edited'
     }
 
-    if (shouldAdjustComponentDelta) return klassName.trim()
+    if (componentDelta > 0) return klassName.trim()
 
     if (isComponentRoot) {
       klassName += ' ecu-selected-root'
@@ -211,7 +207,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
     return klassName.trim()
   }, [
     className,
-    shouldAdjustComponentDelta,
+    componentDelta,
     canBeEdited,
     isComponentRoot,
     isComponentRootFirstChild,

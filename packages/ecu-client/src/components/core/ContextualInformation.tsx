@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { RefObject, Suspense, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Button, Div, H3, Menu, MenuItem, Modal, P, WithOutsideClick } from 'honorable'
 
@@ -30,7 +30,7 @@ type ContextualInformationPropsType = {
 function ContextualInformation({ scrollRef }: ContextualInformationPropsType) {
   const { componentAddress = '' } = useParams()
   const contextualMenuRef = useRef<HTMLDivElement>(null)
-  const { hierarchy, shouldAdjustComponentDelta } = useContext(HierarchyContext)
+  const { hierarchy } = useContext(HierarchyContext)
   const { contextualInformationElement, contextualInformationState, setContextualInformationState } = useContext(ContextualInformationContext)
   const { hierarchyIds, componentDelta, setEditionSearchParams } = useEditionSearchParams()
   const [position, setPosition] = useState<XYType>({ x: 0, y: 0 })
@@ -99,7 +99,7 @@ function ContextualInformation({ scrollRef }: ContextualInformationPropsType) {
   }, [contextualInformationElement])
 
   const renderComponentNameVignette = useCallback(() => {
-    if (!(lastHierarchyItem && isComponentNameVignetteVisible) || shouldAdjustComponentDelta) return null
+    if (!(lastHierarchyItem && isComponentNameVignetteVisible) || componentDelta > 0) return null
 
     return (
       <Div
@@ -117,7 +117,7 @@ function ContextualInformation({ scrollRef }: ContextualInformationPropsType) {
   }, [
     lastHierarchyItem,
     isComponentNameVignetteVisible,
-    shouldAdjustComponentDelta,
+    componentDelta,
     position.x,
     position.y,
     contextualInformationState.isEdited,
@@ -200,12 +200,27 @@ function ContextualInformation({ scrollRef }: ContextualInformationPropsType) {
     }
   }, [contextualInformationElement, scrollRef])
 
+  // Prevent flickering of the component name vignette
+  useEffect(() => {
+    setIsComponentNameVignetteVisible(false)
+
+    const timeoutId = setTimeout(() => {
+      setIsComponentNameVignetteVisible(true)
+    }, 16)
+
+    return () => {
+      clearTimeout(timeoutId)
+    }
+  }, [contextualInformationElement, componentDelta])
+
   if (!componentAddress) return null
 
   return (
     <>
       {renderContextMenu()}
-      {renderComponentNameVignette()}
+      <Suspense>
+        {renderComponentNameVignette()}
+      </Suspense>
       <Modal
         open={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
