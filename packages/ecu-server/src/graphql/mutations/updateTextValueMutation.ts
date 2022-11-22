@@ -1,4 +1,4 @@
-import { JSXElement, jsxExpressionContainer, jsxText, stringLiteral } from '@babel/types'
+import { JSXElement, JSXIdentifier, jsxClosingElement, jsxExpressionContainer, jsxIdentifier, jsxText, stringLiteral } from '@babel/types'
 import { NodePath } from '@babel/traverse'
 
 import { HistoryMutationReturnType } from '../../types.js'
@@ -29,6 +29,12 @@ async function updateTextValueMutation(_: any, { sourceComponentAddress, targetH
     const finalPath = paths[paths.length - 1]
 
     const child = value.includes('\n') ? jsxExpressionContainer(stringLiteral(value)) : jsxText(value)
+
+    if (finalPath.node.openingElement.selfClosing) {
+      finalPath.node.selfClosing = false
+      finalPath.node.openingElement.selfClosing = false
+      finalPath.node.closingElement = jsxClosingElement(jsxIdentifier((finalPath.node.openingElement.name as JSXIdentifier).name))
+    }
 
     finalPath.node.children = [child]
   }
