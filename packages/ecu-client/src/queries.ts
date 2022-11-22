@@ -271,6 +271,16 @@ export type UpdateFileImportsMutationDataType = {
   updateFileImports: boolean
 }
 
+export const UpdateHierarchyDisplayNameMutation = `
+  mutation ($sourceComponentAddress: String!, $targetHierarchyId: String!, $componentDelta: Int! $value: String!) {
+    updateHierarchyDisplayName (sourceComponentAddress: $sourceComponentAddress, targetHierarchyId: $targetHierarchyId, componentDelta: $componentDelta, value: $value)
+  }
+`
+
+export type UpdateHierarchyDisplayNameMutationDataType = {
+  updateHierarchyDisplayName: boolean
+}
+
 export const UpdateTextValueMutation = `
   mutation ($sourceComponentAddress: String!, $targetHierarchyId: String!, $value: String!) {
     updateTextValue (sourceComponentAddress: $sourceComponentAddress, targetHierarchyId: $targetHierarchyId, value: $value)

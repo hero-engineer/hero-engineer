@@ -28,6 +28,7 @@ export type HierarchyPosition = 'before' | 'after' | 'children' | 'parent'
 export type HierarchyItemType = {
   id: string
   label: string
+  displayName: string
   index: number
   fileAddress: string
   fileEmoji: string

@@ -142,6 +142,13 @@ export default mergeTheme(defaultTheme, {
       },
     ],
   },
+  InputBase: {
+    Root: [
+      ({ ghost }: any) => ghost && {
+        lineHeight: 'inherit',
+      },
+    ],
+  },
   Label: {
     Root: [
       {
@@ -309,6 +316,20 @@ export default mergeTheme(defaultTheme, {
         paddingLeft: 0,
         paddingRight: 0,
         minHeight: 0,
+      }),
+      ({ bare }: any) => bare && ({
+        paddingLeft: 0,
+        paddingRight: 0,
+        minHeight: 0,
+        border: 'none',
+        borderRadius: 0,
+        width: 'unset',
+      }),
+    ],
+    InputBase: [
+      ({ bare }: any) => bare && ({
+        lineHeight: 'inherit',
+        paddingTop: 0,
       }),
     ],
     TextArea: [
