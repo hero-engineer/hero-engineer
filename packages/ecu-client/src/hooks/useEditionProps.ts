@@ -135,6 +135,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
 
         return nextHierarchyIds
       },
+      // componentDelta > 0 means adjustment is necessary (see HierarchyBar)
       componentDelta: 1,
     })
   }, [

@@ -115,6 +115,7 @@ function HierarchyBar() {
   }, [hierarchy, actualHierarchy, setTotalHierarchy, setHierarchy])
 
   // Adjust component delta when hierarchyIds change
+  // componentDelta > 0 means adjustment is necessary
   useEffect(() => {
     if (componentDelta <= 0) return
 
