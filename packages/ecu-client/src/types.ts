@@ -35,6 +35,7 @@ export type HierarchyItemType = {
   onComponentAddress: string
   componentAddress?: string
   hierarchyId?: string
+  isRoot: boolean
   isChild: boolean
   isComponentAcceptingChildren: boolean
   children: HierarchyItemType[]
