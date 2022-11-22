@@ -1,14 +1,20 @@
 import { FunctionNodeType } from '../../types.js'
 
-import { ecuAcceptingChildrenComponentNames } from '../../configuration.js'
+import { ecuAtoms } from '../../configuration.js'
 
 import { getNodeByAddress, getNodesBySecondNeighbourg } from '../../graph/index.js'
 
 import traverseTypes from '../types/traverseTypes.js'
 
-function isComponentAcceptingChildren(componentAddress?: string, ecuComponentName?: string) {
-  if (ecuComponentName) {
-    return ecuAcceptingChildrenComponentNames.includes(ecuComponentName)
+function isComponentAcceptingChildren(componentAddress?: string, ecuAtomName?: string) {
+  if (ecuAtomName) {
+    const ecuAtom = ecuAtoms.find(x => x.name === ecuAtomName)
+
+    if (!ecuAtom) {
+      throw new Error(`Ecu atom ${ecuAtomName} not found`)
+    }
+
+    return ecuAtom.isComponentAcceptingChildren
   }
 
   if (!componentAddress) {

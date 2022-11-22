@@ -88,8 +88,3 @@ export const ecuAtoms: AtomType[] = [
     defaultChildren: [jsxText("Edit me I'm a Text")],
   },
 ]
-
-// TODO Deprecate
-export const ecuAcceptingChildrenComponentNames = [
-  'Div',
-]

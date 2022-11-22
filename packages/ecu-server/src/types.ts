@@ -96,6 +96,7 @@ export type HierarchyTreeType = {
   onComponentAddress: string
   componentAddress: string
   hierarchyId: string
+  isRoot: boolean
   isChild: boolean
   isComponentAcceptingChildren: boolean
   children: HierarchyTreeType[]

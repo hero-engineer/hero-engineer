@@ -95,27 +95,20 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
     * MEMOIZATION
   -- */
 
-  const isComponentAcceptingChildrenMemoryHashSeparator = '___'
-  const isComponentAcceptingChildrenMemory = new Map()
+  const isComponentAcceptingChildrenMemory: Record<string, boolean> = {}
 
-  function memoizedIsComponentAcceptingChildren(componentAddress: string, ecuComponentName = '') {
-    const hash = `${componentAddress}${isComponentAcceptingChildrenMemoryHashSeparator}${ecuComponentName}`
+  function memoizedIsComponentAcceptingChildren(componentAddress: string, ecuAtomName = '') {
+    const hash = `${componentAddress}___${ecuAtomName}`
 
-    if (isComponentAcceptingChildrenMemory.has(hash)) {
-      return isComponentAcceptingChildrenMemory.get(hash)
-    }
+    if (typeof isComponentAcceptingChildrenMemory[hash] === 'boolean') return isComponentAcceptingChildrenMemory[hash]
 
-    const retval = isComponentAcceptingChildren(componentAddress, ecuComponentName)
-
-    isComponentAcceptingChildrenMemory.set(hash, retval)
-
-    return retval
+    return isComponentAcceptingChildrenMemory[hash] = isComponentAcceptingChildren(componentAddress, ecuAtomName)
   }
 
   const fileEmojiMemory: Record<string, string> = {}
 
   function memoizedFileEmoji(fileNode: FileNodeType) {
-    if (fileEmojiMemory[fileNode.address]) return fileEmojiMemory[fileNode.address]
+    if (typeof fileEmojiMemory[fileNode.address] === 'string') return fileEmojiMemory[fileNode.address]
 
     return fileEmojiMemory[fileNode.address] = fileNode.payload.emoji
   }
@@ -141,6 +134,7 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
     label: rootCoomponentNode.payload.name,
     index: 0,
     hierarchyId: '',
+    isRoot: true,
     isChild: false,
     isComponentAcceptingChildren: memoizedIsComponentAcceptingChildren(rootCoomponentNode.address),
     children: [],
@@ -267,6 +261,7 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
             index,
             label: `${componentName}[${index}]`,
             hierarchyId,
+            isRoot: false,
             isChild: !hasAst,
             isComponentAcceptingChildren: memoizedIsComponentAcceptingChildren('', componentName),
             children: [],
@@ -306,6 +301,7 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
                 index,
                 label: `${componentName}[${index}]`,
                 hierarchyId: '',
+                isRoot: false,
                 isChild: !hasAst,
                 isComponentAcceptingChildren: memoizedIsComponentAcceptingChildren(componentNode.address),
                 children: [],
