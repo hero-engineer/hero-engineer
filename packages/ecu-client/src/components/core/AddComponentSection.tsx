@@ -30,18 +30,22 @@ function AddComponentSection() {
   const { componentAddress = '' } = useParams()
   const { hierarchyIds, componentDelta } = useEditionSearchParams()
   const { hierarchy } = useContext(HierarchyContext)
+
   const [isAtomsAccordionExpanded, setIsAtomsAccordionExpanded] = usePersistedState('ecu-add-component-section-is-atoms-accordion-expanded', true)
   const [isComponentsAccordionExpanded, setIsComponentsAccordionExpanded] = usePersistedState('ecu-add-component-section-is-components-accordion-expanded', true)
   const [isSpecialAccordionExpanded, setIsSpecialAccordionExpanded] = usePersistedState('ecu-add-component-section-is-special-accordion-expanded', true)
+
+  const [hierarchyPosition, setHierarchyPosition] = useState<HierarchyPosition>(hierarchyPositions[0])
   const [isComponentModalOpen, setIsComponentModalOpen] = useState(false)
   const [isParentModalOpen, setIsParentModalOpen] = useState(false)
+  const [selectedComponentUrlPart, setSelectedComponentFileUrlPart] = useState('')
   const [selectedComponentName, setSelectedComponentName] = useState('')
   const [selectedComponentAddress, setSelectedComponentId] = useState('')
   const [isSelectedComponentAcceptingChildren, setIsSelectedComponentAcceptingChildren] = useState(false)
-  const [hierarchyPosition, setHierarchyPosition] = useState<HierarchyPosition>(hierarchyPositions[0])
 
+  const rootComponentAddress = useMemo(() => hierarchy[0]?.componentAddress ?? '', [hierarchy])
+  const isOnComponentRoot = useMemo(() => hierarchy[hierarchy.length - 1]?.isRoot ?? true, [hierarchy])
   const lastEditedHierarchyItem = useMemo(() => getLastEditedHierarchyItem(hierarchy), [hierarchy])
-  const lastHierarchyItem = useMemo(() => hierarchy[hierarchy.length - 1], [hierarchy])
 
   const navigate = useNavigate()
 
@@ -56,13 +60,16 @@ function AddComponentSection() {
     skip: !componentAddress,
   })
 
-  const handleComponentSelect = useCallback((selectedComponentAddress: string, selectedComponentName: string, isSelectedComponentAcceptingChildren: boolean) => {
+  const handleComponentSelect = useCallback((selectedComponentAddress: string, selectedComponentName: string, selectedComponentUrlPart: string, isSelectedComponentAcceptingChildren: boolean) => {
     setSelectedComponentId(selectedComponentAddress)
     setSelectedComponentName(selectedComponentName)
     setIsSelectedComponentAcceptingChildren(isSelectedComponentAcceptingChildren)
+    setSelectedComponentFileUrlPart(selectedComponentUrlPart)
   }, [])
 
   const handleAddComponentClick = useCallback(async () => {
+    if (isOnComponentRoot) return
+
     if (!isSelectedComponentAcceptingChildren && hierarchyPosition === 'parent') {
       setIsParentModalOpen(true)
 
@@ -85,6 +92,7 @@ function AddComponentSection() {
 
     refetch(refetchKeys.hierarchy)
   }, [
+    isOnComponentRoot,
     isSelectedComponentAcceptingChildren,
     addComponent,
     componentAddress,
@@ -104,13 +112,13 @@ function AddComponentSection() {
     navigate(`/_ecu_/component/${lastEditedHierarchyItem.fileAddress}/${lastEditedHierarchyItem.componentAddress}`)
   }, [navigate, lastEditedHierarchyItem])
 
-  const navigateToLastHierarchyItem = useCallback(() => {
+  const navigateToSelectedComponent = useCallback(() => {
     setIsParentModalOpen(false)
 
-    if (!lastHierarchyItem) return
+    if (!selectedComponentUrlPart) return
 
-    navigate(`/_ecu_/component/${lastHierarchyItem.fileAddress}/${lastHierarchyItem.componentAddress}`)
-  }, [navigate, lastHierarchyItem])
+    navigate(`/_ecu_/component/${selectedComponentUrlPart}`)
+  }, [navigate, selectedComponentUrlPart])
 
   if (componentsQueryResult.error) {
     return null
@@ -153,6 +161,7 @@ function AddComponentSection() {
         </P>
         <Accordion
           ghost
+          noChildrenPadding
           title="Atoms"
           expanded={isAtomsAccordionExpanded}
           onExpand={setIsAtomsAccordionExpanded}
@@ -165,8 +174,8 @@ function AddComponentSection() {
               <MenuItem
                 ghost
                 key={ecuAtom.name}
-                onClick={() => handleComponentSelect(ecuAtomPrefix + ecuAtom.name, ecuAtom.name, ecuAtom.isComponentAcceptingChildren)}
-                backgroundColor={selectedComponentAddress === ecuAtomPrefix + ecuAtom.name ? 'darken(background-light, 20)' : null}
+                onClick={() => handleComponentSelect(ecuAtomPrefix + ecuAtom.name, ecuAtom.name, '', ecuAtom.isComponentAcceptingChildren)}
+                backgroundColor={selectedComponentAddress === ecuAtomPrefix + ecuAtom.name ? 'darken(background-light, 6)' : null}
               >
                 {ecuAtom.name}
                 {ecuAtom.isComponentAcceptingChildren && isComponentAcceptingChildrenNode}
@@ -176,6 +185,7 @@ function AddComponentSection() {
         </Accordion>
         <Accordion
           ghost
+          noChildrenPadding
           title="Components"
           expanded={isComponentsAccordionExpanded}
           onExpand={setIsComponentsAccordionExpanded}
@@ -184,12 +194,14 @@ function AddComponentSection() {
             ghost
             width="100%"
           >
-            {componentsQueryResult.data.components.map(x => (
+            {componentsQueryResult.data.components
+            .filter(x => x.component.address !== rootComponentAddress)
+            .map(x => (
               <MenuItem
                 ghost
                 key={x.component.address}
-                onClick={() => handleComponentSelect(x.component.address, x.component.payload.name, x.isComponentAcceptingChildren)}
-                backgroundColor={selectedComponentAddress === x.component.address ? 'darken(background-light, 20)' : null}
+                onClick={() => handleComponentSelect(x.component.address, x.component.payload.name, `${x.file.address}/${x.component.address}`, x.isComponentAcceptingChildren)}
+                backgroundColor={selectedComponentAddress === x.component.address ? 'darken(background-light, 6)' : null}
               >
                 {x.component.payload.name}
                 {x.isComponentAcceptingChildren && isComponentAcceptingChildrenNode}
@@ -199,6 +211,7 @@ function AddComponentSection() {
         </Accordion>
         <Accordion
           ghost
+          noChildrenPadding
           title="Special"
           expanded={isSpecialAccordionExpanded}
           onExpand={setIsSpecialAccordionExpanded}
@@ -211,8 +224,8 @@ function AddComponentSection() {
               <MenuItem
                 ghost
                 key={ecuSpecial.name}
-                onClick={() => handleComponentSelect(ecuSpecialPrefix + ecuSpecial.name, ecuSpecial.name, ecuSpecial.isComponentAcceptingChildren)}
-                backgroundColor={selectedComponentAddress === ecuSpecialPrefix + ecuSpecial.name ? 'darken(background-light, 20)' : null}
+                onClick={() => handleComponentSelect(ecuSpecialPrefix + ecuSpecial.name, ecuSpecial.name, '', ecuSpecial.isComponentAcceptingChildren)}
+                backgroundColor={selectedComponentAddress === ecuSpecialPrefix + ecuSpecial.name ? 'darken(background-light, 6)' : null}
               >
                 {ecuSpecial.name}
                 {ecuSpecial.isComponentAcceptingChildren && isComponentAcceptingChildrenNode}
@@ -230,6 +243,7 @@ function AddComponentSection() {
         mt={1}
       >
         <Select
+          slim
           menuOnTop
           flexGrow
           backgroundColor="background"
@@ -238,6 +252,7 @@ function AddComponentSection() {
         >
           {hierarchyPositions.map(hierarchyPosition => (
             <MenuItem
+              slim
               key={hierarchyPosition}
               value={hierarchyPosition}
             >
@@ -247,7 +262,7 @@ function AddComponentSection() {
         </Select>
         <Button
           onClick={handleAddComponentClick}
-          disabled={!(selectedComponentAddress && hierarchyIds.length)}
+          disabled={!(selectedComponentAddress && hierarchyIds.length) || isOnComponentRoot}
         >
           <TbRowInsertBottom />
         </Button>
@@ -301,11 +316,11 @@ function AddComponentSection() {
           <Button onClick={() => setIsParentModalOpen(false)}>
             Close
           </Button>
-          {lastHierarchyItem?.componentAddress === selectedComponentAddress && (
-            <Button onClick={navigateToLastHierarchyItem}>
+          {!selectedComponentAddress.startsWith(ecuAtomPrefix) && !selectedComponentAddress.startsWith(ecuSpecialPrefix) && (
+            <Button onClick={navigateToSelectedComponent}>
               Go to
               {' '}
-              {lastHierarchyItem?.componentName}
+              {selectedComponentName}
             </Button>
           )}
         </Div>

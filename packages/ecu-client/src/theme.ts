@@ -163,6 +163,9 @@ export default mergeTheme(defaultTheme, {
         paddingLeft: 0,
         paddingRight: 0,
       },
+      ({ noChildrenPadding }: any) => noChildrenPadding && ({
+        paddingBottom: 0,
+      }),
     ],
   },
   Button: {
@@ -193,43 +196,6 @@ export default mergeTheme(defaultTheme, {
             backgroundColor: 'darken(background-light, 6)',
           },
         },
-      },
-    ],
-  },
-  Menu: {
-    Root: [
-      ({ ghost }: any) => ghost && {
-        elevation: 0,
-        backgroundColor: 'transparent',
-        borderRadius: 0,
-      },
-    ],
-  },
-  MenuItem: {
-    Children: [
-      ({ active, ghost }: any) => active && ghost && {
-        backgroundColor: 'darken(background-light, 10)',
-      },
-    ],
-  },
-  Ul: {
-    Root: [
-      {
-        margin: 0,
-      },
-    ],
-  },
-  Ol: {
-    Root: [
-      {
-        margin: 0,
-      },
-    ],
-  },
-  Label: {
-    Root: [
-      {
-        marginBottom: 0,
       },
     ],
   },
@@ -290,12 +256,65 @@ export default mergeTheme(defaultTheme, {
       }),
     ],
   },
+  Label: {
+    Root: [
+      {
+        marginBottom: 0,
+      },
+    ],
+  },
+  Menu: {
+    Root: [
+      ({ ghost }: any) => ghost && {
+        elevation: 0,
+        backgroundColor: 'transparent',
+        borderRadius: 0,
+      },
+    ],
+  },
+  MenuItem: {
+    Children: [
+      ({ active, ghost }: any) => active && ghost && {
+        backgroundColor: 'darken(background-light, 4)',
+      },
+      ({ slim }: any) => slim && ({
+        paddingTop: 6,
+        paddingBottom: 6,
+      }),
+    ],
+  },
+  Select: {
+    Root: [
+      ({ slim }: any) => slim && ({
+        height: 32,
+      }),
+    ],
+    Selected: [
+      ({ slim }: any) => slim && ({
+        paddingBottom: 2,
+      }),
+    ],
+  },
   Tooltip: {
     Root: [
       {
         backgroundColor: 'background-light',
         color: 'text',
         border: '1px solid border',
+      },
+    ],
+  },
+  Ul: {
+    Root: [
+      {
+        margin: 0,
+      },
+    ],
+  },
+  Ol: {
+    Root: [
+      {
+        margin: 0,
       },
     ],
   },
