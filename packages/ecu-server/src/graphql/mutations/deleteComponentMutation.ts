@@ -8,13 +8,13 @@ import processImpactedFileNodes from '../../domain/processImpactedFileNodes.js'
 import traverseComponent from '../../domain/components/traverseComponent.js'
 import applyComponentDelta from '../../domain/utils/applyComponentDelta.js'
 
-type DeleteComponentMutationArgs = {
+type DeleteComponentMutationArgsType = {
   sourceComponentAddress: string
   targetHierarchyId: string
   componentDelta: number
 }
 
-async function deleteComponentMutation(_: any, { sourceComponentAddress, targetHierarchyId, componentDelta }: DeleteComponentMutationArgs): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
+async function deleteComponentMutation(_: any, { sourceComponentAddress, targetHierarchyId, componentDelta }: DeleteComponentMutationArgsType): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
   console.log('__deleteComponentMutation__')
 
   const componentNode = getNodeByAddress<FunctionNodeType>(sourceComponentAddress)

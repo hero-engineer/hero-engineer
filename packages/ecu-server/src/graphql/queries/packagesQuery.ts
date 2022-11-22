@@ -1,4 +1,4 @@
-import readPackages from '../../packages/readPackages.js'
+import readPackages from '../../domain/packages/readPackages.js'
 
 function packagesQuery() {
   console.log('__packagesQuery__')

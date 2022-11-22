@@ -8,7 +8,7 @@ import { getNodeByAddress } from '../../graph/index.js'
 
 import getEcuScreenshotsLocation from '../../helpers/getEcuScreenshotsLocation.js'
 
-type UpdateComponentScreenshotMutationArgs = {
+type UpdateComponentScreenshotMutationArgsType = {
   sourceComponentAddress: string
   dataUrl: string
 }

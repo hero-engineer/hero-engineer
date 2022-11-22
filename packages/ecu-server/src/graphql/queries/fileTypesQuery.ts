@@ -5,7 +5,7 @@ import { getNodeByAddress } from '../../graph/index.js'
 import traverseTypes from '../../domain/types/traverseTypes.js'
 import extractBetweenComments from '../../domain/comments/extractBetweenComments.js'
 
-type FileTypesQueryArgs = {
+type FileTypesQueryArgsType = {
   sourceFileAddress: string
 }
 

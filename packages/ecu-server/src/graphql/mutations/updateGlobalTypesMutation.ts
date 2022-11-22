@@ -7,11 +7,11 @@ import { appPath, globalTypesFileBegginingComment, globalTypesFileRelativePath }
 import composeHistoryMutation from '../../history/composeHistoryMutation.js'
 import { getNodesByRole } from '../../graph/index.js'
 
-type UpdateGlobalTypesMutationArgs = {
+type UpdateGlobalTypesMutationArgsType = {
   globalTypesFileContent: string
 }
 
-async function updateGlobalTypesMutation(_: any, { globalTypesFileContent }: UpdateGlobalTypesMutationArgs): Promise<HistoryMutationReturnType<boolean>> {
+async function updateGlobalTypesMutation(_: any, { globalTypesFileContent }: UpdateGlobalTypesMutationArgsType): Promise<HistoryMutationReturnType<boolean>> {
   console.log('__updateGlobalTypesMutation__')
 
   const globalTypesFilePath = path.join(appPath, globalTypesFileRelativePath)

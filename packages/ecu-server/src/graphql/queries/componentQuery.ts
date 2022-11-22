@@ -3,7 +3,7 @@ import { FunctionNodeType } from '../../types.js'
 import { getNodeByAddress, getNodesBySecondNeighbourg } from '../../graph/index.js'
 import isComponentAcceptingChildren from '../../domain/components/isComponentAcceptingChildren.js'
 
-type ComponentQueryArgs = {
+type ComponentQueryArgsType = {
   sourceComponentAddress: string
 }
 

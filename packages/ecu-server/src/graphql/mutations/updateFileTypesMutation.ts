@@ -11,12 +11,12 @@ import insertImports from '../../domain/imports/insertImports.js'
 import regenerate from '../../domain/regenerate.js'
 import parseCode from '../../domain/parseCode.js'
 
-type UpdateFileTypesMutationArgs = {
+type UpdateFileTypesMutationArgsType = {
   sourceFileAddress: string
   rawTypes: string
 }
 
-async function updateFileTypesMutation(_: any, { sourceFileAddress, rawTypes }: UpdateFileTypesMutationArgs): Promise<HistoryMutationReturnType<boolean>> {
+async function updateFileTypesMutation(_: any, { sourceFileAddress, rawTypes }: UpdateFileTypesMutationArgsType): Promise<HistoryMutationReturnType<boolean>> {
   console.log('__updateFileTypesMutation__')
 
   const fileNode = getNodeByAddress<FileNodeType>(sourceFileAddress)

@@ -15,15 +15,15 @@ import composeHistoryMutation from '../../history/composeHistoryMutation.js'
 // import createDeleteComponentMutate from '../../domain/traversal/factories/createDeleteComponentMutate'
 // import createDeleteComponentPostTraverse from '../../domain/traversal/factories/createDeleteComponentPostTraverse'
 
-type MoveComponentMutationArgs = {
+type MoveComponentMutationArgsType = {
   sourceComponentAddress: string
   sourceHierarchyId: string
   targetHierarchyId: string
   hierarchyPosition: HierarchyPositionType
 }
 
-async function moveComponentMutation(_: any, { sourceComponentAddress, sourceHierarchyId, targetHierarchyId, hierarchyPosition }: MoveComponentMutationArgs): Promise<void> {
-// async function moveComponentMutation(_: any, { sourceComponentAddress, sourceHierarchyIds, targetHierarchyIds, hierarchyPosition }: MoveComponentMutationArgs): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
+async function moveComponentMutation(_: any, { sourceComponentAddress, sourceHierarchyId, targetHierarchyId, hierarchyPosition }: MoveComponentMutationArgsType): Promise<void> {
+// async function moveComponentMutation(_: any, { sourceComponentAddress, sourceHierarchyIds, targetHierarchyIds, hierarchyPosition }: MoveComponentMutationArgsType): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
   // console.log('__moveComponent__')
 
   // const sourceComponentNode = getNodeByAddress(sourceComponentAddress)

@@ -1,6 +1,6 @@
 import isComponentAcceptingChildren from '../../domain/components/isComponentAcceptingChildren.js'
 
-type IsComponentAcceptingChildrenQueryArgs = {
+type IsComponentAcceptingChildrenQueryArgsType = {
   sourceComponentAddress?: string
   ecuComponentName?: string
 }

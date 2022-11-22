@@ -1,8 +1,8 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import { appPath } from '../configuration.js'
-import { PackageType } from '../types.js'
+import { appPath } from '../../configuration.js'
+import { PackageType } from '../../types.js'
 
 function readPackages() {
   try {

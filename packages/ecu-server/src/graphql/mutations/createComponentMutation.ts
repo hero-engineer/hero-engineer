@@ -17,7 +17,7 @@ import regenerate from '../../domain/regenerate.js'
 
 import capitalize from '../../utils/capitalize.js'
 
-type CreateComponentMutationArgs = {
+type CreateComponentMutationArgsType = {
   name: string
 }
 
@@ -26,7 +26,7 @@ type CreateComponentMutationReturnType = {
   file: FileNodeType
 }
 
-async function createComponentMutation(_: any, { name }: CreateComponentMutationArgs): Promise<HistoryMutationReturnType<CreateComponentMutationReturnType>> {
+async function createComponentMutation(_: any, { name }: CreateComponentMutationArgsType): Promise<HistoryMutationReturnType<CreateComponentMutationReturnType>> {
   console.log('__createComponentMutation__')
 
   if (!name) {

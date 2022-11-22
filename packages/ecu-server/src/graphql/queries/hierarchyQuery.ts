@@ -1,6 +1,6 @@
 import traverseComponent from '../../domain/components/traverseComponent.js'
 
-type HierarchyQueryArgs = {
+type HierarchyQueryArgsType = {
   sourceComponentAddress: string
 }
 

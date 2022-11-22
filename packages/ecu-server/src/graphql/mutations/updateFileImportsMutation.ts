@@ -8,12 +8,12 @@ import composeHistoryMutation from '../../history/composeHistoryMutation.js'
 import insertBetweenComments from '../../domain/comments/insertBetweenComments.js'
 import regenerate from '../../domain/regenerate.js'
 
-type UpdateFileImportsMutationArgs = {
+type UpdateFileImportsMutationArgsType = {
   sourceFileAddress: string
   rawImports: string
 }
 
-async function updateFileImportsMutation(_: any, { sourceFileAddress, rawImports }: UpdateFileImportsMutationArgs): Promise<HistoryMutationReturnType<boolean>> {
+async function updateFileImportsMutation(_: any, { sourceFileAddress, rawImports }: UpdateFileImportsMutationArgsType): Promise<HistoryMutationReturnType<boolean>> {
   console.log('__updateFileImportsMutation__')
 
   const fileNode = getNodeByAddress<FileNodeType>(sourceFileAddress)

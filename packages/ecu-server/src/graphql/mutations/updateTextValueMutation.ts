@@ -9,13 +9,13 @@ import composeHistoryMutation from '../../history/composeHistoryMutation.js'
 import traverseComponent from '../../domain/components/traverseComponent.js'
 import processImpactedFileNodes from '../../domain/processImpactedFileNodes.js'
 
-type UpdateTextValueMutationArgs = {
+type UpdateTextValueMutationArgsType = {
   sourceComponentAddress: string
   targetHierarchyId: string
   value: string
 }
 
-async function updateTextValueMutation(_: any, { sourceComponentAddress, targetHierarchyId, value }: UpdateTextValueMutationArgs): Promise<HistoryMutationReturnType<boolean>> {
+async function updateTextValueMutation(_: any, { sourceComponentAddress, targetHierarchyId, value }: UpdateTextValueMutationArgsType): Promise<HistoryMutationReturnType<boolean>> {
   console.log('__updateTextValueMutation__')
 
   const sourceComponentNode = getNodeByAddress(sourceComponentAddress)

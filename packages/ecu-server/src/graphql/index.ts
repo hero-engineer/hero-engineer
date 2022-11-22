@@ -21,6 +21,7 @@ import updateFileTypesMutation from './mutations/updateFileTypesMutation.js'
 import removeFileUnusedImportsMutation from './mutations/removeFileUnusedImportsMutation.js'
 import updateGlobalTypesMutation from './mutations/updateGlobalTypesMutation.js'
 import updateComponentScreenshotMutation from './mutations/updateComponentScreenshotMutation.js'
+import updateOrInstallPackageMutation from './mutations/updateOrInstallPackageMutation.js'
 import undoMutation from './mutations/undoMutation.js'
 import redoMutation from './mutations/redoMutation.js'
 import pushMutation from './mutations/pushMutation.js'
@@ -143,6 +144,8 @@ export const typeDefs = gql`
     updateGlobalTypes(globalTypesFileContent: String!): Boolean!
     updateFileTypes(sourceFileAddress: String!, rawTypes: String!): Boolean!
 
+    updateOrInstallPackage(package: Package!, shouldDelete: Boolean!): Boolean!
+
     updateComponentScreenshot(sourceComponentAddress: String!, dataUrl: String!): Boolean!
 
     undo: Boolean!
@@ -180,6 +183,8 @@ export const resolvers = {
     removeFileUnusedImports: removeFileUnusedImportsMutation,
     updateFileTypes: updateFileTypesMutation,
     updateGlobalTypes: updateGlobalTypesMutation,
+
+    updateOrInstallPackage: updateOrInstallPackageMutation,
 
     updateComponentScreenshot: updateComponentScreenshotMutation,
 

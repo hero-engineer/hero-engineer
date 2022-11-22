@@ -9,13 +9,13 @@ import insertBetweenComments from '../../domain/comments/insertBetweenComments.j
 import wrapInNormalizedComments from '../../domain/comments/wrapInNormalizedComment.js'
 import regenerate from '../../domain/regenerate.js'
 
-type UpdateFileDescriptionMutationArgs = {
+type UpdateFileDescriptionMutationArgsType = {
   sourceFileAddress: string
   description: string
   emoji: string
 }
 
-async function updateFileDescriptionMutation(_: any, { sourceFileAddress, description, emoji }: UpdateFileDescriptionMutationArgs): Promise<HistoryMutationReturnType<boolean>> {
+async function updateFileDescriptionMutation(_: any, { sourceFileAddress, description, emoji }: UpdateFileDescriptionMutationArgsType): Promise<HistoryMutationReturnType<boolean>> {
   console.log('__updateFileDescriptionMutation__')
 
   const fileNode = getNodeByAddress<FileNodeType>(sourceFileAddress)

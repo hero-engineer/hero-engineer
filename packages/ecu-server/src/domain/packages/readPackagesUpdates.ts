@@ -2,8 +2,8 @@ import path from 'node:path'
 
 import ncu from 'npm-check-updates'
 
-import { appPath } from '../configuration.js'
-import { PackageType } from '../types.js'
+import { appPath } from '../../configuration.js'
+import { PackageType } from '../../types.js'
 
 async function readPackagesUpdates() {
   const packageJsonLocation = path.join(appPath, 'package.json')
