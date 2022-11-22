@@ -42,10 +42,12 @@ async function updateHierarchyDisplayNameMutation(_: any, { sourceComponentAddre
       comments.splice(existingCommentIndex, 1)
     }
 
-    comments.push({
-      type: 'CommentLine',
-      value: ` ${ecuDisplayNameCommentPrefix}${value}`,
-    })
+    if (value) {
+      comments.push({
+        type: 'CommentLine',
+        value: ` ${ecuDisplayNameCommentPrefix}${value}`,
+      })
+    }
 
     finalPath.node.openingElement.name.trailingComments = comments
   }

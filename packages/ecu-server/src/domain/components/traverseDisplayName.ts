@@ -18,6 +18,9 @@ function traverseDisplayName(x: NodePath<JSXElement>) {
         x.stop()
       }
     },
+    JSXElement(x) {
+      x.stop()
+    },
   }, x.scope, x.parentPath)
 
   return displayName
