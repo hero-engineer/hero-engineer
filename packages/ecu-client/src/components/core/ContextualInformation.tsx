@@ -30,7 +30,7 @@ type ContextualInformationPropsType = {
 function ContextualInformation({ scrollRef }: ContextualInformationPropsType) {
   const { componentAddress = '' } = useParams()
   const contextualMenuRef = useRef<HTMLDivElement>(null)
-  const { hierarchy } = useContext(HierarchyContext)
+  const { hierarchy, shouldAdjustComponentDelta } = useContext(HierarchyContext)
   const { contextualInformationElement, contextualInformationState, setContextualInformationState } = useContext(ContextualInformationContext)
   const { hierarchyIds, componentDelta, setEditionSearchParams } = useEditionSearchParams()
   const [position, setPosition] = useState<XYType>({ x: 0, y: 0 })
@@ -99,7 +99,7 @@ function ContextualInformation({ scrollRef }: ContextualInformationPropsType) {
   }, [contextualInformationElement])
 
   const renderComponentNameVignette = useCallback(() => {
-    if (!(lastHierarchyItem && isComponentNameVignetteVisible)) return null
+    if (!(lastHierarchyItem && isComponentNameVignetteVisible) || shouldAdjustComponentDelta) return null
 
     return (
       <Div
@@ -117,6 +117,7 @@ function ContextualInformation({ scrollRef }: ContextualInformationPropsType) {
   }, [
     lastHierarchyItem,
     isComponentNameVignetteVisible,
+    shouldAdjustComponentDelta,
     position.x,
     position.y,
     contextualInformationState.isEdited,

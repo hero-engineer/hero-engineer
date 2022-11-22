@@ -119,6 +119,8 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
       return
     }
 
+    console.log('1')
+
     setEditionSearchParams({
       hierarchyIds: x => {
         const nextHierarchyIds: string[] = []
@@ -176,7 +178,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
       klassName += ' ecu-can-be-edited'
     }
 
-    if (shouldAdjustComponentDelta) return klassName
+    if (shouldAdjustComponentDelta) return klassName.trim()
 
     if (isComponentRoot) {
       klassName += ' ecu-selected-root'
