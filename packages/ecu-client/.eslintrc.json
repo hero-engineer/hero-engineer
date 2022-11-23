@@ -1,0 +1,5 @@
+{
+  "rules": {
+    "react/jsx-closing-bracket-location": "error"
+  }
+}

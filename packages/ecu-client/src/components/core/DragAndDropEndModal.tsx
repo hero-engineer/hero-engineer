@@ -25,6 +25,8 @@ function DragAndDropEndModal() {
     setDragAndDrop({
       sourceHierarchyId: '',
       targetHierarchyId: '',
+      sourceComponentDelta: 0,
+      targetComponentDelta: 0,
     })
   }, [setDragAndDrop])
 

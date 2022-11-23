@@ -19,11 +19,11 @@ import useRefetch from '../../hooks/useRefetch'
 import useClearHierarchyIdsAndComponentDeltaOnClick from '../../hooks/useClearHierarchyIdsAndComponentDeltaOnClick'
 import useIsComponentRefreshingQuery from '../../hooks/useIsComponentRefreshingQuery'
 
-import ComponentLoader from '../core/ComponentLoader'
 import HierarchyBar from '../core/HierarchyBar'
 import ContextualInformation from '../core/ContextualInformation'
 import DragAndDropEndModal from '../core/DragAndDropEndModal'
 import EmojiPicker from '../core/EmojiPicker'
+import ComponentWindow from '../core/ComponentWindow'
 
 function traverseElementToRemoveEcuClasses(element: HTMLElement) {
   const classes: string[] = []
@@ -174,7 +174,6 @@ function Component() {
       flexGrow
       maxHeight="100%"
       overflowY="auto"
-      px="1px" // To allow ecu-elected borders to be visible
       userSelect="none"
     >
       <Div
@@ -222,10 +221,11 @@ function Component() {
         ref={componentRef}
         xflex="y2s" // No flexGrow for outside click to work
         flexShrink={0}
+        flexGrow
         pt={1}
         pb={6}
       >
-        <ComponentLoader componentPath={component.payload.path} />
+        <ComponentWindow componentPath={component.payload.path} />
       </Div>
       <ContextualInformation scrollRef={rootRef} />
       <DragAndDropEndModal />

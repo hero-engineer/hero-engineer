@@ -1,22 +1,22 @@
-import { RefObject, Suspense, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { A, Button, Div, H3, Menu, MenuItem, Modal, P, WithOutsideClick } from 'honorable'
 
-import { useMutation } from 'urql'
 import { SlTrash } from 'react-icons/sl'
+
+import { HierarchyPosition, RectType } from '../../types'
+import { refetchKeys } from '../../constants'
 
 import HierarchyContext from '../../contexts/HierarchyContext'
 import ContextualInformationContext from '../../contexts/ContextualInformationContext'
 import DragAndDropContext from '../../contexts/DragAndDropContext'
-import { RectType } from '../../types'
 
-import { refetchKeys } from '../../constants'
+import { DeleteComponentMutation, DeleteComponentMutationDataType, MoveComponentMutation, MoveComponentMutationDataType } from '../../queries'
 
-import { DeleteComponentMutation, DeleteComponentMutationDataType } from '../../queries'
-
-import useEditionSearchParams from '../../hooks/useEditionSearchParams'
 import useRefetch from '../../hooks/useRefetch'
+import useEditionSearchParams from '../../hooks/useEditionSearchParams'
 import useIsComponentRefreshingMutation from '../../hooks/useIsComponentRefreshingMutation'
+import useMutation from '../../hooks/useMutation'
 
 import isHierarchyOnComponent from '../../helpers/isHierarchyOnComponent'
 import getLastEditedHierarchyItem from '../../helpers/getLastEditedHierarchyItem'
@@ -46,6 +46,7 @@ function ContextualInformation({ scrollRef }: ContextualInformationPropsType) {
   const lastHierarchyItem = useMemo(() => hierarchy[hierarchy.length - 1], [hierarchy])
   const lastEditedHierarchyItem = useMemo(() => getLastEditedHierarchyItem(hierarchy), [hierarchy])
 
+  const [, moveComponent] = useIsComponentRefreshingMutation(useMutation<MoveComponentMutationDataType>(MoveComponentMutation))
   const [, deleteComponent] = useIsComponentRefreshingMutation(useMutation<DeleteComponentMutationDataType>(DeleteComponentMutation))
 
   const refetch = useRefetch()
@@ -118,12 +119,18 @@ function ContextualInformation({ scrollRef }: ContextualInformationPropsType) {
     })
   }, [contextualInformationState.dropElement])
 
+  const handleMove = useCallback(async (hierarchyPosition: HierarchyPosition) => {
+
+  }, [])
+
   // Reset drag and drop on Escape key
   const handleWindowKeyDown = useCallback((event: KeyboardEvent) => {
     if (event.key === 'Escape') {
       setDragAndDrop({
         sourceHierarchyId: '',
         targetHierarchyId: '',
+        sourceComponentDelta: 0,
+        targetComponentDelta: 0,
       })
       setContextualInformationState(x => ({ ...x, dropElement: null }))
     }
@@ -213,16 +220,25 @@ function ContextualInformation({ scrollRef }: ContextualInformationPropsType) {
         fontSize={12}
         zIndex={999999}
         userSelect="none"
-        gap={0.25}
+        gap={0.5}
         px={0.25}
       >
-        <A color="inherit">
+        <Div>
+          Drop:
+        </Div>
+        <A
+          color="inherit"
+          onClick={() => handleMove('before')}>
           Before
         </A>
-        <A color="inherit">
+        <A
+          color="inherit"
+          onClick={() => handleMove('after')}>
           After
         </A>
-        <A color="inherit">
+        <A
+          color="inherit"
+          onClick={() => handleMove('children')}>
           Children
         </A>
       </Div>
@@ -234,6 +250,7 @@ function ContextualInformation({ scrollRef }: ContextualInformationPropsType) {
     dropElementRect.x,
     dropElementRect.y,
     dropElementRect.height,
+    handleMove,
   ])
 
   useEffect(() => {

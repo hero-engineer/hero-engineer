@@ -65,7 +65,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   const { setContextualInformationState } = useContext(ContextualInformationContext)
   const [isEdited, setIsEdited] = useState(false)
 
-  const isSelected = useMemo(() => componentDelta >= 0 && hierarchyIds.length && hierarchyId && hierarchyIds[hierarchyIds.length - 1] === hierarchyId, [componentDelta, hierarchyIds, hierarchyId])
+  const isSelected = useMemo(() => componentDelta >= 0 && hierarchyIds.length > 0 && !!hierarchyId && hierarchyIds[hierarchyIds.length - 1] === hierarchyId, [componentDelta, hierarchyIds, hierarchyId])
   const componentRootHierarchyIds = useMemo(() => getComponentRootHierarchyIds(hierarchy), [hierarchy])
   const isComponentRoot = useMemo(() => componentDelta < 0 && componentRootHierarchyIds.some(x => x === hierarchyId), [componentDelta, componentRootHierarchyIds, hierarchyId])
   const isComponentRootFirstChild = useMemo(() => componentRootHierarchyIds.indexOf(hierarchyId) === 0, [componentRootHierarchyIds, hierarchyId])
@@ -78,6 +78,8 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
       setDragAndDrop({
         sourceHierarchyId: '',
         targetHierarchyId: '',
+        sourceComponentDelta: 0,
+        targetComponentDelta: 0,
       })
       setContextualInformationState(x => ({ ...x, dropElement: null }))
 
@@ -90,6 +92,8 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
         setDragAndDrop({
           sourceHierarchyId: item.hierarchyId,
           targetHierarchyId: dropResult.hierarchyId,
+          sourceComponentDelta: componentDelta,
+          targetComponentDelta: 0,
         })
         setContextualInformationState(x => ({ ...x, dropElement: dropResult.dropElement }))
       }
@@ -98,9 +102,12 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
       isDragging: monitor.isDragging(),
       handlerId: monitor.getHandlerId(),
     }),
-    canDrag: !isEdited,
+    canDrag: (isSelected || isComponentRoot) && !isEdited,
   }), [
     hierarchyId,
+    componentDelta,
+    isSelected,
+    isComponentRoot,
     isEdited,
     setDragAndDrop,
     setContextualInformationState,
@@ -135,6 +142,8 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
     setDragAndDrop({
       sourceHierarchyId: '',
       targetHierarchyId: '',
+      sourceComponentDelta: 0,
+      targetComponentDelta: 0,
     })
 
     event.stopPropagation()
