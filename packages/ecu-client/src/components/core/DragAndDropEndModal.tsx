@@ -45,7 +45,8 @@ function DragAndDropEndModal() {
 
   return (
     <Modal
-      open={!!(dragAndDrop.sourceHierarchyId && dragAndDrop.targetHierarchyId)}
+      open={false}
+      // open={!!(dragAndDrop.sourceHierarchyId && dragAndDrop.targetHierarchyId)}
       onClose={clearDragAndDrop}
     >
       <H2>Complete component move</H2>

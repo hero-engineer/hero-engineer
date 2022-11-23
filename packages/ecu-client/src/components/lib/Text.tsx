@@ -125,11 +125,11 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
             bare
             multiline
             autoFocus
+            width="100%"
             value={value}
             onChange={event => setValue(event.target.value)}
             onKeyDown={handleInputKeyDown}
             onBlur={handleBlur}
-            className="ecu-text-input"
           />
         </WithOutsideClick>
       ) : appendCarriageReturn(children)}

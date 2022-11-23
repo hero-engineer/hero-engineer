@@ -18,9 +18,11 @@ export type FileNodeType = {
   }
 }
 
-export type XYType = {
+export type RectType = {
   x: number
   y: number
+  width: number
+  height: number
 }
 
 export type HierarchyPosition = 'before' | 'after' | 'children' | 'parent'

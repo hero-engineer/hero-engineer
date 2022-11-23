@@ -52,7 +52,6 @@ function SnackBar() {
           elevation={1}
           backgroundColor="background"
           borderBottom={`1px solid ${severityToBorderColor[x.severity]}`}
-          borderRadius="large"
           mt={1}
           p={1}
         >

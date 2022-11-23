@@ -50,9 +50,14 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
   const [dragAndDrop, setDragAndDrop] = useState<DragAndDropType>({ sourceHierarchyId: '', targetHierarchyId: '' })
   const dragAndDropContextValue = useMemo<DragAndDropContextType>(() => ({ dragAndDrop, setDragAndDrop }), [dragAndDrop])
 
-  const [contextualInformationElement, setContextualInformationElement] = useState<HTMLElement | null>(null)
-  const [contextualInformationState, setContextualInformationState] = useState<ContextualInformationStateType>({ isEdited: false, isComponentRoot: false, rightClickEvent: null })
-  const contextualInformationContextValue = useMemo<ContextualInformationContextType>(() => ({ contextualInformationElement, setContextualInformationElement, contextualInformationState, setContextualInformationState }), [contextualInformationElement, contextualInformationState])
+  const [contextualInformationState, setContextualInformationState] = useState<ContextualInformationStateType>({
+    isEdited: false,
+    isComponentRoot: false,
+    rightClickEvent: null,
+    element: null,
+    dropElement: null,
+  })
+  const contextualInformationContextValue = useMemo<ContextualInformationContextType>(() => ({ contextualInformationState, setContextualInformationState }), [contextualInformationState])
 
   return (
     <Provider value={client}>

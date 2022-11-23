@@ -18,8 +18,22 @@ import useForkedRef from './useForkedRef'
 import useHierarchyId from './useHierarchyId'
 import useEditionSearchParams from './useEditionSearchParams'
 
+type DragObject = {
+  hierarchyId: string
+}
+
 type DropResult = {
   hierarchyId: string
+  dropElement: HTMLElement | null
+}
+
+type DragCollectedProp = {
+  isDragging: boolean
+}
+
+type DropCollectedProps = {
+  canDrop: boolean
+  isOverCurrent: boolean
 }
 
 function getHierarchyIds(element: EventTarget | HTMLElement) {
@@ -47,8 +61,8 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   const hierarchyId = useHierarchyId(ecuId, rootRef)
   const { hierarchyIds, componentDelta, setEditionSearchParams } = useEditionSearchParams()
   const { hierarchy } = useContext(HierarchyContext)
-  const { setDragAndDrop } = useContext(DragAndDropContext)
-  const { setContextualInformationElement, setContextualInformationState } = useContext(ContextualInformationContext)
+  const { dragAndDrop, setDragAndDrop } = useContext(DragAndDropContext)
+  const { setContextualInformationState } = useContext(ContextualInformationContext)
   const [isEdited, setIsEdited] = useState(false)
 
   const isSelected = useMemo(() => componentDelta >= 0 && hierarchyIds.length && hierarchyId && hierarchyIds[hierarchyIds.length - 1] === hierarchyId, [componentDelta, hierarchyIds, hierarchyId])
@@ -56,18 +70,28 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   const isComponentRoot = useMemo(() => componentDelta < 0 && componentRootHierarchyIds.some(x => x === hierarchyId), [componentDelta, componentRootHierarchyIds, hierarchyId])
   const isComponentRootFirstChild = useMemo(() => componentRootHierarchyIds.indexOf(hierarchyId) === 0, [componentRootHierarchyIds, hierarchyId])
   const isComponentRootLastChild = useMemo(() => componentRootHierarchyIds.indexOf(hierarchyId) === componentRootHierarchyIds.length - 1, [componentRootHierarchyIds, hierarchyId])
+  const isDrop = useMemo(() => hierarchyId && dragAndDrop.targetHierarchyId === hierarchyId, [dragAndDrop.targetHierarchyId, hierarchyId])
 
-  const [{ isDragging }, drag] = useDrag(() => ({
+  const [{ isDragging }, drag] = useDrag<DragObject, DropResult, DragCollectedProp>(() => ({
     type: 'Node',
-    item: () => ({ hierarchyId }),
+    item: () => {
+      setDragAndDrop({
+        sourceHierarchyId: '',
+        targetHierarchyId: '',
+      })
+      setContextualInformationState(x => ({ ...x, dropElement: null }))
+
+      return { hierarchyId }
+    },
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult<DropResult>()
 
-      if (item && dropResult) {
+      if (item && dropResult && dropResult.hierarchyId !== hierarchyId) {
         setDragAndDrop({
           sourceHierarchyId: item.hierarchyId,
           targetHierarchyId: dropResult.hierarchyId,
         })
+        setContextualInformationState(x => ({ ...x, dropElement: dropResult.dropElement }))
       }
     },
     collect: monitor => ({
@@ -75,9 +99,14 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
       handlerId: monitor.getHandlerId(),
     }),
     canDrag: !isEdited,
-  }), [setDragAndDrop, isEdited, hierarchyId])
+  }), [
+    hierarchyId,
+    isEdited,
+    setDragAndDrop,
+    setContextualInformationState,
+  ])
 
-  const [{ canDrop, isOverCurrent }, drop] = useDrop(() => ({
+  const [{ canDrop, isOverCurrent }, drop] = useDrop<DragObject, DropResult, DropCollectedProps>(() => ({
     accept: 'Node',
     drop: (_item, monitor) => {
       if (monitor.didDrop()) return
@@ -86,6 +115,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
 
       return {
         hierarchyId: dropHierarchyIds[dropHierarchyIds.length - 1],
+        dropElement: rootRef.current,
       }
     },
     collect: monitor => ({
@@ -100,6 +130,12 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   const handleClick = useCallback((event: MouseEvent) => {
     if (event.detail < 2) return // Double click or more only
     if (isEdited) return
+
+    // Reset dragAndDrop
+    setDragAndDrop({
+      sourceHierarchyId: '',
+      targetHierarchyId: '',
+    })
 
     event.stopPropagation()
 
@@ -142,11 +178,12 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
     })
   }, [
     isEdited,
-    canBeEdited,
+    setDragAndDrop,
     hierarchyIds,
+    componentDelta,
+    canBeEdited,
     hierarchy,
     componentAddress,
-    componentDelta,
     setEditionSearchParams,
   ])
 
@@ -189,7 +226,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
       klassName += ' ecu-drag'
     }
 
-    if (canDrop && isOverCurrent) {
+    if (canDrop && isOverCurrent || isDrop) {
       klassName += ' ecu-drop'
     }
 
@@ -209,6 +246,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
     isDragging,
     canDrop,
     isOverCurrent,
+    isDrop,
     isEdited,
   ])
 
@@ -216,15 +254,13 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
     if (!rootRef.current) return
 
     if (isSelected || (isComponentRoot && isComponentRootFirstChild)) {
-      setContextualInformationElement(rootRef.current)
-      setContextualInformationState(x => ({ ...x, isEdited, isComponentRoot: isComponentRootFirstChild }))
+      setContextualInformationState(x => ({ ...x, isEdited, isComponentRoot: isComponentRootFirstChild, element: rootRef.current }))
     }
   }, [
     isSelected,
     isComponentRoot,
     isComponentRootFirstChild,
     isEdited,
-    setContextualInformationElement,
     setContextualInformationState,
   ])
 

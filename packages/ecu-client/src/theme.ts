@@ -124,6 +124,9 @@ export default mergeTheme(defaultTheme, {
     red,
     grey,
     pink,
+    'is-drop': 'green.500',
+    'is-edited': 'darkorchid',
+    'is-component-root': 'gold',
   },
   global: [
     mpRecipe(),
