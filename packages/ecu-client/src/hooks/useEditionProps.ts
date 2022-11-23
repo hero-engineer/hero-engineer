@@ -135,7 +135,6 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   const ref = useForkedRef(rootRef, useForkedRef(drag, drop)) as Ref<T>
 
   const handleClick = useCallback((event: MouseEvent) => {
-    if (event.detail < 2) return // Double click or more only
     if (isEdited) return
 
     // Reset dragAndDrop

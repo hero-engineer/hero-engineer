@@ -38,8 +38,6 @@ function ContextualInformation({ scrollRef, iframeRef }: ContextualInformationPr
   const { dragAndDrop, setDragAndDrop } = useContext(DragAndDropContext)
   const { hierarchyIds, componentDelta, setEditionSearchParams } = useEditionSearchParams()
 
-  const [elementRect, setElementRect] = useState<RectType>({ x: 0, y: 0, width: 0, height: 0 })
-  const [dropElementRect, setDropElementRect] = useState<RectType>({ x: 0, y: 0, width: 0, height: 0 })
   const [isComponentNameVignetteVisible, setIsComponentNameVignetteVisible] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
@@ -96,33 +94,33 @@ function ContextualInformation({ scrollRef, iframeRef }: ContextualInformationPr
   }, [navigate, lastEditedHierarchyItem])
 
   const readElementPosition = useCallback(() => {
-    if (!contextualInformationState.element) return
-    if (!iframeRef.current) return
+    if (!contextualInformationState.element) return null
+    if (!iframeRef.current) return null
 
     const iframeRect = iframeRef.current.getBoundingClientRect()
     const rect = contextualInformationState.element.getBoundingClientRect()
 
-    setElementRect({
+    return {
       x: iframeRect.left + rect.left + window.scrollX,
       y: iframeRect.top + rect.top + window.scrollY,
       width: rect.width,
       height: rect.height,
-    })
+    }
   }, [contextualInformationState.element, iframeRef])
 
   const readDropElementPosition = useCallback(() => {
-    if (!contextualInformationState.dropElement) return
-    if (!iframeRef.current) return
+    if (!contextualInformationState.dropElement) return null
+    if (!iframeRef.current) return null
 
     const iframeRect = iframeRef.current.getBoundingClientRect()
     const rect = contextualInformationState.dropElement.getBoundingClientRect()
 
-    setDropElementRect({
+    return {
       x: iframeRect.left + rect.left + window.scrollX,
       y: iframeRect.top + rect.top + window.scrollY,
       width: rect.width,
       height: rect.height,
-    })
+    }
   }, [contextualInformationState.dropElement, iframeRef])
 
   const handleMove = useCallback(async (hierarchyPosition: HierarchyPosition) => {
@@ -182,6 +180,10 @@ function ContextualInformation({ scrollRef, iframeRef }: ContextualInformationPr
     if (!contextualInformationState.element) return
     if (!(lastHierarchyItem && isComponentNameVignetteVisible) || componentDelta > 0) return null
 
+    const elementRect = readElementPosition()
+
+    if (!elementRect) return null
+
     return (
       <Div
         xflex="x4"
@@ -203,8 +205,7 @@ function ContextualInformation({ scrollRef, iframeRef }: ContextualInformationPr
     lastHierarchyItem,
     isComponentNameVignetteVisible,
     componentDelta,
-    elementRect.x,
-    elementRect.y,
+    readElementPosition,
     contextualInformationState.element,
     contextualInformationState.isEdited,
     contextualInformationState.isComponentRoot,
@@ -213,6 +214,10 @@ function ContextualInformation({ scrollRef, iframeRef }: ContextualInformationPr
   const renderDropVignette = useCallback(() => {
     if (!contextualInformationState.dropElement) return null
     if (!(dragAndDrop.sourceHierarchyId && dragAndDrop.targetHierarchyId)) return null
+
+    const dropElementRect = readDropElementPosition()
+
+    if (!dropElementRect) return null
 
     return (
       <Div
@@ -256,61 +261,59 @@ function ContextualInformation({ scrollRef, iframeRef }: ContextualInformationPr
     dragAndDrop.sourceHierarchyId,
     dragAndDrop.targetHierarchyId,
     contextualInformationState.dropElement,
-    dropElementRect.x,
-    dropElementRect.y,
-    dropElementRect.height,
+    readDropElementPosition,
     handleMove,
   ])
 
-  useEffect(() => {
-    if (!scrollRef.current) return
+  // useEffect(() => {
+  //   if (!scrollRef.current) return
 
-    const scrollElement = scrollRef.current
+  //   const scrollElement = scrollRef.current
 
-    readElementPosition()
+  //   readElementPosition()
 
-    window.addEventListener('resize', readElementPosition)
-    window.addEventListener('scroll', readElementPosition)
-    scrollElement.addEventListener('scroll', readElementPosition)
+  //   window.addEventListener('resize', readElementPosition)
+  //   window.addEventListener('scroll', readElementPosition)
+  //   scrollElement.addEventListener('scroll', readElementPosition)
 
-    const resizeObserver = new ResizeObserver(readElementPosition)
+  //   const resizeObserver = new ResizeObserver(readElementPosition)
 
-    resizeObserver.observe(scrollElement)
+  //   resizeObserver.observe(scrollElement)
 
-    return () => {
-      window.removeEventListener('resize', readElementPosition)
-      window.removeEventListener('scroll', readElementPosition)
+  //   return () => {
+  //     window.removeEventListener('resize', readElementPosition)
+  //     window.removeEventListener('scroll', readElementPosition)
 
-      scrollElement.removeEventListener('scroll', readElementPosition)
+  //     scrollElement.removeEventListener('scroll', readElementPosition)
 
-      resizeObserver.disconnect()
-    }
-  }, [readElementPosition, scrollRef])
+  //     resizeObserver.disconnect()
+  //   }
+  // }, [readElementPosition, scrollRef])
 
-  useEffect(() => {
-    if (!scrollRef.current) return
+  // useEffect(() => {
+  //   if (!scrollRef.current) return
 
-    const scrollElement = scrollRef.current
+  //   const scrollElement = scrollRef.current
 
-    readDropElementPosition()
+  //   readDropElementPosition()
 
-    window.addEventListener('resize', readDropElementPosition)
-    window.addEventListener('scroll', readDropElementPosition)
-    scrollElement.addEventListener('scroll', readDropElementPosition)
+  //   window.addEventListener('resize', readDropElementPosition)
+  //   window.addEventListener('scroll', readDropElementPosition)
+  //   scrollElement.addEventListener('scroll', readDropElementPosition)
 
-    const resizeObserver = new ResizeObserver(readDropElementPosition)
+  //   const resizeObserver = new ResizeObserver(readDropElementPosition)
 
-    resizeObserver.observe(scrollElement)
+  //   resizeObserver.observe(scrollElement)
 
-    return () => {
-      window.removeEventListener('resize', readDropElementPosition)
-      window.removeEventListener('scroll', readDropElementPosition)
+  //   return () => {
+  //     window.removeEventListener('resize', readDropElementPosition)
+  //     window.removeEventListener('scroll', readDropElementPosition)
 
-      scrollElement.removeEventListener('scroll', readDropElementPosition)
+  //     scrollElement.removeEventListener('scroll', readDropElementPosition)
 
-      resizeObserver.disconnect()
-    }
-  }, [readDropElementPosition, scrollRef])
+  //     resizeObserver.disconnect()
+  //   }
+  // }, [readDropElementPosition, scrollRef])
 
   // useEffect(() => {
   //   if (!scrollRef.current) return
