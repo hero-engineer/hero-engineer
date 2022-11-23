@@ -209,6 +209,8 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   const generateClassName = useCallback(() => {
     let klassName = `ecu-edition-no-outline ${className}`
 
+    klassName = klassName.trim()
+
     if (canBeEdited) {
       klassName += ' ecu-can-be-edited'
     }

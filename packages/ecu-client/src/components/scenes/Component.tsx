@@ -220,8 +220,8 @@ function Component() {
       <Div
         ref={componentRef}
         xflex="y2s" // No flexGrow for outside click to work
-        flexShrink={0}
         flexGrow
+        flexShrink={0}
         pt={1}
         pb={6}
       >

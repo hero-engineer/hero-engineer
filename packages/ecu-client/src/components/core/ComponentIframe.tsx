@@ -1,7 +1,6 @@
-
 import { ReactNode, useCallback, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
-import { Iframe, IframeProps } from 'honorable'
+import { Iframe, IframeProps, useGlobalStyles } from 'honorable'
 
 import editionStyles from '../../css/edition.css?inline'
 
@@ -11,8 +10,8 @@ type ComponentIframePropsType = IframeProps & {
 
 function ComponentIframe({ children, ...props }: ComponentIframePropsType) {
   const rootRef = useRef<HTMLIFrameElement>(null)
+  const globalStyles = useGlobalStyles()
 
-  console.log('editionStyles', editionStyles)
   const documentNode = rootRef.current?.contentWindow?.document
   const mountNode = documentNode?.body
 
@@ -28,6 +27,22 @@ function ComponentIframe({ children, ...props }: ComponentIframePropsType) {
 
   useEffect(() => {
     appendCss(editionStyles)
+  }, [appendCss])
+
+  useEffect(() => {
+    globalStyles.forEach(({ styles }) => {
+      appendCss(styles)
+    })
+  }, [globalStyles, appendCss])
+
+  // To allow borders to be visible
+  useEffect(() => {
+    appendCss(`
+      body {
+        padding-left: 1px;
+        padding-right: 1px;
+      }
+    `)
   }, [appendCss])
 
   return (
