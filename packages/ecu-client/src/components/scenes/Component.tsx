@@ -20,7 +20,6 @@ import useClearHierarchyIdsAndComponentDeltaOnClick from '../../hooks/useClearHi
 import useIsComponentRefreshingQuery from '../../hooks/useIsComponentRefreshingQuery'
 
 import HierarchyBar from '../core/HierarchyBar'
-import ContextualInformation from '../core/ContextualInformation'
 import DragAndDropEndModal from '../core/DragAndDropEndModal'
 import EmojiPicker from '../core/EmojiPicker'
 import ComponentWindow from '../core/ComponentWindow'
@@ -227,7 +226,6 @@ function Component() {
       >
         <ComponentWindow componentPath={component.payload.path} />
       </Div>
-      <ContextualInformation scrollRef={rootRef} />
       <DragAndDropEndModal />
     </Div>
   )

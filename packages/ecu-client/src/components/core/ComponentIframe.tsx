@@ -1,6 +1,6 @@
-import { ReactNode, useCallback, useEffect, useRef } from 'react'
+import { ReactNode, Ref, forwardRef, useCallback, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
-import { Iframe, IframeProps, useGlobalStyles } from 'honorable'
+import { Iframe, IframeProps, useForkedRef, useGlobalStyles } from 'honorable'
 
 import editionStyles from '../../css/edition.css?inline'
 
@@ -8,8 +8,10 @@ type ComponentIframePropsType = IframeProps & {
   children: ReactNode
 }
 
-function ComponentIframe({ children, ...props }: ComponentIframePropsType) {
+function ComponentIframe({ children, ...props }: ComponentIframePropsType, ref: Ref<HTMLIFrameElement>) {
   const rootRef = useRef<HTMLIFrameElement>(null)
+  const forkedRef = useForkedRef(ref, rootRef)
+
   const globalStyles = useGlobalStyles()
 
   const documentNode = rootRef.current?.contentWindow?.document
@@ -39,8 +41,7 @@ function ComponentIframe({ children, ...props }: ComponentIframePropsType) {
   useEffect(() => {
     appendCss(`
       body {
-        padding-left: 1px;
-        padding-right: 1px;
+        padding: 1px;
       }
     `)
   }, [appendCss])
@@ -48,7 +49,7 @@ function ComponentIframe({ children, ...props }: ComponentIframePropsType) {
   return (
     <Iframe
       {...props}
-      ref={rootRef}
+      ref={forkedRef}
       flexGrow
       width="100%"
       height="100%"
@@ -59,4 +60,4 @@ function ComponentIframe({ children, ...props }: ComponentIframePropsType) {
   )
 }
 
-export default ComponentIframe
+export default forwardRef(ComponentIframe)

@@ -23,12 +23,14 @@ import getLastEditedHierarchyItem from '../../helpers/getLastEditedHierarchyItem
 
 type ContextualInformationPropsType = {
   scrollRef: RefObject<HTMLElement>
+  iframeRef: RefObject<HTMLIFrameElement>
 }
 
 // Displays:
 // - the context menu on component
 // - the component name vignette
-function ContextualInformation({ scrollRef }: ContextualInformationPropsType) {
+// - the component drop vignette
+function ContextualInformation({ scrollRef, iframeRef }: ContextualInformationPropsType) {
   const { componentAddress = '' } = useParams()
   const contextualMenuRef = useRef<HTMLDivElement>(null)
   const { hierarchy } = useContext(HierarchyContext)
@@ -95,29 +97,33 @@ function ContextualInformation({ scrollRef }: ContextualInformationPropsType) {
 
   const readElementPosition = useCallback(() => {
     if (!contextualInformationState.element) return
+    if (!iframeRef.current) return
 
+    const iframeRect = iframeRef.current.getBoundingClientRect()
     const rect = contextualInformationState.element.getBoundingClientRect()
 
     setElementRect({
-      x: rect.left + window.scrollX,
-      y: rect.top + window.scrollY,
+      x: iframeRect.left + rect.left + window.scrollX,
+      y: iframeRect.top + rect.top + window.scrollY,
       width: rect.width,
       height: rect.height,
     })
-  }, [contextualInformationState.element])
+  }, [contextualInformationState.element, iframeRef])
 
   const readDropElementPosition = useCallback(() => {
     if (!contextualInformationState.dropElement) return
+    if (!iframeRef.current) return
 
+    const iframeRect = iframeRef.current.getBoundingClientRect()
     const rect = contextualInformationState.dropElement.getBoundingClientRect()
 
     setDropElementRect({
-      x: rect.left + window.scrollX,
-      y: rect.top + window.scrollY,
+      x: iframeRect.left + rect.left + window.scrollX,
+      y: iframeRect.top + rect.top + window.scrollY,
       width: rect.width,
       height: rect.height,
     })
-  }, [contextualInformationState.dropElement])
+  }, [contextualInformationState.dropElement, iframeRef])
 
   const handleMove = useCallback(async (hierarchyPosition: HierarchyPosition) => {
 
@@ -228,17 +234,20 @@ function ContextualInformation({ scrollRef }: ContextualInformationPropsType) {
         </Div>
         <A
           color="inherit"
-          onClick={() => handleMove('before')}>
+          onClick={() => handleMove('before')}
+        >
           Before
         </A>
         <A
           color="inherit"
-          onClick={() => handleMove('after')}>
+          onClick={() => handleMove('after')}
+        >
           After
         </A>
         <A
           color="inherit"
-          onClick={() => handleMove('children')}>
+          onClick={() => handleMove('children')}
+        >
           Children
         </A>
       </Div>
@@ -303,24 +312,24 @@ function ContextualInformation({ scrollRef }: ContextualInformationPropsType) {
     }
   }, [readDropElementPosition, scrollRef])
 
-  useEffect(() => {
-    if (!scrollRef.current) return
-    if (!contextualInformationState.element) return
+  // useEffect(() => {
+  //   if (!scrollRef.current) return
+  //   if (!contextualInformationState.element) return
 
-    const observer = new window.IntersectionObserver(([entry]) => {
-      setIsComponentNameVignetteVisible(entry.isIntersecting)
-    }, {
-      root: scrollRef.current,
-      threshold: 0,
-      rootMargin: '-16px 0px 0px 0px',
-    })
+  //   const observer = new window.IntersectionObserver(([entry]) => {
+  //     setIsComponentNameVignetteVisible(entry.isIntersecting)
+  //   }, {
+  //     root: scrollRef.current,
+  //     threshold: 0,
+  //     rootMargin: '-16px 0px 0px 0px',
+  //   })
 
-    observer.observe(contextualInformationState.element)
+  //   observer.observe(contextualInformationState.element)
 
-    return () => {
-      observer.disconnect()
-    }
-  }, [contextualInformationState.element, scrollRef])
+  //   return () => {
+  //     observer.disconnect()
+  //   }
+  // }, [contextualInformationState.element, scrollRef])
 
   // Prevent flickering of the component name vignette
   useEffect(() => {
