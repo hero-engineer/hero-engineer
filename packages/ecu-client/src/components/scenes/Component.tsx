@@ -174,11 +174,11 @@ function Component() {
       maxHeight="100%"
       overflowY="auto"
       userSelect="none"
+      pt={1}
     >
       <Div
         xflex="x4"
         gap={0.5}
-        mt={0.75}
       >
         <EmojiPicker
           emoji={emoji}
@@ -217,14 +217,15 @@ function Component() {
         ) : description || 'Click to add a description'}
       </P>
       <Div
-        ref={componentRef}
-        xflex="y2s" // No flexGrow for outside click to work
+        xflex="y2s"
         flexGrow
         flexShrink={0}
-        pt={1}
-        pb={6}
+        mt={1}
       >
-        <ComponentWindow componentPath={component.payload.path} />
+        <ComponentWindow
+          componentPath={component.payload.path}
+          componentRef={componentRef}
+        />
       </Div>
       <DragAndDropEndModal />
     </Div>

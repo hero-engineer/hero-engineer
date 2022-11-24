@@ -52,7 +52,7 @@ function AddComponentSection() {
   const [componentsQueryResult, refetchComponentsQuery] = useQuery<ComponentsQueryDataType>({
     query: ComponentsQuery,
   })
-  const [, addComponent] = useIsComponentRefreshingMutation(useMutation<AddComponentMutationDataType>(AddComponentMutation))
+  const [{ fetching }, addComponent] = useIsComponentRefreshingMutation(useMutation<AddComponentMutationDataType>(AddComponentMutation))
 
   const refetch = useRefetch({
     key: refetchKeys.components,
@@ -263,6 +263,7 @@ function AddComponentSection() {
         <Button
           onClick={handleAddComponentClick}
           disabled={!(selectedComponentAddress && hierarchyIds.length) || isOnComponentRoot}
+          loading={fetching}
         >
           <TbRowInsertBottom />
         </Button>

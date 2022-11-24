@@ -81,7 +81,6 @@ function Overlay({ children }: OverlayPropsType) {
           flexGrow
           maxHeight="100%"
           overflowY="auto"
-          py={0.5}
           px={2.5}
         >
           {children}

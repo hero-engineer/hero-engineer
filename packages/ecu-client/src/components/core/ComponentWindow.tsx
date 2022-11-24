@@ -1,5 +1,7 @@
-import { useRef } from 'react'
-import { Div } from 'honorable'
+import { RefObject, memo, useRef } from 'react'
+import { CssBaseline, Div, ThemeProvider } from 'honorable'
+
+import theme from '../../theme'
 
 import ComponentIframe from './ComponentIframe'
 import ComponentLoader from './ComponentLoader'
@@ -8,31 +10,29 @@ import ContextualInformation from './ContextualInformation'
 
 type ComponentWindowPropsType = {
   componentPath: string
+  componentRef: RefObject<HTMLDivElement>
 }
 
-function ComponentWindow({ componentPath }: ComponentWindowPropsType) {
-  const scrollRef = useRef<HTMLDivElement>(null)
-  const iframeRef = useRef<HTMLIFrameElement>(null)
-
+function ComponentWindow({ componentPath, componentRef }: ComponentWindowPropsType) {
   return (
-    <>
-      <Div
-        ref={scrollRef}
-        xflex="y2s"
-        flexGrow
-      >
-        <ComponentIframe ref={iframeRef}>
+    <Div
+      xflex="y2s"
+      flexGrow
+      pb={6}
+    >
+      <ComponentIframe>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
           <WithIsComponentRefreshingLayer>
-            <ComponentLoader componentPath={componentPath} />
+            <div ref={componentRef}>
+              <ComponentLoader componentPath={componentPath} />
+            </div>
           </WithIsComponentRefreshingLayer>
-        </ComponentIframe>
-      </Div>
-      <ContextualInformation
-        scrollRef={scrollRef}
-        iframeRef={iframeRef}
-      />
-    </>
+          <ContextualInformation />
+        </ThemeProvider>
+      </ComponentIframe>
+    </Div>
   )
 }
 
-export default ComponentWindow
+export default ComponentWindow // Do not memoize this component, it will break the iframe

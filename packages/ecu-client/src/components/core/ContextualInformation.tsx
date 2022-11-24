@@ -1,10 +1,10 @@
-import { RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { A, Button, Div, H3, Menu, MenuItem, Modal, P, WithOutsideClick } from 'honorable'
 
 import { SlTrash } from 'react-icons/sl'
 
-import { HierarchyPosition, RectType } from '../../types'
+import { HierarchyPosition } from '../../types'
 import { refetchKeys } from '../../constants'
 
 import HierarchyContext from '../../contexts/HierarchyContext'
@@ -21,16 +21,11 @@ import useMutation from '../../hooks/useMutation'
 import isHierarchyOnComponent from '../../helpers/isHierarchyOnComponent'
 import getLastEditedHierarchyItem from '../../helpers/getLastEditedHierarchyItem'
 
-type ContextualInformationPropsType = {
-  scrollRef: RefObject<HTMLElement>
-  iframeRef: RefObject<HTMLIFrameElement>
-}
-
 // Displays:
 // - the context menu on component
 // - the component name vignette
 // - the component drop vignette
-function ContextualInformation({ scrollRef, iframeRef }: ContextualInformationPropsType) {
+function ContextualInformation() {
   const { componentAddress = '' } = useParams()
   const contextualMenuRef = useRef<HTMLDivElement>(null)
   const { hierarchy } = useContext(HierarchyContext)
@@ -75,6 +70,8 @@ function ContextualInformation({ scrollRef, iframeRef }: ContextualInformationPr
       componentDelta: 0,
     })
 
+    setContextualInformationState(x => ({ ...x, element: null }))
+
     refetch(refetchKeys.hierarchy)
   }, [
     closeContextMenu,
@@ -84,6 +81,7 @@ function ContextualInformation({ scrollRef, iframeRef }: ContextualInformationPr
     deleteComponent,
     hierarchyIds,
     setEditionSearchParams,
+    setContextualInformationState,
     refetch,
   ])
 
@@ -95,33 +93,29 @@ function ContextualInformation({ scrollRef, iframeRef }: ContextualInformationPr
 
   const readElementPosition = useCallback(() => {
     if (!contextualInformationState.element) return null
-    if (!iframeRef.current) return null
 
-    const iframeRect = iframeRef.current.getBoundingClientRect()
     const rect = contextualInformationState.element.getBoundingClientRect()
 
     return {
-      x: iframeRect.left + rect.left + window.scrollX,
-      y: iframeRect.top + rect.top + window.scrollY,
+      x: rect.left,
+      y: rect.top,
       width: rect.width,
       height: rect.height,
     }
-  }, [contextualInformationState.element, iframeRef])
+  }, [contextualInformationState.element])
 
   const readDropElementPosition = useCallback(() => {
     if (!contextualInformationState.dropElement) return null
-    if (!iframeRef.current) return null
 
-    const iframeRect = iframeRef.current.getBoundingClientRect()
     const rect = contextualInformationState.dropElement.getBoundingClientRect()
 
     return {
-      x: iframeRect.left + rect.left + window.scrollX,
-      y: iframeRect.top + rect.top + window.scrollY,
+      x: rect.left,
+      y: rect.top,
       width: rect.width,
       height: rect.height,
     }
-  }, [contextualInformationState.dropElement, iframeRef])
+  }, [contextualInformationState.dropElement])
 
   const handleMove = useCallback(async (hierarchyPosition: HierarchyPosition) => {
 
@@ -340,7 +334,7 @@ function ContextualInformation({ scrollRef, iframeRef }: ContextualInformationPr
 
     const timeoutId = setTimeout(() => {
       setIsComponentNameVignetteVisible(true)
-    }, 16)
+    }, 16 - 1) // 16ms is the default frame rate, minus 1 to put it in the next frame not the second (not sure if that works :)
 
     return () => {
       clearTimeout(timeoutId)

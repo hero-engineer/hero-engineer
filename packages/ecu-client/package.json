@@ -19,8 +19,10 @@
     "prepublishOnly": "PRODUCTION_BUILD=true npm run build"
   },
   "dependencies": {
+    "@emotion/cache": "^11.10.5",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@emotion/weak-memoize": "^0.3.0",
     "emoji-picker-react": "^4.4.5",
     "graphql": "^16.6.0",
     "honorable": "^0.165.0",
