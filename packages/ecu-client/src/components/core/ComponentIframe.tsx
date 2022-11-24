@@ -1,4 +1,4 @@
-import { ReactNode, Ref, RefObject, forwardRef, useCallback, useEffect, useRef, useState } from 'react'
+import { ReactElement, Ref, RefObject, forwardRef, useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Iframe, IframeProps, useForkedRef } from 'honorable'
 
@@ -6,8 +6,12 @@ import editionStyles from '../../css/edition.css?inline'
 
 import EmotionProvider from './EmotionProvider'
 
-type ComponentIframePropsType = IframeProps & {
-  children: ReactNode
+type ComponentIframeChildrenArgsType = {
+  window?: Window | null
+}
+
+type ComponentIframePropsType = Omit<IframeProps, 'children'> & {
+  children: (args: ComponentIframeChildrenArgsType) => ReactElement
   componentRef: RefObject<HTMLDivElement>
 }
 
@@ -16,7 +20,9 @@ function ComponentIframe({ children, componentRef, ...props }: ComponentIframePr
   const forkedRef = useForkedRef(ref, rootRef)
 
   const [height, setHeight] = useState<number | 'auto'>('auto')
-  const documentNode = rootRef.current?.contentWindow?.document
+
+  const windowNode = rootRef.current?.contentWindow
+  const documentNode = windowNode?.document
   const mountNode = documentNode?.body
   const headNode = documentNode?.head
 
@@ -71,7 +77,7 @@ function ComponentIframe({ children, componentRef, ...props }: ComponentIframePr
       border="none"
     >
       <EmotionProvider head={headNode}>
-        {mountNode && createPortal(children, mountNode)}
+        {mountNode && createPortal(children({ window: windowNode }), mountNode)}
       </EmotionProvider>
     </Iframe>
   )

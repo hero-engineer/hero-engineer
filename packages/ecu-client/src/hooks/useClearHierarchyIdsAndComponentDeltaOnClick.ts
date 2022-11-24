@@ -1,9 +1,13 @@
-import { RefObject, useCallback, useEffect } from 'react'
+import { RefObject, useCallback, useContext, useEffect } from 'react'
+
+import DragAndDropContext from '../contexts/DragAndDropContext'
 
 import useEditionSearchParams from './useEditionSearchParams'
 
 // Reset hierarchyIds and componentDelta on outside of component double click
 function useClearHierarchyIdsAndComponentDeltaOnClick(clickRef: RefObject<HTMLElement>) {
+  const { setDragAndDrop } = useContext(DragAndDropContext)
+
   const { setEditionSearchParams } = useEditionSearchParams()
 
   const handleClick = useCallback((event: MouseEvent) => {
@@ -14,8 +18,14 @@ function useClearHierarchyIdsAndComponentDeltaOnClick(clickRef: RefObject<HTMLEl
         hierarchyIds: [],
         componentDelta: 0,
       })
+      setDragAndDrop({
+        sourceHierarchyId: '',
+        targetHierarchyId: '',
+        sourceComponentDelta: 0,
+        targetComponentDelta: 0,
+      })
     }
-  }, [clickRef, setEditionSearchParams])
+  }, [clickRef, setEditionSearchParams, setDragAndDrop])
 
   useEffect(() => {
     if (!clickRef.current) return

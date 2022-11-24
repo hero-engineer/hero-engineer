@@ -1,5 +1,7 @@
 import { RefObject, useRef } from 'react'
 import { CssBaseline, Div, ThemeProvider } from 'honorable'
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 
 import theme from '../../theme'
 
@@ -28,15 +30,22 @@ function ComponentWindow({ componentPath, componentRef }: ComponentWindowPropsTy
       pb={6}
     >
       <ComponentIframe componentRef={componentRef}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <WithIsComponentRefreshingLayer>
-            <div ref={componentRef}>
-              <ComponentLoader componentPath={componentPath} />
-            </div>
-          </WithIsComponentRefreshingLayer>
-          <ContextualInformation />
-        </ThemeProvider>
+        {({ window }) => (
+          <DndProvider
+            backend={HTML5Backend}
+            context={window}
+          >
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <WithIsComponentRefreshingLayer>
+                <div ref={componentRef}>
+                  <ComponentLoader componentPath={componentPath} />
+                </div>
+              </WithIsComponentRefreshingLayer>
+              <ContextualInformation />
+            </ThemeProvider>
+          </DndProvider>
+        )}
       </ComponentIframe>
     </Div>
   )
