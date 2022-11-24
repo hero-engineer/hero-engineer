@@ -1,4 +1,4 @@
-import { ReactNode, Ref, forwardRef, useCallback, useEffect, useRef, useState } from 'react'
+import { ReactNode, Ref, RefObject, forwardRef, useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Iframe, IframeProps, useForkedRef } from 'honorable'
 
@@ -8,9 +8,10 @@ import EmotionProvider from './EmotionProvider'
 
 type ComponentIframePropsType = IframeProps & {
   children: ReactNode
+  componentRef: RefObject<HTMLDivElement>
 }
 
-function ComponentIframe({ children, ...props }: ComponentIframePropsType, ref: Ref<HTMLIFrameElement>) {
+function ComponentIframe({ children, componentRef, ...props }: ComponentIframePropsType, ref: Ref<HTMLIFrameElement>) {
   const rootRef = useRef<HTMLIFrameElement>(null)
   const forkedRef = useForkedRef(ref, rootRef)
 
@@ -33,24 +34,32 @@ function ComponentIframe({ children, ...props }: ComponentIframePropsType, ref: 
     appendCss(editionStyles)
   }, [appendCss])
 
-  // To allow borders to be visible
+  // To allow borders and component vignette to be visible
   useEffect(() => {
     appendCss(`
       body {
-        padding: 1px;
+        padding-top: 16px;
+        padding-bottom: 1xp;
+        padding-left: 1px;
+        padding-right: 1px;
       }
     `)
   }, [appendCss])
 
   useEffect(() => {
-    if (!mountNode) return
+    if (!componentRef.current) return
 
     const observer = new ResizeObserver(() => {
-      setHeight(mountNode.scrollHeight)
+      setHeight(componentRef.current!.scrollHeight + 16 + 1)
     })
 
-    observer.observe(mountNode)
-  }, [mountNode])
+    observer.observe(componentRef.current)
+
+    return () => {
+      observer.disconnect()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [componentRef.current])
 
   return (
     <Iframe

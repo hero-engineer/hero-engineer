@@ -194,7 +194,7 @@ function Component() {
       >
         {component.payload.relativePath}
       </P>
-      <P
+      <Div
         ref={descriptionRef}
         color="text-light"
         cursor="pointer"
@@ -215,18 +215,11 @@ function Component() {
             color="text-light"
           />
         ) : description || 'Click to add a description'}
-      </P>
-      <Div
-        xflex="y2s"
-        flexGrow
-        flexShrink={0}
-        mt={1}
-      >
-        <ComponentWindow
-          componentPath={component.payload.path}
-          componentRef={componentRef}
-        />
       </Div>
+      <ComponentWindow
+        componentPath={component.payload.path}
+        componentRef={componentRef}
+      />
       <DragAndDropEndModal />
     </Div>
   )

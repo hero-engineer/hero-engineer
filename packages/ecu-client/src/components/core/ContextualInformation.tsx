@@ -192,7 +192,7 @@ function ContextualInformation() {
         userSelect="none"
         px={0.25}
       >
-        {lastHierarchyItem.displayName ? `${lastHierarchyItem.displayName} [${lastHierarchyItem.componentName}]` : lastHierarchyItem.componentName}
+        {lastHierarchyItem.displayName && lastHierarchyItem.displayName !== lastHierarchyItem.componentName ? `${lastHierarchyItem.displayName} [${lastHierarchyItem.componentName}]` : lastHierarchyItem.componentName}
       </Div>
     )
   }, [

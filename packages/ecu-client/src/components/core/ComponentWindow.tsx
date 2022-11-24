@@ -1,7 +1,9 @@
-import { RefObject, memo, useRef } from 'react'
+import { RefObject, useRef } from 'react'
 import { CssBaseline, Div, ThemeProvider } from 'honorable'
 
 import theme from '../../theme'
+
+import useClearHierarchyIdsAndComponentDeltaOnClick from '../../hooks/useClearHierarchyIdsAndComponentDeltaOnClick'
 
 import ComponentIframe from './ComponentIframe'
 import ComponentLoader from './ComponentLoader'
@@ -14,13 +16,18 @@ type ComponentWindowPropsType = {
 }
 
 function ComponentWindow({ componentPath, componentRef }: ComponentWindowPropsType) {
+  const rootRef = useRef<HTMLDivElement>(null)
+
+  useClearHierarchyIdsAndComponentDeltaOnClick(rootRef)
+
   return (
     <Div
-      xflex="y2s"
+      ref={rootRef}
       flexGrow
+      flexShrink={0}
       pb={6}
     >
-      <ComponentIframe>
+      <ComponentIframe componentRef={componentRef}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <WithIsComponentRefreshingLayer>

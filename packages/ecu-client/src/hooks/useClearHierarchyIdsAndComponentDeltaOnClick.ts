@@ -7,7 +7,6 @@ function useClearHierarchyIdsAndComponentDeltaOnClick(clickRef: RefObject<HTMLEl
   const { setEditionSearchParams } = useEditionSearchParams()
 
   const handleClick = useCallback((event: MouseEvent) => {
-    if (event.detail < 2) return
     if (!clickRef.current) return
 
     if (event.target === clickRef.current) {

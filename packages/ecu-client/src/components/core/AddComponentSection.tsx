@@ -43,7 +43,6 @@ function AddComponentSection() {
   const [selectedComponentAddress, setSelectedComponentId] = useState('')
   const [isSelectedComponentAcceptingChildren, setIsSelectedComponentAcceptingChildren] = useState(false)
 
-  const rootComponentAddress = useMemo(() => hierarchy[0]?.componentAddress ?? '', [hierarchy])
   const isOnComponentRoot = useMemo(() => hierarchy[hierarchy.length - 1]?.isRoot ?? true, [hierarchy])
   const lastEditedHierarchyItem = useMemo(() => getLastEditedHierarchyItem(hierarchy), [hierarchy])
 
@@ -195,7 +194,7 @@ function AddComponentSection() {
             width="100%"
           >
             {componentsQueryResult.data.components
-            .filter(x => x.component.address !== rootComponentAddress)
+            .filter(x => x.component.address !== componentAddress)
             .map(x => (
               <MenuItem
                 ghost
