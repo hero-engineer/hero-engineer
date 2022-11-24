@@ -74,6 +74,8 @@ export type PackageType = {
 
 export type BreakpointType = {
   name: string
-  value: number
+  min: number
+  max: number
+  base: number
   scale: number
 }

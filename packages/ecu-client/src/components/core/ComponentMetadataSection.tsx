@@ -15,7 +15,6 @@ import {
 import useRefetch from '../../hooks/useRefetch'
 import useIsComponentRefreshingQuery from '../../hooks/useIsComponentRefreshingQuery'
 
-import HierarchyBar from '../core/HierarchyBar'
 import EmojiPicker from '../core/EmojiPicker'
 
 function ComponentMetadataSection() {

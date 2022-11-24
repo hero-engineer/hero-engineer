@@ -50,7 +50,9 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
   const hierarchyContextValue = useMemo<HierarchyContextType>(() => ({ hierarchy, setHierarchy, totalHierarchy, setTotalHierarchy }), [hierarchy, totalHierarchy])
 
   const [breakpoint, setBreakpoint] = usePersistedState<BreakpointType | null>('ecu-breakpoint', null)
-  const breakpointContextValue = useMemo<BreakpointContextType>(() => ({ breakpoint, setBreakpoint }), [breakpoint, setBreakpoint])
+  const [breakpoints, setBreakpoints] = usePersistedState<BreakpointType[]>('ecu-breakpoints', [])
+  const [width, setWidth] = usePersistedState<number | '100%'>('ecu-width', '100%', (x: any) => x === '100%' ? x : parseInt(x))
+  const breakpointContextValue = useMemo<BreakpointContextType>(() => ({ breakpoint, setBreakpoint, breakpoints, setBreakpoints, width, setWidth }), [breakpoint, setBreakpoint, breakpoints, setBreakpoints, width, setWidth])
 
   const [dragAndDrop, setDragAndDrop] = useState<DragAndDropType>({
     sourceHierarchyId: '',
