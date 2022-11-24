@@ -71,3 +71,9 @@ export type PackageType = {
   version: string
   type: 'dependencies' | 'devDependencies'
 }
+
+export type BreakpointType = {
+  name: string
+  value: number
+  scale: number
+}

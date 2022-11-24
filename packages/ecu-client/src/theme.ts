@@ -94,17 +94,18 @@ const pink = {
 }
 
 export default mergeTheme(defaultTheme, {
-  name: 'WorldCollector',
+  name: 'Ecu',
   stylesheet: {
     html: [
       {
         overscrollBehaviorX: 'none',
+        fontFamily: "'Inter', sans-serif",
+        fontSize: 14,
       },
     ],
     body: [
       {
         overflow: 'hidden',
-        fontFamily: "'Inter', sans-serif",
         overscrollBehaviorX: 'none',
       },
     ],
@@ -240,7 +241,7 @@ export default mergeTheme(defaultTheme, {
     ],
     Title: [
       ({ ghost }: any) => ghost && {
-        height: 32, // To match the height of the RetractablePanel toggle icon of 33px - 1px border
+        height: 30, // To match the height of the RetractablePanel toggle icon of 31px - 1px border
         paddingTop: 0,
         paddingBottom: 0,
         fontWeight: 500,
@@ -300,6 +301,15 @@ export default mergeTheme(defaultTheme, {
           '&:hover': {
             backgroundColor: 'darken(background-light, 6)',
           },
+        },
+      },
+      ({ ghost, toggled }: any) => ghost && toggled && {
+        backgroundColor: 'darken(background-light, 4)',
+        ':hover': {
+          backgroundColor: 'darken(background-light, 4)',
+        },
+        ':active': {
+          backgroundColor: 'darken(background-light, 4)',
         },
       },
       ({ danger }: any) => danger && {

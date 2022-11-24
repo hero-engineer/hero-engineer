@@ -155,7 +155,7 @@ function HierarchyBar() {
   return (
     <Div
       xflex="x4"
-      fontSize={12}
+      fontSize="0.75rem"
       userSelect="none"
       gap={0.25}
       py={0.5}

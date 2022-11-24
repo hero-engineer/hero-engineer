@@ -187,7 +187,7 @@ function ContextualInformation() {
         height={16}
         backgroundColor={contextualInformationState.isEdited ? 'is-edited' : contextualInformationState.isComponentRoot ? 'is-component-root' : 'primary'}
         color="white"
-        fontSize={12}
+        fontSize="0.75rem"
         zIndex={999999}
         userSelect="none"
         px={0.25}
@@ -222,7 +222,7 @@ function ContextualInformation() {
         height={16}
         backgroundColor="is-drop"
         color="white"
-        fontSize={12}
+        fontSize="0.75rem"
         zIndex={999999}
         userSelect="none"
         gap={0.5}

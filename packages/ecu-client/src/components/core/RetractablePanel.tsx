@@ -59,7 +59,7 @@ function RetractablePanel({ direction, openPersistedStateKey, defaultOpenIndex =
           ghost
           key={index}
           position="absolute"
-          top={openIndex === index ? 0 : `calc(${openIndex < index ? index : index + 1} * 33px)`}
+          top={openIndex === index ? 0 : `calc(${openIndex < index ? index : index + 1} * 31px)`}
           right={isRight ? openIndex === -1 ? '100%' : 'calc(100% + 1px)' : null}
           left={isLeft ? openIndex === -1 ? '100%' : 'calc(100% + 1px)' : null}
           backgroundColor="background-light"

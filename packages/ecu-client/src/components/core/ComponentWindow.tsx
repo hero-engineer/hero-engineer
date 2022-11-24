@@ -1,5 +1,5 @@
 import { RefObject, useRef } from 'react'
-import { CssBaseline, Div, ThemeProvider } from 'honorable'
+import { CssBaseline, Div, ThemeProvider, mergeTheme } from 'honorable'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
@@ -11,6 +11,17 @@ import ComponentIframe from './ComponentIframe'
 import ComponentLoader from './ComponentLoader'
 import WithIsComponentRefreshingLayer from './WithIsComponentRefreshingLayer'
 import ContextualInformation from './ContextualInformation'
+
+const componentTheme = mergeTheme(theme, {
+  name: 'Ecu-Component',
+  stylesheet: {
+    html: [
+      {
+        fontSize: 16,
+      },
+    ],
+  },
+})
 
 type ComponentWindowPropsType = {
   componentPath: string
@@ -35,7 +46,7 @@ function ComponentWindow({ componentPath, componentRef }: ComponentWindowPropsTy
             backend={HTML5Backend}
             context={window}
           >
-            <ThemeProvider theme={theme}>
+            <ThemeProvider theme={componentTheme}>
               <CssBaseline />
               <WithIsComponentRefreshingLayer>
                 <div ref={componentRef}>

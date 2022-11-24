@@ -12,16 +12,18 @@ import theme from '../../theme'
 
 import ModeContext from '../../contexts/ModeContext'
 import HotContext from '../../contexts/HotContext'
+import RefetchContext, { RefetchContextType } from '../../contexts/RefetchContext'
 import SnackBarContext, { SnackBarContextType } from '../../contexts/SnackBarContext'
 import IsComponentRefreshingContext, { IsComponentRefreshingContextType } from '../../contexts/IsComponentRefreshingContext'
-import RefetchContext, { RefetchContextType } from '../../contexts/RefetchContext'
 import HierarchyContext, { HierarchyContextType } from '../../contexts/HierarchyContext'
+import BreakpointContext, { BreakpointContextType } from '../../contexts/BreakpointContext'
 import DragAndDropContext, { DragAndDropContextType, DragAndDropType } from '../../contexts/DragAndDropContext'
 import ContextualInformationContext, { ContextualInformationContextType, ContextualInformationStateType } from '../../contexts/ContextualInformationContext'
 
-import { HierarchyItemType, SnackBarItemType } from '../../types'
+import { BreakpointType, HierarchyItemType, SnackBarItemType } from '../../types'
 
 import useCreateRefetchRegistry from '../../hooks/useCreateRefetchRegistry'
+import usePersistedState from '../../hooks/usePersistedState'
 
 import Router from './Router'
 import WithEcuHomeButton from './WithEcuHomeButton'
@@ -46,6 +48,9 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
   const [hierarchy, setHierarchy] = useState<HierarchyItemType[]>([])
   const [totalHierarchy, setTotalHierarchy] = useState<HierarchyItemType| null>(null)
   const hierarchyContextValue = useMemo<HierarchyContextType>(() => ({ hierarchy, setHierarchy, totalHierarchy, setTotalHierarchy }), [hierarchy, totalHierarchy])
+
+  const [breakpoint, setBreakpoint] = usePersistedState<BreakpointType | null>('ecu-breakpoint', null)
+  const breakpointContextValue = useMemo<BreakpointContextType>(() => ({ breakpoint, setBreakpoint }), [breakpoint, setBreakpoint])
 
   const [dragAndDrop, setDragAndDrop] = useState<DragAndDropType>({
     sourceHierarchyId: '',
@@ -75,15 +80,17 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
                 <SnackBarContext.Provider value={snackBarContextValue}>
                   <IsComponentRefreshingContext.Provider value={isComponnentRefreshingContextValue}>
                     <HierarchyContext.Provider value={hierarchyContextValue}>
-                      <DragAndDropContext.Provider value={dragAndDropContextValue}>
-                        <ContextualInformationContext.Provider value={contextualInformationContextValue}>
-                          <Router>
-                            <WithEcuHomeButton>
-                              {children}
-                            </WithEcuHomeButton>
-                          </Router>
-                        </ContextualInformationContext.Provider>
-                      </DragAndDropContext.Provider>
+                      <BreakpointContext.Provider value={breakpointContextValue}>
+                        <DragAndDropContext.Provider value={dragAndDropContextValue}>
+                          <ContextualInformationContext.Provider value={contextualInformationContextValue}>
+                            <Router>
+                              <WithEcuHomeButton>
+                                {children}
+                              </WithEcuHomeButton>
+                            </Router>
+                          </ContextualInformationContext.Provider>
+                        </DragAndDropContext.Provider>
+                      </BreakpointContext.Provider>
                     </HierarchyContext.Provider>
                   </IsComponentRefreshingContext.Provider>
                 </SnackBarContext.Provider>

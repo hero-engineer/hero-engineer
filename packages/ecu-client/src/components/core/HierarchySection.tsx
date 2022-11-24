@@ -224,14 +224,15 @@ function HierarchyLabel({ hierarchyItem, collapsed, isFetching, setIsFetching }:
       {!hierarchyItem.isRoot && !isEditingDisplayName && !(isLoadingDisplayName && !displayName) && ((isLoadingDisplayName && !!displayName) || !!hierarchyItem.displayName) && (
         <Div
           color="text-light"
-          fontSize={10}>
+          fontSize={10}
+        >
           {hierarchyItem.label}
         </Div>
       )}
       {!isFetching && !isEditingDisplayName && !hierarchyItem.isRoot && hierarchyItem.onComponentAddress === componentAddress && (
         <A
           onClick={handleEditDisplayName}
-          fontSize={12}
+          fontSize="0.75rem"
           className="ecu-hierarchy-label-edit"
           px={0.25}
         >

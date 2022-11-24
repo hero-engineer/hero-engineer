@@ -13,6 +13,7 @@ import EcuButton from './EcuButton'
 import ComponentsLinkButton from './ComponentsLinkButton'
 import CreateComponentButton from './CreateComponentButton'
 import PackagesLinkButton from './PackagesLinkButton'
+import BreakpointsButtons from './BreakpointsButtons'
 import UndoRedoButtons from './UndoRedoButtons'
 import PushButton from './PushButton'
 import ViewAppButton from './ViewAppButton'
@@ -44,6 +45,8 @@ function Overlay({ children }: OverlayPropsType) {
         <ComponentsLinkButton borderRight="1px solid border" />
         <CreateComponentButton borderRight="1px solid border" />
         <PackagesLinkButton borderRight="1px solid border" />
+        <Div flexGrow />
+        <BreakpointsButtons />
         <Div flexGrow />
         <UndoRedoButtons />
         <PushButton />
