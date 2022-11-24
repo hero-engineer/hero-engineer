@@ -41,9 +41,11 @@ function ComponentIframe({ children, componentRef, ...props }: ComponentIframePr
   }, [appendCss])
 
   // To allow borders and component vignette to be visible
+  // And ovrflow auto for scroll to work
   useEffect(() => {
     appendCss(`
       body {
+        overflow: auto;
         padding: 1px;
       }
     `)

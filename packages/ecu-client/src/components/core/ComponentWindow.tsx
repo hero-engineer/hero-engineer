@@ -36,6 +36,7 @@ function ComponentWindow({ componentPath, componentRef }: ComponentWindowPropsTy
   return (
     <Div
       ref={rootRef}
+      xflex="y2s"
       flexGrow
       flexShrink={1}
       overflowY="auto"
