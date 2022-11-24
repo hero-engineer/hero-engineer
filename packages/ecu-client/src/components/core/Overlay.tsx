@@ -1,4 +1,4 @@
-import { PropsWithChildren, memo, useRef } from 'react'
+import { PropsWithChildren, memo } from 'react'
 import { useParams } from 'react-router-dom'
 import { Div } from 'honorable'
 import { RiNodeTree } from 'react-icons/ri'
@@ -7,9 +7,8 @@ import { CgInsertBeforeR } from 'react-icons/cg'
 import { MdBrush } from 'react-icons/md'
 import { BsDiamond } from 'react-icons/bs'
 
-import useClearHierarchyIdsAndComponentDeltaOnClick from '../../hooks/useClearHierarchyIdsAndComponentDeltaOnClick'
-
 import SnackBar from './SnackBar'
+import HierarchyBar from './HierarchyBar'
 import EcuButton from './EcuButton'
 import ComponentsLinkButton from './ComponentsLinkButton'
 import CreateComponentButton from './CreateComponentButton'
@@ -31,9 +30,6 @@ type OverlayPropsType = PropsWithChildren<any>
 // The whole ecu overlay
 function Overlay({ children }: OverlayPropsType) {
   const { componentAddress = '' } = useParams()
-  const childrenRef = useRef<HTMLDivElement>(null)
-
-  useClearHierarchyIdsAndComponentDeltaOnClick(childrenRef)
 
   return (
     <>
@@ -80,13 +76,13 @@ function Overlay({ children }: OverlayPropsType) {
           />
         )}
         <Div
-          ref={childrenRef}
           xflex="y2s"
           flexGrow
           maxHeight="100%"
-          overflowY="auto"
+          overflowY="hidden"
         >
           {children}
+          <HierarchyBar />
         </Div>
         {!!componentAddress && (
           <RetractablePanel

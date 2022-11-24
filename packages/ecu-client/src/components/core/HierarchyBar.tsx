@@ -155,10 +155,13 @@ function HierarchyBar() {
   return (
     <Div
       xflex="x4"
+      flexShrink={0}
       fontSize="0.75rem"
       userSelect="none"
+      backgroundColor="background-light"
+      borderTop="1px solid border"
       gap={0.25}
-      py={0.5}
+      p={0.5}
     >
       {displayHierarchy.map((hierarchyItem, i, a) => (
         <Fragment key={i + hierarchyItem.label}>
@@ -175,11 +178,7 @@ function HierarchyBar() {
           )}
         </Fragment>
       ))}
-      {displayHierarchy.length === 0 && (
-        <Div visibility="hidden">
-          -
-        </Div>
-      )}
+      {displayHierarchy.length === 0 && 'No element selected'}
     </Div>
   )
 }

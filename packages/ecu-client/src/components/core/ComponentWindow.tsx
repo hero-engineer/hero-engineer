@@ -37,8 +37,8 @@ function ComponentWindow({ componentPath, componentRef }: ComponentWindowPropsTy
     <Div
       ref={rootRef}
       flexGrow
-      flexShrink={0}
-      pb={6}
+      flexShrink={1}
+      overflowY="auto"
     >
       <ComponentIframe componentRef={componentRef}>
         {({ window }) => (

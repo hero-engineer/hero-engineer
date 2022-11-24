@@ -53,7 +53,7 @@ function ComponentIframe({ children, componentRef, ...props }: ComponentIframePr
     if (!componentRef.current) return
 
     const observer = new ResizeObserver(() => {
-      setHeight(componentRef.current!.scrollHeight + 16 + 1)
+      setHeight(componentRef.current!.scrollHeight)
     })
 
     observer.observe(componentRef.current)

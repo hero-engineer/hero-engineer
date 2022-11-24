@@ -114,7 +114,6 @@ function ComponentMetadataSection() {
           setEmoji={setEmoji}
         />
         <H4>{component.payload.name}</H4>
-        <HierarchyBar />
       </Div>
       <P
         color="text-light"

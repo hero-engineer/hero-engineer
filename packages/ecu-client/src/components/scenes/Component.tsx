@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom'
 import { useMutation, useQuery } from 'urql'
 import html2canvas from 'html2canvas'
 
+import { Div } from 'honorable'
+
 import { refetchKeys } from '../../constants'
 
 import {
@@ -104,7 +106,7 @@ function Component() {
   const { component } = componentQueryResult.data.component
 
   if (!component) {
-    return null
+    return <Div flexGrow />
   }
 
   return (
