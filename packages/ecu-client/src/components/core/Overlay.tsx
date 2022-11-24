@@ -5,6 +5,7 @@ import { RiNodeTree } from 'react-icons/ri'
 import { BiNetworkChart } from 'react-icons/bi'
 import { CgInsertBeforeR } from 'react-icons/cg'
 import { MdBrush } from 'react-icons/md'
+import { BsDiamond } from 'react-icons/bs'
 
 import useClearHierarchyIdsAndComponentDeltaOnClick from '../../hooks/useClearHierarchyIdsAndComponentDeltaOnClick'
 
@@ -20,6 +21,7 @@ import ViewAppButton from './ViewAppButton'
 import RetractablePanel from './RetractablePanel'
 import HierarchySection from './HierarchySection'
 import AddComponentSection from './AddComponentSection'
+import ComponentMetadataSection from './ComponentMetadataSection'
 import ComponentTypesSection from './ComponentTypesSection'
 import ComponentImportsSection from './ComponentImportsSection'
 import StylesSection from './StylesSection'
@@ -62,7 +64,6 @@ function Overlay({ children }: OverlayPropsType) {
         {!!componentAddress && (
           <RetractablePanel
             direction="left"
-            defaultOpenIndex={0}
             openPersistedStateKey="ecu-left-panel-open"
             items={[
               {
@@ -84,16 +85,19 @@ function Overlay({ children }: OverlayPropsType) {
           flexGrow
           maxHeight="100%"
           overflowY="auto"
-          px={2.5}
         >
           {children}
         </Div>
         {!!componentAddress && (
           <RetractablePanel
             direction="right"
-            defaultOpenIndex={0}
             openPersistedStateKey="ecu-right-panel-open"
             items={[
+              {
+                label: 'Component',
+                icon: <BsDiamond />,
+                children: <ComponentMetadataSection />,
+              },
               {
                 label: 'Imports and types',
                 icon: <BiNetworkChart />,

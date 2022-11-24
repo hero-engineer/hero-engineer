@@ -9,6 +9,7 @@ function useIsComponentRefreshingQuery<T, V extends AnyVariables = AnyVariables>
   const [result] = query
 
   useEffect(() => {
+    // TODO refactor this to use a more reliable way to determine if a component is refreshing
     setIsComponentRefreshing(result.fetching)
   }, [result, setIsComponentRefreshing])
 

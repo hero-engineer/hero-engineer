@@ -44,10 +44,7 @@ function ComponentIframe({ children, componentRef, ...props }: ComponentIframePr
   useEffect(() => {
     appendCss(`
       body {
-        padding-top: 16px;
-        padding-bottom: 1xp;
-        padding-left: 1px;
-        padding-right: 1px;
+        padding: 1px;
       }
     `)
   }, [appendCss])

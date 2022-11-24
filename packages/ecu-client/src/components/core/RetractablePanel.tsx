@@ -1,5 +1,5 @@
 import { ReactNode, useCallback } from 'react'
-import { Button, Div, DivProps, Tooltip } from 'honorable'
+import { Button, Div, Tooltip } from 'honorable'
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md'
 
 import usePersistedState from '../../hooks/usePersistedState'
@@ -12,7 +12,7 @@ type RetractablePanelItemType = {
   children: ReactNode
 }
 
-type RetractablePanelPropsType = DivProps & {
+type RetractablePanelPropsType = {
   direction: 'left' | 'right' | string
   openPersistedStateKey: string
   defaultOpenIndex?: number
@@ -20,7 +20,7 @@ type RetractablePanelPropsType = DivProps & {
 }
 
 // A panel that can be opened and closed on the side of the screen
-function RetractablePanel({ direction, openPersistedStateKey, defaultOpenIndex = -1, items, ...props }: RetractablePanelPropsType) {
+function RetractablePanel({ direction, openPersistedStateKey, defaultOpenIndex = -1, items }: RetractablePanelPropsType) {
   const [openIndex, setOpenIndex] = usePersistedState(openPersistedStateKey, defaultOpenIndex, (x: string) => parseInt(x))
 
   const isLeft = direction === 'left'
@@ -44,39 +44,37 @@ function RetractablePanel({ direction, openPersistedStateKey, defaultOpenIndex =
 
   return (
     <Div
-      position="relative"
-      width={openIndex !== -1 ? 'fit-content' : 0}
+      xflex={isLeft ? 'x4s' : 'x40s'}
       height="100%"
       backgroundColor="background-light"
-      borderLeft={isLeft ? null : '1px solid border'}
-      borderRight={isRight ? null : '1px solid border'}
-      {...props}
     >
-      {items.map(({ label, icon }, index) => wrapWithTooltip(
-        index,
-        label,
-        <Button
-          ghost
-          key={index}
-          position="absolute"
-          top={openIndex === index ? 0 : `calc(${openIndex < index ? index : index + 1} * 31px)`}
-          right={isRight ? openIndex === -1 ? '100%' : 'calc(100% + 1px)' : null}
-          left={isLeft ? openIndex === -1 ? '100%' : 'calc(100% + 1px)' : null}
-          backgroundColor="background-light"
-          onClick={() => toggleOpen(index)}
-          borderLeft={isLeft ? null : '1px solid border'}
-          borderRight={isRight ? null : '1px solid border'}
-          borderBottom="1px solid border"
-        >
-          {xor(isLeft, openIndex === index) ? isLeft ? icon || <MdChevronRight /> : <MdChevronRight /> : isRight ? icon || <MdChevronLeft /> : <MdChevronLeft />}
-        </Button>,
-      ))}
+      <Div
+        xflex="y2s"
+        borderRight={isLeft ? '1px solid border' : null}
+        borderLeft={isRight ? '1px solid border' : null}
+      >
+        {items.map(({ label, icon }, index) => wrapWithTooltip(
+          index,
+          label,
+          <Button
+            ghost
+            key={index}
+            onClick={() => toggleOpen(index)}
+            borderBottom="1px solid border"
+          >
+            {xor(isLeft, openIndex === index) ? isLeft ? icon || <MdChevronRight /> : <MdChevronRight /> : isRight ? icon || <MdChevronLeft /> : <MdChevronLeft />}
+          </Button>,
+        ))}
+      </Div>
       {items.map(({ children }, index) => (
         <Div
           key={index}
           xflex="y2s"
-          height="100%"
           display={openIndex === index ? 'flex' : 'none'}
+          width="fit-content"
+          height="100%"
+          borderRight={isLeft ? '1px solid border' : null}
+          borderLeft={isRight ? '1px solid border' : null}
         >
           {children}
         </Div>
