@@ -156,6 +156,7 @@ function HierarchyBar() {
     <Div
       xflex="x4"
       flexShrink={0}
+      height={30}
       fontSize="0.75rem"
       userSelect="none"
       backgroundColor="background-light"
