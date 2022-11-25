@@ -13,18 +13,18 @@ function useClearHierarchyIdsAndComponentDeltaOnClick(clickRef: RefObject<HTMLEl
   const handleClick = useCallback((event: MouseEvent) => {
     if (!clickRef.current) return
 
-    if (event.target === clickRef.current) {
-      setEditionSearchParams({
-        hierarchyIds: [],
-        componentDelta: 0,
-      })
-      setDragAndDrop({
-        sourceHierarchyId: '',
-        targetHierarchyId: '',
-        sourceComponentDelta: 0,
-        targetComponentDelta: 0,
-      })
-    }
+    if (event.target !== clickRef.current) return
+
+    setEditionSearchParams({
+      hierarchyIds: [],
+      componentDelta: 0,
+    })
+    setDragAndDrop({
+      sourceHierarchyId: '',
+      targetHierarchyId: '',
+      sourceComponentDelta: 0,
+      targetComponentDelta: 0,
+    })
   }, [clickRef, setEditionSearchParams, setDragAndDrop])
 
   useEffect(() => {

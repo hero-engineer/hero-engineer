@@ -1,4 +1,4 @@
-import { ReactNode, memo, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { ReactNode, memo, useContext, useMemo, useRef } from 'react'
 import { Div } from 'honorable'
 
 import BreakpointContext from '../../contexts/BreakpointContext'
@@ -9,9 +9,8 @@ const tickWidth = 1
 
 function WidthBar() {
   const rootRef = useRef<HTMLDivElement>(null)
-  const [, setRefresh] = useState(false) // For rootRef to refresh
 
-  const { width } = useContext(BreakpointContext)
+  const { width, isDragging } = useContext(BreakpointContext)
 
   const ticks = useMemo(() => {
     if (!rootRef.current) return null
@@ -51,9 +50,7 @@ function WidthBar() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rootRef.current])
 
-  useEffect(() => {
-    setRefresh(refresh => !refresh)
-  }, [])
+  if (!isDragging) return null
 
   return (
     <Div

@@ -1,4 +1,4 @@
-import { PropsWithChildren, memo, useContext } from 'react'
+import { PropsWithChildren, memo } from 'react'
 import { useParams } from 'react-router-dom'
 import { Div } from 'honorable'
 import { RiNodeTree } from 'react-icons/ri'
@@ -6,8 +6,6 @@ import { BiNetworkChart } from 'react-icons/bi'
 import { CgInsertBeforeR } from 'react-icons/cg'
 import { MdBrush } from 'react-icons/md'
 import { BsDiamond } from 'react-icons/bs'
-
-import BreakpointContext from '../../contexts/BreakpointContext'
 
 import SnackBar from './SnackBar'
 import HierarchyBar from './HierarchyBar'
@@ -33,7 +31,6 @@ type OverlayPropsType = PropsWithChildren<any>
 // The whole ecu overlay
 function Overlay({ children }: OverlayPropsType) {
   const { componentAddress = '' } = useParams()
-  const { isDragging } = useContext(BreakpointContext)
 
   return (
     <>
@@ -86,7 +83,8 @@ function Overlay({ children }: OverlayPropsType) {
           overflowY="hidden"
         >
           {children}
-          {isDragging ? <WidthBar /> : <HierarchyBar />}
+          <HierarchyBar />
+          <WidthBar />
         </Div>
         {!!componentAddress && (
           <RetractablePanel

@@ -343,6 +343,7 @@ export default mergeTheme(defaultTheme, {
     ],
     TextArea: [
       ({ bare }: any) => bare && ({
+        lineHeight: 'inherit',
         paddingTop: 0,
         paddingBottom: 0,
       }),

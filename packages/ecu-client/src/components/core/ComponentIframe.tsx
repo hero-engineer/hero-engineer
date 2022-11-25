@@ -1,29 +1,27 @@
-import { ReactElement, Ref, RefObject, forwardRef, useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { ReactElement, memo, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { Iframe, IframeProps, useForkedRef } from 'honorable'
+import { Iframe, IframeProps } from 'honorable'
 
 import editionStyles from '../../css/edition.css?inline'
 
 import BreakpointContext from '../../contexts/BreakpointContext'
 
-import EmotionProvider from './EmotionProvider'
-
 type ComponentIframeChildrenArgsType = {
   window?: Window | null
+  head?: HTMLHeadElement
 }
 
 type ComponentIframePropsType = Omit<IframeProps, 'children'> & {
   children: (args: ComponentIframeChildrenArgsType) => ReactElement
-  componentRef: RefObject<HTMLDivElement>
 }
 
-function ComponentIframe({ children, componentRef, ...props }: ComponentIframePropsType, ref: Ref<HTMLIFrameElement>) {
+function ComponentIframe({ children, ...props }: ComponentIframePropsType) {
   const rootRef = useRef<HTMLIFrameElement>(null)
-  const forkedRef = useForkedRef(ref, rootRef)
 
   const { isDragging } = useContext(BreakpointContext)
 
   const [height, setHeight] = useState<number | 'auto'>('auto')
+  const [, setRefresh] = useState(false)
 
   const windowNode = rootRef.current?.contentWindow
   const documentNode = windowNode?.document
@@ -44,47 +42,47 @@ function ComponentIframe({ children, componentRef, ...props }: ComponentIframePr
     appendCss(editionStyles)
   }, [appendCss])
 
-  // To allow borders and component vignette to be visible
-  // And ovrflow auto for scroll to work
+  // To allow borders to be visible
   useEffect(() => {
     appendCss(`
       body {
-        overflow: auto;
         padding: 1px;
       }
     `)
   }, [appendCss])
 
   useEffect(() => {
-    if (!componentRef.current) return
+    if (!mountNode) return
 
     const observer = new ResizeObserver(() => {
-      setHeight(componentRef.current!.scrollHeight)
+      setHeight(mountNode.scrollHeight)
     })
 
-    observer.observe(componentRef.current)
+    observer.observe(mountNode)
 
     return () => {
       observer.disconnect()
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [componentRef.current])
+  }, [mountNode])
+
+  // Refresh for mountNode to be populated
+  useEffect(() => {
+    setRefresh(x => !x)
+  }, [])
 
   return (
     <Iframe
       {...props}
-      ref={forkedRef}
+      ref={rootRef}
       width="100%"
       height={height}
       border="none"
       pointerEvents={isDragging ? 'none' : undefined}
       userSelect="none"
     >
-      <EmotionProvider head={headNode}>
-        {mountNode && createPortal(children({ window: windowNode }), mountNode)}
-      </EmotionProvider>
+      {mountNode && createPortal(children({ window: windowNode, head: headNode }), mountNode)}
     </Iframe>
   )
 }
 
-export default forwardRef(ComponentIframe)
+export default memo(ComponentIframe)

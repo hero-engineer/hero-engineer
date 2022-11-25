@@ -17,8 +17,6 @@ import HierarchyContext from '../../contexts/HierarchyContext'
 import useMutation from '../../hooks/useMutation'
 import useRefetch from '../../hooks/useRefetch'
 
-import xor from '../../utils/xor'
-
 import Emoji from './Emoji'
 
 // The hierarchy section

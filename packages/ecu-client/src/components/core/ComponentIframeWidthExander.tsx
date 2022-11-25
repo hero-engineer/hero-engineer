@@ -1,7 +1,9 @@
-import { ReactNode, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
+import { ReactNode, memo, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
 import { Div } from 'honorable'
 
 import BreakpointContext from '../../contexts/BreakpointContext'
+
+import useClearHierarchyIdsAndComponentDeltaOnClick from '../../hooks/useClearHierarchyIdsAndComponentDeltaOnClick'
 
 type ComponentIframeWidthExanderPropsType = {
   children: ReactNode
@@ -9,6 +11,13 @@ type ComponentIframeWidthExanderPropsType = {
 
 function ComponentIframeWidthExpander({ children }: ComponentIframeWidthExanderPropsType) {
   const rootRef = useRef<HTMLDivElement>(null)
+  const leftRef = useRef<HTMLDivElement>(null)
+  const rightRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
+
+  useClearHierarchyIdsAndComponentDeltaOnClick(leftRef)
+  useClearHierarchyIdsAndComponentDeltaOnClick(rightRef)
+  useClearHierarchyIdsAndComponentDeltaOnClick(contentRef)
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const maxWidth = useMemo(() => rootRef.current?.getBoundingClientRect().width ?? Infinity, [rootRef.current])
@@ -22,9 +31,13 @@ function ComponentIframeWidthExpander({ children }: ComponentIframeWidthExanderP
       flexGrow
       flexShrink={1}
     >
-      <Div flexGrow />
+      <Div
+        ref={leftRef}
+        flexGrow
+      />
       <ComponentIframeWidthExanderHandle maxWidth={maxWidth} />
       <Div
+        ref={contentRef}
         xflex="y2s"
         width={width}
         overflowY="auto"
@@ -32,7 +45,10 @@ function ComponentIframeWidthExpander({ children }: ComponentIframeWidthExanderP
         {children}
       </Div>
       <ComponentIframeWidthExanderHandle maxWidth={maxWidth} />
-      <Div flexGrow />
+      <Div
+        ref={rightRef}
+        flexGrow
+      />
     </Div>
   )
 }
@@ -86,4 +102,4 @@ function ComponentIframeWidthExanderHandle({ maxWidth }: ComponentIframeWidthExa
   )
 }
 
-export default ComponentIframeWidthExpander
+export default memo(ComponentIframeWidthExpander)

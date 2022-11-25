@@ -1,16 +1,16 @@
-import { RefObject, useRef } from 'react'
-import { CssBaseline, Div, ThemeProvider, mergeTheme } from 'honorable'
+import { memo } from 'react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
+import { CssBaseline, Div, ThemeProvider, mergeTheme } from 'honorable'
 
 import theme from '../../theme'
-
-import useClearHierarchyIdsAndComponentDeltaOnClick from '../../hooks/useClearHierarchyIdsAndComponentDeltaOnClick'
 
 import ComponentIframeWidthExpander from './ComponentIframeWidthExander'
 import ComponentIframe from './ComponentIframe'
 import ComponentLoader from './ComponentLoader'
 import WithIsComponentRefreshingLayer from './WithIsComponentRefreshingLayer'
+import WithComponentScrenshot from './WithComponentScrenshot'
+import EmotionProvider from './EmotionProvider'
 import ContextualInformation from './ContextualInformation'
 
 const componentTheme = mergeTheme(theme, {
@@ -26,17 +26,11 @@ const componentTheme = mergeTheme(theme, {
 
 type ComponentWindowPropsType = {
   componentPath: string
-  componentRef: RefObject<HTMLDivElement>
 }
 
-function ComponentWindow({ componentPath, componentRef }: ComponentWindowPropsType) {
-  const rootRef = useRef<HTMLDivElement>(null)
-
-  useClearHierarchyIdsAndComponentDeltaOnClick(rootRef)
-
+function ComponentWindow({ componentPath }: ComponentWindowPropsType) {
   return (
     <Div
-      ref={rootRef}
       xflex="y2s"
       flexGrow
       flexShrink={1}
@@ -44,22 +38,24 @@ function ComponentWindow({ componentPath, componentRef }: ComponentWindowPropsTy
       overflowY="auto"
     >
       <ComponentIframeWidthExpander>
-        <ComponentIframe componentRef={componentRef}>
-          {({ window }) => (
-            <DndProvider
-              backend={HTML5Backend}
-              context={window}
-            >
-              <ThemeProvider theme={componentTheme}>
-                <CssBaseline />
-                <WithIsComponentRefreshingLayer>
-                  <div ref={componentRef}>
-                    <ComponentLoader componentPath={componentPath} />
-                  </div>
-                </WithIsComponentRefreshingLayer>
-                <ContextualInformation />
-              </ThemeProvider>
-            </DndProvider>
+        <ComponentIframe>
+          {({ window, head }) => (
+            <EmotionProvider head={head}>
+              <DndProvider
+                backend={HTML5Backend}
+                context={window}
+              >
+                <ThemeProvider theme={componentTheme}>
+                  <CssBaseline />
+                  <WithIsComponentRefreshingLayer>
+                    <WithComponentScrenshot>
+                      <ComponentLoader componentPath={componentPath} />
+                    </WithComponentScrenshot>
+                  </WithIsComponentRefreshingLayer>
+                  <ContextualInformation />
+                </ThemeProvider>
+              </DndProvider>
+            </EmotionProvider>
           )}
         </ComponentIframe>
       </ComponentIframeWidthExpander>
@@ -67,4 +63,4 @@ function ComponentWindow({ componentPath, componentRef }: ComponentWindowPropsTy
   )
 }
 
-export default ComponentWindow // Do not memoize this component, it will break the iframe
+export default memo(ComponentWindow)

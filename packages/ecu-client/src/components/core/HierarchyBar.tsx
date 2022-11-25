@@ -10,6 +10,7 @@ import { HierarchyItemType } from '../../types'
 import { HierarchyQuery, HierarchyQueryDataType } from '../../queries'
 
 import HierarchyContext from '../../contexts/HierarchyContext'
+import BreakpointContext from '../../contexts/BreakpointContext'
 
 import usePreviousWithDefault from '../../hooks/usePreviousWithDefault'
 import useEditionSearchParams from '../../hooks/useEditionSearchParams'
@@ -47,6 +48,7 @@ function HierarchyBar() {
   const { componentAddress = '' } = useParams()
   const { hierarchyIds, componentDelta, setEditionSearchParams } = useEditionSearchParams()
   const { setHierarchy, setTotalHierarchy } = useContext(HierarchyContext)
+  const { isDragging } = useContext(BreakpointContext)
 
   const [hierarchyQueryResult, refetchHierarchyQuery] = useQuery<HierarchyQueryDataType>({
     query: HierarchyQuery,
@@ -145,10 +147,15 @@ function HierarchyBar() {
 
   // Take a new screenshot when the hierarchy changes
   useEffect(() => {
+    if (hierarchyQueryResult.fetching) return
+
     refetch(refetchKeys.componentScreenshot)
-  }, [refetch, hierarchyQueryResult.data?.hierarchy])
+  }, [refetch, hierarchyQueryResult.fetching, hierarchyQueryResult.data?.hierarchy])
 
   if (!componentAddress) {
+    return null
+  }
+  if (isDragging) {
     return null
   }
 
