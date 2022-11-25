@@ -47,8 +47,7 @@ function Packages() {
       </Div>
       <Div
         xflex="x4"
-        gap={0.5}
-        mt={2}
+        mt={1}
       >
         <AddPackageButton />
       </Div>
