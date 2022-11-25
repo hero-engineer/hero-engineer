@@ -7,6 +7,7 @@ import theme from '../../theme'
 
 import useClearHierarchyIdsAndComponentDeltaOnClick from '../../hooks/useClearHierarchyIdsAndComponentDeltaOnClick'
 
+import ComponentIframeWidthExpander from './ComponentIframeWidthExander'
 import ComponentIframe from './ComponentIframe'
 import ComponentLoader from './ComponentLoader'
 import WithIsComponentRefreshingLayer from './WithIsComponentRefreshingLayer'
@@ -39,26 +40,29 @@ function ComponentWindow({ componentPath, componentRef }: ComponentWindowPropsTy
       xflex="y2s"
       flexGrow
       flexShrink={1}
+      backgroundColor="background-component"
       overflowY="auto"
     >
-      <ComponentIframe componentRef={componentRef}>
-        {({ window }) => (
-          <DndProvider
-            backend={HTML5Backend}
-            context={window}
-          >
-            <ThemeProvider theme={componentTheme}>
-              <CssBaseline />
-              <WithIsComponentRefreshingLayer>
-                <div ref={componentRef}>
-                  <ComponentLoader componentPath={componentPath} />
-                </div>
-              </WithIsComponentRefreshingLayer>
-              <ContextualInformation />
-            </ThemeProvider>
-          </DndProvider>
-        )}
-      </ComponentIframe>
+      <ComponentIframeWidthExpander>
+        <ComponentIframe componentRef={componentRef}>
+          {({ window }) => (
+            <DndProvider
+              backend={HTML5Backend}
+              context={window}
+            >
+              <ThemeProvider theme={componentTheme}>
+                <CssBaseline />
+                <WithIsComponentRefreshingLayer>
+                  <div ref={componentRef}>
+                    <ComponentLoader componentPath={componentPath} />
+                  </div>
+                </WithIsComponentRefreshingLayer>
+                <ContextualInformation />
+              </ThemeProvider>
+            </DndProvider>
+          )}
+        </ComponentIframe>
+      </ComponentIframeWidthExpander>
     </Div>
   )
 }

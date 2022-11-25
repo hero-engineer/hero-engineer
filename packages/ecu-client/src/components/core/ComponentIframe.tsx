@@ -1,8 +1,10 @@
-import { ReactElement, Ref, RefObject, forwardRef, useCallback, useEffect, useRef, useState } from 'react'
+import { ReactElement, Ref, RefObject, forwardRef, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Iframe, IframeProps, useForkedRef } from 'honorable'
 
 import editionStyles from '../../css/edition.css?inline'
+
+import BreakpointContext from '../../contexts/BreakpointContext'
 
 import EmotionProvider from './EmotionProvider'
 
@@ -18,6 +20,8 @@ type ComponentIframePropsType = Omit<IframeProps, 'children'> & {
 function ComponentIframe({ children, componentRef, ...props }: ComponentIframePropsType, ref: Ref<HTMLIFrameElement>) {
   const rootRef = useRef<HTMLIFrameElement>(null)
   const forkedRef = useForkedRef(ref, rootRef)
+
+  const { isDragging } = useContext(BreakpointContext)
 
   const [height, setHeight] = useState<number | 'auto'>('auto')
 
@@ -70,10 +74,10 @@ function ComponentIframe({ children, componentRef, ...props }: ComponentIframePr
     <Iframe
       {...props}
       ref={forkedRef}
-      flexGrow
       width="100%"
       height={height}
       border="none"
+      pointerEvents={isDragging ? 'none' : undefined}
     >
       <EmotionProvider head={headNode}>
         {mountNode && createPortal(children({ window: windowNode }), mountNode)}

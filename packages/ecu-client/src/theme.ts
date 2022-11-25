@@ -118,6 +118,7 @@ export default mergeTheme(defaultTheme, {
   colors: {
     primary: 'blue.500',
     'background-light': '#fafcff',
+    'background-component': 'darken(background-light, 25)',
     border: 'darken(background-light, 10)',
     blue,
     green,
