@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react'
-import { Button, Div, H1, Q, Spinner } from 'honorable'
+import { useMemo } from 'react'
+import { Div, H1, Spinner } from 'honorable'
 
 import { refetchKeys } from '../../constants'
 import { PackagesQuery, PackagesQueryDataType, PackagesUpdatesQuery, PackagesUpdatesQueryDataType } from '../../queries'
