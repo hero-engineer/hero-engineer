@@ -54,7 +54,7 @@ function HierarchySection() {
     <Div
       xflex="y2s"
       flexGrow
-      width={256 + 64}
+      width={256}
       overflowY="auto"
     >
       <P

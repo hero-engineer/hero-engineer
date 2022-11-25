@@ -136,6 +136,11 @@ export default mergeTheme(defaultTheme, {
     xflexRecipe(),
     mapperRecipe('borderRadius', borderRadiuses),
     ({ flexGrow }: any) => flexGrow === true && ({ flexGrow: 1 }),
+    ({ ellipsis }: any) => ellipsis && ({
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+    }),
   ],
   /* --
    * Tags
@@ -360,6 +365,9 @@ export default mergeTheme(defaultTheme, {
   },
   MenuItem: {
     Children: [
+      {
+        minWidth: 0, // To allow ellipsis https://css-tricks.com/flexbox-truncated-text/
+      },
       ({ active, ghost }: any) => active && ghost && {
         backgroundColor: 'darken(background-light, 4)',
       },
