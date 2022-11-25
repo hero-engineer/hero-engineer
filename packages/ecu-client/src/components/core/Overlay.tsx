@@ -100,10 +100,10 @@ function Overlay({ children }: OverlayPropsType) {
                 label: 'Imports and types',
                 icon: <BiNetworkChart />,
                 children: (
-                  <Div minWidth={512}>
+                  <>
                     <ComponentImportsSection />
                     <ComponentTypesSection />
-                  </Div>
+                  </>
                 ),
               },
               {

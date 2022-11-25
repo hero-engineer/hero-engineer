@@ -42,6 +42,7 @@ function GlobalTypesModal({ open, onClose }: GlobalTypesModalPropsType) {
     <Modal
       open={open}
       onClose={onClose}
+      minWidth={512}
     >
       <H3>Global types</H3>
       <Input
@@ -57,7 +58,10 @@ function GlobalTypesModal({ open, onClose }: GlobalTypesModalPropsType) {
         gap={0.5}
         mt={2}
       >
-        <Button onClick={onClose}>
+        <Button
+          secondary
+          onClick={onClose}
+        >
           Discard and close
         </Button>
         <Button onClick={handleSave}>

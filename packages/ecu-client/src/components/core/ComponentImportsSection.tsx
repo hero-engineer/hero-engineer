@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { Accordion } from 'honorable'
+import { Accordion, Div } from 'honorable'
 
 import usePersistedState from '../../hooks/usePersistedState'
 
@@ -11,14 +11,19 @@ function ComponentImportsSection() {
   const [expanded, setExpanded] = usePersistedState('ecu-component-imports-accordion-expanded', true)
 
   return (
-    <Accordion
-      ghost
-      expanded={expanded}
-      onExpand={setExpanded}
-      title="Imports"
+    <Div
+      xflex="y2s"
+      width={256 + 128 + 64 + 32 + 16 + 8 + 4 + 2}
     >
-      <ComponentImportsEditor />
-    </Accordion>
+      <Accordion
+        ghost
+        expanded={expanded}
+        onExpand={setExpanded}
+        title="Imports"
+      >
+        <ComponentImportsEditor />
+      </Accordion>
+    </Div>
   )
 }
 

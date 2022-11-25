@@ -103,18 +103,24 @@ function ComponentMetadataSection() {
   }
 
   return (
-    <Div width="100%">
+    <Div
+      width={256}
+      minWidth={0}
+      p={1}
+    >
       <Div
         xflex="x4"
         gap={0.5}
+        minWidth={0}
       >
         <EmojiPicker
           emoji={emoji}
           setEmoji={setEmoji}
         />
-        <H4>{component.payload.name}</H4>
+        <H4 ellipsis>{component.payload.name}</H4>
       </Div>
       <P
+        ellipsis
         color="text-light"
         fontSize={12}
         mt={1}
