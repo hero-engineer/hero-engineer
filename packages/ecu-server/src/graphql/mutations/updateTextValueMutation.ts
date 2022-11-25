@@ -28,7 +28,7 @@ async function updateTextValueMutation(_: any, { sourceComponentAddress, targetH
   function onSuccess(paths: NodePath<JSXElement>[]) {
     const finalPath = paths[paths.length - 1]
 
-    const child = value.includes('\n') ? jsxExpressionContainer(stringLiteral(value)) : jsxText(value)
+    const child = value.includes('\n') || value.trim() !== value ? jsxExpressionContainer(stringLiteral(value)) : jsxText(value)
 
     if (finalPath.node.openingElement.selfClosing) {
       finalPath.node.selfClosing = false
