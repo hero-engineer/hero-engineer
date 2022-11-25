@@ -1,5 +1,5 @@
 import { FormEvent, useCallback, useEffect, useState } from 'react'
-import { Button, Div, Form, InputBase } from 'honorable'
+import { Button, Div, Form, Input } from 'honorable'
 import { SlTrash } from 'react-icons/sl'
 import { CiEdit } from 'react-icons/ci'
 import { VscRunAbove } from 'react-icons/vsc'
@@ -143,7 +143,8 @@ function PackageTableRow({ pkg, updatedPackages }: PackageTableRowPropsType) {
       >
         {isEditing ? (
           <Form onSubmit={handleSubmit}>
-            <InputBase
+            <Input
+              bare
               autoFocus
               value={value}
               onChange={event => setValue(event.target.value)}
