@@ -9,7 +9,7 @@ import fileTypesQuery from './queries/fileTypesQuery.js'
 import isComponentAcceptingChildrenQuery from './queries/isComponentAcceptingChildrenQuery.js'
 import packagesQuery from './queries/packagesQuery.js'
 import packagesUpdatesQuery from './queries/packagesUpdatesQuery.js'
-import canRedoQuery from './queries/canRedoQuery.js'
+import undoRedoMetadataQuery from './queries/undoRedoMetdataQuery.js'
 import createComponentMutation from './mutations/createComponentMutation.js'
 import addComponentMutation from './mutations/addComponentMutation.js'
 import deleteComponentMutation from './mutations/deleteComponentMutation.js'
@@ -116,6 +116,11 @@ export const typeDefs = gql`
     file: FileNode!
   }
 
+  type UndoRedoMetadataReturnValue {
+    undoMessage: String!
+    redoMessage: String
+  }
+
   type Query {
     component(sourceComponentAddress: String!): ComponentReturnValue!
     components: [ComponentReturnValue]!
@@ -128,7 +133,7 @@ export const typeDefs = gql`
     packages: [Package]!
     packagesUpdates: [Package]!
 
-    canRedo: Boolean!
+    undoRedoMetadata: UndoRedoMetadataReturnValue!
   }
 
   type Mutation {
@@ -171,7 +176,7 @@ export const resolvers = {
     packages: packagesQuery,
     packagesUpdates: packagesUpdatesQuery,
 
-    canRedo: canRedoQuery,
+    undoRedoMetadata: undoRedoMetadataQuery,
   },
   Mutation: {
     createComponent: createComponentMutation,
