@@ -51,7 +51,7 @@ function Packages() {
       >
         <AddPackageButton />
       </Div>
-      <Div mt={2}>
+      <Div mt={1.5}>
         {!!dependencies.length && (
           <>
             <Div
