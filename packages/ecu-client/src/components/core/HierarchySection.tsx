@@ -188,39 +188,52 @@ function HierarchyLabel({ hierarchyItem, collapsed, isFetching, setIsFetching }:
       className="ecu-hierarchy-label"
     >
       {!!hierarchyItem.children.length && (
-        <BiCaretRight
-          size={12}
-          style={{
-            transform: `rotate(${collapsed ? 0 : 90}deg)`,
-          }}
-        />
+        <Div
+          xflex="x5"
+          flexShrink={0}
+        >
+          <BiCaretRight
+            size={12}
+            style={{
+              transform: `rotate(${collapsed ? 0 : 90}deg)`,
+            }}
+          />
+        </Div>
       )}
       {!hierarchyItem.children.length && (
         <Div
           xflex="x5"
+          flexShrink={0}
           mx={0.225}
         >
           <IoSquareSharp size={5} />
         </Div>
       )}
       <Emoji emoji={hierarchyItem.fileEmoji} />
-      {isEditingDisplayName ? (
-        <WithOutsideClick onOutsideClick={handleUpdateDisplayName}>
-          <Input
-            inputProps={{ ref: handleInputRef }}
-            bare
-            autoFocus
-            value={displayName}
-            onEnter={handleUpdateDisplayName}
-            onChange={event => setDisplayName(event.target.value)}
-            onClick={(event: any) => event.stopPropagation()}
-          />
-        </WithOutsideClick>
-      ) : isLoadingDisplayName
-        ? displayName || hierarchyItem.label
-        : hierarchyItem.displayName || hierarchyItem.label}
+      <Div
+        ellipsis
+        flexShrink={1}
+      >
+        {isEditingDisplayName ? (
+          <WithOutsideClick onOutsideClick={handleUpdateDisplayName}>
+            <Input
+              inputProps={{ ref: handleInputRef }}
+              bare
+              autoFocus
+              value={displayName}
+              onEnter={handleUpdateDisplayName}
+              onChange={event => setDisplayName(event.target.value)}
+              onClick={(event: any) => event.stopPropagation()}
+            />
+          </WithOutsideClick>
+        ) : isLoadingDisplayName
+          ? displayName || hierarchyItem.label
+          : hierarchyItem.displayName || hierarchyItem.label}
+      </Div>
       {!hierarchyItem.isRoot && !isEditingDisplayName && !(isLoadingDisplayName && !displayName) && ((isLoadingDisplayName && !!displayName) || !!hierarchyItem.displayName) && (
         <Div
+          ellipsis
+          flexShrink={1000000000}
           color="text-light"
           fontSize={10}
         >
@@ -230,9 +243,11 @@ function HierarchyLabel({ hierarchyItem, collapsed, isFetching, setIsFetching }:
       {!isFetching && !isEditingDisplayName && !hierarchyItem.isRoot && hierarchyItem.onComponentAddress === componentAddress && (
         <A
           onClick={handleEditDisplayName}
+          flexShrink={0}
           fontSize="0.75rem"
           className="ecu-hierarchy-label-edit"
-          px={0.25}
+          pl={0.25}
+          pr={0.5}
         >
           <VscEdit />
         </A>
