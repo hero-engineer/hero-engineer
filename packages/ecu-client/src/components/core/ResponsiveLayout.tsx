@@ -10,14 +10,20 @@ function ResponsiveLayout({ children }: ResponsiveLayoutPropsType) {
     <Div
       xflex="y2s"
       flexGrow
-      width={1024 + 256 + 64 + 16 + 4}
-      maxWidth={1024 + 256 + 64 + 16 + 4}
-      mx="auto"
-      mt={1}
-      px={1}
-      pb={6}
+      overflowY="auto"
     >
-      {children}
+      <Div
+        xflex="y2s"
+        flexGrow
+        width={1024 + 256 + 64 + 16 + 4}
+        maxWidth={1024 + 256 + 64 + 16 + 4}
+        mx="auto"
+        mt={1}
+        px={1}
+        pb={6}
+      >
+        {children}
+      </Div>
     </Div>
   )
 }

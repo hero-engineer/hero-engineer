@@ -23,8 +23,6 @@ function ComponentIframe({ children, ...props }: ComponentIframePropsType) {
   const [height, setHeight] = useState(0)
   const [, setRefresh] = useState(false)
 
-  console.log('height', height)
-
   const windowNode = rootRef.current?.contentWindow
   const documentNode = windowNode?.document
   const mountNode = documentNode?.body
@@ -62,6 +60,7 @@ function ComponentIframe({ children, ...props }: ComponentIframePropsType) {
     if (!mountNode) return
 
     const observer = new ResizeObserver(() => {
+      console.log('≈', mountNode.scrollHeight)
       setHeight(mountNode.scrollHeight)
     })
 

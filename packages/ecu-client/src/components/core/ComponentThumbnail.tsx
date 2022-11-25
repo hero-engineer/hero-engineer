@@ -25,7 +25,7 @@ function ComponentThumbnail({ address, name, emoji }: ComponentThumbnailPropsTyp
       width={256}
       height={256}
       maxHeight={256}
-      elevation={1}
+      elevation={2}
       borderRadius="large"
       p={1}
     >
