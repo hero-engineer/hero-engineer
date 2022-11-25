@@ -20,8 +20,10 @@ function ComponentIframe({ children, ...props }: ComponentIframePropsType) {
 
   const { isDragging } = useContext(BreakpointContext)
 
-  const [height, setHeight] = useState<number | 'auto'>('auto')
+  const [height, setHeight] = useState(0)
   const [, setRefresh] = useState(false)
+
+  console.log('height', height)
 
   const windowNode = rootRef.current?.contentWindow
   const documentNode = windowNode?.document
@@ -43,10 +45,15 @@ function ComponentIframe({ children, ...props }: ComponentIframePropsType) {
   }, [appendCss])
 
   // To allow borders to be visible
+  // And the iframe to have the component height
   useEffect(() => {
     appendCss(`
+      html {
+        height: fit-content;
+      }
       body {
         padding: 1px;
+        height: fit-content;
       }
     `)
   }, [appendCss])
@@ -76,6 +83,7 @@ function ComponentIframe({ children, ...props }: ComponentIframePropsType) {
       ref={rootRef}
       width="100%"
       height={height}
+      minHeight={0}
       border="none"
       pointerEvents={isDragging ? 'none' : undefined}
       userSelect="none"

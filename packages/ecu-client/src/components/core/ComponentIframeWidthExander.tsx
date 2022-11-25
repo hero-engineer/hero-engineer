@@ -19,10 +19,10 @@ function ComponentIframeWidthExpander({ children }: ComponentIframeWidthExanderP
   useClearHierarchyIdsAndComponentDeltaOnClick(rightRef)
   useClearHierarchyIdsAndComponentDeltaOnClick(contentRef)
 
+  const { width } = useContext(BreakpointContext)
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const maxWidth = useMemo(() => rootRef.current?.getBoundingClientRect().width ?? Infinity, [rootRef.current])
-
-  const { width } = useContext(BreakpointContext)
 
   return (
     <Div
