@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 import { Button, Div, Tooltip } from 'honorable'
 
@@ -7,12 +7,12 @@ import { BiRedo, BiUndo } from 'react-icons/bi'
 import { refetchKeys } from '../../constants'
 
 import {
-  CanRedoQuery,
-  CanRedoQueryDataType,
   RedoMutation,
   RedoMutationDataType,
   UndoMutation,
   UndoMutationDataType,
+  UndoRedoMetadastaQueryDataType,
+  UndoRedoMetadataQuery,
 } from '../../queries'
 
 import useQuery from '../../hooks/useQuery'
@@ -23,15 +23,18 @@ import useRefetch from '../../hooks/useRefetch'
 function UndoRedoButtons() {
   const [loading, setLoading] = useState(false)
 
-  const [canRedoQueryResults, refetchCanRedoQuery] = useQuery<CanRedoQueryDataType>({
-    query: CanRedoQuery,
+  const [undoRedoMetadataQueryResults, refetchUndoRedoMetadataQuery] = useQuery<UndoRedoMetadastaQueryDataType>({
+    query: UndoRedoMetadataQuery,
   })
   const [, undoMutation] = useMutation<UndoMutationDataType>(UndoMutation)
   const [, redoMutation] = useMutation<RedoMutationDataType>(RedoMutation)
 
+  const undoMessage = useMemo(() => undoRedoMetadataQueryResults.data?.undoRedoMetadata?.undoMessage, [undoRedoMetadataQueryResults.data])
+  const redoMessage = useMemo(() => undoRedoMetadataQueryResults.data?.undoRedoMetadata?.redoMessage, [undoRedoMetadataQueryResults.data])
+
   const refetch = useRefetch({
-    key: refetchKeys.canRedo,
-    refetch: refetchCanRedoQuery,
+    key: refetchKeys.undoRedoMetadata,
+    refetch: refetchUndoRedoMetadataQuery,
   })
 
   const handleUndoClick = useCallback(async () => {
@@ -51,7 +54,7 @@ function UndoRedoButtons() {
   return (
     <Div xflex="x4">
       <Tooltip
-        label="Undo"
+        label={`Undo ${undoMessage}`}
         placement="bottom-end"
       >
         <Button
@@ -65,14 +68,14 @@ function UndoRedoButtons() {
         </Button>
       </Tooltip>
       <Tooltip
-        label="Redo"
+        label={`Redo ${redoMessage}`}
         placement="bottom-end"
       >
         <Button
           ghost
           borderLeft="1px solid border"
           onClick={handleRedoClick}
-          disabled={!canRedoQueryResults.data?.canRedo}
+          disabled={!redoMessage}
           loading={loading}
           spinnerColor="text"
         >

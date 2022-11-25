@@ -16,7 +16,7 @@ export const refetchKeys = {
   isComponentAcceptingChildren: 'isComponentAcceptingChildren',
   fileImports: 'fileImports',
   fileTypes: 'fileTypes',
-  canRedo: 'canRedo',
+  undoRedoMetadata: 'undoRedoMetadata',
   packages: 'packages',
   packagesUpdates: 'packagesUpdates',
 }

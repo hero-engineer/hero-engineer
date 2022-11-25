@@ -60,7 +60,6 @@ function ComponentIframe({ children, ...props }: ComponentIframePropsType) {
     if (!mountNode) return
 
     const observer = new ResizeObserver(() => {
-      console.log('≈', mountNode.scrollHeight)
       setHeight(mountNode.scrollHeight)
     })
 

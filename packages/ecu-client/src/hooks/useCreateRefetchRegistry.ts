@@ -12,7 +12,7 @@ function useCreateRefetchRegistry() {
 
   const refetch = useCallback((key: string) => {
     if (key === refetchKeys.all) {
-      Object.keys(registry).forEach(key => refetch(key))
+      Object.keys(registry.current).forEach(key => refetch(key))
 
       return
     }

@@ -143,14 +143,20 @@ export type IsComponentAcceptingChildrenQueryDataType = {
   isComponentAcceptingChildren: boolean
 }
 
-export const CanRedoQuery = `
+export const UndoRedoMetadataQuery = `
   query {
-    canRedo
+    undoRedoMetadata {
+      undoMessage
+      redoMessage
+    }
   }
 `
 
-export type CanRedoQueryDataType = {
-  canRedo: boolean
+export type UndoRedoMetadastaQueryDataType = {
+  undoRedoMetadata: {
+    undoMessage: string
+    redoMessage: string | null
+  }
 }
 
 export const PackagesQuery = `
