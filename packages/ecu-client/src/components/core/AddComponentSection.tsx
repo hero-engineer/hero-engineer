@@ -176,13 +176,10 @@ function AddComponentSection() {
                 onClick={() => handleComponentSelect(ecuAtomPrefix + ecuAtom.name, ecuAtom.name, '', ecuAtom.isComponentAcceptingChildren)}
                 backgroundColor={selectedComponentAddress === ecuAtomPrefix + ecuAtom.name ? 'darken(background-light, 6)' : null}
               >
-                <Div
-                  ellipsis
-                  xflex="x4"
-                >
+                <Div ellipsis>
                   {ecuAtom.name}
-                  {ecuAtom.isComponentAcceptingChildren && isComponentAcceptingChildrenNode}
                 </Div>
+                {ecuAtom.isComponentAcceptingChildren && isComponentAcceptingChildrenNode}
               </MenuItem>
             ))}
           </Menu>
@@ -207,13 +204,10 @@ function AddComponentSection() {
                 onClick={() => handleComponentSelect(x.component.address, x.component.payload.name, `${x.file.address}/${x.component.address}`, x.isComponentAcceptingChildren)}
                 backgroundColor={selectedComponentAddress === x.component.address ? 'darken(background-light, 6)' : null}
               >
-                <Div
-                  ellipsis
-                  xflex="x4"
-                >
+                <Div ellipsis>
                   {x.component.payload.name}
-                  {x.isComponentAcceptingChildren && isComponentAcceptingChildrenNode}
                 </Div>
+                {x.isComponentAcceptingChildren && isComponentAcceptingChildrenNode}
               </MenuItem>
             ))}
           </Menu>
@@ -236,13 +230,10 @@ function AddComponentSection() {
                 onClick={() => handleComponentSelect(ecuSpecialPrefix + ecuSpecial.name, ecuSpecial.name, '', ecuSpecial.isComponentAcceptingChildren)}
                 backgroundColor={selectedComponentAddress === ecuSpecialPrefix + ecuSpecial.name ? 'darken(background-light, 6)' : null}
               >
-                <Div
-                  ellipsis
-                  xflex="x4"
-                >
+                <Div ellipsis>
                   {ecuSpecial.name}
-                  {ecuSpecial.isComponentAcceptingChildren && isComponentAcceptingChildrenNode}
                 </Div>
+                {ecuSpecial.isComponentAcceptingChildren && isComponentAcceptingChildrenNode}
               </MenuItem>
             ))}
           </Menu>
