@@ -14,11 +14,12 @@ import useEditionProps from '../../hooks/useEditionProps'
 import useForkedRef from '../../hooks/useForkedRef'
 import useRefetch from '../../hooks/useRefetch'
 
-type TextPropsType = HTMLProps<HTMLDivElement> & {
+type TextPropsType = Omit<HTMLProps<HTMLDivElement>, 'children'> & {
   'data-ecu': string
   children: string
 }
 
+const castChildren = (x: any) => Array.isArray(x) ? x.join('') : x
 const appendCarriageReturn = (x: string) => typeof x === 'string' ? `${x}\n` : x
 
 // A text component
@@ -26,7 +27,7 @@ const appendCarriageReturn = (x: string) => typeof x === 'string' ? `${x}\n` : x
 function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref: Ref<any>) {
   const { componentAddress = '' } = useParams()
   const hot = useContext(HotContext)
-  const [value, setValue] = useState(children)
+  const [value, setValue] = useState(castChildren(children))
   const [loading, setLoading] = useState(false)
   const {
     ref: editionRef,
@@ -88,7 +89,7 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
   }, [handleBlur, setIsEdited, children])
 
   useEffect(() => {
-    setValue(children)
+    setValue(castChildren(children))
   }, [children])
 
   // Select the content of the input when editing
