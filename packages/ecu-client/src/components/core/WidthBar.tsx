@@ -1,39 +1,59 @@
+import { ReactNode, memo, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { Div } from 'honorable'
-import { ReactNode, useCallback, useContext, useRef } from 'react'
 
 import BreakpointContext from '../../contexts/BreakpointContext'
 
 const largeIncrement = 50
 const smallIncrement = 5
+const tickWidth = 1
 
 function WidthBar() {
   const rootRef = useRef<HTMLDivElement>(null)
+  const [, setRefresh] = useState(false) // For rootRef to refresh
 
-  const { isDragging, width } = useContext(BreakpointContext)
+  const { width } = useContext(BreakpointContext)
 
-  const renderTicks = useCallback(() => {
+  const ticks = useMemo(() => {
     if (!rootRef.current) return null
 
     const rootWidth = rootRef.current.getBoundingClientRect().width
-    const spanWidth = rootWidth - (rootWidth - width) / 2
     const ticks: ReactNode[] = []
 
-    for (let i = 0; i < spanWidth; i += smallIncrement) {
+    for (let i = 0; i < rootWidth; i += smallIncrement) {
       ticks.push(
         <Div
           key={i}
-          width={1}
+          flexShrink={0}
+          width={tickWidth}
           height={i % largeIncrement === 0 ? '100%' : i % (2 * smallIncrement) === 0 ? '33.333%' : '16.666%'}
           backgroundColor="grey.500"
-          marginRight={smallIncrement}
+          marginRight={smallIncrement - tickWidth}
         />
       )
+
+      if (i % largeIncrement === 0) {
+        ticks.push(
+          <Div
+            key={`${i}label`}
+            position="absolute"
+            top={2}
+            left={i + 4}
+            flexShrink={0}
+            fontSize="0.666rem"
+          >
+            {i}
+          </Div>
+        )
+      }
     }
 
     return ticks
-  }, [width])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rootRef.current])
 
-  if (!isDragging) return null
+  useEffect(() => {
+    setRefresh(refresh => !refresh)
+  }, [])
 
   return (
     <Div
@@ -45,14 +65,16 @@ function WidthBar() {
       borderTop="1px solid border"
     >
       <Div
+        position="relative"
         xflex="x7"
         flexGrow
+        overflow="hidden"
         ml={`calc(100% - ${width}px - (100% - ${width}px) / 2)`}
       >
-        {renderTicks()}
+        {ticks}
       </Div>
     </Div>
   )
 }
 
-export default WidthBar
+export default memo(WidthBar)

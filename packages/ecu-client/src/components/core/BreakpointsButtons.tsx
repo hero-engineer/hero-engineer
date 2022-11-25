@@ -79,6 +79,7 @@ function BreakpointsButtons() {
     <Div
       xflex="x4"
       borderLeft="1px solid border"
+      userSelect="none"
     >
       {breakpoints.map((bp, i) => (
         <Tooltip

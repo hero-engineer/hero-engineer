@@ -20,6 +20,8 @@ import useIsComponentRefreshingQuery from '../../hooks/useIsComponentRefreshingQ
 
 import ComponentWindow from '../core/ComponentWindow'
 
+const placeholder = <Div flexGrow />
+
 function traverseElementToRemoveEcuClasses(element: HTMLElement) {
   const classes: string[] = []
 
@@ -97,16 +99,16 @@ function Component() {
   )
 
   if (componentQueryResult.error) {
-    return null
+    return placeholder
   }
   if (!componentQueryResult.data?.component) {
-    return null
+    return placeholder
   }
 
   const { component } = componentQueryResult.data.component
 
   if (!component) {
-    return <Div flexGrow />
+    return placeholder
   }
 
   return (

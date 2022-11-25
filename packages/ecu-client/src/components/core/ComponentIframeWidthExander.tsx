@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useContext, useEffect, useState } from 'react'
+import { ReactNode, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
 import { Div } from 'honorable'
 
 import BreakpointContext from '../../contexts/BreakpointContext'
@@ -8,16 +8,22 @@ type ComponentIframeWidthExanderPropsType = {
 }
 
 function ComponentIframeWidthExpander({ children }: ComponentIframeWidthExanderPropsType) {
+  const rootRef = useRef<HTMLDivElement>(null)
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const maxWidth = useMemo(() => rootRef.current?.getBoundingClientRect().width ?? Infinity, [rootRef.current])
+
   const { width } = useContext(BreakpointContext)
 
   return (
     <Div
+      ref={rootRef}
       xflex="x4s"
       flexGrow
       flexShrink={1}
     >
       <Div flexGrow />
-      <ComponentIframeWidthExanderHandle />
+      <ComponentIframeWidthExanderHandle maxWidth={maxWidth} />
       <Div
         xflex="y2s"
         width={width}
@@ -25,13 +31,17 @@ function ComponentIframeWidthExpander({ children }: ComponentIframeWidthExanderP
       >
         {children}
       </Div>
-      <ComponentIframeWidthExanderHandle />
+      <ComponentIframeWidthExanderHandle maxWidth={maxWidth} />
       <Div flexGrow />
     </Div>
   )
 }
 
-function ComponentIframeWidthExanderHandle() {
+type ComponentIframeWidthExanderHandlePropsType = {
+  maxWidth: number
+}
+
+function ComponentIframeWidthExanderHandle({ maxWidth }: ComponentIframeWidthExanderHandlePropsType) {
   const { breakpoint, setWidth, isDragging, setIsDragging } = useContext(BreakpointContext)
 
   const handleMouseDown = useCallback(() => {
@@ -45,8 +55,8 @@ function ComponentIframeWidthExanderHandle() {
   const handleMouseMove = useCallback((event: MouseEvent) => {
     if (!(isDragging && breakpoint)) return
 
-    setWidth(width => Math.max(breakpoint.min, Math.min(breakpoint.max, width - event.movementX)))
-  }, [isDragging, breakpoint, setWidth])
+    setWidth(width => Math.max(breakpoint.min, Math.min(maxWidth, breakpoint.max, width - event.movementX)))
+  }, [isDragging, breakpoint, setWidth, maxWidth])
 
   useEffect(() => {
     window.addEventListener('mouseup', handleMouseUp)
@@ -69,6 +79,7 @@ function ComponentIframeWidthExanderHandle() {
       width={5}
       cursor="col-resize"
       backgroundColor={isDragging ? 'primary' : undefined}
+      userSelect="none"
       _hover={{ backgroundColor: 'primary' }}
       onMouseDown={handleMouseDown}
     />

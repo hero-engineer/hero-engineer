@@ -78,6 +78,7 @@ function ComponentIframe({ children, componentRef, ...props }: ComponentIframePr
       height={height}
       border="none"
       pointerEvents={isDragging ? 'none' : undefined}
+      userSelect="none"
     >
       <EmotionProvider head={headNode}>
         {mountNode && createPortal(children({ window: windowNode }), mountNode)}
