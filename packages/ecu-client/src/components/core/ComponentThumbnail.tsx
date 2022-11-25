@@ -22,7 +22,6 @@ function ComponentThumbnail({ address, name, emoji }: ComponentThumbnailPropsTyp
       xflex="y2s"
       flexShrik={0}
       gap={1}
-      width={256}
       height={256}
       maxHeight={256}
       elevation={2}

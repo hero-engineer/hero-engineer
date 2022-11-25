@@ -36,8 +36,10 @@ function Components() {
       <H1>Components</H1>
       <Div
         mt={2}
-        xflex="x11"
-        gap={1}
+        display="grid"
+        gridTemplateColumns="repeat(4, 1fr)"
+        gridColumnGap={32}
+        gridRowGap={32}
       >
         {components.map(componentAndFile => (
           <Link
