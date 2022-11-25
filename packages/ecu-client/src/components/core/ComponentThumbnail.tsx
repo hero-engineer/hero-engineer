@@ -42,9 +42,12 @@ function ComponentThumbnail({ address, name, emoji }: ComponentThumbnailPropsTyp
         fontWeight={500}
         textAlign="center"
         color="text"
+        minWidth={0}
       >
         <Emoji emoji={emoji} />
-        {name}
+        <Div ellipsis>
+          {name}
+        </Div>
       </Div>
     </Div>
   )
