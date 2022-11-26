@@ -32,6 +32,8 @@ function SpacingEditorInputRef({ title, value, onChange, allowNegativeValues }: 
 
   if (typeof value === 'undefined') return null
 
+  console.log('allowNegativeValues', allowNegativeValues)
+
   return (
     <Div
       ref={ref}
