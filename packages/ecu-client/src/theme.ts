@@ -255,6 +255,10 @@ export default mergeTheme(defaultTheme, {
         paddingBottom: 0,
         fontWeight: 500,
       },
+      ({ smallPadding }: any) => smallPadding && {
+        paddingLeft: 8,
+        paddingRight: 8,
+      },
     ],
     Children: [
       ({ ghost }: any) => ghost && {
@@ -263,6 +267,12 @@ export default mergeTheme(defaultTheme, {
       },
       ({ noChildrenPadding }: any) => noChildrenPadding && ({
         paddingBottom: 0,
+      }),
+      ({ smallPadding }: any) => smallPadding && ({
+        paddingTop: 8,
+        paddingBottom: 8,
+        paddingLeft: 8,
+        paddingRight: 8,
       }),
     ],
   },

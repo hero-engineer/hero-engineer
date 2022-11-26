@@ -12,6 +12,7 @@ import useQuery from '../../hooks/useQuery'
 import useRefetch from '../../hooks/useRefetch'
 
 import CssClassesSelector from './CssClassesSelector'
+import StylesSpacingSection from './StylesSpacingSection'
 
 // The styles section
 // Displayed in the right panel
@@ -32,11 +33,24 @@ function StylesSection() {
   }, [setUpdatedClassName])
 
   const renderSection = useCallback(() => (
-    <CssClassesSelector
-      allClasses={allClasses}
-      classes={classes}
-      onClassesChange={handleSetClasses}
-    />
+    <>
+      <Div
+        xflex="x4"
+        px={0.5}
+      >
+        <CssClassesSelector
+          allClasses={allClasses}
+          classes={classes}
+          onClassesChange={handleSetClasses}
+        />
+      </Div>
+      <StylesSpacingSection
+        margings={[0, 0, 0, 0]}
+        paddings={[0, 0, 0, 0]}
+        onMarginChange={() => {}}
+        onPaddingChange={() => {}}
+      />
+    </>
   ), [allClasses, classes, handleSetClasses])
 
   useRefetch({
@@ -48,11 +62,12 @@ function StylesSection() {
     <Div
       xflex="y2s"
       width={256}
-      p={0.5}
+      py={0.5}
     >
       <Div
         fontWeight="bold"
         mb={0.5}
+        px={0.5}
       >
         Styles
       </Div>
