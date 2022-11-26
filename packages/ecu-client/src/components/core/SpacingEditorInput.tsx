@@ -1,4 +1,4 @@
-import { Ref, forwardRef, useState } from 'react'
+import { Ref, RefObject, forwardRef, useState } from 'react'
 import { Button, Div, Slider } from 'honorable'
 import { CgUndo } from 'react-icons/cg'
 
@@ -9,9 +9,10 @@ import CssValueInput from './CssValueInput'
 
 type SpacingEditorInputPropsType = {
   title: string
-  value: SpacingType,
-  onChange: (value: SpacingType) => void,
-  allowNegativeValues?: boolean,
+  value: SpacingType
+  onChange: (value: SpacingType) => void
+  allowNegativeValues?: boolean
+  unitMenuRef: RefObject<any>
 }
 
 const designTokens = [
@@ -25,14 +26,12 @@ const designTokens = [
   '96',
 ]
 
-function SpacingEditorInputRef({ title, value, onChange, allowNegativeValues }: SpacingEditorInputPropsType, ref: Ref<any>) {
+function SpacingEditorInputRef({ title, value, onChange, allowNegativeValues, unitMenuRef }: SpacingEditorInputPropsType, ref: Ref<any>) {
   const [rawValue] = splitCssValue(value)
   const numericValue = parseInt(rawValue)
   const [sliderValue, setSliderValue] = useState(numericValue === numericValue ? numericValue : 0)
 
   if (typeof value === 'undefined') return null
-
-  console.log('allowNegativeValues', allowNegativeValues)
 
   return (
     <Div
@@ -60,15 +59,17 @@ function SpacingEditorInputRef({ title, value, onChange, allowNegativeValues }: 
         >
           <CgUndo />
         </Div>
-        {/* @ts-expect-error */}
         <Slider
+          slim
           min={allowNegativeValues ? -128 : 0}
           max={128}
           step={1}
+          knobSize={12}
           value={sliderValue}
           onChange={(_event, value) => setSliderValue(value)}
         />
         <CssValueInput
+          unitMenuRef={unitMenuRef}
           value={value.toString()}
           onChange={onChange}
         />

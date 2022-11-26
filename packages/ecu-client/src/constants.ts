@@ -45,6 +45,7 @@ export const ecuSpecials = [
 export const ecuSpecialPrefix = '__ecu_special__'
 
 export const cssValueUnits = [
+  'auto',
   'px',
   '%',
   'rem',
@@ -60,5 +61,39 @@ export const cssValueUnits = [
   'in',
   'pt',
   'pc',
-  'auto',
 ] as const
+
+export const cssAttributesMap = {
+  'margin-top': {
+    attributes: ['margin-top', 'margin'],
+    defaultValue: 0,
+  },
+  'margin-right': {
+    attributes: ['margin-right', 'margin'],
+    defaultValue: 0,
+  },
+  'margin-bottom': {
+    attributes: ['margin-bottom', 'margin'],
+    defaultValue: 0,
+  },
+  'margin-left': {
+    attributes: ['margin-left', 'margin'],
+    defaultValue: 0,
+  },
+  'padding-top': {
+    attributes: ['padding-top', 'padding'],
+    defaultValue: 0,
+  },
+  'padding-right': {
+    attributes: ['padding-right', 'padding'],
+    defaultValue: 0,
+  },
+  'padding-bottom': {
+    attributes: ['padding-bottom', 'padding'],
+    defaultValue: 0,
+  },
+  'padding-left': {
+    attributes: ['padding-left', 'padding'],
+    defaultValue: 0,
+  },
+} as const

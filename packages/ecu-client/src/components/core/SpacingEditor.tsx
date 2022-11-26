@@ -40,6 +40,7 @@ function SpacingEditor({
 }: SpacingEditorPropsType) {
   const rootRef = useRef<HTMLDivElement>(null)
   const childrenRef = useRef<HTMLDivElement>(null)
+  const unitMenuRef = useRef<HTMLDivElement>(null)
 
   useRefresh()
 
@@ -62,7 +63,9 @@ function SpacingEditor({
   }, [])
 
   const handleInputOutsideClick = useCallback((event: MouseEvent | TouchEvent) => {
-    if (!rootRef.current?.contains(event.target as Node) || childrenRef.current?.contains(event.target as Node)) {
+    console.log('unitMenuRef.current', unitMenuRef.current)
+
+    if (!rootRef.current?.contains(event.target as Node) || childrenRef.current?.contains(event.target as Node) || unitMenuRef.current?.contains(event.target as Node)) {
       setEditedIndex(-1)
     }
   }, [])
@@ -80,24 +83,29 @@ function SpacingEditor({
         preserveAspectRatio="none"
       >
         <Path
+          // Top
           d={`M 0 0 L ${borderSize} ${borderSize} L ${svgWidth - borderSize} ${borderSize} L ${svgWidth} 0 Z`}
           fill={`darken(background-light, ${hoveredIndex === 0 ? 10 : 6}%)`}
         />
         <Path
-          d={`M 0 0 L ${borderSize} ${borderSize} L ${borderSize} ${svgHeight - borderSize} L 0 ${svgHeight} Z`}
+          // Right
+          d={`M ${svgWidth} 0 L ${svgWidth - borderSize} ${borderSize} L ${svgWidth - borderSize} ${svgHeight - borderSize} L ${svgWidth} ${svgHeight} Z`}
           fill={`darken(background-light, ${hoveredIndex === 1 ? 12 : 8}%)`}
         />
         <Path
-          d={`M ${svgWidth} 0 L ${svgWidth - borderSize} ${borderSize} L ${svgWidth - borderSize} ${svgHeight - borderSize} L ${svgWidth} ${svgHeight} Z`}
-          fill={`darken(background-light, ${hoveredIndex === 2 ? 12 : 8}%)`}
+          // Bottom
+          d={`M ${svgWidth} ${svgHeight} L ${svgWidth - borderSize} ${svgHeight - borderSize} L ${borderSize} ${svgHeight - borderSize} L 0 ${svgHeight} Z`}
+          fill={`darken(background-light, ${hoveredIndex === 2 ? 10 : 6}%)`}
         />
         <Path
-          d={`M ${svgWidth} ${svgHeight} L ${svgWidth - borderSize} ${svgHeight - borderSize} L ${borderSize} ${svgHeight - borderSize} L 0 ${svgHeight} Z`}
-          fill={`darken(background-light, ${hoveredIndex === 3 ? 10 : 6}%)`}
+          // Left
+          d={`M 0 0 L ${borderSize} ${borderSize} L ${borderSize} ${svgHeight - borderSize} L 0 ${svgHeight} Z`}
+          fill={`darken(background-light, ${hoveredIndex === 3 ? 12 : 8}%)`}
         />
       </Svg>
       {!!svgWidth && (
         <Div
+          // Top
           xflex="x5"
           position="absolute"
           top={borderSize / 2}
@@ -119,10 +127,11 @@ function SpacingEditor({
       )}
       {!!svgWidth && (
         <Div
+          // Right
           xflex="x5"
           position="absolute"
           top={svgHeight / 2}
-          left={borderSize / 2 - offetHorizontal}
+          right={borderSize / 2 - offetHorizontal}
           fontSize="0.75rem"
           lineHeight="0.75rem"
         >
@@ -140,10 +149,11 @@ function SpacingEditor({
       )}
       {!!svgWidth && (
         <Div
+          // Bottom
           xflex="x5"
           position="absolute"
-          top={svgHeight / 2}
-          right={borderSize / 2 - offetHorizontal}
+          bottom={borderSize / 2}
+          left={svgWidth / 2}
           fontSize="0.75rem"
           lineHeight="0.75rem"
         >
@@ -161,10 +171,11 @@ function SpacingEditor({
       )}
       {!!svgWidth && (
         <Div
+          // Left
           xflex="x5"
           position="absolute"
-          bottom={borderSize / 2}
-          left={svgWidth / 2}
+          top={svgHeight / 2}
+          left={borderSize / 2 - offetHorizontal}
           fontSize="0.75rem"
           lineHeight="0.75rem"
         >
@@ -204,6 +215,7 @@ function SpacingEditor({
         bottom={0}
       >
         <Path
+          // Top
           d={`M 0 0 L ${borderSize} ${borderSize} L ${svgWidth - borderSize} ${borderSize} L ${svgWidth} 0 Z`}
           fill="transparent"
           onMouseEnter={() => handleHover(0)}
@@ -212,7 +224,8 @@ function SpacingEditor({
           cursor="pointer"
         />
         <Path
-          d={`M 0 0 L ${borderSize} ${borderSize} L ${borderSize} ${svgHeight - borderSize} L 0 ${svgHeight} Z`}
+          // Right
+          d={`M ${svgWidth} 0 L ${svgWidth - borderSize} ${borderSize} L ${svgWidth - borderSize} ${svgHeight - borderSize} L ${svgWidth} ${svgHeight} Z`}
           fill="transparent"
           onMouseEnter={() => handleHover(1)}
           onMouseLeave={() => handleHover(-1)}
@@ -220,7 +233,8 @@ function SpacingEditor({
           cursor="pointer"
         />
         <Path
-          d={`M ${svgWidth} 0 L ${svgWidth - borderSize} ${borderSize} L ${svgWidth - borderSize} ${svgHeight - borderSize} L ${svgWidth} ${svgHeight} Z`}
+          // Bottom
+          d={`M ${svgWidth} ${svgHeight} L ${svgWidth - borderSize} ${svgHeight - borderSize} L ${borderSize} ${svgHeight - borderSize} L 0 ${svgHeight} Z`}
           fill="transparent"
           onMouseEnter={() => handleHover(2)}
           onMouseLeave={() => handleHover(-1)}
@@ -228,7 +242,8 @@ function SpacingEditor({
           cursor="pointer"
         />
         <Path
-          d={`M ${svgWidth} ${svgHeight} L ${svgWidth - borderSize} ${svgHeight - borderSize} L ${borderSize} ${svgHeight - borderSize} L 0 ${svgHeight} Z`}
+          // Left
+          d={`M 0 0 L ${borderSize} ${borderSize} L ${borderSize} ${svgHeight - borderSize} L 0 ${svgHeight} Z`}
           fill="transparent"
           onMouseEnter={() => handleHover(3)}
           onMouseLeave={() => handleHover(-1)}
@@ -253,10 +268,11 @@ function SpacingEditor({
           onOutsideClick={handleInputOutsideClick}
         >
           <SpacingEditorInput
-            title={`${title.toLowerCase()}-${indexToSemanticValue[editedIndex]}`}
-            allowNegativeValues={allowNegativeValues}
             value={value[editedIndex]}
             onChange={x => onChange(prepareValue(editedIndex, x))}
+            title={`${title.toLowerCase()}-${indexToSemanticValue[editedIndex]}`}
+            allowNegativeValues={allowNegativeValues}
+            unitMenuRef={unitMenuRef}
           />
         </WithOutsideClick>,
         inputMountNode

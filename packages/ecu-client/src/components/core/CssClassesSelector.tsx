@@ -4,34 +4,34 @@ import { MdOutlineClose } from 'react-icons/md'
 
 import { CssClassType } from '../../types'
 
-import extractSelectors from '../../utils/extractSelectors'
+import extractClassNamesFromSelector from '../../utils/extractClassNamesFromSelector'
 
 type CssClassesSelector = {
   allClasses: CssClassType[],
-  classes: string[]
+  classNames: string[]
   onClassesChange: (classes: string[]) => void
 }
 
 const ecuCreateOption = `__ecu_create_option__${Math.random()}`
 
-function CssClassesSelector({ allClasses, classes, onClassesChange }: CssClassesSelector) {
+function CssClassesSelector({ allClasses, classNames, onClassesChange }: CssClassesSelector) {
   const [value, setValue] = useState('')
 
   const options = useMemo(() => [...new Set(
     allClasses
-    .map(c => extractSelectors(c.selector))
+    .map(c => extractClassNamesFromSelector(c.selector))
     .flat()
-    .filter(className => !classes.includes(className))
-  )], [allClasses, classes])
+    .filter(className => !classNames.includes(className))
+  )], [allClasses, classNames])
 
   const handleSelect = useCallback((selectedValue: any) => {
     setValue('')
-    onClassesChange([...new Set(selectedValue === ecuCreateOption ? !value ? classes : [...classes, value] : [...classes, selectedValue])])
-  }, [onClassesChange, classes, value])
+    onClassesChange([...new Set(selectedValue === ecuCreateOption ? !value ? classNames : [...classNames, value] : [...classNames, selectedValue])])
+  }, [onClassesChange, classNames, value])
 
   const handleDiscardClass = useCallback((className: string) => {
-    onClassesChange(classes.filter(c => c !== className))
-  }, [classes, onClassesChange])
+    onClassesChange(classNames.filter(c => c !== className))
+  }, [classNames, onClassesChange])
 
   return (
     <Div
@@ -44,7 +44,7 @@ function CssClassesSelector({ allClasses, classes, onClassesChange }: CssClasses
       gap={0.25}
       p={0.25}
     >
-      {classes.map(className => (
+      {classNames.map(className => (
         <CssClassChip
           key={className}
           onDiscard={() => handleDiscardClass(className)}
@@ -55,7 +55,7 @@ function CssClassesSelector({ allClasses, classes, onClassesChange }: CssClasses
       <Autocomplete
         bare
         autoHighlight
-        placeholder={`${classes.length ? 'Combine' : 'Choose'} or create class`}
+        placeholder={`${classNames.length ? 'Combine' : 'Choose'} or create class`}
         options={options}
         anyOption={{ value: ecuCreateOption, label: 'Create new class' }}
         value={value}

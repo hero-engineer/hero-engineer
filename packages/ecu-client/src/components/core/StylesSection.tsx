@@ -1,7 +1,7 @@
 import { memo, useCallback, useContext, useMemo } from 'react'
 import { Div } from 'honorable'
 
-import { refetchKeys } from '../../constants'
+import { cssAttributesMap, refetchKeys } from '../../constants'
 
 import { CssClassesQuery, CssClassesQueryDataType } from '../../queries'
 
@@ -10,6 +10,9 @@ import CssClassesContext from '../../contexts/CssClassesContext'
 
 import useQuery from '../../hooks/useQuery'
 import useRefetch from '../../hooks/useRefetch'
+import useCssValues from '../../hooks/useCssValues'
+
+import filterClassesByClassNames from '../../utils/filterClassesByClassNames'
 
 import CssClassesSelector from './CssClassesSelector'
 import StylesSpacingSection from './StylesSpacingSection'
@@ -24,11 +27,14 @@ function StylesSection() {
     query: CssClassesQuery,
   })
 
+  const classNames = useMemo(() => (updatedClassName || className) ? (updatedClassName !== null ? updatedClassName : className).split(' ').map(c => c.trim()).filter(Boolean) : [], [updatedClassName, className])
   const allClasses = useMemo(() => cssClassesQueryResult.data?.cssClasses || [], [cssClassesQueryResult.data])
-  const classes = useMemo(() => (updatedClassName || className) ? (updatedClassName !== null ? updatedClassName : className).split(' ').map(c => c.trim()).filter(Boolean) : [], [updatedClassName, className])
+  const classes = useMemo(() => filterClassesByClassNames(allClasses, classNames), [allClasses, classNames])
   const hasNoNodeSelected = useMemo(() => !hierarchy.length || hierarchy[hierarchy.length - 1].isRoot, [hierarchy])
+  const cssValues = useCssValues(classes, cssAttributesMap)
 
-  const handleSetClasses = useCallback((classes: string[]) => {
+  console.log('cssValues', cssValues)
+  const handleSetClassNames = useCallback((classes: string[]) => {
     setUpdatedClassName(classes.join(' '))
   }, [setUpdatedClassName])
 
@@ -40,18 +46,18 @@ function StylesSection() {
       >
         <CssClassesSelector
           allClasses={allClasses}
-          classes={classes}
-          onClassesChange={handleSetClasses}
+          classNames={classNames}
+          onClassesChange={handleSetClassNames}
         />
       </Div>
       <StylesSpacingSection
-        marging={[0, 0, 0, 0]}
-        padding={[0, 0, 0, 0]}
+        marging={[cssValues['margin-top'], cssValues['margin-right'], cssValues['margin-bottom'], cssValues['margin-left']]}
+        padding={[cssValues['padding-top'], cssValues['padding-right'], cssValues['padding-bottom'], cssValues['padding-left']]}
         onMarginChange={() => {}}
         onPaddingChange={() => {}}
       />
     </>
-  ), [allClasses, classes, handleSetClasses])
+  ), [allClasses, classNames, cssValues, handleSetClassNames])
 
   useRefetch({
     key: refetchKeys.cssClasses,

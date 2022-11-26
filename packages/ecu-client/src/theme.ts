@@ -449,6 +449,18 @@ export default mergeTheme(defaultTheme, {
       },
     ],
   },
+  Slider: {
+    Root: [
+      ({ slim }: any) => slim && {
+        height: 4,
+      },
+    ],
+    Track: [
+      ({ slim }: any) => slim && {
+        height: 4,
+      },
+    ],
+  },
   Switch: {
     Control: [
       {
