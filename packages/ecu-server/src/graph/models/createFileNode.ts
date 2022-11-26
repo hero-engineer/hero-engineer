@@ -17,7 +17,7 @@ function createFileNode(data: CreateFileNodeDataType): FileNodeType {
         return fs.readFileSync(data.payload.path, 'utf8')
       },
       get ast() {
-        return parseCode(this.code)
+        return data.payload.extension === 'css' ? null : parseCode(this.code)
       },
       get description() {
         return extractDescription(this.code)

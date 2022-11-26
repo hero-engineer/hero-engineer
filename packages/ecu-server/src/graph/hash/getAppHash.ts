@@ -1,6 +1,6 @@
 import { hashElement } from 'folder-hash'
 
-import { appPath } from '../../configuration.js'
+import { allowedExtensions, appPath } from '../../configuration.js'
 
 async function getAppHash() {
   const results = await hashElement(appPath, {
@@ -8,7 +8,7 @@ async function getAppHash() {
       exclude: ['.*', 'node_modules', 'test_coverage'],
     },
     files: {
-      include: ['*.ts', '*.tsx'],
+      include: allowedExtensions.map(extension => `*.${extension}`),
     },
   })
 

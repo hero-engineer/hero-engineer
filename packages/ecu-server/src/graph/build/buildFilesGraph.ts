@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import { appPath } from '../../configuration.js'
+import { allowedExtensions, appPath } from '../../configuration.js'
 
 import addFile from '../add/addFile.js'
 import addFileDependencies from '../add/addFileDependencies.js'
@@ -22,8 +22,12 @@ function traverseDirectories(rootPath: string) {
     if (fs.statSync(filePath).isDirectory() && fileName !== 'node_modules') {
       traverseDirectories(filePath)
     }
-    else if (fileName.endsWith('.ts') || fileName.endsWith('.tsx')) {
-      addFile(filePath)
+    else {
+      const extension = path.extname(filePath).slice(1)
+
+      if (allowedExtensions.includes(extension)) {
+        addFile(filePath)
+      }
     }
   })
 }

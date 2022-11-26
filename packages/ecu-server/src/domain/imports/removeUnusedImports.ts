@@ -2,7 +2,7 @@ import { ParseResult } from '@babel/core'
 
 import traverse from '../traverse.js'
 
-function removeUnunsedImports(ast: ParseResult) {
+function removeUnunsedImports(ast: ParseResult | null) {
   const identifierNames: string[] = []
 
   traverse(ast, {

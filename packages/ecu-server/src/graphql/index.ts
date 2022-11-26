@@ -3,6 +3,7 @@ import { gql } from 'apollo-server'
 import componentQuery from './queries/componentQuery.js'
 import componentsQuery from './queries/componentsQuery.js'
 import hierarchyQuery from './queries/hierarchyQuery.js'
+import cssClassesQuery from './queries/cssClassesQuery.js'
 import globalTypesQuery from './queries/globalTypesQuery.js'
 import fileImportsQuery from './queries/fileImportsQuery.js'
 import fileTypesQuery from './queries/fileTypesQuery.js'
@@ -101,6 +102,17 @@ export const typeDefs = gql`
     type: String!
   }
 
+  type CssAttribute {
+    name: String!
+    value: String!
+  }
+
+  type CssClass {
+    selector: String!
+    declaration: String!
+    attributes: [CssAttribute]!
+  }
+
   type FileImportsReturnValue {
     rawImports: String!
     imports: [Import]!
@@ -125,6 +137,7 @@ export const typeDefs = gql`
     component(sourceComponentAddress: String!): ComponentReturnValue!
     components: [ComponentReturnValue]!
     hierarchy(sourceComponentAddress: String!): String!
+    cssClasses: [CssClass]!
     globalTypes: GlobalTypesReturnValue!
     fileImports(sourceFileAddress: String!): FileImportsReturnValue!
     fileTypes(sourceFileAddress: String!): FileTypesReturnValue!
@@ -168,6 +181,7 @@ export const resolvers = {
     component: componentQuery,
     components: componentsQuery,
     hierarchy: hierarchyQuery,
+    cssClasses: cssClassesQuery,
     globalTypes: globalTypesQuery,
     fileImports: fileImportsQuery,
     fileTypes: fileTypesQuery,

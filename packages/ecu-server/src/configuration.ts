@@ -22,6 +22,8 @@ export const ecuHistoryFileName = 'ecu-history.json'
 
 export const globalTypesFileRelativePath = 'src/types.ts'
 
+export const allowedExtensions = ['ts', 'tsx', 'css']
+
 export const ecuDisplayNameCommentPrefix = 'ecu-display-name '
 
 export const globalTypesFileBegginingComment = `/* ---

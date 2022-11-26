@@ -29,7 +29,7 @@ function insertPropFactory(key: string, getValue: () => string) {
   }
 }
 
-function updateDataEcuAttributes(componentNode: FunctionNodeType, ast: ParseResult) {
+function updateDataEcuAttributes(componentNode: FunctionNodeType, ast: ParseResult | null) {
   const cursors = [0]
   const importedEcuComponentNames: string[] = []
 

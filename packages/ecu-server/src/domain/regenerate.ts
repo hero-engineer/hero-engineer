@@ -7,7 +7,9 @@ import { FileNodeType } from '../types.js'
 import generate from './generate.js'
 import lintCode from './lintCode.js'
 
-async function regenerate(fileNode: FileNodeType, astOrCode: ParseResult | string) {
+async function regenerate(fileNode: FileNodeType, astOrCode: ParseResult | string | null) {
+  if (!astOrCode) return false
+
   let code = typeof astOrCode === 'string' ? astOrCode : generate(astOrCode).code
 
   code = await lintCode(code)

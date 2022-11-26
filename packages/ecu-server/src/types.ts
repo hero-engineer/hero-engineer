@@ -36,7 +36,7 @@ export type FileNodePayloadType = {
   path: string
   relativePath: string
   code: string
-  ast: ParseResult
+  ast: ParseResult | null
   description: string
   emoji: string
 }
@@ -127,4 +127,15 @@ export type PackageType = {
   name: string
   version: string
   type: 'dependencies' | 'devDependencies'
+}
+
+export type CssAttributeType = {
+  name: string
+  value: string
+}
+
+export type CssClassType = {
+  selector: string
+  declaration: string
+  attributes: CssAttributeType[]
 }
