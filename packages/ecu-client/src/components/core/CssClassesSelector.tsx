@@ -48,6 +48,7 @@ function CssClassesSelector({ classes, setClasses }: CssClassesSelector) {
       ))}
       <Autocomplete
         bare
+        autoHighlight
         placeholder={`${classes.length ? 'Combine' : 'Choose'} or create class`}
         options={options}
         anyOption={{ value: ecuCreateOption, label: 'Create new class' }}
