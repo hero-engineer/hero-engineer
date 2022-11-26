@@ -157,6 +157,9 @@ export default mergeTheme(defaultTheme, {
       ({ ghost }: any) => ghost && {
         lineHeight: 'inherit',
       },
+      ({ bare }: any) => bare && ({
+        lineHeight: 'inherit',
+      }),
     ],
   },
   Label: {
@@ -261,6 +264,16 @@ export default mergeTheme(defaultTheme, {
       ({ noChildrenPadding }: any) => noChildrenPadding && ({
         paddingBottom: 0,
       }),
+    ],
+  },
+  Autocomplete: {
+    Input: [
+      ({ bare }: any) => bare && {
+        border: 'none',
+        minHeight: 0,
+        paddingLeft: 0,
+        paddingRight: 0,
+      },
     ],
   },
   Button: {
