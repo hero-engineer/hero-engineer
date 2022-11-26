@@ -1,4 +1,4 @@
-import { FileNodeType, FunctionNodeType, ImportType, PackageType, TypeType } from './types'
+import { CssClassType, FileNodeType, FunctionNodeType, ImportType, PackageType, TypeType } from './types'
 
 type ComponentReturnType = {
   component: FunctionNodeType
@@ -9,16 +9,6 @@ type ComponentReturnType = {
 /* --
   * QUERIES
 -- */
-
-export const HierarchyQuery = `
-  query ($sourceComponentAddress: String!) {
-    hierarchy (sourceComponentAddress: $sourceComponentAddress)
-  }
-`
-
-export type HierarchyQueryDataType = {
-  hierarchy: string
-}
 
 export const ComponentsQuery = `
   query {
@@ -77,6 +67,33 @@ export const ComponentQuery = `
 
 export type ComponentQueryDataType = {
   component: ComponentReturnType
+}
+
+export const HierarchyQuery = `
+  query ($sourceComponentAddress: String!) {
+    hierarchy (sourceComponentAddress: $sourceComponentAddress)
+  }
+`
+
+export type HierarchyQueryDataType = {
+  hierarchy: string
+}
+
+export const CssClassesQuery = `
+  query {
+    cssClasses {
+      selector
+      declaration
+      attributes {
+        name
+        value
+      }
+    }
+  }
+`
+
+export type CssClassesQueryDataType = {
+  cssClasses: CssClassType[]
 }
 
 export const GlobalTypesQuery = `

@@ -79,3 +79,14 @@ export type BreakpointType = {
   base: number
   scale: number
 }
+
+export type CssAttributeType = {
+  name: string
+  value: string
+}
+
+export type CssClassType= {
+  selector: string
+  declaration: string
+  attributes: CssAttributeType[]
+}

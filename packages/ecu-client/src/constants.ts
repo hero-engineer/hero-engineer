@@ -9,9 +9,10 @@ export const hierarchyPositions: HierarchyPosition[] = [
 
 export const refetchKeys = {
   all: 'all',
-  hierarchy: 'hierarchy',
   component: 'component',
   components: 'components',
+  hierarchy: 'hierarchy',
+  cssClasses: 'cssClasses',
   componentScreenshot: 'componentScreenshot',
   isComponentAcceptingChildren: 'isComponentAcceptingChildren',
   fileImports: 'fileImports',
