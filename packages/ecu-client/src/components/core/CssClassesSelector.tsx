@@ -23,7 +23,7 @@ function CssClassesSelector({ classes, setClasses }: CssClassesSelector) {
   const options = useMemo(() => allClasses.filter(c => !classes.includes(c)), [classes])
 
   const handleSelect = useCallback((selectedValue: any) => {
-    setClasses(x => [...new Set([...x, selectedValue === ecuCreateOption ? value : selectedValue])])
+    setClasses(x => [...new Set(selectedValue === ecuCreateOption ? !value ? x : [...x, value] : [...x, selectedValue])])
     setValue('')
   }, [setClasses, value])
 
@@ -48,7 +48,7 @@ function CssClassesSelector({ classes, setClasses }: CssClassesSelector) {
       ))}
       <Autocomplete
         bare
-        placeholder="Choose or create class"
+        placeholder={`${classes.length ? 'Combine' : 'Choose'} or create class`}
         options={options}
         anyOption={{ value: ecuCreateOption, label: 'Create new class' }}
         value={value}
@@ -79,8 +79,12 @@ function CssClassChip({ children, onDiscard }: CssClassChipPropsType) {
       borderRadius="medium"
       gap={0.25}
       p={0.25}
+      minWidth={0}
+      maxWidth="100%"
     >
-      {children}
+      <Div ellipsis>
+        {children}
+      </Div>
       <Div
         xflex="x5"
         fontSize="0.75em"

@@ -275,6 +275,11 @@ export default mergeTheme(defaultTheme, {
         paddingRight: 0,
       },
     ],
+    Menu: [
+      ({ bare }: any) => bare && {
+        top: 'calc(100% + 8px)',
+      },
+    ],
   },
   Button: {
     Root: [
