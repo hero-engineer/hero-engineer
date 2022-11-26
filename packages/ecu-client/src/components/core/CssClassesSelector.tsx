@@ -1,28 +1,37 @@
-import { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Autocomplete, Div } from 'honorable'
 import { MdOutlineClose } from 'react-icons/md'
 
 import { CssClassType } from '../../types'
 
-import removeSelectorPrefix from '../../utils/removeSelectorPrefix'
+import extractSelectors from '../../utils/extractSelectors'
 
 type CssClassesSelector = {
   allClasses: CssClassType[],
   classes: string[]
-  setClasses: Dispatch<SetStateAction<string[]>>
+  onClassesChange: (classes: string[]) => void
 }
 
 const ecuCreateOption = `__ecu_create_option__${Math.random()}`
 
-function CssClassesSelector({ allClasses, classes, setClasses }: CssClassesSelector) {
+function CssClassesSelector({ allClasses, classes, onClassesChange }: CssClassesSelector) {
   const [value, setValue] = useState('')
 
-  const options = useMemo(() => allClasses.map(c => removeSelectorPrefix(c.selector)).filter(className => !classes.includes(className)), [allClasses, classes])
+  const options = useMemo(() => [...new Set(
+    allClasses
+    .map(c => extractSelectors(c.selector))
+    .flat()
+    .filter(className => !classes.includes(className))
+  )], [allClasses, classes])
 
   const handleSelect = useCallback((selectedValue: any) => {
-    setClasses(x => [...new Set(selectedValue === ecuCreateOption ? !value ? x : [...x, value] : [...x, selectedValue])])
     setValue('')
-  }, [setClasses, value])
+    onClassesChange([...new Set(selectedValue === ecuCreateOption ? !value ? classes : [...classes, value] : [...classes, selectedValue])])
+  }, [onClassesChange, classes, value])
+
+  const handleDiscardClass = useCallback((className: string) => {
+    onClassesChange(classes.filter(c => c !== className))
+  }, [classes, onClassesChange])
 
   return (
     <Div
@@ -38,7 +47,7 @@ function CssClassesSelector({ allClasses, classes, setClasses }: CssClassesSelec
       {classes.map(className => (
         <CssClassChip
           key={className}
-          onDiscard={() => setClasses(classes => classes.filter(c => c !== className))}
+          onDiscard={() => handleDiscardClass(className)}
         >
           {className}
         </CssClassChip>

@@ -74,7 +74,8 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
   const contextualInformationContextValue = useMemo<ContextualInformationContextType>(() => ({ contextualInformationState, setContextualInformationState }), [contextualInformationState])
 
   const [className, setClassName] = useState('')
-  const cssClassesContextValue = useMemo<CssClassesContextType>(() => ({ className, setClassName }), [className])
+  const [updatedClassName, setUpdatedClassName] = useState<string | null>(null)
+  const cssClassesContextValue = useMemo<CssClassesContextType>(() => ({ className, setClassName, updatedClassName, setUpdatedClassName }), [className, updatedClassName])
 
   return (
     <Provider value={client}>

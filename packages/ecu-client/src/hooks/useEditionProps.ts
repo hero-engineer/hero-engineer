@@ -64,7 +64,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   const { hierarchy } = useContext(HierarchyContext)
   const { dragAndDrop, setDragAndDrop } = useContext(DragAndDropContext)
   const { setContextualInformationState } = useContext(ContextualInformationContext)
-  const { setClassName } = useContext(CssClassesContext)
+  const { setClassName, updatedClassName } = useContext(CssClassesContext)
   const [isEdited, setIsEdited] = useState(false)
 
   const isSelected = useMemo(() => componentDelta >= 0 && hierarchyIds.length > 0 && !!hierarchyId && hierarchyIds[hierarchyIds.length - 1] === hierarchyId, [componentDelta, hierarchyIds, hierarchyId])
@@ -208,7 +208,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   }, [isSelected, isComponentRoot, setContextualInformationState])
 
   const generateClassName = useCallback(() => {
-    let klassName = `ecu-edition-no-outline ${className}`
+    let klassName = `ecu-edition-no-outline ${isSelected && updatedClassName !== null ? updatedClassName : className}`
 
     klassName = klassName.trim()
 
@@ -248,18 +248,19 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
 
     return klassName.trim()
   }, [
+    updatedClassName,
     className,
     componentDelta,
     canBeEdited,
+    canDrop,
+    isSelected,
+    isEdited,
     isComponentRoot,
     isComponentRootFirstChild,
     isComponentRootLastChild,
-    isSelected,
     isDragging,
-    canDrop,
     isOverCurrent,
     isDrop,
-    isEdited,
   ])
 
   useEffect(() => {
