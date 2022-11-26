@@ -90,3 +90,7 @@ export type CssClassType= {
   declaration: string
   attributes: CssAttributeType[]
 }
+
+export type SpacingType = number | string
+
+export type SpacingsType = [SpacingType, SpacingType, SpacingType, SpacingType]

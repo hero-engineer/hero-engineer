@@ -114,6 +114,17 @@ export default mergeTheme(defaultTheme, {
         color: 'primary',
       },
     ],
+    'input::-webkit-outer-spin-button, input::-webkit-inner-spin-button': [
+      {
+        WebkitAppearance: 'none',
+        margin: 0,
+      },
+    ],
+    'input[type=number]': [
+      {
+        MozAppearance: 'textfield',
+      },
+    ],
   },
   colors: {
     primary: 'blue.500',
@@ -135,12 +146,12 @@ export default mergeTheme(defaultTheme, {
     gapRecipe(),
     xflexRecipe(),
     mapperRecipe('borderRadius', borderRadiuses),
-    ({ flexGrow }: any) => flexGrow === true && ({ flexGrow: 1 }),
-    ({ ellipsis }: any) => ellipsis && ({
+    ({ flexGrow }: any) => flexGrow === true && { flexGrow: 1 },
+    ({ ellipsis }: any) => ellipsis && {
       whiteSpace: 'nowrap',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
-    }),
+    },
   ],
   /* --
    * Tags
@@ -157,9 +168,9 @@ export default mergeTheme(defaultTheme, {
       ({ ghost }: any) => ghost && {
         lineHeight: 'inherit',
       },
-      ({ bare }: any) => bare && ({
+      ({ bare }: any) => bare && {
         lineHeight: 'inherit',
-      }),
+      },
     ],
   },
   Label: {
@@ -346,6 +357,10 @@ export default mergeTheme(defaultTheme, {
           backgroundColor: 'darken(background-light, 4)',
         },
       },
+      ({ slim }: any) => slim && {
+        paddingTop: 0,
+        paddingBottom: 0,
+      },
       ({ danger }: any) => danger && {
         backgroundColor: 'red.500',
         '&:hover': {
@@ -359,27 +374,35 @@ export default mergeTheme(defaultTheme, {
   },
   Input: {
     Root: [
-      ({ bare }: any) => bare && ({
+      ({ bare }: any) => bare && {
         paddingLeft: 0,
         paddingRight: 0,
         minHeight: 0,
         border: 'none',
         borderRadius: 0,
         width: 'unset',
-      }),
+      },
+      ({ short }: any) => short && {
+        minHeight: 0,
+        width: 64,
+        paddingLeft: 4,
+        paddingRight: 4,
+      },
     ],
     InputBase: [
-      ({ bare }: any) => bare && ({
+      ({ bare }: any) => bare && {
         lineHeight: 'inherit',
-        paddingTop: 0,
-      }),
+      },
+      ({ slim }: any) => slim && {
+        lineHeight: 'inherit',
+      },
     ],
     TextArea: [
-      ({ bare }: any) => bare && ({
+      ({ bare }: any) => bare && {
         lineHeight: 'inherit',
         paddingTop: 0,
         paddingBottom: 0,
-      }),
+      },
     ],
   },
   Menu: {
@@ -407,14 +430,14 @@ export default mergeTheme(defaultTheme, {
   },
   Select: {
     Root: [
-      ({ slim }: any) => slim && ({
+      ({ slim }: any) => slim && {
         height: 32,
-      }),
+      },
     ],
     Selected: [
-      ({ slim }: any) => slim && ({
+      ({ slim }: any) => slim && {
         paddingBottom: 2,
-      }),
+      },
     ],
   },
   Tooltip: {

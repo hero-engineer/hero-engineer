@@ -1,22 +1,58 @@
-import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Div, Path, Svg } from 'honorable'
+import { ReactNode, useCallback, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
+import { Div, Path, Svg, WithOutsideClick } from 'honorable'
 
-export type SpacingEditorValueType = string | number
+import { SpacingType, SpacingsType } from '../../types'
+
+import useRefresh from '../../hooks/useRefresh'
+
+import SpacingEditorInput from './SpacingEditorInput'
 
 type SpacingEditorPropsType = {
   title: string;
-  children?: ReactNode
-  value: [SpacingEditorValueType, SpacingEditorValueType, SpacingEditorValueType, SpacingEditorValueType]
-  onChange: (value: [SpacingEditorValueType, SpacingEditorValueType, SpacingEditorValueType, SpacingEditorValueType]) => void
+  allowNegativeValues?: boolean
+  value: SpacingsType
+  onChange: (value: SpacingsType) => void
   height?: number | string
   borderSize?: number
   offetHorizontal?: number
+  inputMountNode: Element | null
+  children?: ReactNode
 }
 
-function SpacingEditor({ title, children, value, onChange, height = '100%', borderSize = 25, offetHorizontal = 0 }: SpacingEditorPropsType) {
+const indexToSemanticValue = [
+  'top',
+  'left',
+  'right',
+  'bottom',
+]
+
+function SpacingEditor({
+  title,
+  allowNegativeValues,
+  value,
+  onChange,
+  height = '100%',
+  borderSize = 25,
+  offetHorizontal = 0,
+  inputMountNode,
+  children,
+}: SpacingEditorPropsType) {
   const rootRef = useRef<HTMLDivElement>(null)
+  const childrenRef = useRef<HTMLDivElement>(null)
+
+  useRefresh()
+
   const [hoveredIndex, setHoveredIndex] = useState(-1)
-  const [, setRefresh] = useState(false)
+  const [editedIndex, setEditedIndex] = useState(-1)
+
+  const prepareValue = useCallback((index: number, nextValue: SpacingType) => {
+    const newArray = [...value]
+
+    newArray[index] = nextValue
+
+    return newArray as SpacingsType
+  }, [value])
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const { width: svgWidth, height: svgHeight } = useMemo(() => rootRef.current?.getBoundingClientRect() ?? { width: 0, height: 0 }, [rootRef.current])
@@ -25,8 +61,10 @@ function SpacingEditor({ title, children, value, onChange, height = '100%', bord
     setHoveredIndex(index)
   }, [])
 
-  useEffect(() => {
-    setRefresh(x => !x)
+  const handleInputOutsideClick = useCallback((event: MouseEvent | TouchEvent) => {
+    if (!rootRef.current?.contains(event.target as Node) || childrenRef.current?.contains(event.target as Node)) {
+      setEditedIndex(-1)
+    }
   }, [])
 
   return (
@@ -42,12 +80,12 @@ function SpacingEditor({ title, children, value, onChange, height = '100%', bord
         preserveAspectRatio="none"
       >
         <Path
-          d={`M 0 0 L ${borderSize} ${borderSize} L ${borderSize} ${svgHeight - borderSize} L 0 ${svgHeight} Z`}
-          fill={`darken(background-light, ${hoveredIndex === 1 ? 12 : 8}%)`}
-        />
-        <Path
           d={`M 0 0 L ${borderSize} ${borderSize} L ${svgWidth - borderSize} ${borderSize} L ${svgWidth} 0 Z`}
           fill={`darken(background-light, ${hoveredIndex === 0 ? 10 : 6}%)`}
+        />
+        <Path
+          d={`M 0 0 L ${borderSize} ${borderSize} L ${borderSize} ${svgHeight - borderSize} L 0 ${svgHeight} Z`}
+          fill={`darken(background-light, ${hoveredIndex === 1 ? 12 : 8}%)`}
         />
         <Path
           d={`M ${svgWidth} 0 L ${svgWidth - borderSize} ${borderSize} L ${svgWidth - borderSize} ${svgHeight - borderSize} L ${svgWidth} ${svgHeight} Z`}
@@ -166,17 +204,19 @@ function SpacingEditor({ title, children, value, onChange, height = '100%', bord
         bottom={0}
       >
         <Path
-          d={`M 0 0 L ${borderSize} ${borderSize} L ${borderSize} ${svgHeight - borderSize} L 0 ${svgHeight} Z`}
-          fill="transparent"
-          onMouseEnter={() => handleHover(1)}
-          onMouseLeave={() => handleHover(-1)}
-          cursor="pointer"
-        />
-        <Path
           d={`M 0 0 L ${borderSize} ${borderSize} L ${svgWidth - borderSize} ${borderSize} L ${svgWidth} 0 Z`}
           fill="transparent"
           onMouseEnter={() => handleHover(0)}
           onMouseLeave={() => handleHover(-1)}
+          onClick={() => setEditedIndex(0)}
+          cursor="pointer"
+        />
+        <Path
+          d={`M 0 0 L ${borderSize} ${borderSize} L ${borderSize} ${svgHeight - borderSize} L 0 ${svgHeight} Z`}
+          fill="transparent"
+          onMouseEnter={() => handleHover(1)}
+          onMouseLeave={() => handleHover(-1)}
+          onClick={() => setEditedIndex(1)}
           cursor="pointer"
         />
         <Path
@@ -184,6 +224,7 @@ function SpacingEditor({ title, children, value, onChange, height = '100%', bord
           fill="transparent"
           onMouseEnter={() => handleHover(2)}
           onMouseLeave={() => handleHover(-1)}
+          onClick={() => setEditedIndex(2)}
           cursor="pointer"
         />
         <Path
@@ -191,10 +232,12 @@ function SpacingEditor({ title, children, value, onChange, height = '100%', bord
           fill="transparent"
           onMouseEnter={() => handleHover(3)}
           onMouseLeave={() => handleHover(-1)}
+          onClick={() => setEditedIndex(3)}
           cursor="pointer"
         />
       </Svg>
       <Div
+        ref={childrenRef}
         position="absolute"
         top={borderSize}
         bottom={borderSize}
@@ -204,6 +247,20 @@ function SpacingEditor({ title, children, value, onChange, height = '100%', bord
       >
         {children}
       </Div>
+      {editedIndex !== -1 && !!inputMountNode && createPortal(
+        <WithOutsideClick
+          preventFirstFire
+          onOutsideClick={handleInputOutsideClick}
+        >
+          <SpacingEditorInput
+            title={`${title.toLowerCase()}-${indexToSemanticValue[editedIndex]}`}
+            allowNegativeValues={allowNegativeValues}
+            value={value[editedIndex]}
+            onChange={x => onChange(prepareValue(editedIndex, x))}
+          />
+        </WithOutsideClick>,
+        inputMountNode
+      )}
     </Div>
   )
 }

@@ -6,6 +6,8 @@ import editionStyles from '../../css/edition.css?inline'
 
 import BreakpointContext from '../../contexts/BreakpointContext'
 
+import useRefresh from '../../hooks/useRefresh'
+
 type ComponentIframeChildrenArgsType = {
   window?: Window | null
   head?: HTMLHeadElement
@@ -18,10 +20,11 @@ type ComponentIframePropsType = Omit<IframeProps, 'children'> & {
 function ComponentIframe({ children, ...props }: ComponentIframePropsType) {
   const rootRef = useRef<HTMLIFrameElement>(null)
 
+  useRefresh()
+
   const { isDragging } = useContext(BreakpointContext)
 
   const [height, setHeight] = useState(0)
-  const [, setRefresh] = useState(false)
 
   const windowNode = rootRef.current?.contentWindow
   const documentNode = windowNode?.document
@@ -69,11 +72,6 @@ function ComponentIframe({ children, ...props }: ComponentIframePropsType) {
       observer.disconnect()
     }
   }, [mountNode])
-
-  // Refresh for mountNode to be populated
-  useEffect(() => {
-    setRefresh(x => !x)
-  }, [])
 
   return (
     <Iframe

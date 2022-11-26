@@ -43,3 +43,22 @@ export const ecuSpecials = [
 ]
 
 export const ecuSpecialPrefix = '__ecu_special__'
+
+export const cssValueUnits = [
+  'px',
+  '%',
+  'rem',
+  'em',
+  'vw',
+  'vh',
+  'vmin',
+  'vmax',
+  'ch',
+  'ex',
+  'mm',
+  'cm',
+  'in',
+  'pt',
+  'pc',
+  'auto',
+] as const

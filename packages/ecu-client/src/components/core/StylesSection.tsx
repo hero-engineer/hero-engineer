@@ -45,8 +45,8 @@ function StylesSection() {
         />
       </Div>
       <StylesSpacingSection
-        margings={[0, 0, 0, 0]}
-        paddings={[0, 0, 0, 0]}
+        marging={[0, 0, 0, 0]}
+        padding={[0, 0, 0, 0]}
         onMarginChange={() => {}}
         onPaddingChange={() => {}}
       />
