@@ -2,25 +2,22 @@ import { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react'
 import { Autocomplete, Div } from 'honorable'
 import { MdOutlineClose } from 'react-icons/md'
 
+import { CssClassType } from '../../types'
+
+import removeSelectorPrefix from '../../utils/removeSelectorPrefix'
+
 type CssClassesSelector = {
+  allClasses: CssClassType[],
   classes: string[]
   setClasses: Dispatch<SetStateAction<string[]>>
 }
 
-const allClasses = [
-  'hero',
-  'hero-body',
-  'container',
-  'columns',
-  'rows',
-]
-
 const ecuCreateOption = `__ecu_create_option__${Math.random()}`
 
-function CssClassesSelector({ classes, setClasses }: CssClassesSelector) {
+function CssClassesSelector({ allClasses, classes, setClasses }: CssClassesSelector) {
   const [value, setValue] = useState('')
 
-  const options = useMemo(() => allClasses.filter(c => !classes.includes(c)), [classes])
+  const options = useMemo(() => allClasses.map(c => removeSelectorPrefix(c.selector)).filter(className => !classes.includes(className)), [allClasses, classes])
 
   const handleSelect = useCallback((selectedValue: any) => {
     setClasses(x => [...new Set(selectedValue === ecuCreateOption ? !value ? x : [...x, value] : [...x, selectedValue])])
@@ -59,7 +56,7 @@ function CssClassesSelector({ classes, setClasses }: CssClassesSelector) {
         flexGrow
         flexShrink={1}
         position="initial" // Give the menu to the parent
-        py={0.25}
+        p={0.25}
       />
     </Div>
   )

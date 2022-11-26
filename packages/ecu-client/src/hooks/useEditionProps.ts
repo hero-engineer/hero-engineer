@@ -7,6 +7,7 @@ import { useDrag, useDrop } from 'react-dnd'
 import HierarchyContext from '../contexts/HierarchyContext'
 import DragAndDropContext from '../contexts/DragAndDropContext'
 import ContextualInformationContext from '../contexts/ContextualInformationContext'
+import CssClassesContext from '../contexts/CssClassesContext'
 
 import getComponentRootHierarchyIds from '../helpers/getComponentRootHierarchyIds'
 import isHierarchyOnComponent from '../helpers/isHierarchyOnComponent'
@@ -63,6 +64,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   const { hierarchy } = useContext(HierarchyContext)
   const { dragAndDrop, setDragAndDrop } = useContext(DragAndDropContext)
   const { setContextualInformationState } = useContext(ContextualInformationContext)
+  const { setClassName } = useContext(CssClassesContext)
   const [isEdited, setIsEdited] = useState(false)
 
   const isSelected = useMemo(() => componentDelta >= 0 && hierarchyIds.length > 0 && !!hierarchyId && hierarchyIds[hierarchyIds.length - 1] === hierarchyId, [componentDelta, hierarchyIds, hierarchyId])
@@ -273,6 +275,12 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
     isEdited,
     setContextualInformationState,
   ])
+
+  useEffect(() => {
+    if (!isSelected || isComponentRoot) return
+
+    setClassName(className)
+  }, [isSelected, isComponentRoot, setClassName, className])
 
   return {
     ref,

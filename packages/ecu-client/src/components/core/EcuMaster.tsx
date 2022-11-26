@@ -19,6 +19,7 @@ import HierarchyContext, { HierarchyContextType } from '../../contexts/Hierarchy
 import BreakpointContext, { BreakpointContextType } from '../../contexts/BreakpointContext'
 import DragAndDropContext, { DragAndDropContextType, DragAndDropType } from '../../contexts/DragAndDropContext'
 import ContextualInformationContext, { ContextualInformationContextType, ContextualInformationStateType } from '../../contexts/ContextualInformationContext'
+import CssClassesContext, { CssClassesContextType } from '../../contexts/CssClassesContext'
 
 import { BreakpointType, HierarchyItemType, SnackBarItemType } from '../../types'
 
@@ -72,6 +73,9 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
   })
   const contextualInformationContextValue = useMemo<ContextualInformationContextType>(() => ({ contextualInformationState, setContextualInformationState }), [contextualInformationState])
 
+  const [className, setClassName] = useState('')
+  const cssClassesContextValue = useMemo<CssClassesContextType>(() => ({ className, setClassName }), [className])
+
   return (
     <Provider value={client}>
       <DndProvider backend={HTML5Backend}>
@@ -86,11 +90,13 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
                       <BreakpointContext.Provider value={breakpointContextValue}>
                         <DragAndDropContext.Provider value={dragAndDropContextValue}>
                           <ContextualInformationContext.Provider value={contextualInformationContextValue}>
-                            <Router>
-                              <WithEcuHomeButton>
-                                {children}
-                              </WithEcuHomeButton>
-                            </Router>
+                            <CssClassesContext.Provider value={cssClassesContextValue}>
+                              <Router>
+                                <WithEcuHomeButton>
+                                  {children}
+                                </WithEcuHomeButton>
+                              </Router>
+                            </CssClassesContext.Provider>
                           </ContextualInformationContext.Provider>
                         </DragAndDropContext.Provider>
                       </BreakpointContext.Provider>

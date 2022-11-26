@@ -26,9 +26,10 @@ const componentTheme = mergeTheme(theme, {
 
 type ComponentWindowPropsType = {
   componentPath: string
+  decoratorPaths: string[]
 }
 
-function ComponentWindow({ componentPath }: ComponentWindowPropsType) {
+function ComponentWindow({ componentPath, decoratorPaths }: ComponentWindowPropsType) {
   return (
     <Div
       xflex="y2s"
@@ -49,7 +50,11 @@ function ComponentWindow({ componentPath }: ComponentWindowPropsType) {
                   <CssBaseline />
                   <WithIsComponentRefreshingLayer>
                     <WithComponentScrenshot>
-                      <ComponentLoader componentPath={componentPath} />
+                      <ComponentLoader
+                        head={head}
+                        componentPath={componentPath}
+                        decoratorPaths={decoratorPaths}
+                      />
                     </WithComponentScrenshot>
                   </WithIsComponentRefreshingLayer>
                   <ContextualInformation />

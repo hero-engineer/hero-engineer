@@ -1,4 +1,4 @@
-import { memo, useCallback, useContext, useMemo, useState } from 'react'
+import { memo, useCallback, useContext, useMemo } from 'react'
 import { Div } from 'honorable'
 
 import { refetchKeys } from '../../constants'
@@ -6,6 +6,7 @@ import { refetchKeys } from '../../constants'
 import { CssClassesQuery, CssClassesQueryDataType } from '../../queries'
 
 import HierarchyContext from '../../contexts/HierarchyContext'
+import CssClassesContext from '../../contexts/CssClassesContext'
 
 import useQuery from '../../hooks/useQuery'
 
@@ -17,22 +18,25 @@ import CssClassesSelector from './CssClassesSelector'
 // Displayed in the right panel
 function StylesSection() {
   const { hierarchy } = useContext(HierarchyContext)
-  const [classes, setClasses] = useState<string[]>([])
+  const { className } = useContext(CssClassesContext)
 
   const [cssClassesQueryResult, refetchCssClassesQuery] = useQuery<CssClassesQueryDataType>({
     query: CssClassesQuery,
   })
 
-  console.log('cssClassesQueryResult.data', cssClassesQueryResult.data)
+  console.log('className', className)
 
+  const allClasses = useMemo(() => cssClassesQueryResult.data?.cssClasses || [], [cssClassesQueryResult.data])
+  const classes = useMemo(() => className ? className.split(' ').map(x => x.trim()) : [], [className])
   const hasNoNodeSelected = useMemo(() => !hierarchy.length || hierarchy[hierarchy.length - 1].isRoot, [hierarchy])
 
   const renderSection = useCallback(() => (
     <CssClassesSelector
+      allClasses={allClasses}
       classes={classes}
-      setClasses={setClasses}
+      setClasses={() => {}}
     />
-  ), [classes])
+  ), [allClasses, classes])
 
   useRefetch({
     key: refetchKeys.cssClasses,

@@ -3,6 +3,7 @@ import { CssClassType, FileNodeType, FunctionNodeType, ImportType, PackageType, 
 type ComponentReturnType = {
   component: FunctionNodeType
   file: FileNodeType
+  decoratorPaths: string[]
   isComponentAcceptingChildren: boolean
 }
 
@@ -61,6 +62,7 @@ export const ComponentQuery = `
           relativePath
         }
       }
+      decoratorPaths
     }
   }
 `

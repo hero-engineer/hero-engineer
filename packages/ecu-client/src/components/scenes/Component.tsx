@@ -41,14 +41,17 @@ function Component() {
     return placeholder
   }
 
-  const { component } = componentQueryResult.data.component
+  const { component, decoratorPaths } = componentQueryResult.data.component
 
   if (!component) {
     return placeholder
   }
 
   return (
-    <ComponentWindow componentPath={component.payload.path} />
+    <ComponentWindow
+      componentPath={component.payload.path}
+      decoratorPaths={decoratorPaths}
+    />
   )
 }
 
