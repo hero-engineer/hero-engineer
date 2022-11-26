@@ -24,6 +24,12 @@ export const globalTypesFileRelativePath = 'src/types.ts'
 
 export const allowedExtensions = ['ts', 'tsx', 'css']
 
+export const ecuDecoratorsRelativeLocation = 'src/decorators'
+
+export const ecuDecoratorNameSuffix = 'Decorator'
+
+export const ecuCommonDecoratorName = 'EcuCommonDecorator'
+
 export const ecuDisplayNameCommentPrefix = 'ecu-display-name '
 
 export const globalTypesFileBegginingComment = `/* ---

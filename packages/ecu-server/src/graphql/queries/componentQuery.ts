@@ -1,7 +1,9 @@
 import { FunctionNodeType } from '../../types.js'
 
 import { getNodeByAddress, getNodesBySecondNeighbourg } from '../../graph/index.js'
+
 import isComponentAcceptingChildren from '../../domain/components/isComponentAcceptingChildren.js'
+import getComponentDecoratorPaths from '../../domain/components/getComponentDecoratorPaths.js'
 
 type ComponentQueryArgsType = {
   sourceComponentAddress: string
@@ -25,6 +27,7 @@ function componentQuery(_: any, { sourceComponentAddress }: ComponentQueryArgsTy
   return {
     component: componentNode,
     file: fileNode,
+    decoratorPaths: getComponentDecoratorPaths(componentNode),
     isComponentAcceptingChildren: isComponentAcceptingChildren(componentNode.address),
   }
 }

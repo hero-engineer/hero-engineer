@@ -77,6 +77,7 @@ export const typeDefs = gql`
   type ComponentReturnValue {
     component: FunctionNode!
     file: FileNode!
+    decoratorPaths: [String]!
     isComponentAcceptingChildren: Boolean!
   }
 

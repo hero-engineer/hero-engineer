@@ -1,7 +1,9 @@
 import { FunctionNodeType } from '../../types.js'
 
 import { getNodesByRole, getNodesBySecondNeighbourg } from '../../graph/index.js'
+
 import isComponentAcceptingChildren from '../../domain/components/isComponentAcceptingChildren.js'
+import getComponentDecoratorPaths from '../../domain/components/getComponentDecoratorPaths.js'
 
 function componentsQuery() {
   console.log('__componentsQuery__')
@@ -16,6 +18,7 @@ function componentsQuery() {
     return {
       component: componentNode,
       file: fileNode,
+      decoratorPaths: getComponentDecoratorPaths(componentNode),
       isComponentAcceptingChildren: isComponentAcceptingChildren(componentNode.address),
     }
   })

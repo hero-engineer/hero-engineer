@@ -25,8 +25,6 @@ async function traverseCss(fileNode: FileNodeType) {
     })
   })
 
-  console.log(JSON.stringify(classes, null, 2))
-
   return classes
 }
 
