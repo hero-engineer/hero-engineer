@@ -3,6 +3,8 @@ import posscssNested from 'postcss-nested'
 
 import { CssAttributeType, CssClassType, FileNodeType } from '../../types.js'
 
+import areSelectorsEqual from './utils/areSelectorsEqual.js'
+
 async function traverseCss(fileNode: FileNodeType, targetSelector?: string, onSuccess?: (cssClass: CssClassType) => void) {
   const { root } = await postcss([posscssNested]).process(fileNode.payload.code, { from: fileNode.payload.path })
 
@@ -26,7 +28,7 @@ async function traverseCss(fileNode: FileNodeType, targetSelector?: string, onSu
 
     classes.push(cssClass)
 
-    if (cssClass.selector === targetSelector) onSuccess?.(cssClass)
+    if (targetSelector && areSelectorsEqual(cssClass.selector, targetSelector)) onSuccess?.(cssClass)
   })
 
   return classes

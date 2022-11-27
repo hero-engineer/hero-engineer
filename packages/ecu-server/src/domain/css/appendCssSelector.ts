@@ -13,7 +13,7 @@ async function appendCssSelector(fileNode: FileNodeType, selector: string) {
 
   if (isAlradyInserted) return
 
-  const code = `${fileNode.payload.code}\n${selector} {}`
+  const code = `${fileNode.payload.code}\n${selector} {}\n`
 
   fs.writeFileSync(fileNode.payload.path, code, 'utf8')
 }

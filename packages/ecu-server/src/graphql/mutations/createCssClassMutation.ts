@@ -50,15 +50,7 @@ async function createCssClassMutation(_: any, { sourceComponentAddress, targetHi
 
     if (foundClassNameAttribute) {
       if (foundClassNameAttribute.value?.type === 'StringLiteral') {
-        const foundClassNames = foundClassNameAttribute.value.value.split(' ')
-
-        classNames.forEach(className => {
-          if (!foundClassNames.includes(className)) {
-            foundClassNames.push(className)
-          }
-        })
-
-        foundClassNameAttribute.value.value = foundClassNames.join(' ')
+        foundClassNameAttribute.value.value = classNames.join(' ')
       }
       else {
         throw new Error('Unsupported non-string className attribute') // TODO: support non-string className attribute
@@ -77,7 +69,7 @@ async function createCssClassMutation(_: any, { sourceComponentAddress, targetHi
 
   return {
     returnValue: true,
-    description: `Add className "${classNames.join(' ')}" to ${componentName} in ${componentNode.payload.name}`,
+    description: `Add className '${classNames.join(' ')}' to ${componentName} in ${componentNode.payload.name}`,
   }
 }
 
