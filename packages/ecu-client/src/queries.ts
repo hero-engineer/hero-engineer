@@ -328,8 +328,8 @@ export type UpdateFileDescriptionMutationDataType = {
 }
 
 export const CreateCssClassMutation = `
-  mutation ($sourceComponentAddress: String!, $targetHierarchyId: String!, $componentDelta: Int! $classNames: [String!]!, $combine: Boolean!) {
-    createCssClass (sourceComponentAddress: $sourceComponentAddress, targetHierarchyId: $targetHierarchyId, componentDelta: $componentDelta, classNames: $classNames, combine: $combine)
+  mutation ($sourceComponentAddress: String!, $targetHierarchyId: String!, $componentDelta: Int! $classNames: [String!]!, $shouldCombine: Boolean!, $shouldUpdateElement: Boolean!) {
+    createCssClass (sourceComponentAddress: $sourceComponentAddress, targetHierarchyId: $targetHierarchyId, componentDelta: $componentDelta, classNames: $classNames, shouldCombine: $shouldCombine, shouldUpdateElement: $shouldUpdateElement)
   }
 `
 

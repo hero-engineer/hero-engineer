@@ -183,11 +183,6 @@ function StylesSection() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updatedStyles])
 
-  useEffect(() => {
-    console.log('effect', classNames)
-    setSelectedClassNames(classNames.length ? [classNames[classNames.length - 1]] : [])
-  }, [classNames])
-
   return (
     <Div
       xflex="y2s"

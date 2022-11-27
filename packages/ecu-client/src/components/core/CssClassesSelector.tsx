@@ -28,7 +28,7 @@ function CssClassesSelector({ allClasses, classNames, onClassesChange, selectedC
   const { componentAddress = '' } = useParams()
   const { hierarchyIds, componentDelta } = useEditionSearchParams()
 
-  const [value, setValue] = useState('')
+  const [search, setSearch] = useState('')
 
   const [{ fetching }, createCssClass] = useMutation<CreateCssClassMutationDataType>(CreateCssClassMutation)
 
@@ -41,7 +41,7 @@ function CssClassesSelector({ allClasses, classNames, onClassesChange, selectedC
 
   const refetch = useRefetch()
 
-  const handleCreateClass = useCallback(async (classNames: string[]) => {
+  const handleCreateClass = useCallback(async (classNames: string[], shouldUpdateElement = true) => {
     if (!classNames.length) return
 
     setLoading(true)
@@ -51,7 +51,8 @@ function CssClassesSelector({ allClasses, classNames, onClassesChange, selectedC
       targetHierarchyId: hierarchyIds[hierarchyIds.length - 1],
       componentDelta,
       classNames,
-      combine: selectedClassNames.length > 1,
+      shouldUpdateElement,
+      shouldCombine: selectedClassNames.length > 1,
     })
 
     setLoading(false)
@@ -68,13 +69,13 @@ function CssClassesSelector({ allClasses, classNames, onClassesChange, selectedC
   ])
 
   const handleSelect = useCallback((selectedValue: any) => {
-    setValue('')
+    const addedClassName = selectedValue === ecuCreateOption ? search : selectedValue
+    const nextClassNames = [...new Set(addedClassName ? [...classNames, addedClassName] : classNames)]
 
-    const nextClassNames = [...new Set(selectedValue === ecuCreateOption ? !value ? classNames : [...classNames, value] : [...classNames, selectedValue])]
-
+    setSearch('')
     onClassesChange(nextClassNames)
     handleCreateClass(nextClassNames)
-  }, [onClassesChange, classNames, value, handleCreateClass])
+  }, [onClassesChange, classNames, search, handleCreateClass])
 
   const handleDiscardClass = useCallback((className: string) => {
     const nextClassNames = classNames.filter(c => c !== className)
@@ -84,24 +85,23 @@ function CssClassesSelector({ allClasses, classNames, onClassesChange, selectedC
   }, [classNames, onClassesChange, handleCreateClass])
 
   const handleChipSelect = useCallback((className: string) => {
-    setSelectedClassNames(selectedClassNames => {
-      if (selectedClassNames.includes(className)) {
-        return selectedClassNames.filter(c => c !== className)
-      }
-
-      // Keep sort order
-      const nextSelectedClassNames = [...classNames]
-
-      return nextSelectedClassNames.filter(x => selectedClassNames.includes(x) || x === className)
-    })
+    setSelectedClassNames(selectedClassNames => (
+      selectedClassNames.includes(className)
+        ? selectedClassNames.filter(c => c !== className)
+        : [...classNames].filter(x => selectedClassNames.includes(x) || x === className) // keep classNames sort order
+    ))
   }, [setSelectedClassNames, classNames])
 
   // Create chained class
   useEffect(() => {
     if (selectedClassNames.length < 2) return
 
-    handleCreateClass(selectedClassNames)
+    handleCreateClass(selectedClassNames, false)
   }, [selectedClassNames, handleCreateClass])
+
+  useEffect(() => {
+    setSelectedClassNames(classNames.length ? [classNames[classNames.length - 1]] : [])
+  }, [setSelectedClassNames, classNames])
 
   return (
     <Div
@@ -131,8 +131,8 @@ function CssClassesSelector({ allClasses, classNames, onClassesChange, selectedC
         placeholder={`${classNames.length ? 'Add' : 'Choose'} or create class`}
         options={options}
         anyOption={{ value: ecuCreateOption, label: 'Create new class' }}
-        value={value}
-        onChange={setValue}
+        value={search}
+        onChange={setSearch}
         onSelect={handleSelect}
         inputProps={{ bare: true, disabled: fetching }}
         flexGrow
@@ -163,6 +163,7 @@ function CssClassChip({ children, onDiscard, onSelect, primary }: CssClassChipPr
       minWidth={0}
       maxWidth="100%"
       cursor="pointer"
+      userSelect="none"
     >
       <Div
         ellipsis
