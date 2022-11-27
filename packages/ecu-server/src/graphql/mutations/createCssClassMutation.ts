@@ -18,10 +18,11 @@ type CreateCssClassMutationArgsType = {
   targetHierarchyId: string
   componentDelta: number
   classNames: string[]
-  combine: boolean
+  shouldCombine: boolean
+  shouldUpdateElement: boolean
 }
 
-async function createCssClassMutation(_: any, { sourceComponentAddress, targetHierarchyId, componentDelta, classNames, combine }: CreateCssClassMutationArgsType): Promise<HistoryMutationReturnType<boolean>> {
+async function createCssClassMutation(_: any, { sourceComponentAddress, targetHierarchyId, componentDelta, classNames, shouldCombine, shouldUpdateElement }: CreateCssClassMutationArgsType): Promise<HistoryMutationReturnType<boolean>> {
   console.log('__createCssClassMutation__')
 
   if (!classNames.length) {
@@ -66,17 +67,19 @@ async function createCssClassMutation(_: any, { sourceComponentAddress, targetHi
     }
   }
 
-  const { impacted } = traverseComponent(sourceComponentAddress, targetHierarchyId, onSuccess)
+  if (shouldUpdateElement) {
+    const { impacted } = traverseComponent(sourceComponentAddress, targetHierarchyId, onSuccess)
 
-  await processImpactedFileNodes(impacted)
+    await processImpactedFileNodes(impacted)
+  }
 
-  const selectors = combine ? classNames.map(x => `.${x}`).join('') : `.${classNames[classNames.length - 1]}`
+  const selectors = shouldCombine ? classNames.map(x => `.${x}`).join('') : `.${classNames[classNames.length - 1]}`
 
   await appendCssSelector(indexCssNode, selectors)
 
   return {
     returnValue: true,
-    description: `Add className '${classNames.join(' ')}' to ${componentName} in ${componentNode.payload.name}`,
+    description: `Add className '${classNames.join(' ')}'${shouldUpdateElement ? ` to ${componentName} in ${componentNode.payload.name}` : ''}`,
   }
 }
 
