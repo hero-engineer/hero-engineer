@@ -3,7 +3,7 @@ import { Button, Div, Slider } from 'honorable'
 import { CgUndo } from 'react-icons/cg'
 
 import { SpacingType } from '../../types'
-import splitCssValue from '../../utils/splitCssValue'
+import splitSpacingValue from '../../utils/splitSpacingValue'
 
 import CssValueInput from './CssValueInput'
 
@@ -27,7 +27,7 @@ const designTokens = [
 ]
 
 function SpacingEditorInputRef({ title, value, onChange, allowNegativeValues, unitMenuRef }: SpacingEditorInputPropsType, ref: Ref<any>) {
-  const [rawValue] = splitCssValue(value)
+  const [rawValue] = splitSpacingValue(value)
   const numericValue = parseInt(rawValue)
   const [sliderValue, setSliderValue] = useState(numericValue === numericValue ? numericValue : 0)
 

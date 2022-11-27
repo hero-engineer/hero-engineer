@@ -298,7 +298,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
       onClick: handleClick,
       onContextMenu: handleContextMenu,
       className: generateClassName(),
-      style: updatedStyles,
+      style: isSelected ? updatedStyles : {},
       'data-ecu': ecuId,
       'data-ecu-hierarchy': hierarchyId,
     },

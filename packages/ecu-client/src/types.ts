@@ -91,6 +91,16 @@ export type CssClassType= {
   attributes: CssAttributeType[]
 }
 
-export type SpacingType = number | string
+export type CssValueType = string | number
+
+export type SpacingType = CssValueType
 
 export type SpacingsType = [SpacingType, SpacingType, SpacingType, SpacingType]
+
+export type CSsAttributesMapType = Record<string, {
+  attributes: readonly string[]
+  defaultValue: CssValueType
+  extractValue?: (value: CssValueType) => CssValueType
+  converter?: (value: CssValueType) => Record<string, CssValueType>
+  isValueValid: (value: CssValueType) => boolean
+}>

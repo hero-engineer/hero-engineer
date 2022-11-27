@@ -1,6 +1,6 @@
 import { cssValueUnits } from '../constants'
 
-function splitCssValue(cssValue: string | number): [string, typeof cssValueUnits[number] | null] {
+function splitSpacingValue(cssValue: string | number): [string, typeof cssValueUnits[number] | null] {
   if (typeof cssValue === 'number') return [cssValue.toString(), 'px']
   if (cssValue === 'auto') return [cssValue, 'auto']
 
@@ -11,4 +11,4 @@ function splitCssValue(cssValue: string | number): [string, typeof cssValueUnits
   return [cssValue, 'px']
 }
 
-export default splitCssValue
+export default splitSpacingValue

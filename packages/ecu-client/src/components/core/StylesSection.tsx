@@ -1,7 +1,7 @@
 import { memo, useCallback, useContext, useMemo } from 'react'
 import { Div } from 'honorable'
 
-import { cssAttributesMap, refetchKeys } from '../../constants'
+import { cssAttributesMap, refetchKeys, spacingSemanticValues } from '../../constants'
 
 import { CssClassesQuery, CssClassesQueryDataType } from '../../queries'
 
@@ -11,8 +11,10 @@ import CssClassesContext from '../../contexts/CssClassesContext'
 import useQuery from '../../hooks/useQuery'
 import useRefetch from '../../hooks/useRefetch'
 import useCssValues from '../../hooks/useCssValues'
+import useJsCssValues from '../../hooks/useJsCssValues'
 
 import filterClassesByClassNames from '../../utils/filterClassesByClassNames'
+import convertCssAttributeNameToJs from '../../utils/convertCssAttributeNameToJs'
 
 import CssClassesSelector from './CssClassesSelector'
 import StylesSpacingSection from './StylesSpacingSection'
@@ -21,7 +23,7 @@ import StylesSpacingSection from './StylesSpacingSection'
 // Displayed in the right panel
 function StylesSection() {
   const { hierarchy } = useContext(HierarchyContext)
-  const { className, setClassName } = useContext(CssClassesContext)
+  const { className, setClassName, updatedStyles, setUpdatedStyles } = useContext(CssClassesContext)
 
   const [cssClassesQueryResult, refetchCssClassesQuery] = useQuery<CssClassesQueryDataType>({
     query: CssClassesQuery,
@@ -32,10 +34,20 @@ function StylesSection() {
   const classes = useMemo(() => filterClassesByClassNames(allClasses, classNames), [allClasses, classNames])
   const hasNoNodeSelected = useMemo(() => !hierarchy.length || hierarchy[hierarchy.length - 1].isRoot, [hierarchy])
   const cssValues = useCssValues(classes, cssAttributesMap)
+  const finalCssValues = useJsCssValues(cssValues, updatedStyles, cssAttributesMap)
 
   const handleSetClassNames = useCallback((classes: string[]) => {
     setClassName(classes.join(' '))
   }, [setClassName])
+
+  const handleStyleChange = useCallback((attributeName: string, value: string) => {
+    const jsAttributeName = convertCssAttributeNameToJs(attributeName)
+
+    setUpdatedStyles(x => ({ ...x, [jsAttributeName]: value }))
+  }, [setUpdatedStyles])
+
+  console.log('finalCssValues', finalCssValues)
+  console.log('updatedStyles', updatedStyles)
 
   const renderSection = useCallback(() => (
     <>
@@ -50,13 +62,13 @@ function StylesSection() {
         />
       </Div>
       <StylesSpacingSection
-        marging={[cssValues['margin-top'], cssValues['margin-right'], cssValues['margin-bottom'], cssValues['margin-left']]}
-        padding={[cssValues['padding-top'], cssValues['padding-right'], cssValues['padding-bottom'], cssValues['padding-left']]}
-        onMarginChange={() => {}}
-        onPaddingChange={() => {}}
+        marging={[finalCssValues['margin-top'], finalCssValues['margin-right'], finalCssValues['margin-bottom'], finalCssValues['margin-left']]}
+        padding={[finalCssValues['padding-top'], finalCssValues['padding-right'], finalCssValues['padding-bottom'], finalCssValues['padding-left']]}
+        onMarginChange={value => handleStyleChange('margin', value.join(' '))}
+        onPaddingChange={value => handleStyleChange('padding', value.join(' '))}
       />
     </>
-  ), [allClasses, classNames, cssValues, handleSetClassNames])
+  ), [allClasses, classNames, finalCssValues, handleSetClassNames, handleStyleChange])
 
   useRefetch({
     key: refetchKeys.cssClasses,

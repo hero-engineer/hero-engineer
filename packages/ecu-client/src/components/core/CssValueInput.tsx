@@ -1,9 +1,10 @@
-import { RefObject, useCallback, useState } from 'react'
+import { KeyboardEvent, RefObject, useCallback, useState } from 'react'
 import { Div, Input, Menu, MenuItem } from 'honorable'
 
 import { cssValueUnits } from '../../constants'
 
-import splitCssValue from '../../utils/splitCssValue'
+import splitSpacingValue from '../../utils/splitSpacingValue'
+import trimLeadingZeroes from '../../utils/trimLeadingZeroes'
 
 type CssValueInputPropsType = {
   value: string
@@ -12,14 +13,18 @@ type CssValueInputPropsType = {
 }
 
 function CssValueInput({ value, onChange, unitMenuRef }: CssValueInputPropsType) {
-  const [rawValue, unit = 'auto'] = splitCssValue(value)
+  const [rawValue, unit = 'auto'] = splitSpacingValue(value)
 
   const [isUnitMenuOpen, setIsUnitMenuOpen] = useState(false)
 
   const handleUnitClick = useCallback((nextUnit: string) => {
     setIsUnitMenuOpen(false)
-    onChange(nextUnit === 'auto' ? nextUnit : `${rawValue}${nextUnit}`)
-  }, [onChange, rawValue])
+    onChange(nextUnit === 'auto' ? nextUnit : `${unit === 'auto' ? 0 : rawValue}${nextUnit}`)
+  }, [onChange, rawValue, unit])
+
+  const handleInputChange = useCallback((event: any) => {
+    onChange(`${event.target.value === '0' ? event.target.value : trimLeadingZeroes(event.target.value)}${unit?.toString()}`)
+  }, [onChange, unit])
 
   const renderAdornment = useCallback(() => (
     <Div
@@ -69,9 +74,10 @@ function CssValueInput({ value, onChange, unitMenuRef }: CssValueInputPropsType)
         short
         type="number"
         value={rawValue === 'auto' ? '' : rawValue}
-        onChange={event => onChange(`${event.target.value}${unit?.toString()}`)}
+        onChange={handleInputChange}
         backgroundColor="white"
         endIcon={renderAdornment()}
+        disabled={unit === 'auto'}
         pr={0}
       />
       {renderUnitMenu()}

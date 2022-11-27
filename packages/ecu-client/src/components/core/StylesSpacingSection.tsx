@@ -37,6 +37,7 @@ function StylesSpacingSection({ marging, padding, onMarginChange, onPaddingChang
       <SpacingEditor
         allowNegativeValues
         title="Margin"
+        semanticName="margin"
         value={marging}
         height={baseHeight}
         onChange={onMarginChange}
@@ -45,6 +46,7 @@ function StylesSpacingSection({ marging, padding, onMarginChange, onPaddingChang
       >
         <SpacingEditor
           title="Padding"
+          semanticName="padding"
           value={padding}
           onChange={onPaddingChange}
           height={(borderSizeDivider - 2) * baseHeight / borderSizeDivider + spacingEditorPadding}

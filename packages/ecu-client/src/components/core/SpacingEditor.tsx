@@ -2,14 +2,18 @@ import { ReactNode, useCallback, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Div, Path, Svg, WithOutsideClick } from 'honorable'
 
+import { cssAttributesMap, spacingSemanticValues } from '../../constants'
 import { SpacingType, SpacingsType } from '../../types'
 
 import useRefresh from '../../hooks/useRefresh'
 
+import splitSpacingValue from '../../utils/splitSpacingValue'
+
 import SpacingEditorInput from './SpacingEditorInput'
 
 type SpacingEditorPropsType = {
-  title: string;
+  title: string
+  semanticName: string
   allowNegativeValues?: boolean
   value: SpacingsType
   onChange: (value: SpacingsType) => void
@@ -20,15 +24,9 @@ type SpacingEditorPropsType = {
   children?: ReactNode
 }
 
-const indexToSemanticValue = [
-  'top',
-  'left',
-  'right',
-  'bottom',
-]
-
 function SpacingEditor({
   title,
+  semanticName,
   allowNegativeValues,
   value,
   onChange,
@@ -63,12 +61,16 @@ function SpacingEditor({
   }, [])
 
   const handleInputOutsideClick = useCallback((event: MouseEvent | TouchEvent) => {
-    console.log('unitMenuRef.current', unitMenuRef.current)
+    const editedValue = value[editedIndex]
+    const cssAttributeName = `${semanticName}-${spacingSemanticValues[editedIndex]}`
 
+    if (!cssAttributesMap[cssAttributeName].isValueValid(editedValue)) {
+      onChange(prepareValue(editedIndex, cssAttributesMap[cssAttributeName].defaultValue))
+    }
     if (!rootRef.current?.contains(event.target as Node) || childrenRef.current?.contains(event.target as Node) || unitMenuRef.current?.contains(event.target as Node)) {
       setEditedIndex(-1)
     }
-  }, [])
+  }, [value, editedIndex, onChange, prepareValue, semanticName])
 
   return (
     <Div
@@ -270,7 +272,7 @@ function SpacingEditor({
           <SpacingEditorInput
             value={value[editedIndex]}
             onChange={x => onChange(prepareValue(editedIndex, x))}
-            title={`${title.toLowerCase()}-${indexToSemanticValue[editedIndex]}`}
+            title={`${semanticName}-${spacingSemanticValues[editedIndex]}`}
             allowNegativeValues={allowNegativeValues}
             unitMenuRef={unitMenuRef}
           />
