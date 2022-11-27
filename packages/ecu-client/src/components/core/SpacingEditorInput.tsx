@@ -1,4 +1,4 @@
-import { Ref, RefObject, forwardRef, useCallback, useEffect, useState } from 'react'
+import { Ref, RefObject, forwardRef, useCallback } from 'react'
 import { Button, Div, Slider } from 'honorable'
 import { CgUndo } from 'react-icons/cg'
 
@@ -17,13 +17,13 @@ type SpacingEditorInputPropsType = {
 
 const designTokens = [
   'auto',
-  '2',
-  '4',
-  '8',
-  '16',
-  '32',
-  '64',
-  '96',
+  '2px',
+  '4px',
+  '8px',
+  '16px',
+  '32px',
+  '64px',
+  '96px',
 ]
 
 function SpacingEditorInputRef({ title, value, onChange, allowNegativeValues, unitMenuRef }: SpacingEditorInputPropsType, ref: Ref<any>) {
@@ -37,14 +37,8 @@ function SpacingEditorInputRef({ title, value, onChange, allowNegativeValues, un
   }, [onChange, unit])
 
   const handleDesignTokenClick = useCallback((designToken: string) => {
-    if (designToken === 'auto') {
-      onChange(designToken)
-
-      return
-    }
-
-    onChange(`${designToken}${unit === 'auto' ? 'px' : unit}`)
-  }, [onChange, unit])
+    onChange(designToken)
+  }, [onChange])
 
   if (typeof value === 'undefined') return null
 

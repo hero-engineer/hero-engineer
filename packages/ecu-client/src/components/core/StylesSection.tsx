@@ -1,5 +1,6 @@
 import { memo, useCallback, useContext, useMemo } from 'react'
 import { Div } from 'honorable'
+import throttleAsynchronous from 'throttle-asynchronous'
 
 import { cssAttributesMap, refetchKeys, spacingSemanticValues } from '../../constants'
 
@@ -15,6 +16,8 @@ import useJsCssValues from '../../hooks/useJsCssValues'
 
 import filterClassesByClassNames from '../../utils/filterClassesByClassNames'
 import convertCssAttributeNameToJs from '../../utils/convertCssAttributeNameToJs'
+
+import { SpacingsType } from '../../types'
 
 import CssClassesSelector from './CssClassesSelector'
 import StylesSpacingSection from './StylesSpacingSection'
@@ -36,15 +39,26 @@ function StylesSection() {
   const cssValues = useCssValues(classes, cssAttributesMap)
   const finalCssValues = useJsCssValues(cssValues, updatedStyles, cssAttributesMap)
 
+  const margin = useMemo(() => spacingSemanticValues.map(spacingSemanticValue => `margin-${spacingSemanticValue}`).map(key => finalCssValues[key] ?? cssAttributesMap[key].defaultValue) as SpacingsType, [finalCssValues])
+  const padding = useMemo(() => spacingSemanticValues.map(spacingSemanticValue => `padding-${spacingSemanticValue}`).map(key => finalCssValues[key] ?? cssAttributesMap[key].defaultValue) as SpacingsType, [finalCssValues])
+
+  const handleCssUpdate = useCallback(() => {
+    console.log('handleCssUpdate')
+  }, [])
+
+  const throttledHandleCssUpdate = useMemo(() => throttleAsynchronous(handleCssUpdate, 1000), [handleCssUpdate])
+
   const handleSetClassNames = useCallback((classes: string[]) => {
     setClassName(classes.join(' '))
-  }, [setClassName])
+    setUpdatedStyles({})
+  }, [setClassName, setUpdatedStyles])
 
   const handleStyleChange = useCallback((attributeName: string, value: string) => {
     const jsAttributeName = convertCssAttributeNameToJs(attributeName)
 
     setUpdatedStyles(x => ({ ...x, [jsAttributeName]: value }))
-  }, [setUpdatedStyles])
+    throttledHandleCssUpdate()
+  }, [setUpdatedStyles, throttledHandleCssUpdate])
 
   const renderSection = useCallback(() => (
     <>
@@ -59,13 +73,13 @@ function StylesSection() {
         />
       </Div>
       <StylesSpacingSection
-        marging={[finalCssValues['margin-top'], finalCssValues['margin-right'], finalCssValues['margin-bottom'], finalCssValues['margin-left']]}
-        padding={[finalCssValues['padding-top'], finalCssValues['padding-right'], finalCssValues['padding-bottom'], finalCssValues['padding-left']]}
+        marging={margin}
+        padding={padding}
         onMarginChange={value => handleStyleChange('margin', value.join(' '))}
         onPaddingChange={value => handleStyleChange('padding', value.join(' '))}
       />
     </>
-  ), [allClasses, classNames, finalCssValues, handleSetClassNames, handleStyleChange])
+  ), [allClasses, classNames, margin, padding, handleSetClassNames, handleStyleChange])
 
   useRefetch({
     key: refetchKeys.cssClasses,

@@ -118,6 +118,7 @@ function SpacingEditor({
           <Div
             xflex="x5"
             position="absolute"
+            color={value[0].toString().startsWith(cssAttributesMap[`${semanticName}-top`].defaultValue.toString()) ? 'inherit' : 'primary'}
             top={-borderSize / 2}
             left={-borderSize / 2}
             right={-borderSize / 2}
@@ -140,6 +141,7 @@ function SpacingEditor({
           <Div
             xflex="x5"
             position="absolute"
+            color={value[1].toString().startsWith(cssAttributesMap[`${semanticName}-right`].defaultValue.toString()) ? 'inherit' : 'primary'}
             top={-borderSize / 2}
             left={-borderSize / 2}
             right={-borderSize / 2}
@@ -162,6 +164,7 @@ function SpacingEditor({
           <Div
             xflex="x5"
             position="absolute"
+            color={value[2].toString().startsWith(cssAttributesMap[`${semanticName}-bottom`].defaultValue.toString()) ? 'inherit' : 'primary'}
             top={-borderSize / 2}
             left={-borderSize / 2}
             right={-borderSize / 2}
@@ -184,6 +187,7 @@ function SpacingEditor({
           <Div
             xflex="x5"
             position="absolute"
+            color={value[3].toString().startsWith(cssAttributesMap[`${semanticName}-left`].defaultValue.toString()) ? 'inherit' : 'primary'}
             top={-borderSize / 2}
             left={-borderSize / 2}
             right={-borderSize / 2}
