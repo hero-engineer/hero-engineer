@@ -24,14 +24,28 @@ function CssClassesSelector({ allClasses, classNames, onClassesChange }: CssClas
     .filter(className => !classNames.includes(className))
   )], [allClasses, classNames])
 
+  const handleCreateClass = useCallback(async (className: string) => {
+
+  }, [])
+
+  const handleDeleteClass = useCallback(async (className: string) => {
+
+  }, [])
+
   const handleSelect = useCallback((selectedValue: any) => {
     setValue('')
     onClassesChange([...new Set(selectedValue === ecuCreateOption ? !value ? classNames : [...classNames, value] : [...classNames, selectedValue])])
-  }, [onClassesChange, classNames, value])
+
+    if (value && selectedValue === ecuCreateOption) {
+      handleCreateClass(value)
+    }
+  }, [onClassesChange, classNames, value, handleCreateClass])
 
   const handleDiscardClass = useCallback((className: string) => {
     onClassesChange(classNames.filter(c => c !== className))
-  }, [classNames, onClassesChange])
+
+    handleDeleteClass(className)
+  }, [classNames, onClassesChange, handleDeleteClass])
 
   return (
     <Div

@@ -33,7 +33,6 @@ function StylesSpacingSection({ marging, padding, onMarginChange, onPaddingChang
       title="Spacing"
       expanded={expanded}
       onExpand={setExpanded}
-      mt={0.5}
     >
       <SpacingEditor
         allowNegativeValues

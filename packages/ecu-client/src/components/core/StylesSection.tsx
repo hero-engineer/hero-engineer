@@ -21,22 +21,21 @@ import StylesSpacingSection from './StylesSpacingSection'
 // Displayed in the right panel
 function StylesSection() {
   const { hierarchy } = useContext(HierarchyContext)
-  const { className, updatedClassName, setUpdatedClassName } = useContext(CssClassesContext)
+  const { className, setClassName } = useContext(CssClassesContext)
 
   const [cssClassesQueryResult, refetchCssClassesQuery] = useQuery<CssClassesQueryDataType>({
     query: CssClassesQuery,
   })
 
-  const classNames = useMemo(() => (updatedClassName || className) ? (updatedClassName !== null ? updatedClassName : className).split(' ').map(c => c.trim()).filter(Boolean) : [], [updatedClassName, className])
+  const classNames = useMemo(() => className.split(' ').map(c => c.trim()).filter(Boolean), [className])
   const allClasses = useMemo(() => cssClassesQueryResult.data?.cssClasses || [], [cssClassesQueryResult.data])
   const classes = useMemo(() => filterClassesByClassNames(allClasses, classNames), [allClasses, classNames])
   const hasNoNodeSelected = useMemo(() => !hierarchy.length || hierarchy[hierarchy.length - 1].isRoot, [hierarchy])
   const cssValues = useCssValues(classes, cssAttributesMap)
 
-  console.log('cssValues', cssValues)
   const handleSetClassNames = useCallback((classes: string[]) => {
-    setUpdatedClassName(classes.join(' '))
-  }, [setUpdatedClassName])
+    setClassName(classes.join(' '))
+  }, [setClassName])
 
   const renderSection = useCallback(() => (
     <>

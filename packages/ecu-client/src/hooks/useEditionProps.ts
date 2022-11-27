@@ -64,7 +64,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   const { hierarchy } = useContext(HierarchyContext)
   const { dragAndDrop, setDragAndDrop } = useContext(DragAndDropContext)
   const { setContextualInformationState } = useContext(ContextualInformationContext)
-  const { setClassName, updatedClassName } = useContext(CssClassesContext)
+  const { className: updatedClassName, setClassName, updatedStyles } = useContext(CssClassesContext)
   const [isEdited, setIsEdited] = useState(false)
 
   const isSelected = useMemo(() => componentDelta >= 0 && hierarchyIds.length > 0 && !!hierarchyId && hierarchyIds[hierarchyIds.length - 1] === hierarchyId, [componentDelta, hierarchyIds, hierarchyId])
@@ -164,6 +164,8 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
         componentDelta: Math.min(0, componentDelta + 1),
       })
 
+      setClassName('')
+
       return
     }
 
@@ -186,6 +188,8 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
       // componentDelta > 0 means adjustment is necessary (see HierarchyBar)
       componentDelta: 1,
     })
+
+    setClassName('')
   }, [
     isEdited,
     setDragAndDrop,
@@ -195,6 +199,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
     hierarchy,
     componentAddress,
     setEditionSearchParams,
+    setClassName,
   ])
 
   const handleContextMenu = useCallback((event: MouseEvent) => {
@@ -208,7 +213,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   }, [isSelected, isComponentRoot, setContextualInformationState])
 
   const generateClassName = useCallback(() => {
-    let klassName = `ecu-edition-no-outline ${isSelected && updatedClassName !== null ? updatedClassName : className}`
+    let klassName = `ecu-edition-no-outline ${isSelected ? updatedClassName || className : className}`
 
     klassName = klassName.trim()
 
@@ -293,6 +298,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
       onClick: handleClick,
       onContextMenu: handleContextMenu,
       className: generateClassName(),
+      style: updatedStyles,
       'data-ecu': ecuId,
       'data-ecu-hierarchy': hierarchyId,
     },

@@ -1,7 +1,7 @@
 import '../../css/common.css'
 
 import { ViteHotContext } from 'vite/types/hot'
-import { PropsWithChildren, useCallback, useMemo, useState } from 'react'
+import { CSSProperties, PropsWithChildren, useCallback, useMemo, useState } from 'react'
 import { Provider } from 'urql'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -74,8 +74,8 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
   const contextualInformationContextValue = useMemo<ContextualInformationContextType>(() => ({ contextualInformationState, setContextualInformationState }), [contextualInformationState])
 
   const [className, setClassName] = useState('')
-  const [updatedClassName, setUpdatedClassName] = useState<string | null>(null)
-  const cssClassesContextValue = useMemo<CssClassesContextType>(() => ({ className, setClassName, updatedClassName, setUpdatedClassName }), [className, updatedClassName])
+  const [updatedStyles, setUpdatedStyles] = useState<CSSProperties>({})
+  const cssClassesContextValue = useMemo<CssClassesContextType>(() => ({ className, setClassName, updatedStyles, setUpdatedStyles }), [className, updatedStyles])
 
   return (
     <Provider value={client}>

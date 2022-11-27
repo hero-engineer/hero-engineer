@@ -1,15 +1,15 @@
-import { Dispatch, SetStateAction, createContext } from 'react'
+import { CSSProperties, Dispatch, SetStateAction, createContext } from 'react'
 
 export type CssClassesContextType = {
   className: string
   setClassName: Dispatch<SetStateAction<string>>
-  updatedClassName: string | null
-  setUpdatedClassName: Dispatch<SetStateAction<string | null>>
+  updatedStyles: CSSProperties
+  setUpdatedStyles: Dispatch<SetStateAction<CSSProperties>>
 }
 
 export default createContext<CssClassesContextType>({
   className: '',
   setClassName: () => {},
-  updatedClassName: null,
-  setUpdatedClassName: () => {},
+  updatedStyles: {},
+  setUpdatedStyles: () => {},
 })
