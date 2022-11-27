@@ -64,7 +64,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   const { hierarchy } = useContext(HierarchyContext)
   const { dragAndDrop, setDragAndDrop } = useContext(DragAndDropContext)
   const { setContextualInformationState } = useContext(ContextualInformationContext)
-  const { className: updatedClassName, setClassName, updatedStyles } = useContext(CssClassesContext)
+  const { className: updatedClassName, setClassName, updatedStyles, setUpdatedStyles } = useContext(CssClassesContext)
   const [isEdited, setIsEdited] = useState(false)
 
   const isSelected = useMemo(() => componentDelta >= 0 && hierarchyIds.length > 0 && !!hierarchyId && hierarchyIds[hierarchyIds.length - 1] === hierarchyId, [componentDelta, hierarchyIds, hierarchyId])
@@ -165,6 +165,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
       })
 
       setClassName('')
+      setUpdatedStyles({})
 
       return
     }
@@ -190,6 +191,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
     })
 
     setClassName('')
+    setUpdatedStyles({})
   }, [
     isEdited,
     setDragAndDrop,
@@ -200,6 +202,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
     componentAddress,
     setEditionSearchParams,
     setClassName,
+    setUpdatedStyles,
   ])
 
   const handleContextMenu = useCallback((event: MouseEvent) => {

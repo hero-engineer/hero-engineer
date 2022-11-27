@@ -3,11 +3,9 @@ import { createPortal } from 'react-dom'
 import { Div, Path, Svg, WithOutsideClick } from 'honorable'
 
 import { cssAttributesMap, spacingSemanticValues } from '../../constants'
-import { SpacingType, SpacingsType } from '../../types'
+import { CssValueType, SpacingType, SpacingsType } from '../../types'
 
 import useRefresh from '../../hooks/useRefresh'
-
-import splitSpacingValue from '../../utils/splitSpacingValue'
 
 import SpacingEditorInput from './SpacingEditorInput'
 
@@ -21,6 +19,7 @@ type SpacingEditorPropsType = {
   borderSize?: number
   offetHorizontal?: number
   inputMountNode: Element | null
+  workingCssValues: Record<string, CssValueType>
   children?: ReactNode
 }
 
@@ -34,6 +33,7 @@ function SpacingEditor({
   borderSize = 25,
   offetHorizontal = 0,
   inputMountNode,
+  workingCssValues,
   children,
 }: SpacingEditorPropsType) {
   const rootRef = useRef<HTMLDivElement>(null)
@@ -55,6 +55,7 @@ function SpacingEditor({
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const { width: svgWidth, height: svgHeight } = useMemo(() => rootRef.current?.getBoundingClientRect() ?? { width: 0, height: 0 }, [rootRef.current])
+  const workingCssValuesKeys = useMemo(() => Object.keys(workingCssValues), [workingCssValues])
 
   const handleHover = useCallback((index: number) => {
     setHoveredIndex(index)
@@ -118,7 +119,7 @@ function SpacingEditor({
           <Div
             xflex="x5"
             position="absolute"
-            color={value[0].toString().startsWith(cssAttributesMap[`${semanticName}-top`].defaultValue.toString()) ? 'inherit' : 'primary'}
+            color={workingCssValuesKeys.includes(`${semanticName}-top`) && value[0].toString() !== cssAttributesMap[`${semanticName}-top`].defaultValue.toString() ? 'primary' : 'inherit'}
             top={-borderSize / 2}
             left={-borderSize / 2}
             right={-borderSize / 2}
@@ -141,7 +142,7 @@ function SpacingEditor({
           <Div
             xflex="x5"
             position="absolute"
-            color={value[1].toString().startsWith(cssAttributesMap[`${semanticName}-right`].defaultValue.toString()) ? 'inherit' : 'primary'}
+            color={workingCssValuesKeys.includes(`${semanticName}-right`) && value[1].toString() !== cssAttributesMap[`${semanticName}-right`].defaultValue.toString() ? 'primary' : 'inherit'}
             top={-borderSize / 2}
             left={-borderSize / 2}
             right={-borderSize / 2}
@@ -164,7 +165,7 @@ function SpacingEditor({
           <Div
             xflex="x5"
             position="absolute"
-            color={value[2].toString().startsWith(cssAttributesMap[`${semanticName}-bottom`].defaultValue.toString()) ? 'inherit' : 'primary'}
+            color={workingCssValuesKeys.includes(`${semanticName}-bottom`) && value[2].toString() !== cssAttributesMap[`${semanticName}-bottom`].defaultValue.toString() ? 'primary' : 'inherit'}
             top={-borderSize / 2}
             left={-borderSize / 2}
             right={-borderSize / 2}
@@ -187,7 +188,7 @@ function SpacingEditor({
           <Div
             xflex="x5"
             position="absolute"
-            color={value[3].toString().startsWith(cssAttributesMap[`${semanticName}-left`].defaultValue.toString()) ? 'inherit' : 'primary'}
+            color={workingCssValuesKeys.includes(`${semanticName}-left`) && value[3].toString() !== cssAttributesMap[`${semanticName}-left`].defaultValue.toString() ? 'primary' : 'inherit'}
             top={-borderSize / 2}
             left={-borderSize / 2}
             right={-borderSize / 2}

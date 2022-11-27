@@ -315,6 +315,9 @@ export default mergeTheme(defaultTheme, {
         paddingLeft: 12,
         paddingRight: 12,
       },
+      ({ borderPrimary }: any) => borderPrimary && {
+        border: '1px solid primary',
+      },
       ({ secondary }: any) => secondary && {
         backgroundColor: 'transparent',
         color: 'primary',
@@ -363,6 +366,12 @@ export default mergeTheme(defaultTheme, {
       ({ slim }: any) => slim && {
         paddingTop: 0,
         paddingBottom: 0,
+      },
+      ({ tiny }: any) => tiny && {
+        paddingTop: 4,
+        paddingBottom: 4,
+        paddingLeft: 4,
+        paddingRight: 4,
       },
       ({ danger }: any) => danger && {
         backgroundColor: 'red.500',

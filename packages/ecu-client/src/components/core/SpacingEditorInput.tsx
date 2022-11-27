@@ -40,6 +40,10 @@ function SpacingEditorInputRef({ title, value, onChange, allowNegativeValues, un
     onChange(designToken)
   }, [onChange])
 
+  const handleReset = useCallback(() => {
+    onChange(0)
+  }, [onChange])
+
   if (typeof value === 'undefined') return null
 
   return (
@@ -64,6 +68,7 @@ function SpacingEditorInputRef({ title, value, onChange, allowNegativeValues, un
           xflex="x5"
           cursor="pointer"
           _hover={{ color: 'primary' }}
+          onClick={handleReset}
           p={0.25}
         >
           <CgUndo />

@@ -1,7 +1,8 @@
-import { useCallback, useMemo, useState } from 'react'
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Autocomplete, Div } from 'honorable'
+import { Autocomplete, Button, Div, Tooltip } from 'honorable'
 import { MdOutlineClose } from 'react-icons/md'
+import { BiCollapse } from 'react-icons/bi'
 
 import { CssClassType } from '../../types'
 
@@ -14,14 +15,19 @@ import useEditionSearchParams from '../../hooks/useEditionSearchParams'
 import { refetchKeys } from '../../constants'
 
 type CssClassesSelector = {
-  allClasses: CssClassType[],
+  allClasses: CssClassType[]
   classNames: string[]
+  currentClassIndex: number
+  setCurrentClassIndex: Dispatch<SetStateAction<number>>
+  combine: boolean
+  setCombine: Dispatch<SetStateAction<boolean>>
+  setLoading: Dispatch<SetStateAction<boolean>>
   onClassesChange: (classes: string[]) => void
 }
 
 const ecuCreateOption = `__ecu_create_option__${Math.random()}`
 
-function CssClassesSelector({ allClasses, classNames, onClassesChange }: CssClassesSelector) {
+function CssClassesSelector({ allClasses, classNames, onClassesChange, currentClassIndex, setCurrentClassIndex, combine, setCombine, setLoading }: CssClassesSelector) {
   const { componentAddress = '' } = useParams()
   const { hierarchyIds, componentDelta } = useEditionSearchParams()
 
@@ -39,15 +45,30 @@ function CssClassesSelector({ allClasses, classNames, onClassesChange }: CssClas
   const refetch = useRefetch()
 
   const handleCreateClass = useCallback(async (classNames: string[]) => {
+    if (!classNames.length) return
+
+    setLoading(true)
+
     await createCssClass({
       sourceComponentAddress: componentAddress,
       targetHierarchyId: hierarchyIds[hierarchyIds.length - 1],
       componentDelta,
       classNames,
+      combine,
     })
 
+    setLoading(false)
+
     refetch(refetchKeys.cssClasses)
-  }, [createCssClass, componentAddress, hierarchyIds, componentDelta, refetch])
+  }, [
+    setLoading,
+    createCssClass,
+    componentAddress,
+    hierarchyIds,
+    componentDelta,
+    combine,
+    refetch,
+  ])
 
   const handleSelect = useCallback((selectedValue: any) => {
     setValue('')
@@ -65,40 +86,73 @@ function CssClassesSelector({ allClasses, classNames, onClassesChange }: CssClas
     handleCreateClass(nextClassNames)
   }, [classNames, onClassesChange, handleCreateClass])
 
+  useEffect(() => {
+    if (!combine) return
+
+    handleCreateClass(classNames)
+  }, [combine, classNames, handleCreateClass])
+
   return (
     <Div
-      xflex="x41"
-      position="relative"
-      fontSize="0.85rem"
-      backgroundColor="white"
-      border="1px solid border"
-      borderRadius="medium"
+      xflex="x1"
+      width="100%"
       gap={0.25}
-      p={0.25}
     >
-      {classNames.map(className => (
-        <CssClassChip
-          key={className}
-          onDiscard={() => handleDiscardClass(className)}
+      {classNames.length > 1 && (
+        <Tooltip
+          label={`${combine ? 'Unchain' : 'Chain'} classes`}
+          placement="bottom"
         >
-          {className}
-        </CssClassChip>
-      ))}
-      <Autocomplete
-        bare
-        autoHighlight
-        placeholder={`${classNames.length ? 'Combine' : 'Choose'} or create class`}
-        options={options}
-        anyOption={{ value: ecuCreateOption, label: 'Create new class' }}
-        value={value}
-        onChange={setValue}
-        onSelect={handleSelect}
-        inputProps={{ bare: true, disabled: fetching }}
+          <Button
+            tiny
+            borderPrimary
+            secondary={!combine}
+            onClick={() => setCombine(x => !x)}
+            flexShrink={0}
+            fontSize="0.75rem"
+            mt="1px"
+          >
+            <BiCollapse />
+          </Button>
+        </Tooltip>
+      )}
+      <Div
+        xflex="x41"
         flexGrow
-        flexShrink={1}
-        position="initial" // Give the menu to the parent
+        position="relative"
+        fontSize="0.85rem"
+        backgroundColor="white"
+        border="1px solid border"
+        borderRadius="medium"
+        gap={0.25}
         p={0.25}
-      />
+      >
+        {classNames.map((className, i) => (
+          <CssClassChip
+            key={className}
+            onDiscard={() => handleDiscardClass(className)}
+            onSelect={() => setCurrentClassIndex(i)}
+            primary={combine || i === currentClassIndex}
+          >
+            {className}
+          </CssClassChip>
+        ))}
+        <Autocomplete
+          bare
+          autoHighlight
+          placeholder={`${classNames.length ? 'Add' : 'Choose'} or create class`}
+          options={options}
+          anyOption={{ value: ecuCreateOption, label: 'Create new class' }}
+          value={value}
+          onChange={setValue}
+          onSelect={handleSelect}
+          inputProps={{ bare: true, disabled: fetching }}
+          flexGrow
+          flexShrink={1}
+          position="initial" // Give the menu to the parent
+          p={0.25}
+        />
+      </Div>
     </Div>
   )
 }
@@ -106,28 +160,33 @@ function CssClassesSelector({ allClasses, classNames, onClassesChange }: CssClas
 type CssClassChipPropsType = {
   children: string
   onDiscard: () => void
+  onSelect: () => void
+  primary: boolean
 }
 
-function CssClassChip({ children, onDiscard }: CssClassChipPropsType) {
+function CssClassChip({ children, onDiscard, onSelect, primary }: CssClassChipPropsType) {
   return (
     <Div
       xflex="x4"
       flexShrink={0}
-      backgroundColor="primary"
-      color="white"
+      backgroundColor={primary ? 'primary' : 'darken(background-light, 10)'}
+      color={primary ? 'white' : 'text'}
       borderRadius="medium"
-      gap={0.25}
       p={0.25}
       minWidth={0}
       maxWidth="100%"
+      cursor="pointer"
     >
-      <Div ellipsis>
+      <Div
+        ellipsis
+        onClick={onSelect}
+        pr={0.25}
+      >
         {children}
       </Div>
       <Div
         xflex="x5"
         fontSize="0.75em"
-        cursor="pointer"
         onClick={onDiscard}
       >
         <MdOutlineClose />

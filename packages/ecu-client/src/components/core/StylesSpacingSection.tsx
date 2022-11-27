@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { Accordion } from 'honorable'
 
-import { SpacingsType } from '../../types'
+import { CssValueType, SpacingsType } from '../../types'
 
 import useRefresh from '../../hooks/useRefresh'
 import usePersistedState from '../../hooks/usePersistedState'
@@ -13,13 +13,14 @@ type StylesSpacingSectionPropsType = {
   padding: SpacingsType,
   onMarginChange: (value: SpacingsType) => void,
   onPaddingChange: (value: SpacingsType) => void,
+  workingCssValues: Record<string, CssValueType>
 }
 
 const baseHeight = 128 + 32 + 8 + 2
 const borderSizeDivider = 3.58
 const spacingEditorPadding = 8
 
-function StylesSpacingSection({ marging, padding, onMarginChange, onPaddingChange }: StylesSpacingSectionPropsType) {
+function StylesSpacingSection({ marging, padding, onMarginChange, onPaddingChange, workingCssValues }: StylesSpacingSectionPropsType) {
   const inputMountNodeRef = useRef<HTMLDivElement>(null)
 
   useRefresh()
@@ -44,6 +45,7 @@ function StylesSpacingSection({ marging, padding, onMarginChange, onPaddingChang
         onChange={onMarginChange}
         borderSize={baseHeight / borderSizeDivider - spacingEditorPadding}
         inputMountNode={inputMountNodeRef.current}
+        workingCssValues={workingCssValues}
       >
         <SpacingEditor
           title="Padding"
@@ -54,6 +56,7 @@ function StylesSpacingSection({ marging, padding, onMarginChange, onPaddingChang
           borderSize={baseHeight / borderSizeDivider - spacingEditorPadding}
           offetHorizontal={2}
           inputMountNode={inputMountNodeRef.current}
+          workingCssValues={workingCssValues}
         />
       </SpacingEditor>
       <div ref={inputMountNodeRef} />
