@@ -18,10 +18,15 @@ type CreateCssClassMutationArgsType = {
   targetHierarchyId: string
   componentDelta: number
   classNames: string[]
+  combine: boolean
 }
 
-async function createCssClassMutation(_: any, { sourceComponentAddress, targetHierarchyId, componentDelta, classNames }: CreateCssClassMutationArgsType): Promise<HistoryMutationReturnType<boolean>> {
+async function createCssClassMutation(_: any, { sourceComponentAddress, targetHierarchyId, componentDelta, classNames, combine }: CreateCssClassMutationArgsType): Promise<HistoryMutationReturnType<boolean>> {
   console.log('__createCssClassMutation__')
+
+  if (!classNames.length) {
+    throw new Error('classNames is empty')
+  }
 
   const componentNode = getNodeByAddress<FunctionNodeType>(sourceComponentAddress)
 
@@ -65,7 +70,9 @@ async function createCssClassMutation(_: any, { sourceComponentAddress, targetHi
 
   await processImpactedFileNodes(impacted)
 
-  await appendCssSelector(indexCssNode, classNames.map(x => `.${x}`).join(''))
+  const selectors = combine ? classNames.map(x => `.${x}`).join('') : `.${classNames[classNames.length - 1]}`
+
+  await appendCssSelector(indexCssNode, selectors)
 
   return {
     returnValue: true,

@@ -1,4 +1,5 @@
 import { gql } from 'apollo-server'
+import { GraphQLScalarType, Kind } from 'graphql'
 
 import componentQuery from './queries/componentQuery.js'
 import componentsQuery from './queries/componentsQuery.js'
@@ -25,12 +26,15 @@ import removeFileUnusedImportsMutation from './mutations/removeFileUnusedImports
 import updateGlobalTypesMutation from './mutations/updateGlobalTypesMutation.js'
 import updateComponentScreenshotMutation from './mutations/updateComponentScreenshotMutation.js'
 import createCssClassMutation from './mutations/createCssClassMutation.js'
+import updateCssClassMutation from './mutations/updateCssClassMutation.js'
 import installOrUpdatePackageMutation from './mutations/installOrUpdatePackageMutation.js'
 import undoMutation from './mutations/undoMutation.js'
 import redoMutation from './mutations/redoMutation.js'
 import pushMutation from './mutations/pushMutation.js'
 
 export const typeDefs = gql`
+
+  scalar CssValue
 
   enum ExportType {
     Default
@@ -107,7 +111,7 @@ export const typeDefs = gql`
 
   type CssAttribute {
     name: String!
-    value: String!
+    value: CssValue!
   }
 
   type CssClass {
@@ -168,7 +172,8 @@ export const typeDefs = gql`
     updateGlobalTypes(globalTypesFileContent: String!): Boolean!
     updateFileTypes(sourceFileAddress: String!, rawTypes: String!): Boolean!
 
-    createCssClass(sourceComponentAddress: String!, targetHierarchyId: String!, componentDelta: Int!, classNames: [String!]!): Boolean!
+    createCssClass(sourceComponentAddress: String!, targetHierarchyId: String!, componentDelta: Int!, classNames: [String!]!, combine: Boolean!): Boolean!
+    updateCssClass(classNames: [String!]!, attributesJson: String!): Boolean!
 
     installOrUpdatePackage(name: String!, version: String!, type: String!, shouldDelete: Boolean!): Boolean!
 
@@ -214,6 +219,7 @@ export const resolvers = {
     updateGlobalTypes: updateGlobalTypesMutation,
 
     createCssClass: createCssClassMutation,
+    updateCssClass: updateCssClassMutation,
 
     installOrUpdatePackage: installOrUpdatePackageMutation,
 
@@ -223,4 +229,21 @@ export const resolvers = {
     redo: redoMutation,
     push: pushMutation,
   },
+  CssValue: new GraphQLScalarType({
+    name: 'CssValue',
+    description: 'A string or number representing a CSS value',
+    serialize(value) {
+      return value
+    },
+    parseValue(value) {
+      return value
+    },
+    parseLiteral(ast) {
+      if (ast.kind === Kind.INT || ast.kind === Kind.FLOAT || ast.kind === Kind.STRING) {
+        return ast.value
+      }
+
+      return null
+    },
+  }),
 }

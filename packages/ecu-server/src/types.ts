@@ -129,9 +129,11 @@ export type PackageType = {
   type: 'dependencies' | 'devDependencies'
 }
 
+export type CssValueType = string | number
+
 export type CssAttributeType = {
   name: string
-  value: string
+  value: CssValueType
 }
 
 export type CssClassType = {
