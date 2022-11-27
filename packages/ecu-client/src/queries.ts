@@ -152,6 +152,7 @@ export type FileImportsQueryDataType = {
   }
 }
 
+// Unused
 export const IsComponentAcceptingChildrenQuery = `
   query ($sourceComponentAddress: String, $ecuComponentName: String) {
     isComponentAcceptingChildren (sourceComponentAddress: $sourceComponentAddress, ecuComponentName: $ecuComponentName)
@@ -324,6 +325,16 @@ export const UpdateFileDescriptionMutation = `
 
 export type UpdateFileDescriptionMutationDataType = {
   updateFileDescription: boolean
+}
+
+export const CreateCssClassMutation = `
+  mutation ($sourceComponentAddress: String!, $targetHierarchyId: String!, $componentDelta: Int! $classNames: [String!]!) {
+    createCssClass (sourceComponentAddress: $sourceComponentAddress, targetHierarchyId: $targetHierarchyId, componentDelta: $componentDelta, classNames: $classNames)
+  }
+`
+
+export type CreateCssClassMutationDataType = {
+  createCssClass: boolean
 }
 
 export const InstallOrUpdatePackageMutation = `

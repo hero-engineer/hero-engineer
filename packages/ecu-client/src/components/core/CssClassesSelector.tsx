@@ -1,10 +1,17 @@
 import { useCallback, useMemo, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { Autocomplete, Div } from 'honorable'
 import { MdOutlineClose } from 'react-icons/md'
 
 import { CssClassType } from '../../types'
 
+import useMutation from '../../hooks/useMutation'
+import useRefetch from '../../hooks/useRefetch'
+
 import extractClassNamesFromSelector from '../../utils/extractClassNamesFromSelector'
+import { CreateCssClassMutation, CreateCssClassMutationDataType } from '../../queries'
+import useEditionSearchParams from '../../hooks/useEditionSearchParams'
+import { refetchKeys } from '../../constants'
 
 type CssClassesSelector = {
   allClasses: CssClassType[],
@@ -15,7 +22,12 @@ type CssClassesSelector = {
 const ecuCreateOption = `__ecu_create_option__${Math.random()}`
 
 function CssClassesSelector({ allClasses, classNames, onClassesChange }: CssClassesSelector) {
+  const { componentAddress = '' } = useParams()
+  const { hierarchyIds, componentDelta } = useEditionSearchParams()
+
   const [value, setValue] = useState('')
+
+  const [{ fetching }, createCssClass] = useMutation<CreateCssClassMutationDataType>(CreateCssClassMutation)
 
   const options = useMemo(() => [...new Set(
     allClasses
@@ -24,28 +36,34 @@ function CssClassesSelector({ allClasses, classNames, onClassesChange }: CssClas
     .filter(className => !classNames.includes(className))
   )], [allClasses, classNames])
 
-  const handleCreateClass = useCallback(async (className: string) => {
+  const refetch = useRefetch()
 
-  }, [])
+  const handleCreateClass = useCallback(async (classNames: string[]) => {
+    await createCssClass({
+      sourceComponentAddress: componentAddress,
+      targetHierarchyId: hierarchyIds[hierarchyIds.length - 1],
+      componentDelta,
+      classNames,
+    })
 
-  const handleDeleteClass = useCallback(async (className: string) => {
-
-  }, [])
+    refetch(refetchKeys.cssClasses)
+  }, [createCssClass, componentAddress, hierarchyIds, componentDelta, refetch])
 
   const handleSelect = useCallback((selectedValue: any) => {
     setValue('')
-    onClassesChange([...new Set(selectedValue === ecuCreateOption ? !value ? classNames : [...classNames, value] : [...classNames, selectedValue])])
 
-    if (value && selectedValue === ecuCreateOption) {
-      handleCreateClass(value)
-    }
+    const nextClassNames = [...new Set(selectedValue === ecuCreateOption ? !value ? classNames : [...classNames, value] : [...classNames, selectedValue])]
+
+    onClassesChange(nextClassNames)
+    handleCreateClass(nextClassNames)
   }, [onClassesChange, classNames, value, handleCreateClass])
 
   const handleDiscardClass = useCallback((className: string) => {
-    onClassesChange(classNames.filter(c => c !== className))
+    const nextClassNames = classNames.filter(c => c !== className)
 
-    handleDeleteClass(className)
-  }, [classNames, onClassesChange, handleDeleteClass])
+    onClassesChange(nextClassNames)
+    handleCreateClass(nextClassNames)
+  }, [classNames, onClassesChange, handleCreateClass])
 
   return (
     <Div
@@ -75,7 +93,7 @@ function CssClassesSelector({ allClasses, classNames, onClassesChange }: CssClas
         value={value}
         onChange={setValue}
         onSelect={handleSelect}
-        inputProps={{ bare: true }}
+        inputProps={{ bare: true, disabled: fetching }}
         flexGrow
         flexShrink={1}
         position="initial" // Give the menu to the parent
