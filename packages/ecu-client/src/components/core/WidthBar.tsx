@@ -20,28 +20,32 @@ function WidthBar() {
 
     for (let i = 0; i < rootWidth; i += smallIncrement) {
       ticks.push(
-        <Div
+        <div
           key={i}
-          flexShrink={0}
-          width={tickWidth}
-          height={i % largeIncrement === 0 ? '100%' : i % (2 * smallIncrement) === 0 ? '33.333%' : '16.666%'}
-          backgroundColor="grey.500"
-          marginRight={smallIncrement - tickWidth}
+          style={{
+            flexShrink: 0,
+            width: tickWidth,
+            height: i % largeIncrement === 0 ? '100%' : i % (2 * smallIncrement) === 0 ? '33.333%' : '16.666%',
+            backgroundColor: 'darkslategray',
+            marginRight: smallIncrement - tickWidth,
+          }}
         />
       )
 
       if (i % largeIncrement === 0) {
         ticks.push(
-          <Div
+          <div
             key={`${i}label`}
-            position="absolute"
-            top={2}
-            left={i + 4}
-            flexShrink={0}
-            fontSize="0.666rem"
+            style={{
+              position: 'absolute',
+              top: 2,
+              left: i + 4,
+              flexShrink: 0,
+              fontSize: '0.666rem',
+            }}
           >
             {i}
-          </Div>
+          </div>
         )
       }
     }

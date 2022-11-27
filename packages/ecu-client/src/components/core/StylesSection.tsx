@@ -121,6 +121,17 @@ function StylesSection() {
     </Div>
   ), [])
 
+  const renderNoSelectedClassNames = useCallback(() => (
+    <Div
+      color="text-light"
+      fontSize="0.85rem"
+      mt={0.5}
+      px={0.5}
+    >
+      Select a class to edit its styles
+    </Div>
+  ), [])
+
   const renderSubSections = useCallback(() => (
     <Div position="relative">
       <StylesSpacingSection
@@ -164,7 +175,7 @@ function StylesSection() {
           onClassesChange={handleSetClassNames}
         />
       </Div>
-      {!classNames.length ? renderNoClassNames() : renderSubSections()}
+      {!classNames.length ? renderNoClassNames() : !selectedClassNames.length ? renderNoSelectedClassNames() : renderSubSections()}
     </>
   ), [
     allClasses,
@@ -172,6 +183,7 @@ function StylesSection() {
     selectedClassNames,
     handleSetClassNames,
     renderNoClassNames,
+    renderNoSelectedClassNames,
     renderSubSections,
   ])
 
