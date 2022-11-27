@@ -46,9 +46,6 @@ function StylesSection() {
     setUpdatedStyles(x => ({ ...x, [jsAttributeName]: value }))
   }, [setUpdatedStyles])
 
-  console.log('finalCssValues', finalCssValues)
-  console.log('updatedStyles', updatedStyles)
-
   const renderSection = useCallback(() => (
     <>
       <Div

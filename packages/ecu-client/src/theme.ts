@@ -270,6 +270,9 @@ export default mergeTheme(defaultTheme, {
         paddingLeft: 8,
         paddingRight: 8,
       },
+      ({ smallTitle }: any) => smallTitle && {
+        fontSize: '0.85rem',
+      },
     ],
     Children: [
       ({ ghost }: any) => ghost && {

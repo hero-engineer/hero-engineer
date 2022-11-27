@@ -1,4 +1,4 @@
-import { Ref, RefObject, forwardRef, useState } from 'react'
+import { Ref, RefObject, forwardRef, useCallback, useEffect, useState } from 'react'
 import { Button, Div, Slider } from 'honorable'
 import { CgUndo } from 'react-icons/cg'
 
@@ -27,9 +27,24 @@ const designTokens = [
 ]
 
 function SpacingEditorInputRef({ title, value, onChange, allowNegativeValues, unitMenuRef }: SpacingEditorInputPropsType, ref: Ref<any>) {
-  const [rawValue] = splitSpacingValue(value)
+  const [rawValue, unit] = splitSpacingValue(value)
   const numericValue = parseInt(rawValue)
-  const [sliderValue, setSliderValue] = useState(numericValue === numericValue ? numericValue : 0)
+
+  const handleSliderChange = useCallback((_event: any, value: number) => {
+    if (unit === 'auto') return
+
+    onChange(`${value}${unit}`)
+  }, [onChange, unit])
+
+  const handleDesignTokenClick = useCallback((designToken: string) => {
+    if (designToken === 'auto') {
+      onChange(designToken)
+
+      return
+    }
+
+    onChange(`${designToken}${unit === 'auto' ? 'px' : unit}`)
+  }, [onChange, unit])
 
   if (typeof value === 'undefined') return null
 
@@ -65,8 +80,9 @@ function SpacingEditorInputRef({ title, value, onChange, allowNegativeValues, un
           max={128}
           step={1}
           knobSize={12}
-          value={sliderValue}
-          onChange={(_event, value) => setSliderValue(value)}
+          defaultValue={numericValue === numericValue ? numericValue : 0}
+          onChange={handleSliderChange}
+          disabled={unit === 'auto'}
         />
         <CssValueInput
           unitMenuRef={unitMenuRef}
@@ -85,6 +101,7 @@ function SpacingEditorInputRef({ title, value, onChange, allowNegativeValues, un
           <Button
             key={designToken}
             slim
+            onClick={() => handleDesignTokenClick(designToken)}
             py={0.25 / 2}
           >
             {designToken}

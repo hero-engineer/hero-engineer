@@ -30,6 +30,7 @@ function StylesSpacingSection({ marging, padding, onMarginChange, onPaddingChang
     <Accordion
       ghost
       smallPadding
+      smallTitle
       title="Spacing"
       expanded={expanded}
       onExpand={setExpanded}
