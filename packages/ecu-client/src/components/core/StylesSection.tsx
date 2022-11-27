@@ -18,8 +18,9 @@ import useThrottleAsynchronous from '../../hooks/useThrottleAsynchronous'
 import filterClassesByClassNames from '../../utils/filterClassesByClassNames'
 import convertCssAttributeNameToJs from '../../utils/convertCssAttributeNameToJs'
 import removeCssDefaults from '../../utils/removeCssDefaults'
+import areSelectorsEqual from '../../utils/areSelectorsEqual'
 
-import { SpacingsType } from '../../types'
+import { CssValueType, SpacingsType } from '../../types'
 
 import CssClassesSelector from './CssClassesSelector'
 import StylesSpacingSection from './StylesSpacingSection'
@@ -47,13 +48,18 @@ function StylesSection() {
   const [loading, setLoading] = useState(false)
 
   const allClasses = useMemo(() => cssClassesQueryResult.data?.cssClasses || [], [cssClassesQueryResult.data])
+  const combinedClass = useMemo(() => {
+    if (!combine) return null
+
+    const selector = classNames.map(className => `.${className}`).join('')
+
+    return allClasses.find(c => areSelectorsEqual(c.selector, selector))!
+  }, [combine, allClasses, classNames])
   const classes = useMemo(() => filterClassesByClassNames(allClasses, classNames), [allClasses, classNames])
-  const currentClass = useMemo(() => filterClassesByClassNames(allClasses, combine ? classNames : [classNames[currentClassIndex]]), [allClasses, combine, classNames, currentClassIndex])
+  const currentClass = useMemo(() => combine && combinedClass ? [combinedClass] : filterClassesByClassNames(classes, [classNames[currentClassIndex]]), [classes, combine, combinedClass, classNames, currentClassIndex])
   const hasNoNodeSelected = useMemo(() => !hierarchy.length || hierarchy[hierarchy.length - 1].isRoot, [hierarchy])
-  const cssValues = useCssValues(classes, cssAttributesMap)
-  const currentCssValues = useCssValues(currentClass, cssAttributesMap)
-  const finalCssValues = useJsCssValues(cssValues, updatedStyles, cssAttributesMap)
-  const workingCssValues = useJsCssValues(currentCssValues, updatedStyles, cssAttributesMap)
+  const finalCssValues = useJsCssValues(useCssValues(classes, cssAttributesMap), updatedStyles, cssAttributesMap)
+  const workingCssValues = useJsCssValues(useCssValues(currentClass, cssAttributesMap), updatedStyles, cssAttributesMap)
 
   const margin = useMemo(() => spacingSemanticValues.map(spacingSemanticValue => `margin-${spacingSemanticValue}`).map(key => finalCssValues[key] ?? cssAttributesMap[key].defaultValue) as SpacingsType, [finalCssValues])
   const padding = useMemo(() => spacingSemanticValues.map(spacingSemanticValue => `padding-${spacingSemanticValue}`).map(key => finalCssValues[key] ?? cssAttributesMap[key].defaultValue) as SpacingsType, [finalCssValues])
@@ -91,7 +97,7 @@ function StylesSection() {
     setUpdatedStyles({})
   }, [setClassName, setUpdatedStyles])
 
-  const handleStyleChange = useCallback((attributeName: string, value: string) => {
+  const handleStyleChange = useCallback((attributeName: string, value: CssValueType) => {
     const jsAttributeName = convertCssAttributeNameToJs(attributeName)
 
     setUpdatedStyles(x => ({ ...x, [jsAttributeName]: value }))
@@ -123,8 +129,8 @@ function StylesSection() {
       <StylesSpacingSection
         marging={margin}
         padding={padding}
-        onMarginChange={value => handleStyleChange('margin', value.join(' '))}
-        onPaddingChange={value => handleStyleChange('padding', value.join(' '))}
+        onMarginChange={(atrributeName, value) => handleStyleChange(atrributeName, value)}
+        onPaddingChange={(atrributeName, value) => handleStyleChange('padding', value)}
         workingCssValues={workingCssValues}
       />
       {loading && (

@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { Accordion } from 'honorable'
 
-import { CssValueType, SpacingsType } from '../../types'
+import { CssValueType, SpacingType, SpacingsType } from '../../types'
 
 import useRefresh from '../../hooks/useRefresh'
 import usePersistedState from '../../hooks/usePersistedState'
@@ -11,8 +11,8 @@ import SpacingEditor from './SpacingEditor'
 type StylesSpacingSectionPropsType = {
   marging: SpacingsType,
   padding: SpacingsType,
-  onMarginChange: (value: SpacingsType) => void,
-  onPaddingChange: (value: SpacingsType) => void,
+  onMarginChange: (attributeName: string, value: SpacingType) => void,
+  onPaddingChange: (attributeName: string, value: SpacingType) => void,
   workingCssValues: Record<string, CssValueType>
 }
 
