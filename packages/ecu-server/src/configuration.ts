@@ -22,6 +22,8 @@ export const ecuHistoryFileName = 'ecu-history.json'
 
 export const globalTypesFileRelativePath = 'src/types.ts'
 
+export const indexCssFileRelativePath = 'src/index.css'
+
 export const allowedExtensions = ['ts', 'tsx', 'css']
 
 export const ecuDecoratorsRelativeLocation = 'src/decorators'

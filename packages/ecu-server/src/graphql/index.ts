@@ -11,6 +11,7 @@ import isComponentAcceptingChildrenQuery from './queries/isComponentAcceptingChi
 import packagesQuery from './queries/packagesQuery.js'
 import packagesUpdatesQuery from './queries/packagesUpdatesQuery.js'
 import undoRedoMetadataQuery from './queries/undoRedoMetdataQuery.js'
+
 import createComponentMutation from './mutations/createComponentMutation.js'
 import addComponentMutation from './mutations/addComponentMutation.js'
 import deleteComponentMutation from './mutations/deleteComponentMutation.js'
@@ -23,6 +24,7 @@ import updateFileTypesMutation from './mutations/updateFileTypesMutation.js'
 import removeFileUnusedImportsMutation from './mutations/removeFileUnusedImportsMutation.js'
 import updateGlobalTypesMutation from './mutations/updateGlobalTypesMutation.js'
 import updateComponentScreenshotMutation from './mutations/updateComponentScreenshotMutation.js'
+import createCssClassMutation from './mutations/createCssClassMutation.js'
 import installOrUpdatePackageMutation from './mutations/installOrUpdatePackageMutation.js'
 import undoMutation from './mutations/undoMutation.js'
 import redoMutation from './mutations/redoMutation.js'
@@ -152,9 +154,9 @@ export const typeDefs = gql`
 
   type Mutation {
     createComponent(name: String!): CreateComponentReturnValue!
-    addComponent(sourceComponentAddress: String!, targetComponentAddress: String!, targetHierarchyId: String!, hierarchyPosition: HierarchyPosition!, componentDelta: Int!): FunctionNode!
-    deleteComponent(sourceComponentAddress: String!, targetHierarchyId: String!, componentDelta: Int!): FunctionNode!
-    moveComponent(sourceComponentAddress: String!, sourceHierarchyId: String!, targetHierarchyId: String!, hierarchyPosition: HierarchyPosition!): [FunctionNode!]!
+    addComponent(sourceComponentAddress: String!, targetComponentAddress: String!, targetHierarchyId: String!, hierarchyPosition: HierarchyPosition!, componentDelta: Int!): Boolean!
+    deleteComponent(sourceComponentAddress: String!, targetHierarchyId: String!, componentDelta: Int!): Boolean!
+    moveComponent(sourceComponentAddress: String!, sourceHierarchyId: String!, targetHierarchyId: String!, hierarchyPosition: HierarchyPosition!): Boolean!
 
     updateHierarchyDisplayName(sourceComponentAddress: String!, targetHierarchyId: String!, componentDelta: Int!, value: String!): Boolean!
 
@@ -165,6 +167,8 @@ export const typeDefs = gql`
     removeFileUnusedImports(sourceFileAddress: String!): Boolean!
     updateGlobalTypes(globalTypesFileContent: String!): Boolean!
     updateFileTypes(sourceFileAddress: String!, rawTypes: String!): Boolean!
+
+    createCssClass(sourceComponentAddress: String!, targetHierarchyId: String!, componentDelta: Int!, classNames: [String!]!): Boolean!
 
     installOrUpdatePackage(name: String!, version: String!, type: String!, shouldDelete: Boolean!): Boolean!
 
@@ -208,6 +212,8 @@ export const resolvers = {
     removeFileUnusedImports: removeFileUnusedImportsMutation,
     updateFileTypes: updateFileTypesMutation,
     updateGlobalTypes: updateGlobalTypesMutation,
+
+    createCssClass: createCssClassMutation,
 
     installOrUpdatePackage: installOrUpdatePackageMutation,
 

@@ -1,3 +1,6 @@
+import { NodePath } from '@babel/traverse'
+import { JSXElement, JSXIdentifier } from '@babel/types'
+
 import { FunctionNodeType, HistoryMutationReturnType } from '../../types.js'
 
 import { getNodeByAddress } from '../../graph/index.js'
@@ -14,7 +17,7 @@ type DeleteComponentMutationArgsType = {
   componentDelta: number
 }
 
-async function deleteComponentMutation(_: any, { sourceComponentAddress, targetHierarchyId, componentDelta }: DeleteComponentMutationArgsType): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
+async function deleteComponentMutation(_: any, { sourceComponentAddress, targetHierarchyId, componentDelta }: DeleteComponentMutationArgsType): Promise<HistoryMutationReturnType<boolean>> {
   console.log('__deleteComponentMutation__')
 
   const componentNode = getNodeByAddress<FunctionNodeType>(sourceComponentAddress)
@@ -27,19 +30,23 @@ async function deleteComponentMutation(_: any, { sourceComponentAddress, targetH
     throw new Error('Positive componentDelta not supported')
   }
 
-  function onSuccess(paths: any[]) {
+  let name = ''
+
+  function onSuccess(paths: NodePath<JSXElement>[]) {
     const finalPath = applyComponentDelta(paths, componentDelta)
+
+    name = (finalPath.node.openingElement.name as JSXIdentifier).name
 
     finalPath.remove()
   }
 
   const { impacted } = traverseComponent(sourceComponentAddress, targetHierarchyId, onSuccess)
 
-  const { impactedComponentNode } = await processImpactedFileNodes(impacted)
+  await processImpactedFileNodes(impacted)
 
   return {
-    returnValue: impactedComponentNode,
-    description: `Delete component ${impactedComponentNode?.payload.name} in ${componentNode.payload.name}`,
+    returnValue: true,
+    description: `Delete component ${name} in ${componentNode.payload.name}`,
   }
 }
 
