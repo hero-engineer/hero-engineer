@@ -43,20 +43,19 @@ function StylesSection() {
 
   const classNames = useMemo(() => className.split(' ').map(c => c.trim()).filter(Boolean), [className])
 
-  const [currentClassIndex, setCurrentClassIndex] = useState(classNames.length - 1)
-  const [combine, setCombine] = useState(false)
+  const [selectedClassNames, setSelectedClassNames] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
 
   const allClasses = useMemo(() => cssClassesQueryResult.data?.cssClasses || [], [cssClassesQueryResult.data])
   const combinedClass = useMemo(() => {
-    if (!combine) return null
+    if (!selectedClassNames.length) return null
 
-    const selector = classNames.map(className => `.${className}`).join('')
+    const selector = selectedClassNames.map(className => `.${className}`).join('')
 
     return allClasses.find(c => areSelectorsEqual(c.selector, selector))!
-  }, [combine, allClasses, classNames])
+  }, [selectedClassNames, allClasses])
   const classes = useMemo(() => filterClassesByClassNames(allClasses, classNames), [allClasses, classNames])
-  const currentClass = useMemo(() => combine && combinedClass ? [combinedClass] : filterClassesByClassNames(classes, [classNames[currentClassIndex]]), [classes, combine, combinedClass, classNames, currentClassIndex])
+  const currentClass = useMemo(() => selectedClassNames.length && combinedClass ? [combinedClass] : filterClassesByClassNames(classes, selectedClassNames), [classes, selectedClassNames, combinedClass])
   const hasNoNodeSelected = useMemo(() => !hierarchy.length || hierarchy[hierarchy.length - 1].isRoot, [hierarchy])
   const finalCssValues = useJsCssValues(useCssValues(classes, cssAttributesMap), updatedStyles, cssAttributesMap)
   const workingCssValues = useJsCssValues(useCssValues(currentClass, cssAttributesMap), updatedStyles, cssAttributesMap)
@@ -68,10 +67,9 @@ function StylesSection() {
     if (!classNames.length) return
 
     const attributes = Object.entries(removeCssDefaults(workingCssValues, cssAttributesMap)).map(([name, value]) => ({ name, value }))
-    const workingClassNames = combine ? classNames : [classNames[currentClassIndex]]
 
     await updateCssClass({
-      classNames: workingClassNames,
+      classNames: selectedClassNames,
       attributesJson: JSON.stringify(attributes),
     })
 
@@ -83,9 +81,8 @@ function StylesSection() {
   }, [
     updateCssClass,
     workingCssValues,
-    combine,
+    selectedClassNames,
     classNames,
-    currentClassIndex,
     setUpdatedStyles,
     refetch,
   ])
@@ -161,10 +158,8 @@ function StylesSection() {
         <CssClassesSelector
           allClasses={allClasses}
           classNames={classNames}
-          currentClassIndex={currentClassIndex}
-          setCurrentClassIndex={setCurrentClassIndex}
-          combine={combine}
-          setCombine={setCombine}
+          selectedClassNames={selectedClassNames}
+          setSelectedClassNames={setSelectedClassNames}
           setLoading={setLoading}
           onClassesChange={handleSetClassNames}
         />
@@ -174,12 +169,10 @@ function StylesSection() {
   ), [
     allClasses,
     classNames,
-    combine,
+    selectedClassNames,
     handleSetClassNames,
     renderNoClassNames,
     renderSubSections,
-    currentClassIndex,
-    setCurrentClassIndex,
   ])
 
   useEffect(() => {
@@ -191,7 +184,8 @@ function StylesSection() {
   }, [updatedStyles])
 
   useEffect(() => {
-    setCurrentClassIndex(classNames.length - 1)
+    console.log('effect', classNames)
+    setSelectedClassNames(classNames.length ? [classNames[classNames.length - 1]] : [])
   }, [classNames])
 
   return (

@@ -1,8 +1,7 @@
 import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Autocomplete, Button, Div, Tooltip } from 'honorable'
+import { Autocomplete, Div } from 'honorable'
 import { MdOutlineClose } from 'react-icons/md'
-import { BiCollapse } from 'react-icons/bi'
 
 import { CssClassType } from '../../types'
 
@@ -17,17 +16,15 @@ import { refetchKeys } from '../../constants'
 type CssClassesSelector = {
   allClasses: CssClassType[]
   classNames: string[]
-  currentClassIndex: number
-  setCurrentClassIndex: Dispatch<SetStateAction<number>>
-  combine: boolean
-  setCombine: Dispatch<SetStateAction<boolean>>
+  selectedClassNames: string[]
+  setSelectedClassNames: Dispatch<SetStateAction<string[]>>
   setLoading: Dispatch<SetStateAction<boolean>>
   onClassesChange: (classes: string[]) => void
 }
 
 const ecuCreateOption = `__ecu_create_option__${Math.random()}`
 
-function CssClassesSelector({ allClasses, classNames, onClassesChange, currentClassIndex, setCurrentClassIndex, combine, setCombine, setLoading }: CssClassesSelector) {
+function CssClassesSelector({ allClasses, classNames, onClassesChange, selectedClassNames, setSelectedClassNames, setLoading }: CssClassesSelector) {
   const { componentAddress = '' } = useParams()
   const { hierarchyIds, componentDelta } = useEditionSearchParams()
 
@@ -54,7 +51,7 @@ function CssClassesSelector({ allClasses, classNames, onClassesChange, currentCl
       targetHierarchyId: hierarchyIds[hierarchyIds.length - 1],
       componentDelta,
       classNames,
-      combine,
+      combine: selectedClassNames.length > 1,
     })
 
     setLoading(false)
@@ -66,7 +63,7 @@ function CssClassesSelector({ allClasses, classNames, onClassesChange, currentCl
     componentAddress,
     hierarchyIds,
     componentDelta,
-    combine,
+    selectedClassNames,
     refetch,
   ])
 
@@ -86,73 +83,63 @@ function CssClassesSelector({ allClasses, classNames, onClassesChange, currentCl
     handleCreateClass(nextClassNames)
   }, [classNames, onClassesChange, handleCreateClass])
 
-  useEffect(() => {
-    if (!combine) return
+  const handleChipSelect = useCallback((className: string) => {
+    setSelectedClassNames(selectedClassNames => {
+      if (selectedClassNames.includes(className)) {
+        return selectedClassNames.filter(c => c !== className)
+      }
 
-    handleCreateClass(classNames)
-  }, [combine, classNames, handleCreateClass])
+      // Keep sort order
+      const nextSelectedClassNames = [...classNames]
+
+      return nextSelectedClassNames.filter(x => selectedClassNames.includes(x) || x === className)
+    })
+  }, [setSelectedClassNames, classNames])
+
+  // Create chained class
+  useEffect(() => {
+    if (selectedClassNames.length < 2) return
+
+    handleCreateClass(selectedClassNames)
+  }, [selectedClassNames, handleCreateClass])
 
   return (
     <Div
-      xflex="x1"
-      width="100%"
+      xflex="x41"
+      flexGrow
+      position="relative"
+      fontSize="0.85rem"
+      backgroundColor="white"
+      border="1px solid border"
+      borderRadius="medium"
       gap={0.25}
+      p={0.25}
     >
-      {classNames.length > 1 && (
-        <Tooltip
-          label={`${combine ? 'Unchain' : 'Chain'} classes`}
-          placement="bottom"
+      {classNames.map(className => (
+        <CssClassChip
+          key={className}
+          onDiscard={() => handleDiscardClass(className)}
+          onSelect={() => handleChipSelect(className)}
+          primary={selectedClassNames.includes(className)}
         >
-          <Button
-            tiny
-            borderPrimary
-            secondary={!combine}
-            onClick={() => setCombine(x => !x)}
-            flexShrink={0}
-            fontSize="0.75rem"
-            mt="1px"
-          >
-            <BiCollapse />
-          </Button>
-        </Tooltip>
-      )}
-      <Div
-        xflex="x41"
+          {className}
+        </CssClassChip>
+      ))}
+      <Autocomplete
+        bare
+        autoHighlight
+        placeholder={`${classNames.length ? 'Add' : 'Choose'} or create class`}
+        options={options}
+        anyOption={{ value: ecuCreateOption, label: 'Create new class' }}
+        value={value}
+        onChange={setValue}
+        onSelect={handleSelect}
+        inputProps={{ bare: true, disabled: fetching }}
         flexGrow
-        position="relative"
-        fontSize="0.85rem"
-        backgroundColor="white"
-        border="1px solid border"
-        borderRadius="medium"
-        gap={0.25}
+        flexShrink={1}
+        position="initial" // Give the menu to the parent
         p={0.25}
-      >
-        {classNames.map((className, i) => (
-          <CssClassChip
-            key={className}
-            onDiscard={() => handleDiscardClass(className)}
-            onSelect={() => setCurrentClassIndex(i)}
-            primary={combine || i === currentClassIndex}
-          >
-            {className}
-          </CssClassChip>
-        ))}
-        <Autocomplete
-          bare
-          autoHighlight
-          placeholder={`${classNames.length ? 'Add' : 'Choose'} or create class`}
-          options={options}
-          anyOption={{ value: ecuCreateOption, label: 'Create new class' }}
-          value={value}
-          onChange={setValue}
-          onSelect={handleSelect}
-          inputProps={{ bare: true, disabled: fetching }}
-          flexGrow
-          flexShrink={1}
-          position="initial" // Give the menu to the parent
-          p={0.25}
-        />
-      </Div>
+      />
     </Div>
   )
 }
