@@ -222,7 +222,7 @@ function SpacingEditor({
           onMouseEnter={() => handleHover(0)}
           onMouseLeave={() => handleHover(-1)}
           onClick={() => setEditedIndex(0)}
-          cursor="pointer"
+          cursor="crosshair"
         />
         <Path
           // Right
@@ -231,7 +231,7 @@ function SpacingEditor({
           onMouseEnter={() => handleHover(1)}
           onMouseLeave={() => handleHover(-1)}
           onClick={() => setEditedIndex(1)}
-          cursor="pointer"
+          cursor="crosshair"
         />
         <Path
           // Bottom
@@ -240,7 +240,7 @@ function SpacingEditor({
           onMouseEnter={() => handleHover(2)}
           onMouseLeave={() => handleHover(-1)}
           onClick={() => setEditedIndex(2)}
-          cursor="pointer"
+          cursor="crosshair"
         />
         <Path
           // Left
@@ -249,7 +249,7 @@ function SpacingEditor({
           onMouseEnter={() => handleHover(3)}
           onMouseLeave={() => handleHover(-1)}
           onClick={() => setEditedIndex(3)}
-          cursor="pointer"
+          cursor="crosshair"
         />
       </Svg>
       <Div

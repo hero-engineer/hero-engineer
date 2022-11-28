@@ -9,7 +9,8 @@ function StylesSubSectionDisabledOverlay() {
       left={0}
       right={0}
       bottom={0}
-      backgroundColor="transparency(black, 98)"
+      backgroundColor="background-styles-overlay"
+      cursor="not-allowed"
     />
   )
 }

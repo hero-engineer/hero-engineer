@@ -140,6 +140,7 @@ export default mergeTheme(defaultTheme, {
       light: 'background-light',
       dark: 'background',
     },
+    'background-styles-overlay': 'transparent',
     border: {
       light: 'darken(background-light, 10)',
       dark: 'lighten(background-light, 10)',
