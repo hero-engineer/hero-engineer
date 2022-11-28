@@ -81,8 +81,6 @@ function ComponentIframeWidthExanderHandle({ isLeft, maxWidth }: ComponentIframe
   const handleMouseMove = useCallback((event: MouseEvent) => {
     if (!(isDragging && isDraggingCurrent && breakpoint)) return
 
-    console.log('(isLeft ? -1 : 1)', (isLeft ? -1 : 1))
-
     setWidth(width => Math.max(breakpoint.min, Math.min(maxWidth, breakpoint.max, width + (isLeft ? -2 : 2) * event.movementX)))
   }, [
     isDragging,

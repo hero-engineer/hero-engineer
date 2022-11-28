@@ -334,7 +334,7 @@ function ContextualInformation() {
 
     const timeoutId = setTimeout(() => {
       setIsComponentNameVignetteVisible(true)
-    }, 16 - 1) // 16ms is the default frame rate, minus 1 to put it in the next frame not the second (not sure if that works :)
+    }, 3 * 16)
 
     return () => {
       clearTimeout(timeoutId)
