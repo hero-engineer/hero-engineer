@@ -9,6 +9,7 @@ import useQuery from '../../hooks/useQuery'
 import useRefetch from '../../hooks/useRefetch'
 import useIsComponentRefreshingQuery from '../../hooks/useIsComponentRefreshingQuery'
 
+import ComponentProviders from '../core/ComponentProviders'
 import ComponentWindow from '../core/ComponentWindow'
 
 const placeholder = <Div flexGrow />
@@ -47,10 +48,12 @@ function Component() {
   }
 
   return (
-    <ComponentWindow
-      componentPath={component.payload.path}
-      decoratorPaths={decoratorPaths}
-    />
+    <ComponentProviders>
+      <ComponentWindow
+        componentPath={component.payload.path}
+        decoratorPaths={decoratorPaths}
+      />
+    </ComponentProviders>
   )
 }
 

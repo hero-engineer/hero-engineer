@@ -162,8 +162,6 @@ function HierarchyBar() {
     // @ts-expect-error
     delete lastEditedCompoment.children
 
-    console.log('xxx', lastEditedCompoment)
-
     setLastEditedComponent(lastEditedCompoment)
   }, [hierarchy, setLastEditedComponent])
 
