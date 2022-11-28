@@ -172,7 +172,7 @@ function ContextualInformation() {
 
   const renderComponentVignette = useCallback(() => {
     if (!contextualInformationState.element) return
-    if (!(lastHierarchyItem && isComponentNameVignetteVisible)) return null
+    if (!(lastHierarchyItem && isComponentNameVignetteVisible) || componentDelta > 0) return null
 
     const elementRect = readElementPosition()
 
@@ -198,6 +198,7 @@ function ContextualInformation() {
   }, [
     lastHierarchyItem,
     isComponentNameVignetteVisible,
+    componentDelta,
     readElementPosition,
     contextualInformationState.element,
     contextualInformationState.isEdited,

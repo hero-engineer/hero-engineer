@@ -272,6 +272,7 @@ function HierarchyLabel({ hierarchyItem, collapsed, isSelected, isFetching, setI
         xflex="x4"
         gap={0.25}
         onClick={onSelect}
+        minWidth={0}
       >
         <Emoji emoji={hierarchyItem.fileEmoji} />
         <Div
@@ -295,16 +296,6 @@ function HierarchyLabel({ hierarchyItem, collapsed, isSelected, isFetching, setI
             ? displayName || hierarchyItem.label
             : hierarchyItem.displayName || hierarchyItem.label}
         </Div>
-        {!hierarchyItem.isRoot && !isEditingDisplayName && !(isLoadingDisplayName && !displayName) && ((isLoadingDisplayName && !!displayName) || !!hierarchyItem.displayName) && (
-          <Div
-            ellipsis
-            flexShrink={1000000000}
-            color="text-light"
-            fontSize={10}
-          >
-            {hierarchyItem.label}
-          </Div>
-        )}
         {!isFetching && !isEditingDisplayName && !hierarchyItem.isRoot && hierarchyItem.onComponentAddress === componentAddress && (
           <A
             onClick={handleEditDisplayName}

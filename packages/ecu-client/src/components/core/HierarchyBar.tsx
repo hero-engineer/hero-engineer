@@ -30,6 +30,17 @@ function isSelectedComponentParent(hierarchy: HierarchyItemType[], currentHierar
   return rightIndex === currentIndex && selectedHierarchyItem.onComponentAddress === currentHierarchyItem.componentAddress
 }
 
+function getHierarchyDelta(hierarchy: HierarchyItemType[]) {
+  let delta = 0
+
+  hierarchy.forEach(x => {
+    if (x.hierarchyId) delta = 0
+    else delta--
+  })
+
+  return delta
+}
+
 // The hierarchy bar component has 2 purposes:
 // - Display the hierarchy of the current component
 // - Update it
@@ -57,7 +68,8 @@ function HierarchyBar() {
   const hierarchy = useMemo(() => JSON.parse(hierarchyQueryResult.data?.hierarchy || '""') || {}, [hierarchyQueryResult.data])
   const totalHierarchy = useMemo(() => getFlattenedHierarchy(hierarchy, hierarchyIds), [hierarchy, hierarchyIds])
   const actualHierarchy = useMemo(() => totalHierarchy.slice(0, totalHierarchy.length + componentDelta), [totalHierarchy, componentDelta])
-  const displayHierarchy = useMemo(() => hierarchyIds.length ? actualHierarchy : [], [hierarchyIds, actualHierarchy])
+  const previousHierarchy = usePreviousWithDefault(actualHierarchy, actualHierarchy)
+  const displayHierarchy = useMemo(() => hierarchyIds.length ? componentDelta > 0 ? previousHierarchy : actualHierarchy : [], [hierarchyIds, componentDelta, previousHierarchy, actualHierarchy])
 
   const handleClick = useCallback((index: number) => {
     // If clicked on a Component node link, ...
@@ -98,6 +110,35 @@ function HierarchyBar() {
       componentDelta: 0,
     })
   }, [actualHierarchy, totalHierarchy, setEditionSearchParams])
+
+  // Adjust component delta when hierarchyIds change
+  // componentDelta > 0 means adjustment is necessary
+  useEffect(() => {
+    if (componentDelta <= 0) return
+
+    const commonHierarchy: HierarchyItemType[] = []
+
+    for (let i = 0; i < previousHierarchy.length; i++) {
+      if (previousHierarchy[i].id === totalHierarchy[i].id) {
+        commonHierarchy.push(previousHierarchy[i])
+      }
+      else {
+        break
+      }
+    }
+
+    const workingHierarchyPart = totalHierarchy.slice(commonHierarchy.length, -1)
+    const nextDelta = workingHierarchyPart.length ? getHierarchyDelta(workingHierarchyPart) : 0
+
+    setEditionSearchParams({
+      componentDelta: nextDelta,
+    })
+  }, [
+    componentDelta,
+    previousHierarchy,
+    totalHierarchy,
+    setEditionSearchParams,
+  ])
 
   useEffect(() => {
     setTotalHierarchy(hierarchy)
