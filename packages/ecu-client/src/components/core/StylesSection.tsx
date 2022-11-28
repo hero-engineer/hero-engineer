@@ -29,8 +29,8 @@ import useEditionSearchParams from '../../hooks/useEditionSearchParams'
 import getComponentRootHierarchyIds from '../../helpers/getComponentRootHierarchyIds'
 
 import CssClassesSelector from './CssClassesSelector'
-import StylesLayoutSection from './StylesLayoutSection'
-import StylesSpacingSection from './StylesSpacingSection'
+import StylesSubSectionLayout from './StylesSubSectionLayout'
+import StylesSubSectionSpacing from './StylesSubSectionSpacing'
 
 // The styles section
 // Displayed in the right panel
@@ -146,12 +146,12 @@ function StylesSection() {
           This is your styling including all classes.
         </Div>
       )}
-      <StylesLayoutSection
+      <StylesSubSectionLayout
         cssValues={selectedClassName ? workingCssValues : finalCssValues}
         onChange={handleStyleChange}
         disabled={!selectedClassName}
       />
-      <StylesSpacingSection
+      <StylesSubSectionSpacing
         cssValues={selectedClassName ? workingCssValues : finalCssValues}
         onChange={handleStyleChange}
         disabled={!selectedClassName}

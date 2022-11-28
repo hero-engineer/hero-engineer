@@ -1,5 +1,6 @@
 import { Div } from 'honorable'
 
+// An overlay to block editing whenno classNAme is selected
 function StylesSubSectionDisabledOverlay() {
   return (
     <Div

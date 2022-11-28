@@ -276,6 +276,7 @@ export default mergeTheme(defaultTheme, {
       ({ backgroundTitle, expanded, isExpanding }: any) => backgroundTitle && {
         backgroundColor: 'darken(background-light, 8)',
         borderBottom: expanded || isExpanding ? '1px solid border' : null,
+        boxSizing: 'content-box', // To prevent layout adjustments when the border is added
       },
     ],
     Children: [

@@ -8,6 +8,7 @@ import useRefresh from '../../hooks/useRefresh'
 import usePersistedState from '../../hooks/usePersistedState'
 
 import SpacingEditor from './SpacingEditor'
+import StylesSubSectionTitle from './StylesSubSectionTitle'
 import StylesSubSectionDisabledOverlay from './StylesSubSectionDisabledOverlay'
 
 type StylesSpacingSectionPropsType = {
@@ -20,7 +21,18 @@ const baseHeight = 128 + 32 + 8 + 2
 const borderSizeDivider = 3.58
 const spacingEditorPadding = 8
 
-function StylesSpacingSection({ onChange, cssValues, disabled }: StylesSpacingSectionPropsType) {
+const attributeNames = [
+  'margin-top',
+  'margin-right',
+  'margin-bottom',
+  'margin-left',
+  'padding-top',
+  'padding-right',
+  'padding-bottom',
+  'padding-left',
+]
+
+function StylesSubSectionSpacing({ onChange, cssValues, disabled }: StylesSpacingSectionPropsType) {
   const inputMountNodeRef = useRef<HTMLDivElement>(null)
 
   useRefresh()
@@ -37,7 +49,14 @@ function StylesSpacingSection({ onChange, cssValues, disabled }: StylesSpacingSe
       smallTitle
       backgroundTitle
       childrenPositionRelative
-      title="Spacing"
+      title={(
+        <StylesSubSectionTitle
+          title="Spacing"
+          expanded={expanded}
+          cssValues={cssValues}
+          attributeNames={attributeNames}
+        />
+      )}
       expanded={expanded}
       onExpand={setExpanded}
     >
@@ -70,4 +89,4 @@ function StylesSpacingSection({ onChange, cssValues, disabled }: StylesSpacingSe
   )
 }
 
-export default StylesSpacingSection
+export default StylesSubSectionSpacing

@@ -19,6 +19,7 @@ import { CssAttributeType, CssValueType } from '../../types'
 import { cssAttributesMap } from '../../constants'
 
 import CssValueInput from './CssValueInput'
+import StylesSubSectionTitle from './StylesSubSectionTitle'
 import StylesSubSectionDisabledOverlay from './StylesSubSectionDisabledOverlay'
 
 type StylesLayoutSectionPropsType = {
@@ -43,6 +44,14 @@ function addDefaults(attributeNames: string[]) {
 
   return attributes
 }
+
+const attributeNames = [
+  'display',
+  'flex-direction',
+  'flex-wrap',
+  'align-items',
+  'justify-content',
+]
 
 const displays = [
   {
@@ -177,7 +186,7 @@ const justifys = [
   },
 ]
 
-function StylesLayoutSection({ cssValues, onChange, disabled }: StylesLayoutSectionPropsType) {
+function StylesSubSectionLayout({ cssValues, onChange, disabled }: StylesLayoutSectionPropsType) {
   const [expanded, setExpanded] = usePersistedState('styles-layout-section-expanded', true)
 
   const isToggled = useCallback((attributeName: string, values: CssValueType[]) => values.includes(cssValues[attributeName] ?? cssAttributesMap[attributeName].defaultValue), [cssValues])
@@ -416,7 +425,14 @@ function StylesLayoutSection({ cssValues, onChange, disabled }: StylesLayoutSect
       smallTitle
       backgroundTitle
       childrenPositionRelative
-      title="Layout"
+      title={(
+        <StylesSubSectionTitle
+          title="Layout"
+          expanded={expanded}
+          cssValues={cssValues}
+          attributeNames={attributeNames}
+        />
+      )}
       expanded={expanded}
       onExpand={setExpanded}
       borderTop="1px solid border"
@@ -437,4 +453,4 @@ function StylesLayoutSection({ cssValues, onChange, disabled }: StylesLayoutSect
   )
 }
 
-export default StylesLayoutSection
+export default StylesSubSectionLayout
