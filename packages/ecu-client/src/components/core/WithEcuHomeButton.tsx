@@ -1,6 +1,7 @@
 import { PropsWithChildren, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from 'honorable'
+import { GiRosaShield } from 'react-icons/gi'
 
 type WithEcuHomeButtonPropsType = PropsWithChildren<any>
 
@@ -12,13 +13,15 @@ function WithEcuHomeButton({ children }: WithEcuHomeButtonPropsType) {
     <>
       {displayed && (
         <Button
-          position="fixed"
-          top={16}
-          right={16}
+          small
           as={Link}
-          to="/_ecu_/components"
+          to="/_ecu_"
+          position="fixed"
+          top={8}
+          right={8}
+          fontSize="0.85em"
         >
-          Ecu
+          <GiRosaShield />
         </Button>
       )}
       {children}

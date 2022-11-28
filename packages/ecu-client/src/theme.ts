@@ -395,6 +395,12 @@ export default mergeTheme(defaultTheme, {
         paddingTop: 0,
         paddingBottom: 0,
       },
+      ({ small }: any) => small && {
+        paddingTop: 8,
+        paddingBottom: 8,
+        paddingLeft: 8,
+        paddingRight: 8,
+      },
       ({ tiny }: any) => tiny && {
         paddingTop: 4,
         paddingBottom: 4,
