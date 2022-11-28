@@ -7,7 +7,7 @@ import LastEditedComponentContext from '../../contexts/LastEditedComponentContex
 
 function LastEditedComponentButton(props: any) {
   const { lastEditedComponent } = useContext(LastEditedComponentContext)
-  const matched = useMatch('/_ecu_/component')
+  const matched = useMatch('/_ecu_/component/*')
 
   if (!lastEditedComponent || matched) return null
 
