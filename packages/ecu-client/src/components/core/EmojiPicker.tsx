@@ -1,19 +1,17 @@
 import { useCallback, useState } from 'react'
-import ExternalEmojiPicker from 'emoji-picker-react'
 import { Div, Tooltip, WithOutsideClick } from 'honorable'
 
-import getEmojiUrl from '../../helpers/getEmojiUrl'
-
 import Emoji from './Emoji'
+import EmojiPickerBase from './EmojiPickerBase'
 
 type EmojiPickerPropsType= {
   emoji: string
-  setEmoji: (emoji: string) => void
+  onEmojiChange: (emoji: string) => void
   size?: number
 }
 
 // An emoji picker component for a file
-function EmojiPicker({ emoji, setEmoji, size = 24 }: EmojiPickerPropsType) {
+function EmojiPicker({ emoji, onEmojiChange, size = 24 }: EmojiPickerPropsType) {
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false)
 
   const handleEmojiClose = useCallback(() => {
@@ -21,9 +19,9 @@ function EmojiPicker({ emoji, setEmoji, size = 24 }: EmojiPickerPropsType) {
   }, [])
 
   const handleEmojiSelect = useCallback((emojiObject: any) => {
-    setEmoji(emojiObject.unified)
+    onEmojiChange(emojiObject.unified)
     handleEmojiClose()
-  }, [setEmoji, handleEmojiClose])
+  }, [onEmojiChange, handleEmojiClose])
 
   return (
     <Div
@@ -57,11 +55,7 @@ function EmojiPicker({ emoji, setEmoji, size = 24 }: EmojiPickerPropsType) {
             left={0}
             zIndex={999999}
           >
-            <ExternalEmojiPicker
-              autoFocusSearch
-              onEmojiClick={handleEmojiSelect}
-              getEmojiUrl={getEmojiUrl}
-            />
+            <EmojiPickerBase onChange={handleEmojiSelect} />
           </Div>
         </WithOutsideClick>
       )}

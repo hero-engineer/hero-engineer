@@ -2,6 +2,7 @@ import { memo, useCallback, useContext, useEffect, useMemo, useState } from 'rea
 import { useParams } from 'react-router-dom'
 import { Div, useDebounce } from 'honorable'
 
+import { CssAttributeType, CssValueType } from '../../types'
 import { cssAttributesMap, refetchKeys } from '../../constants'
 
 import { CssClassesQuery, CssClassesQueryDataType, UpdateCssClassMutation, UpdateCssClassMutationDataType } from '../../queries'
@@ -16,17 +17,16 @@ import useRefetch from '../../hooks/useRefetch'
 import useCssValues from '../../hooks/useCssValues'
 import useJsCssValues from '../../hooks/useJsCssValues'
 import useThrottleAsynchronous from '../../hooks/useThrottleAsynchronous'
-
-import filterClassesByClassNames from '../../utils/filterClassesByClassNames'
-import convertCssAttributeNameToJs from '../../utils/convertCssAttributeNameToJs'
-import removeCssDefaults from '../../utils/removeCssDefaults'
-
-import { CssAttributeType, CssValueType } from '../../types'
-
 import usePersistedState from '../../hooks/usePersistedState'
 import useEditionSearchParams from '../../hooks/useEditionSearchParams'
 
 import getComponentRootHierarchyIds from '../../helpers/getComponentRootHierarchyIds'
+
+import filterClassesByClassNames from '../../utils/filterClassesByClassNames'
+import convertCssAttributeNameToJs from '../../utils/convertCssAttributeNameToJs'
+import removeCssDefaults from '../../utils/removeCssDefaults'
+import filterInvalidCssValues from '../../utils/filterInvalidCssValues'
+import convertUnicode from '../../utils/convertUnicode'
 
 import CssClassesSelector from './CssClassesSelector'
 import StylesSubSectionLayout from './StylesSubSectionLayout'
@@ -72,10 +72,10 @@ function StylesSection() {
   const handleCssUpdate = useCallback(async () => {
     if (!classNames.length) return
 
-    const attributes = Object.entries(removeCssDefaults(workingCssValues, cssAttributesMap)).map(([name, value]) => ({ name, value }))
+    const attributes = Object.entries(filterInvalidCssValues(removeCssDefaults(workingCssValues, cssAttributesMap), cssAttributesMap)).map(([name, value]) => ({ name, value }))
 
     await updateCssClass({
-      classNames: selectedClassName,
+      classNames: convertUnicode(selectedClassName),
       attributesJson: JSON.stringify(attributes),
     })
 
@@ -184,10 +184,10 @@ function StylesSection() {
         <CssClassesSelector
           allClasses={allClasses}
           classNames={classNames}
+          onClassNamesChange={handleSetClassNames}
           selectedClassName={selectedClassName}
-          setSelectedClassName={setSelectedClassName}
-          setLoading={setLoading}
-          onClassesChange={handleSetClassNames}
+          onSelectedClassNameChange={setSelectedClassName}
+          onLoading={setLoading}
         />
       </Div>
       {!classNames.length ? renderNoClassNames() : renderSubSections()}

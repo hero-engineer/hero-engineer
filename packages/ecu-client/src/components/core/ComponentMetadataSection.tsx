@@ -115,7 +115,7 @@ function ComponentMetadataSection() {
       >
         <EmojiPicker
           emoji={emoji}
-          setEmoji={setEmoji}
+          onEmojiChange={setEmoji}
         />
         <H4 ellipsis>{component.payload.name}</H4>
       </Div>

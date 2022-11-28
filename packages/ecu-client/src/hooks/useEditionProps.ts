@@ -15,6 +15,7 @@ import isHierarchyOnComponent from '../helpers/isHierarchyOnComponent'
 
 import areArraysEqualAtStart from '../utils/areArraysEqualAtStart'
 import areArraysEqual from '../utils/areArraysEqual'
+import convertUnicode from '../utils/convertUnicode'
 
 import useForkedRef from './useForkedRef'
 import useHierarchyId from './useHierarchyId'
@@ -218,7 +219,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   }, [debouncedIsSelected, isComponentRoot, setContextualInformationState])
 
   const generateClassName = useCallback(() => {
-    let klassName = `ecu-edition-no-outline ${debouncedIsSelected ? updatedClassName || className : className}`
+    let klassName = `ecu-edition-no-outline ${convertUnicode(debouncedIsSelected ? updatedClassName || className : className)}`
 
     klassName = klassName.trim()
 
