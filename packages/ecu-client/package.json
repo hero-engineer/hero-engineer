@@ -23,6 +23,7 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@emotion/weak-memoize": "^0.3.0",
+    "css.gg": "^2.0.0",
     "emoji-picker-react": "^4.4.5",
     "graphql": "^16.6.0",
     "honorable": "^0.186.0",

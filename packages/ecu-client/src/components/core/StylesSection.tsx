@@ -23,6 +23,7 @@ import areSelectorsEqual from '../../utils/areSelectorsEqual'
 import { CssValueType, SpacingsType } from '../../types'
 
 import CssClassesSelector from './CssClassesSelector'
+import StylesLayoutSection from './StylesLayoutSection'
 import StylesSpacingSection from './StylesSpacingSection'
 
 // The styles section
@@ -87,7 +88,7 @@ function StylesSection() {
     refetch,
   ])
 
-  const throttledHandleCssUpdate = useThrottleAsynchronous(handleCssUpdate, 333)
+  const throttledHandleCssUpdate = useThrottleAsynchronous(handleCssUpdate, 500)
 
   const handleSetClassNames = useCallback((classes: string[]) => {
     setClassName(classes.join(' '))
@@ -133,12 +134,21 @@ function StylesSection() {
   ), [])
 
   const renderSubSections = useCallback(() => (
-    <Div position="relative">
+    <Div
+      xflex="y2s"
+      position="relative"
+      mt={0.25}
+      borderTop="1px solid border"
+    >
+      <StylesLayoutSection
+        workingCssValues={workingCssValues}
+        onChange={handleStyleChange}
+      />
       <StylesSpacingSection
         marging={margin}
         padding={padding}
-        onMarginChange={(atrributeName, value) => handleStyleChange(atrributeName, value)}
-        onPaddingChange={(atrributeName, value) => handleStyleChange('padding', value)}
+        onMarginChange={(attributeName, value) => handleStyleChange(attributeName, value)}
+        onPaddingChange={(attributeName, value) => handleStyleChange('padding', value)}
         workingCssValues={workingCssValues}
       />
       {loading && (

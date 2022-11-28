@@ -64,6 +64,8 @@ export const cssValueUnits = [
   'pc',
 ] as const
 
+const cssDisplayValues = ['block', 'flex', 'grid', 'none']
+
 function extractSpacing(value: CssValueType, index: number): CssValueType {
   if (typeof value === 'number') return value
 
@@ -203,6 +205,11 @@ export const cssAttributesMap: CSsAttributesMapType = {
     defaultValue: 0,
     extractValue: value => extractSpacing(value, 3),
     isValueValid: isSpacingValueValid,
+  },
+  display: {
+    attributes: ['display'],
+    defaultValue: 'block',
+    isValueValid: value => typeof value === 'string' && cssDisplayValues.includes(value),
   },
 } as const
 

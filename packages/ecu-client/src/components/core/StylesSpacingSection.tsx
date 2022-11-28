@@ -32,10 +32,10 @@ function StylesSpacingSection({ marging, padding, onMarginChange, onPaddingChang
       ghost
       smallPadding
       smallTitle
+      backgroundTitle
       title="Spacing"
       expanded={expanded}
       onExpand={setExpanded}
-      mt={0.25}
     >
       <SpacingEditor
         allowNegativeValues
