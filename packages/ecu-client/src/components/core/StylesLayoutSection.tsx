@@ -332,7 +332,7 @@ function StylesLayoutSection({ cssValues, onChange }: StylesLayoutSectionPropsTy
       <Div
         xflex="x4"
         minWidth={54}
-        color={cssValues['column-gap'] && cssValues['column-gap'] !== cssAttributesMap['column-gap'].defaultValue || cssValues['row-gap'] && cssValues['row-gap'] !== cssAttributesMap['row-gap'].defaultValue ? 'primary' : 'text-light'}
+        color={(cssValues['column-gap'] && cssValues['column-gap'] !== cssAttributesMap['column-gap'].defaultValue) || (cssValues['row-gap'] && cssValues['row-gap'] !== cssAttributesMap['row-gap'].defaultValue) ? 'primary' : 'text-light'}
         pt={0.25}
       >
         Gap:

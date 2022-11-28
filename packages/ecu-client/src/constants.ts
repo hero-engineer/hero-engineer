@@ -236,12 +236,12 @@ export const cssAttributesMap: CSsAttributesMapType = {
   },
   'row-gap': {
     attributes: ['row-gap'],
-    defaultValue: 0,
+    defaultValue: '0px', // A bit of a hack, to make the gap editor display no modified value on 0px
     isValueValid: isSpacingValueValid,
   },
   'column-gap': {
     attributes: ['column-gap'],
-    defaultValue: 0,
+    defaultValue: '0px',
     isValueValid: isSpacingValueValid,
   },
 } as const
