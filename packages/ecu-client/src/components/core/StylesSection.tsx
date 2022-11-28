@@ -7,6 +7,7 @@ import { CssClassesQuery, CssClassesQueryDataType, UpdateCssClassMutation, Updat
 
 import HierarchyContext from '../../contexts/HierarchyContext'
 import CssClassesContext from '../../contexts/CssClassesContext'
+import HotContext from '../../contexts/HotContext'
 
 import useQuery from '../../hooks/useQuery'
 import useMutation from '../../hooks/useMutation'
@@ -30,7 +31,7 @@ import StylesSpacingSection from './StylesSpacingSection'
 function StylesSection() {
   const { hierarchy } = useContext(HierarchyContext)
   const { className, setClassName, updatedStyles, setUpdatedStyles } = useContext(CssClassesContext)
-
+  const hot = useContext(HotContext)
   const [cssClassesQueryResult, refetchCssClassesQuery] = useQuery<CssClassesQueryDataType>({
     query: CssClassesQuery,
   })
@@ -63,17 +64,12 @@ function StylesSection() {
       attributesJson: JSON.stringify(attributes),
     })
 
-    setTimeout(() => {
-      setUpdatedStyles({})
-    }, 500)
-
     refetch(refetchKeys.cssClasses)
   }, [
     updateCssClass,
     workingCssValues,
     selectedClassName,
     classNames,
-    setUpdatedStyles,
     refetch,
   ])
 
@@ -188,6 +184,16 @@ function StylesSection() {
   // Adding throttledHandleCssUpdate as a dep seems to cause infinite useEffect trigger
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updatedStyles])
+
+  useEffect(() => {
+    if (hot) {
+      hot.on('vite:beforeUpdate', () => {
+        setTimeout(() => {
+          setUpdatedStyles({})
+        }, 500)
+      })
+    }
+  }, [hot, setUpdatedStyles])
 
   return (
     <Div
