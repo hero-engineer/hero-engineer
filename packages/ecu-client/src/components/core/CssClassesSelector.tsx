@@ -143,7 +143,7 @@ function CssClassChip({ children, onDiscard, onSelect, primary }: CssClassChipPr
     <Div
       xflex="x4"
       flexShrink={0}
-      backgroundColor={primary ? 'primary' : 'darken(background-light, 10)'}
+      backgroundColor={primary ? 'primary' : 'darken(background-light, 8)'}
       color={primary ? 'white' : 'text'}
       borderRadius="medium"
       p={0.25}

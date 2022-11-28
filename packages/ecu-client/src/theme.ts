@@ -273,9 +273,9 @@ export default mergeTheme(defaultTheme, {
       ({ smallTitle }: any) => smallTitle && {
         fontSize: '0.85rem',
       },
-      ({ backgroundTitle, expanded }: any) => backgroundTitle && {
-        backgroundColor: 'darken(background-light, 6)',
-        borderBottom: expanded ? '1px solid border' : null,
+      ({ backgroundTitle, expanded, isExpanding }: any) => backgroundTitle && {
+        backgroundColor: 'darken(background-light, 8)',
+        borderBottom: expanded || isExpanding ? '1px solid border' : null,
       },
     ],
     Children: [
