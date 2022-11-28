@@ -26,7 +26,6 @@ import filterClassesByClassNames from '../../utils/filterClassesByClassNames'
 import convertCssAttributeNameToJs from '../../utils/convertCssAttributeNameToJs'
 import removeCssDefaults from '../../utils/removeCssDefaults'
 import filterInvalidCssValues from '../../utils/filterInvalidCssValues'
-import convertUnicode from '../../utils/convertUnicode'
 
 import CssClassesSelector from './CssClassesSelector'
 import StylesSubSectionLayout from './StylesSubSectionLayout'
@@ -76,7 +75,7 @@ function StylesSection() {
     const attributes = Object.entries(filterInvalidCssValues(removeCssDefaults(workingCssValues, cssAttributesMap), cssAttributesMap)).map(([name, value]) => ({ name, value }))
 
     await updateCssClass({
-      classNames: convertUnicode(selectedClassName),
+      classNames: selectedClassName,
       attributesJson: JSON.stringify(attributes),
     })
 

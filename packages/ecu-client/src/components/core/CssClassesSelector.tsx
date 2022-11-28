@@ -15,7 +15,6 @@ import useRefetch from '../../hooks/useRefetch'
 import useEditionSearchParams from '../../hooks/useEditionSearchParams'
 
 import extractClassNamesFromSelector from '../../utils/extractClassNamesFromSelector'
-import convertUnicode from '../../utils/convertUnicode'
 
 import EmojiPickerBase from './EmojiPickerBase'
 
@@ -254,7 +253,7 @@ function CssClassChip({ children, onDiscard, onSelect, primary }: CssClassChipPr
         onClick={onSelect}
         pr={0.25}
       >
-        {convertUnicode(children)}
+        {children}
       </Div>
       <Div
         xflex="x5"
