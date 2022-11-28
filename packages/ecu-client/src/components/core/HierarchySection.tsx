@@ -6,17 +6,20 @@ import { A, Div, Input, P, TreeView, WithOutsideClick } from 'honorable'
 import { BiCaretRight } from 'react-icons/bi'
 import { IoSquareSharp } from 'react-icons/io5'
 import { VscEdit } from 'react-icons/vsc'
+import { SlTrash } from 'react-icons/sl'
 
 import { HierarchyItemType } from '../../types'
 import { refetchKeys } from '../../constants'
 
-import { UpdateHierarchyDisplayNameMutation, UpdateHierarchyDisplayNameMutationDataType } from '../../queries'
+import { DeleteComponentMutation, DeleteComponentMutationDataType, UpdateHierarchyDisplayNameMutation, UpdateHierarchyDisplayNameMutationDataType } from '../../queries'
 
 import HierarchyContext from '../../contexts/HierarchyContext'
+import ContextualInformationContext from '../../contexts/ContextualInformationContext'
 
 import useMutation from '../../hooks/useMutation'
 import useRefetch from '../../hooks/useRefetch'
 import useEditionSearchParams from '../../hooks/useEditionSearchParams'
+import useIsComponentRefreshingMutation from '../../hooks/useIsComponentRefreshingMutation'
 
 import findHierarchyIdsAndComponentDelta from '../../utils/findHierarchyIdsAndComponentDelta'
 
@@ -25,11 +28,17 @@ import Emoji from './Emoji'
 // The hierarchy section
 // Displayed in the left panel
 function HierarchySection() {
+  const { componentAddress = '' } = useParams()
   const { totalHierarchy, hierarchy } = useContext(HierarchyContext)
-  const { setEditionSearchParams } = useEditionSearchParams()
+  const { setContextualInformationState } = useContext(ContextualInformationContext)
+  const { hierarchyIds, componentDelta, setEditionSearchParams } = useEditionSearchParams()
 
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
   const [isFetching, setIsFetching] = useState(false)
+
+  const [, deleteComponent] = useIsComponentRefreshingMutation(useMutation<DeleteComponentMutationDataType>(DeleteComponentMutation))
+
+  const refetch = useRefetch()
 
   const handleSelect = useCallback((hierarchyItem: HierarchyItemType) => {
     const found = findHierarchyIdsAndComponentDelta(totalHierarchy, hierarchyItem)
@@ -41,6 +50,31 @@ function HierarchySection() {
       })
     }
   }, [totalHierarchy, setEditionSearchParams])
+
+  const handleDeleteComponent = useCallback(async () => {
+    await deleteComponent({
+      sourceComponentAddress: componentAddress,
+      targetHierarchyId: hierarchyIds[hierarchyIds.length - 1],
+      componentDelta,
+    })
+
+    setEditionSearchParams({
+      hierarchyIds: [],
+      componentDelta: 0,
+    })
+
+    setContextualInformationState(x => ({ ...x, element: null }))
+
+    refetch(refetchKeys.hierarchy)
+  }, [
+    hierarchyIds,
+    componentDelta,
+    componentAddress,
+    deleteComponent,
+    setEditionSearchParams,
+    setContextualInformationState,
+    refetch,
+  ])
 
   const renderHierarchyItem = useCallback((hierarchyItem: HierarchyItemType | null) => {
     if (!(hierarchyItem && hierarchyItem.label)) return null
@@ -54,11 +88,12 @@ function HierarchySection() {
           <HierarchyLabel
             hierarchyItem={hierarchyItem}
             collapsed={collapsed[hierarchyItem.id]}
-            selected={hierarchy[hierarchy.length - 1]?.id === hierarchyItem.id}
+            isSelected={hierarchy[hierarchy.length - 1]?.id === hierarchyItem.id}
             isFetching={isFetching}
             setIsFetching={setIsFetching}
             onExpand={() => setCollapsed(x => ({ ...x, [hierarchyItem.id]: !collapsed[hierarchyItem.id] }))}
             onSelect={() => handleSelect(hierarchyItem)}
+            onDelete={handleDeleteComponent}
           />
         )}
         expanded={!collapsed[hierarchyItem.id]}
@@ -66,7 +101,7 @@ function HierarchySection() {
         {hierarchyItem.children.map(renderHierarchyItem)}
       </TreeView>
     )
-  }, [collapsed, isFetching, hierarchy, handleSelect])
+  }, [collapsed, isFetching, hierarchy, handleSelect, handleDeleteComponent])
 
   return (
     <Div
@@ -123,20 +158,21 @@ function getComponentDeltaAndHierarchyId(hierarchyItem: HierarchyItemType, compo
 type HierarchyLabelPropsType = {
   hierarchyItem: HierarchyItemType
   collapsed: boolean
-  selected: boolean
+  isSelected: boolean
   isFetching: boolean
   setIsFetching: (isFetching: boolean) => void
   onExpand: () => void
   onSelect: () => void
+  onDelete: () => void
 }
 
-function HierarchyLabel({ hierarchyItem, collapsed, selected, isFetching, setIsFetching, onExpand, onSelect }: HierarchyLabelPropsType) {
+function HierarchyLabel({ hierarchyItem, collapsed, isSelected, isFetching, setIsFetching, onExpand, onSelect, onDelete }: HierarchyLabelPropsType) {
   const { componentAddress = '' } = useParams()
 
   const [displayName, setDisplayName] = useState(hierarchyItem.displayName || hierarchyItem.label || '')
   const [isEditingDisplayName, setIsEditingDisplayName] = useState(false)
   const [isLoadingDisplayName, setIsLoadingDisplayName] = useState(false)
-  const [textSelected, setTextSelected] = useState(false)
+  const [isTextSelected, setIsTextSelected] = useState(false)
 
   const [, updateHierarchyDisplayName] = useMutation<UpdateHierarchyDisplayNameMutationDataType>(UpdateHierarchyDisplayNameMutation)
 
@@ -152,7 +188,7 @@ function HierarchyLabel({ hierarchyItem, collapsed, selected, isFetching, setIsF
     if (isFetching || hierarchyItem.isRoot || hierarchyItem.onComponentAddress !== componentAddress) return
 
     setIsEditingDisplayName(false)
-    setTextSelected(false)
+    setIsTextSelected(false)
 
     const { componentDelta, hierarchyId } = getComponentDeltaAndHierarchyId(hierarchyItem) || {}
 
@@ -188,12 +224,12 @@ function HierarchyLabel({ hierarchyItem, collapsed, selected, isFetching, setIsF
   ])
 
   const handleInputRef = useCallback((input: HTMLInputElement | null) => {
-    if (input && !textSelected) {
+    if (input && !isTextSelected) {
       input.select()
 
-      setTextSelected(true)
+      setIsTextSelected(true)
     }
-  }, [textSelected])
+  }, [isTextSelected])
 
   useEffect(() => {
     setIsLoadingDisplayName(false)
@@ -241,7 +277,7 @@ function HierarchyLabel({ hierarchyItem, collapsed, selected, isFetching, setIsF
         <Div
           ellipsis
           flexShrink={1}
-          color={selected && !isEditingDisplayName ? 'primary' : 'inherit'}
+          color={isSelected && !isEditingDisplayName ? 'primary' : 'inherit'}
         >
           {isEditingDisplayName ? (
             <WithOutsideClick onOutsideClick={handleUpdateDisplayName}>
@@ -276,9 +312,22 @@ function HierarchyLabel({ hierarchyItem, collapsed, selected, isFetching, setIsF
             fontSize="0.75rem"
             className="ecu-hierarchy-label-edit"
             pl={0.25}
-            pr={0.5}
+            pr={isSelected ? 0.25 : 0.5}
           >
             <VscEdit />
+          </A>
+        )}
+        {isSelected && !isFetching && !isEditingDisplayName && !hierarchyItem.isRoot && hierarchyItem.onComponentAddress === componentAddress && (
+          <A
+            onClick={onDelete}
+            flexShrink={0}
+            color="red.500"
+            fontSize="0.75rem"
+            className="ecu-hierarchy-label-edit"
+            pl={0.25}
+            pr={0.5}
+          >
+            <SlTrash />
           </A>
         )}
       </Div>
