@@ -6,6 +6,6 @@ export type ThemeModeContextType = {
 }
 
 export default createContext<ThemeModeContextType>({
-  themeMode: 'light',
+  themeMode: 'dark',
   setThemeMode: () => {},
 })

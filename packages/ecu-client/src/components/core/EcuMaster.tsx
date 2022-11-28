@@ -38,7 +38,7 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
   const { refetch, register } = useCreateRefetchRegistry()
   const refetchContextValue = useMemo<RefetchContextType>(() => ({ refetch, register }), [refetch, register])
 
-  const [themeMode, setThemeMode] = usePersistedState<'light' | 'dark'>('theme-mode', 'light')
+  const [themeMode, setThemeMode] = usePersistedState<'light' | 'dark'>('theme-mode', 'dark')
   const themeModeContextValue = useMemo<ThemeModeContextType>(() => ({ themeMode, setThemeMode }), [themeMode, setThemeMode])
 
   const [snackBarItems, setSnackBarItems] = useState<SnackBarItemType[]>([])
