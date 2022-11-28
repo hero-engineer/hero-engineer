@@ -117,6 +117,7 @@ export type EcuHistoryEntryType = {
 export type AtomType = {
   id: string
   name: string
+  defaultClassName: string
   isComponentAcceptingChildren: boolean
   defaultChildren: (JSXText | JSXExpressionContainer | JSXSpreadChild | JSXElement | JSXFragment)[]
 }

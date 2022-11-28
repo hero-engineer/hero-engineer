@@ -90,12 +90,14 @@ export const ecuAtoms: AtomType[] = [
   {
     id: `${ecuAtomPrefix}Div`,
     name: 'Div',
+    defaultClassName: 'div-remove-me',
     isComponentAcceptingChildren: true,
     defaultChildren: [],
   },
   {
     id: `${ecuAtomPrefix}Text`,
     name: 'Text',
+    defaultClassName: '',
     isComponentAcceptingChildren: false,
     defaultChildren: [jsxText("Edit me I'm a Text")],
   },

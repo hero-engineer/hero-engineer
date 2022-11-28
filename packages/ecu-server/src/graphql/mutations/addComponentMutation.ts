@@ -46,7 +46,7 @@ async function addComponentMutation(_: any, { sourceComponentAddress, targetComp
 
     name = targetAtom.name
     postTraverse = createAddAtomComponentPostTraverse(targetAtom)
-    onSuccess = createAddComponentOnSuccess(targetAtom.name, targetAtom.defaultChildren, hierarchyPosition, componentDelta)
+    onSuccess = createAddComponentOnSuccess(targetAtom.name, targetAtom.defaultChildren, targetAtom.defaultClassName, hierarchyPosition, componentDelta)
   }
   else {
     const targetComponentNode = getNodeByAddress(targetComponentAddress)
@@ -57,7 +57,7 @@ async function addComponentMutation(_: any, { sourceComponentAddress, targetComp
 
     name = targetComponentNode.payload.name
     postTraverse = createAddUserComponentPostTraverse(targetComponentNode)
-    onSuccess = createAddComponentOnSuccess(targetComponentNode.payload.name, [], hierarchyPosition, componentDelta)
+    onSuccess = createAddComponentOnSuccess(targetComponentNode.payload.name, [], '', hierarchyPosition, componentDelta)
   }
 
   try {
