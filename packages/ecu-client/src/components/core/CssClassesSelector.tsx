@@ -16,15 +16,15 @@ import { refetchKeys } from '../../constants'
 type CssClassesSelector = {
   allClasses: CssClassType[]
   classNames: string[]
-  selectedClassNames: string[]
-  setSelectedClassNames: Dispatch<SetStateAction<string[]>>
+  selectedClassName: string
+  setSelectedClassName: Dispatch<SetStateAction<string>>
   setLoading: Dispatch<SetStateAction<boolean>>
   onClassesChange: (classes: string[]) => void
 }
 
 const ecuCreateOption = `__ecu_create_option__${Math.random()}`
 
-function CssClassesSelector({ allClasses, classNames, onClassesChange, selectedClassNames, setSelectedClassNames, setLoading }: CssClassesSelector) {
+function CssClassesSelector({ allClasses, classNames, onClassesChange, selectedClassName, setSelectedClassName, setLoading }: CssClassesSelector) {
   const { componentAddress = '' } = useParams()
   const { hierarchyIds, componentDelta } = useEditionSearchParams()
 
@@ -41,7 +41,7 @@ function CssClassesSelector({ allClasses, classNames, onClassesChange, selectedC
 
   const refetch = useRefetch()
 
-  const handleCreateClass = useCallback(async (classNames: string[], shouldUpdateElement = true) => {
+  const handleCreateClass = useCallback(async (classNames: string[]) => {
     if (!classNames.length) return
 
     setLoading(true)
@@ -51,8 +51,6 @@ function CssClassesSelector({ allClasses, classNames, onClassesChange, selectedC
       targetHierarchyId: hierarchyIds[hierarchyIds.length - 1],
       componentDelta,
       classNames,
-      shouldUpdateElement,
-      shouldCombine: selectedClassNames.length > 1,
     })
 
     setLoading(false)
@@ -64,7 +62,6 @@ function CssClassesSelector({ allClasses, classNames, onClassesChange, selectedC
     componentAddress,
     hierarchyIds,
     componentDelta,
-    selectedClassNames,
     refetch,
   ])
 
@@ -81,27 +78,15 @@ function CssClassesSelector({ allClasses, classNames, onClassesChange, selectedC
     const nextClassNames = classNames.filter(c => c !== className)
 
     onClassesChange(nextClassNames)
-    handleCreateClass(nextClassNames)
-  }, [classNames, onClassesChange, handleCreateClass])
+  }, [classNames, onClassesChange])
 
   const handleChipSelect = useCallback((className: string) => {
-    setSelectedClassNames(selectedClassNames => (
-      selectedClassNames.includes(className)
-        ? selectedClassNames.filter(c => c !== className)
-        : [...classNames].filter(x => selectedClassNames.includes(x) || x === className) // keep classNames sort order
-    ))
-  }, [setSelectedClassNames, classNames])
-
-  // Create chained class
-  useEffect(() => {
-    if (selectedClassNames.length < 2) return
-
-    handleCreateClass(selectedClassNames, false)
-  }, [selectedClassNames, handleCreateClass])
+    setSelectedClassName(x => x === className ? '' : className)
+  }, [setSelectedClassName])
 
   useEffect(() => {
-    setSelectedClassNames(classNames.length ? [classNames[classNames.length - 1]] : [])
-  }, [setSelectedClassNames, classNames])
+    setSelectedClassName(classNames[classNames.length - 1])
+  }, [setSelectedClassName, classNames])
 
   return (
     <Div
@@ -120,7 +105,7 @@ function CssClassesSelector({ allClasses, classNames, onClassesChange, selectedC
           key={className}
           onDiscard={() => handleDiscardClass(className)}
           onSelect={() => handleChipSelect(className)}
-          primary={selectedClassNames.includes(className)}
+          primary={selectedClassName === className}
         >
           {className}
         </CssClassChip>

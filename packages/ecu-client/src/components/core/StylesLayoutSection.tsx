@@ -8,7 +8,7 @@ import { CssValueType } from '../../types'
 import { cssAttributesMap } from '../../constants'
 
 type StylesLayoutSectionPropsType = {
-  workingCssValues: Record<string, CssValueType>
+  cssValues: Record<string, CssValueType>
   onChange: (attributeName: string, value: CssValueType) => void
 }
 
@@ -31,24 +31,22 @@ const displays = [
   },
 ]
 
-function StylesLayoutSection({ workingCssValues, onChange }: StylesLayoutSectionPropsType) {
+function StylesLayoutSection({ cssValues, onChange }: StylesLayoutSectionPropsType) {
   const [expanded, setExpanded] = usePersistedState('styles-layout-section-expanded', true)
-
-  console.log('workingCssValues.display', workingCssValues.display)
 
   const renderDisplayEditor = useCallback(() => (
     <Div xflex="x4">
       <Div
         minWidth={46}
         fontSize="0.75rem"
-        color={workingCssValues.display && workingCssValues.display !== cssAttributesMap.display.defaultValue ? 'primary' : 'text-light'}
+        color={cssValues.display && cssValues.display !== cssAttributesMap.display.defaultValue ? 'primary' : 'text-light'}
       >
         Display:
       </Div>
       {displays.map(({ name, Icon }) => (
         <Button
           ghost
-          toggled={workingCssValues.display ? workingCssValues.display === name : cssAttributesMap.display.defaultValue === name}
+          toggled={cssValues.display ? cssValues.display === name : cssAttributesMap.display.defaultValue === name}
           onClick={() => onChange('display', name)}
           key={name}
         >
@@ -56,7 +54,7 @@ function StylesLayoutSection({ workingCssValues, onChange }: StylesLayoutSection
         </Button>
       ))}
     </Div>
-  ), [workingCssValues, onChange])
+  ), [cssValues, onChange])
 
   return (
     <Accordion

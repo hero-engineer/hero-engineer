@@ -11,16 +11,15 @@ import SpacingEditor from './SpacingEditor'
 type StylesSpacingSectionPropsType = {
   marging: SpacingsType,
   padding: SpacingsType,
-  onMarginChange: (attributeName: string, value: SpacingType) => void,
-  onPaddingChange: (attributeName: string, value: SpacingType) => void,
-  workingCssValues: Record<string, CssValueType>
+  onChange: (attributeName: string, value: SpacingType) => void,
+  cssValues: Record<string, CssValueType>
 }
 
 const baseHeight = 128 + 32 + 8 + 2
 const borderSizeDivider = 3.58
 const spacingEditorPadding = 8
 
-function StylesSpacingSection({ marging, padding, onMarginChange, onPaddingChange, workingCssValues }: StylesSpacingSectionPropsType) {
+function StylesSpacingSection({ marging, padding, onChange, cssValues }: StylesSpacingSectionPropsType) {
   const inputMountNodeRef = useRef<HTMLDivElement>(null)
 
   useRefresh()
@@ -43,21 +42,21 @@ function StylesSpacingSection({ marging, padding, onMarginChange, onPaddingChang
         semanticName="margin"
         value={marging}
         height={baseHeight}
-        onChange={onMarginChange}
+        onChange={onChange}
         borderSize={baseHeight / borderSizeDivider - spacingEditorPadding}
         inputMountNode={inputMountNodeRef.current}
-        workingCssValues={workingCssValues}
+        cssValues={cssValues}
       >
         <SpacingEditor
           title="Padding"
           semanticName="padding"
           value={padding}
-          onChange={onPaddingChange}
+          onChange={onChange}
           height={(borderSizeDivider - 2) * baseHeight / borderSizeDivider + spacingEditorPadding}
           borderSize={baseHeight / borderSizeDivider - spacingEditorPadding}
           offetHorizontal={2}
           inputMountNode={inputMountNodeRef.current}
-          workingCssValues={workingCssValues}
+          cssValues={cssValues}
         />
       </SpacingEditor>
       <div ref={inputMountNodeRef} />

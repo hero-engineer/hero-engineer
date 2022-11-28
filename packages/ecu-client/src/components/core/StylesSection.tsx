@@ -18,7 +18,6 @@ import useThrottleAsynchronous from '../../hooks/useThrottleAsynchronous'
 import filterClassesByClassNames from '../../utils/filterClassesByClassNames'
 import convertCssAttributeNameToJs from '../../utils/convertCssAttributeNameToJs'
 import removeCssDefaults from '../../utils/removeCssDefaults'
-import areSelectorsEqual from '../../utils/areSelectorsEqual'
 
 import { CssValueType, SpacingsType } from '../../types'
 
@@ -44,25 +43,20 @@ function StylesSection() {
 
   const classNames = useMemo(() => className.split(' ').map(c => c.trim()).filter(Boolean), [className])
 
-  const [selectedClassNames, setSelectedClassNames] = useState<string[]>([])
+  const [selectedClassName, setSelectedClassName] = useState<string>('')
   const [loading, setLoading] = useState(false)
 
   const allClasses = useMemo(() => cssClassesQueryResult.data?.cssClasses || [], [cssClassesQueryResult.data])
-  const combinedClass = useMemo(() => {
-    if (!selectedClassNames.length) return null
-
-    const selector = selectedClassNames.map(className => `.${className}`).join('')
-
-    return allClasses.find(c => areSelectorsEqual(c.selector, selector))!
-  }, [selectedClassNames, allClasses])
   const classes = useMemo(() => filterClassesByClassNames(allClasses, classNames), [allClasses, classNames])
-  const currentClass = useMemo(() => selectedClassNames.length && combinedClass ? [combinedClass] : filterClassesByClassNames(classes, selectedClassNames), [classes, selectedClassNames, combinedClass])
+  const currentClass = useMemo(() => filterClassesByClassNames(classes, [selectedClassName]), [classes, selectedClassName])
   const hasNoNodeSelected = useMemo(() => !hierarchy.length || hierarchy[hierarchy.length - 1].isRoot, [hierarchy])
   const finalCssValues = useJsCssValues(useCssValues(classes, cssAttributesMap), updatedStyles, cssAttributesMap)
   const workingCssValues = useJsCssValues(useCssValues(currentClass, cssAttributesMap), updatedStyles, cssAttributesMap)
 
-  const margin = useMemo(() => spacingSemanticValues.map(spacingSemanticValue => `margin-${spacingSemanticValue}`).map(key => finalCssValues[key] ?? cssAttributesMap[key].defaultValue) as SpacingsType, [finalCssValues])
-  const padding = useMemo(() => spacingSemanticValues.map(spacingSemanticValue => `padding-${spacingSemanticValue}`).map(key => finalCssValues[key] ?? cssAttributesMap[key].defaultValue) as SpacingsType, [finalCssValues])
+  const margin = useMemo(() => spacingSemanticValues.map(spacingSemanticValue => `margin-${spacingSemanticValue}`).map(key => (selectedClassName ? workingCssValues[key] : finalCssValues[key]) ?? cssAttributesMap[key].defaultValue) as SpacingsType, [selectedClassName, workingCssValues, finalCssValues])
+  const padding = useMemo(() => spacingSemanticValues.map(spacingSemanticValue => `padding-${spacingSemanticValue}`).map(key => (selectedClassName ? workingCssValues[key] : finalCssValues[key]) ?? cssAttributesMap[key].defaultValue) as SpacingsType, [selectedClassName, workingCssValues, finalCssValues])
+
+  console.log('finalCssValues', finalCssValues)
 
   const handleCssUpdate = useCallback(async () => {
     if (!classNames.length) return
@@ -70,7 +64,7 @@ function StylesSection() {
     const attributes = Object.entries(removeCssDefaults(workingCssValues, cssAttributesMap)).map(([name, value]) => ({ name, value }))
 
     await updateCssClass({
-      classNames: selectedClassNames,
+      classNames: selectedClassName,
       attributesJson: JSON.stringify(attributes),
     })
 
@@ -82,7 +76,7 @@ function StylesSection() {
   }, [
     updateCssClass,
     workingCssValues,
-    selectedClassNames,
+    selectedClassName,
     classNames,
     setUpdatedStyles,
     refetch,
@@ -122,34 +116,22 @@ function StylesSection() {
     </Div>
   ), [])
 
-  const renderNoSelectedClassNames = useCallback(() => (
-    <Div
-      color="text-light"
-      fontSize="0.85rem"
-      mt={0.5}
-      px={0.5}
-    >
-      Select a class to edit its styles
-    </Div>
-  ), [])
-
   const renderSubSections = useCallback(() => (
     <Div
       xflex="y2s"
       position="relative"
-      mt={0.25}
       borderTop="1px solid border"
+      mt={0.5}
     >
       <StylesLayoutSection
-        workingCssValues={workingCssValues}
+        cssValues={selectedClassName ? workingCssValues : finalCssValues}
         onChange={handleStyleChange}
       />
       <StylesSpacingSection
         marging={margin}
         padding={padding}
-        onMarginChange={(attributeName, value) => handleStyleChange(attributeName, value)}
-        onPaddingChange={(attributeName, value) => handleStyleChange('padding', value)}
-        workingCssValues={workingCssValues}
+        onChange={handleStyleChange}
+        cssValues={selectedClassName ? workingCssValues : finalCssValues}
       />
       {loading && (
         <Div
@@ -165,9 +147,11 @@ function StylesSection() {
   ), [
     margin,
     padding,
-    handleStyleChange,
+    selectedClassName,
     workingCssValues,
+    finalCssValues,
     loading,
+    handleStyleChange,
   ])
 
   const renderSection = useCallback(() => (
@@ -179,21 +163,20 @@ function StylesSection() {
         <CssClassesSelector
           allClasses={allClasses}
           classNames={classNames}
-          selectedClassNames={selectedClassNames}
-          setSelectedClassNames={setSelectedClassNames}
+          selectedClassName={selectedClassName}
+          setSelectedClassName={setSelectedClassName}
           setLoading={setLoading}
           onClassesChange={handleSetClassNames}
         />
       </Div>
-      {!classNames.length ? renderNoClassNames() : !selectedClassNames.length ? renderNoSelectedClassNames() : renderSubSections()}
+      {!classNames.length ? renderNoClassNames() : renderSubSections()}
     </>
   ), [
     allClasses,
     classNames,
-    selectedClassNames,
+    selectedClassName,
     handleSetClassNames,
     renderNoClassNames,
-    renderNoSelectedClassNames,
     renderSubSections,
   ])
 
