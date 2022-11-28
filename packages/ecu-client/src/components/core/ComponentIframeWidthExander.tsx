@@ -112,8 +112,8 @@ function ComponentIframeWidthExanderHandle({ isLeft, maxWidth }: ComponentIframe
       {isDragging && isDraggingCurrent && (
         <Div
           position="absolute"
-          left="-50vw"
-          right="-50vw"
+          left="-100vw"
+          right="-100vw"
           top={0}
           bottom={0}
           onMouseMove={handleMouseMove}
