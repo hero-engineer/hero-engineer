@@ -1,5 +1,3 @@
-import '../../css/common.css'
-
 import { ViteHotContext } from 'vite/types/hot'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
 import { Provider as GraphqlProvider } from 'urql'
@@ -42,8 +40,8 @@ function MasterProviders({ mode, hot, children }: MasterProvidersPropsType) {
   const [lastEditedComponent, setLastEditedComponent] = usePersistedState<HierarchyItemType | null>('last-edited-component', null)
   const lastEditedComponentContextValue = useMemo<LastEditedComponentContextType>(() => ({ lastEditedComponent, setLastEditedComponent }), [lastEditedComponent, setLastEditedComponent])
 
-  const [breakpoint, setBreakpoint] = usePersistedState<BreakpointType | null>('ecu-breakpoint', null)
-  const [breakpoints, setBreakpoints] = usePersistedState<BreakpointType[]>('ecu-breakpoints', [])
+  const [breakpoint, setBreakpoint] = usePersistedState<BreakpointType | null>('breakpoint', null)
+  const [breakpoints, setBreakpoints] = usePersistedState<BreakpointType[]>('breakpoints', [])
   const [width, setWidth] = usePersistedState<number>('ecu-width', 0, (x: any) => parseInt(x))
   const [isDragging, setIsDragging] = useState(false)
   const breakpointContextValue = useMemo<BreakpointContextType>(() => ({ breakpoint, setBreakpoint, breakpoints, setBreakpoints, width, setWidth, isDragging, setIsDragging }), [breakpoint, setBreakpoint, breakpoints, setBreakpoints, width, setWidth, isDragging])

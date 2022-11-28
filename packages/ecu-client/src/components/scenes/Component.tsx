@@ -1,5 +1,10 @@
 import { useParams } from 'react-router-dom'
 import { Div } from 'honorable'
+import { RiNodeTree } from 'react-icons/ri'
+import { BiNetworkChart } from 'react-icons/bi'
+import { CgInsertBeforeR } from 'react-icons/cg'
+import { MdBrush } from 'react-icons/md'
+import { BsDiamond } from 'react-icons/bs'
 
 import { refetchKeys } from '../../constants'
 
@@ -11,6 +16,16 @@ import useIsComponentRefreshingQuery from '../../hooks/useIsComponentRefreshingQ
 
 import ComponentProviders from '../core/ComponentProviders'
 import ComponentWindow from '../core/ComponentWindow'
+
+import HierarchyBar from '../core/HierarchyBar'
+import RetractablePanel from '../core/RetractablePanel'
+import HierarchySection from '../core/HierarchySection'
+import AddComponentSection from '../core/AddComponentSection'
+import ComponentMetadataSection from '../core/ComponentMetadataSection'
+import ComponentTypesSection from '../core/ComponentTypesSection'
+import ComponentImportsSection from '../core/ComponentImportsSection'
+import StylesSection from '../core/StylesSection'
+import WidthBar from '../core/WidthBar'
 
 const placeholder = <Div flexGrow />
 
@@ -49,10 +64,66 @@ function Component() {
 
   return (
     <ComponentProviders>
-      <ComponentWindow
-        componentPath={component.payload.path}
-        decoratorPaths={decoratorPaths}
-      />
+      <Div
+        xflex="x4s"
+        flexGrow
+      >
+        <RetractablePanel
+          direction="left"
+          openPersistedStateKey="left-panel-open"
+          items={[
+            {
+              label: 'Hierarchy',
+              icon: <RiNodeTree />,
+              children: <HierarchySection />,
+            },
+            {
+              label: 'Insert component',
+              icon: <CgInsertBeforeR />,
+              children: <AddComponentSection />,
+            },
+          ]}
+        />
+        <Div
+          xflex="y2s"
+          flexGrow
+          maxHeight="100%"
+          overflow="hidden"
+        >
+          <ComponentWindow
+            componentPath={component.payload.path}
+            decoratorPaths={decoratorPaths}
+          />
+          <HierarchyBar />
+          <WidthBar />
+        </Div>
+        <RetractablePanel
+          direction="right"
+          openPersistedStateKey="right-panel-open"
+          items={[
+            {
+              label: 'Component',
+              icon: <BsDiamond />,
+              children: <ComponentMetadataSection />,
+            },
+            {
+              label: 'Imports and types',
+              icon: <BiNetworkChart />,
+              children: (
+                <>
+                  <ComponentImportsSection />
+                  <ComponentTypesSection />
+                </>
+              ),
+            },
+            {
+              label: 'Styles',
+              icon: <MdBrush />,
+              children: <StylesSection />,
+            },
+          ]}
+        />
+      </Div>
     </ComponentProviders>
   )
 }
