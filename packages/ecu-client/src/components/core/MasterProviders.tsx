@@ -42,7 +42,7 @@ function MasterProviders({ mode, hot, children }: MasterProvidersPropsType) {
 
   const [breakpoint, setBreakpoint] = usePersistedState<BreakpointType | null>('breakpoint', null)
   const [breakpoints, setBreakpoints] = usePersistedState<BreakpointType[]>('breakpoints', [])
-  const [width, setWidth] = usePersistedState<number>('ecu-width', 0, (x: any) => parseInt(x))
+  const [width, setWidth] = usePersistedState<number>('width', 0, (x: any) => parseInt(x))
   const [isDragging, setIsDragging] = useState(false)
   const breakpointContextValue = useMemo<BreakpointContextType>(() => ({ breakpoint, setBreakpoint, breakpoints, setBreakpoints, width, setWidth, isDragging, setIsDragging }), [breakpoint, setBreakpoint, breakpoints, setBreakpoints, width, setWidth, isDragging])
 

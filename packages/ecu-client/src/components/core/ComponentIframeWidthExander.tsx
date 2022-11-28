@@ -100,26 +100,29 @@ function ComponentIframeWidthExanderHandle({ isLeft, maxWidth }: ComponentIframe
   }, [handleMouseUp])
 
   return (
-    <Div
-      position="relative"
-      width={5}
-      cursor="col-resize"
-      backgroundColor={isDragging ? 'primary' : undefined}
-      userSelect="none"
-      _hover={{ backgroundColor: 'primary' }}
-      onMouseDown={handleMouseDown}
-    >
+    <>
+      <Div
+        position="relative"
+        width={5}
+        backgroundColor={isDragging ? 'primary' : undefined}
+        userSelect="none"
+        cursor="col-resize"
+        _hover={{ backgroundColor: 'primary' }}
+        onMouseDown={handleMouseDown}
+      />
       {isDragging && isDraggingCurrent && (
         <Div
-          position="absolute"
-          left="-100vw"
-          right="-100vw"
+          position="fixed"
+          left={0}
+          right={0}
           top={0}
           bottom={0}
           onMouseMove={handleMouseMove}
+          zIndex={9999999}
+          cursor="col-resize"
         />
       )}
-    </Div>
+    </>
   )
 }
 
