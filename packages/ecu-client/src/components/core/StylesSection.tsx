@@ -1,6 +1,6 @@
 import { memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Div, Tooltip, useDebounce } from 'honorable'
+import { Div, useDebounce } from 'honorable'
 
 import { cssAttributesMap, refetchKeys } from '../../constants'
 
@@ -56,10 +56,12 @@ function StylesSection() {
   const [loading, setLoading] = useState(false)
 
   const componentRootHierarchyIds = useMemo(() => getComponentRootHierarchyIds(hierarchy), [hierarchy])
+  const isSomeNodeSelected = useMemo(() => hierarchy.length > 0, [hierarchy])
   const isComponentRoot = useMemo(() => componentDelta < 0 && componentRootHierarchyIds.some(x => x === hierarchyIds[hierarchyIds.length - 1]), [componentDelta, componentRootHierarchyIds, hierarchyIds])
   const isOnAnotherComponent = useMemo(() => !hierarchy.length || hierarchy[hierarchy.length - 1].onComponentAddress !== componentAddress, [hierarchy, componentAddress])
   const isNoElementSelected = useMemo(() => !hierarchy.length || hierarchy[hierarchy.length - 1].isRoot || isComponentRoot || isOnAnotherComponent, [hierarchy, isComponentRoot, isOnAnotherComponent])
-  const debouncedIsNoElementSelected = useDebounce(isNoElementSelected, 100) // To prevent flickering of the section
+  const debouncedIsNoElementSelected = useDebounce(isNoElementSelected, 6 * 16) // To prevent flickering of the section
+  const debouncedIsOnAnotherComponent = useDebounce(isSomeNodeSelected && isOnAnotherComponent, 6 * 16) // To prevent flickering of the section
 
   const allClasses = useMemo(() => cssClassesQueryResult.data?.cssClasses || [], [cssClassesQueryResult.data])
   const classes = useMemo(() => filterClassesByClassNames(allClasses, classNames), [allClasses, classNames])
@@ -94,6 +96,8 @@ function StylesSection() {
   }, [setClassName, setUpdatedStyles])
 
   const handleStyleChange = useCallback((attributes: CssAttributeType[]) => {
+    if (!selectedClassName) return
+
     const updatedStyles: Record<string, CssValueType> = {}
 
     attributes.forEach(({ name, value }) => {
@@ -101,7 +105,7 @@ function StylesSection() {
     })
 
     setUpdatedStyles(x => ({ ...x, ...updatedStyles }))
-  }, [setUpdatedStyles])
+  }, [selectedClassName, setUpdatedStyles])
 
   const renderNoElement = useCallback(() => (
     <Div
@@ -109,9 +113,9 @@ function StylesSection() {
       fontSize="0.85rem"
       px={0.5}
     >
-      {isOnAnotherComponent ? 'To edit this element you must edit its parent component' : 'No element selected'}
+      {debouncedIsOnAnotherComponent ? 'To edit this element you must edit its parent component' : 'No element selected'}
     </Div>
-  ), [isOnAnotherComponent])
+  ), [debouncedIsOnAnotherComponent])
 
   const renderNoClassNames = useCallback(() => (
     <Div
@@ -128,16 +132,29 @@ function StylesSection() {
     <Div
       xflex="y2s"
       position="relative"
-      borderTop="1px solid border"
       mt={0.5}
     >
+      {!selectedClassName && (
+        <Div
+          textAlign="center"
+          fontSize="0.75rem"
+          color="text-light"
+          mb={0.5}
+        >
+          Select a class to edit it.
+          <br />
+          This is your styling including all classes.
+        </Div>
+      )}
       <StylesLayoutSection
         cssValues={selectedClassName ? workingCssValues : finalCssValues}
         onChange={handleStyleChange}
+        disabled={!selectedClassName}
       />
       <StylesSpacingSection
         cssValues={selectedClassName ? workingCssValues : finalCssValues}
         onChange={handleStyleChange}
+        disabled={!selectedClassName}
       />
       {loading && (
         <Div
@@ -148,26 +165,6 @@ function StylesSection() {
           bottom={0}
           backgroundColor="transparency(black, 75)"
         />
-      )}
-      {!selectedClassName && (
-        <Tooltip
-          label={(
-            <Div textAlign="center">
-              Select a class to edit it.
-              <br />
-              This is your styling including all classes.
-            </Div>
-          )}
-        >
-          <Div
-            position="absolute"
-            top={0}
-            left={0}
-            right={0}
-            bottom={0}
-            backgroundColor="transparency(black, 98)"
-          />
-        </Tooltip>
       )}
     </Div>
   ), [

@@ -1,5 +1,5 @@
-import { useCallback, useRef } from 'react'
-import { Accordion, Button, Div, Tooltip, useOutsideClick } from 'honorable'
+import { useCallback } from 'react'
+import { Accordion, Button, Div, Tooltip } from 'honorable'
 import { CgArrowAlignH, CgArrowAlignV, CgDisplayFlex, CgDisplayFullwidth, CgDisplayGrid } from 'react-icons/cg'
 import { FaRegEyeSlash } from 'react-icons/fa'
 import { AiOutlineLine } from 'react-icons/ai'
@@ -19,10 +19,12 @@ import { CssAttributeType, CssValueType } from '../../types'
 import { cssAttributesMap } from '../../constants'
 
 import CssValueInput from './CssValueInput'
+import StylesSubSectionDisabledOverlay from './StylesSubSectionDisabledOverlay'
 
 type StylesLayoutSectionPropsType = {
   cssValues: Record<string, CssValueType>
   onChange: (attributes: CssAttributeType[]) => void
+  disabled: boolean
 }
 
 function addDefaults(attributeNames: string[]) {
@@ -175,7 +177,7 @@ const justifys = [
   },
 ]
 
-function StylesLayoutSection({ cssValues, onChange }: StylesLayoutSectionPropsType) {
+function StylesLayoutSection({ cssValues, onChange, disabled }: StylesLayoutSectionPropsType) {
   const [expanded, setExpanded] = usePersistedState('styles-layout-section-expanded', true)
 
   const isToggled = useCallback((attributeName: string, values: CssValueType[]) => values.includes(cssValues[attributeName] ?? cssAttributesMap[attributeName].defaultValue), [cssValues])
@@ -413,9 +415,11 @@ function StylesLayoutSection({ cssValues, onChange }: StylesLayoutSectionPropsTy
       smallPadding
       smallTitle
       backgroundTitle
+      childrenPositionRelative
       title="Layout"
       expanded={expanded}
       onExpand={setExpanded}
+      borderTop="1px solid border"
     >
       <Div
         xflex="y2s"
@@ -428,6 +432,7 @@ function StylesLayoutSection({ cssValues, onChange }: StylesLayoutSectionPropsTy
         {cssValues.display === 'flex' && renderFlexGapEditor()}
         {cssValues.display === 'flex' && renderFlexWrapEditor()}
       </Div>
+      {disabled && <StylesSubSectionDisabledOverlay />}
     </Accordion>
   )
 }

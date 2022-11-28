@@ -1,4 +1,4 @@
-import { Ref, RefObject, forwardRef, useCallback } from 'react'
+import { Ref, forwardRef, useCallback } from 'react'
 import { Button, Div, Slider } from 'honorable'
 import { CgUndo } from 'react-icons/cg'
 

@@ -8,17 +8,19 @@ import useRefresh from '../../hooks/useRefresh'
 import usePersistedState from '../../hooks/usePersistedState'
 
 import SpacingEditor from './SpacingEditor'
+import StylesSubSectionDisabledOverlay from './StylesSubSectionDisabledOverlay'
 
 type StylesSpacingSectionPropsType = {
   onChange: (attributes: CssAttributeType[]) => void,
   cssValues: Record<string, CssValueType>
+  disabled: boolean
 }
 
 const baseHeight = 128 + 32 + 8 + 2
 const borderSizeDivider = 3.58
 const spacingEditorPadding = 8
 
-function StylesSpacingSection({ onChange, cssValues }: StylesSpacingSectionPropsType) {
+function StylesSpacingSection({ onChange, cssValues, disabled }: StylesSpacingSectionPropsType) {
   const inputMountNodeRef = useRef<HTMLDivElement>(null)
 
   useRefresh()
@@ -34,6 +36,7 @@ function StylesSpacingSection({ onChange, cssValues }: StylesSpacingSectionProps
       smallPadding
       smallTitle
       backgroundTitle
+      childrenPositionRelative
       title="Spacing"
       expanded={expanded}
       onExpand={setExpanded}
@@ -62,6 +65,7 @@ function StylesSpacingSection({ onChange, cssValues }: StylesSpacingSectionProps
         />
       </SpacingEditor>
       <div ref={inputMountNodeRef} />
+      {disabled && <StylesSubSectionDisabledOverlay />}
     </Accordion>
   )
 }

@@ -283,15 +283,18 @@ export default mergeTheme(defaultTheme, {
         paddingLeft: 0,
         paddingRight: 0,
       },
-      ({ noChildrenPadding }: any) => noChildrenPadding && ({
+      ({ noChildrenPadding }: any) => noChildrenPadding && {
         paddingBottom: 0,
-      }),
-      ({ smallPadding }: any) => smallPadding && ({
+      },
+      ({ smallPadding }: any) => smallPadding && {
         paddingTop: 8,
         paddingBottom: 8,
         paddingLeft: 8,
         paddingRight: 8,
-      }),
+      },
+      ({ childrenPositionRelative }: any) => childrenPositionRelative && {
+        position: 'relative',
+      },
     ],
   },
   Autocomplete: {
