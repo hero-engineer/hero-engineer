@@ -7,6 +7,8 @@ import { CssAttributeType, CssValueType, SpacingsType } from '../../types'
 
 import useRefresh from '../../hooks/useRefresh'
 
+import doesParentHaveId from '../../utils/doesParentHaveId'
+
 import SpacingEditorInput from './SpacingEditorInput'
 
 type SpacingEditorPropsType = {
@@ -38,7 +40,6 @@ function SpacingEditor({
 }: SpacingEditorPropsType) {
   const rootRef = useRef<HTMLDivElement>(null)
   const childrenRef = useRef<HTMLDivElement>(null)
-  const unitMenuRef = useRef<HTMLDivElement>(null)
 
   useRefresh()
 
@@ -60,7 +61,8 @@ function SpacingEditor({
     if (!cssAttributesMap[cssAttributeName].isValueValid(editedValue)) {
       onChange([{ name: `${semanticName}-${spacingSemanticValues[editedIndex]}`, value: cssAttributesMap[`${semanticName}-${spacingSemanticValues[editedIndex]}`].defaultValue }])
     }
-    if (!rootRef.current?.contains(event.target as Node) || childrenRef.current?.contains(event.target as Node) || unitMenuRef.current?.contains(event.target as Node)) {
+
+    if ((!rootRef.current?.contains(event.target as Node) || childrenRef.current?.contains(event.target as Node)) && !doesParentHaveId(event.target as Element, 'CssValueInput-unit-menu')) {
       setEditedIndex(-1)
     }
   }, [value, editedIndex, onChange, semanticName])
@@ -271,7 +273,6 @@ function SpacingEditor({
             onChange={x => onChange([{ name: `${semanticName}-${spacingSemanticValues[editedIndex]}`, value: x }])}
             title={`${semanticName}-${spacingSemanticValues[editedIndex]}`}
             allowNegativeValues={allowNegativeValues}
-            unitMenuRef={unitMenuRef}
           />
         </WithOutsideClick>,
         inputMountNode

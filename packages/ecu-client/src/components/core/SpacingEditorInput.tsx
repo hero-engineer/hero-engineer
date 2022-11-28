@@ -12,7 +12,6 @@ type SpacingEditorInputPropsType = {
   value: CssValueType
   onChange: (value: CssValueType) => void
   allowNegativeValues?: boolean
-  unitMenuRef: RefObject<any>
 }
 
 const designTokens = [
@@ -26,7 +25,7 @@ const designTokens = [
   '96px',
 ]
 
-function SpacingEditorInputRef({ title, value, onChange, allowNegativeValues, unitMenuRef }: SpacingEditorInputPropsType, ref: Ref<any>) {
+function SpacingEditorInputRef({ title, value, onChange, allowNegativeValues }: SpacingEditorInputPropsType, ref: Ref<any>) {
   const [rawValue, unit] = splitSpacingValue(value)
   const numericValue = parseInt(rawValue)
 
@@ -84,7 +83,6 @@ function SpacingEditorInputRef({ title, value, onChange, allowNegativeValues, un
           disabled={unit === 'auto'}
         />
         <CssValueInput
-          unitMenuRef={unitMenuRef}
           value={value.toString()}
           onChange={onChange}
         />

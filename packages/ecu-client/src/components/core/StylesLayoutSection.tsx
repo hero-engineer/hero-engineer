@@ -1,5 +1,5 @@
-import { useCallback } from 'react'
-import { Accordion, Button, Div, Tooltip } from 'honorable'
+import { useCallback, useRef } from 'react'
+import { Accordion, Button, Div, Tooltip, useOutsideClick } from 'honorable'
 import { CgArrowAlignH, CgArrowAlignV, CgDisplayFlex, CgDisplayFullwidth, CgDisplayGrid } from 'react-icons/cg'
 import { FaRegEyeSlash } from 'react-icons/fa'
 import { AiOutlineLine } from 'react-icons/ai'
@@ -17,6 +17,8 @@ import {
 import usePersistedState from '../../hooks/usePersistedState'
 import { CssAttributeType, CssValueType } from '../../types'
 import { cssAttributesMap } from '../../constants'
+
+import CssValueInput from './CssValueInput'
 
 type StylesLayoutSectionPropsType = {
   cssValues: Record<string, CssValueType>
@@ -321,6 +323,90 @@ function StylesLayoutSection({ cssValues, onChange }: StylesLayoutSectionPropsTy
     </Div>
   ), [cssValues, onChange, isToggled])
 
+  const renderFlexGapEditor = useCallback(() => (
+    <Div
+      xflex="x1"
+      fontSize="0.75rem"
+      mb={0.25}
+    >
+      <Div
+        xflex="x4"
+        minWidth={54}
+        color={cssValues['column-gap'] && cssValues['column-gap'] !== cssAttributesMap['column-gap'].defaultValue || cssValues['row-gap'] && cssValues['row-gap'] !== cssAttributesMap['row-gap'].defaultValue ? 'primary' : 'text-light'}
+        pt={0.25}
+      >
+        Gap:
+      </Div>
+      <Div
+        xflex="x4"
+        gap={0.5}
+      >
+        <Div
+          xflex="y1"
+          gap={0.25}
+        >
+          <CssValueInput
+            value={(cssValues['row-gap'] ?? cssAttributesMap['row-gap'].defaultValue).toString()}
+            onChange={value => onChange([{ name: 'row-gap', value }])}
+          />
+          <Div color="text-light">
+            Rows
+          </Div>
+        </Div>
+        <Div
+          xflex="y1"
+          gap={0.25}
+        >
+          <CssValueInput
+            value={(cssValues['column-gap'] ?? cssAttributesMap['column-gap'].defaultValue).toString()}
+            onChange={value => onChange([{ name: 'column-gap', value }])}
+          />
+          <Div color="text-light">
+            Columns
+          </Div>
+        </Div>
+      </Div>
+    </Div>
+  ), [cssValues, onChange])
+
+  const renderFlexWrapEditor = useCallback(() => (
+    <Div
+      xflex="x4s"
+      minHeight={30} // For flex-wrap button ont to change the layour
+    >
+      <Div
+        xflex="x4"
+        minWidth={54}
+        fontSize="0.75rem"
+        color={cssValues['flex-wrap'] && cssValues['flex-wrap'] !== cssAttributesMap['flex-wrap'].defaultValue ? 'primary' : 'text-light'}
+      >
+        Wrap:
+      </Div>
+      <Button
+        ghost
+        smallText
+        toggled={isToggled('flex-wrap', ['wrap', 'wrap-reverse'])}
+        onClick={() => onChange([{ name: 'flex-wrap', value: ['wrap', 'wrap-reverse'].includes((cssValues['flex-wrap'] ?? '').toString()) ? 'nowrap' : 'wrap' }])}
+      >
+        Wrap
+      </Button>
+      {['wrap', 'wrap-reverse'].includes((cssValues['flex-wrap'] ?? '').toString()) && (
+        <Tooltip
+          label="Reverse"
+          placement="bottom"
+        >
+          <Button
+            ghost
+            toggled={(cssValues['flex-wrap'] ?? '').toString() === 'wrap-reverse'}
+            onClick={() => onChange([{ name: 'flex-wrap', value: (cssValues['flex-wrap'] ?? '').toString() === 'wrap-reverse' ? 'wrap' : 'wrap-reverse' }])}
+          >
+            <MdOutlineSwapHoriz />
+          </Button>
+        </Tooltip>
+      )}
+    </Div>
+  ), [cssValues, onChange, isToggled])
+
   return (
     <Accordion
       ghost
@@ -339,6 +425,8 @@ function StylesLayoutSection({ cssValues, onChange }: StylesLayoutSectionPropsTy
         {cssValues.display === 'flex' && renderFlexDirectionEditor()}
         {cssValues.display === 'flex' && renderFlexAlignEditor()}
         {cssValues.display === 'flex' && renderFlexJustifyEditor()}
+        {cssValues.display === 'flex' && renderFlexGapEditor()}
+        {cssValues.display === 'flex' && renderFlexWrapEditor()}
       </Div>
     </Accordion>
   )

@@ -1,5 +1,5 @@
-import { KeyboardEvent, RefObject, useCallback, useState } from 'react'
-import { Div, Input, Menu, MenuItem } from 'honorable'
+import { useCallback, useState } from 'react'
+import { Div, Input, Menu, MenuItem, WithOutsideClick } from 'honorable'
 
 import { cssValueUnits } from '../../constants'
 
@@ -9,10 +9,9 @@ import trimLeadingZeroes from '../../utils/trimLeadingZeroes'
 type CssValueInputPropsType = {
   value: string
   onChange: (value: string) => void
-  unitMenuRef: RefObject<any>
 }
 
-function CssValueInput({ value, onChange, unitMenuRef }: CssValueInputPropsType) {
+function CssValueInput({ value, onChange }: CssValueInputPropsType) {
   const [rawValue, unit = 'auto'] = splitSpacingValue(value)
 
   const [isUnitMenuOpen, setIsUnitMenuOpen] = useState(false)
@@ -25,6 +24,10 @@ function CssValueInput({ value, onChange, unitMenuRef }: CssValueInputPropsType)
   const handleInputChange = useCallback((event: any) => {
     onChange(`${event.target.value === '0' ? event.target.value : trimLeadingZeroes(event.target.value)}${unit?.toString()}`)
   }, [onChange, unit])
+
+  const handleMenuClose = useCallback(() => {
+    setIsUnitMenuOpen(false)
+  }, [])
 
   const renderAdornment = useCallback(() => (
     <Div
@@ -40,32 +43,35 @@ function CssValueInput({ value, onChange, unitMenuRef }: CssValueInputPropsType)
   ), [unit])
 
   const renderUnitMenu = useCallback(() => (
-    <Menu
-      ref={unitMenuRef}
-      position="absolute"
-      bottom="calc(100% + 4px)"
-      right={0}
-      left={0}
-      maxHeight={190}
-      overflowY="auto"
-      display={isUnitMenuOpen ? 'block' : 'none'}
+    <WithOutsideClick
+      preventFirstFire
+      onOutsideClick={handleMenuClose}
     >
-      {cssValueUnits.map(unit => (
-        <MenuItem
-          key={unit}
-          slim
-          noFocus // Would move the menu scroll otherwise
-          onClick={() => handleUnitClick(unit)}
-        >
-          {unit}
-        </MenuItem>
-      ))}
-    </Menu>
-  ), [unitMenuRef, isUnitMenuOpen, handleUnitClick])
+      <Menu
+        id="CssValueInput-unit-menu"
+        position="absolute"
+        bottom="calc(100% + 4px)"
+        right={0}
+        left={0}
+        maxHeight={190}
+        overflowY="auto"
+      >
+        {cssValueUnits.map(unit => (
+          <MenuItem
+            key={unit}
+            slim
+            noFocus // Would move the menu scroll otherwise
+            onClick={() => handleUnitClick(unit)}
+          >
+            {unit}
+          </MenuItem>
+        ))}
+      </Menu>
+    </WithOutsideClick>
+  ), [handleUnitClick, handleMenuClose])
 
   return (
     <Div
-      ref={unitMenuRef}
       xflex="x4"
       position="relative"
     >
@@ -78,9 +84,10 @@ function CssValueInput({ value, onChange, unitMenuRef }: CssValueInputPropsType)
         backgroundColor="white"
         endIcon={renderAdornment()}
         disabled={unit === 'auto'}
+        overflow="hidden"
         pr={0}
       />
-      {renderUnitMenu()}
+      {isUnitMenuOpen && renderUnitMenu()}
     </Div>
   )
 }

@@ -67,6 +67,7 @@ export const cssValueUnits = [
 const cssDisplayValues = ['block', 'inline-block', 'flex', 'grid', 'none']
 const cssFlexDirectionValues = ['row', 'column']
 const cssAlignItemsValues = ['flex-start', 'flex-end', 'center', 'stretch', 'baseline', 'space-between', 'space-around', 'space-evenly']
+const cssFlexWrapValues = ['nowrap', 'wrap', 'wrap-reverse']
 
 function extractSpacing(value: CssValueType, index: number): CssValueType {
   if (typeof value === 'number') return value
@@ -227,6 +228,21 @@ export const cssAttributesMap: CSsAttributesMapType = {
     attributes: ['justify-content'],
     defaultValue: 'flex-start',
     isValueValid: value => typeof value === 'string' && cssAlignItemsValues.includes(value),
+  },
+  'flex-wrap': {
+    attributes: ['flex-wrap'],
+    defaultValue: 'nowrap',
+    isValueValid: value => typeof value === 'string' && cssFlexWrapValues.includes(value),
+  },
+  'row-gap': {
+    attributes: ['row-gap'],
+    defaultValue: 0,
+    isValueValid: isSpacingValueValid,
+  },
+  'column-gap': {
+    attributes: ['column-gap'],
+    defaultValue: 0,
+    isValueValid: isSpacingValueValid,
   },
 } as const
 
