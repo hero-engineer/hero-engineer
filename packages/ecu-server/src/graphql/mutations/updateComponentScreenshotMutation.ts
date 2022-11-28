@@ -24,7 +24,7 @@ async function updateComponentScreenshotMutation(_: any, { sourceComponentAddres
 
   try {
     await sharp(Buffer.from(dataUrl.split(',')[1], 'base64'))
-      .trim()
+      // .trim()
       .toFile(path.join(getEcuScreenshotsLocation(), `${componentNode.address}.png`))
   }
   catch (error) {
