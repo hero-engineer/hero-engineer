@@ -23,10 +23,6 @@ type CreateCssClassMutationArgsType = {
 async function createCssClassMutation(_: any, { sourceComponentAddress, targetHierarchyId, componentDelta, classNames }: CreateCssClassMutationArgsType): Promise<HistoryMutationReturnType<boolean>> {
   console.log('__createCssClassMutation__')
 
-  if (!classNames.length) {
-    throw new Error('classNames is empty')
-  }
-
   const componentNode = getNodeByAddress<FunctionNodeType>(sourceComponentAddress)
 
   if (!componentNode) {
@@ -53,14 +49,17 @@ async function createCssClassMutation(_: any, { sourceComponentAddress, targetHi
     const foundClassNameAttribute = finalPath.node.openingElement.attributes.find(a => a.type === 'JSXAttribute' && a.name.name === 'className') as JSXAttribute
 
     if (foundClassNameAttribute) {
-      if (foundClassNameAttribute.value?.type === 'StringLiteral') {
+      if (!classNames.length) {
+        finalPath.node.openingElement.attributes.splice(finalPath.node.openingElement.attributes.indexOf(foundClassNameAttribute), 1)
+      }
+      else if (foundClassNameAttribute.value?.type === 'StringLiteral') {
         foundClassNameAttribute.value.value = classNames.join(' ')
       }
       else {
         throw new Error('Unsupported non-string className attribute') // TODO: support non-string className attribute
       }
     }
-    else {
+    else if (classNames.length) {
       finalPath.node.openingElement.attributes.push(jsxAttribute(jsxIdentifier('className'), stringLiteral(classNames.join(' '))))
     }
   }
@@ -69,13 +68,15 @@ async function createCssClassMutation(_: any, { sourceComponentAddress, targetHi
 
   await processImpactedFileNodes(impacted)
 
-  const selector = `.${classNames[classNames.length - 1]}`
+  if (classNames.length) {
+    const selector = `.${classNames[classNames.length - 1]}`
 
-  await appendCssSelector(indexCssNode, selector)
+    await appendCssSelector(indexCssNode, selector)
+  }
 
   return {
     returnValue: true,
-    description: `Add className '${classNames.join(' ')}' to ${componentName} in ${componentNode.payload.name}`,
+    description: `${classNames.length ? `Add className '${classNames.join(' ')}' to` : 'Remove className on'} ${componentName} in ${componentNode.payload.name}`,
   }
 }
 
