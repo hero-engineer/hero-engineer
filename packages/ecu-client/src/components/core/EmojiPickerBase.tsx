@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import ExternalEmojiPicker, { EmojiClickData } from 'emoji-picker-react'
 
-import getEmojiUrl from '../../helpers/getEmojiUrl'
+import getEmojiUrl from '../../utils/getEmojiUrl'
 
 type EmojiPickerBasePropsType= {
   onChange: (unified: string, raw: string) => void

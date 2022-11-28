@@ -18,8 +18,8 @@ import useIsComponentRefreshingMutation from '../../hooks/useIsComponentRefreshi
 
 import { AddComponentMutation, AddComponentMutationDataType, ComponentsQuery, ComponentsQueryDataType } from '../../queries'
 
-import isHierarchyOnComponent from '../../helpers/isHierarchyOnComponent'
-import getLastEditedHierarchyItem from '../../helpers/getLastEditedHierarchyItem'
+import isHierarchyOnComponent from '../../utils/isHierarchyOnComponent'
+import getLastEditedHierarchyItem from '../../utils/getLastEditedHierarchyItem'
 
 import capitalize from '../../utils/capitalize'
 import usePersistedState from '../../hooks/usePersistedState'

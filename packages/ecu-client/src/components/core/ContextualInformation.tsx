@@ -18,8 +18,8 @@ import useEditionSearchParams from '../../hooks/useEditionSearchParams'
 import useIsComponentRefreshingMutation from '../../hooks/useIsComponentRefreshingMutation'
 import useMutation from '../../hooks/useMutation'
 
-import isHierarchyOnComponent from '../../helpers/isHierarchyOnComponent'
-import getLastEditedHierarchyItem from '../../helpers/getLastEditedHierarchyItem'
+import isHierarchyOnComponent from '../../utils/isHierarchyOnComponent'
+import getLastEditedHierarchyItem from '../../utils/getLastEditedHierarchyItem'
 
 // Displays:
 // - the context menu on component

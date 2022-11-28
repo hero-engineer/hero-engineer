@@ -1,6 +1,6 @@
 import { Emoji as ExternalEmoji } from 'emoji-picker-react'
 
-import getEmojiUrl from '../../helpers/getEmojiUrl'
+import getEmojiUrl from '../../utils/getEmojiUrl'
 
 type EmojiPropsType = {
   emoji: string

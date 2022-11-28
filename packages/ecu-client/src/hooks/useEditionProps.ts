@@ -10,8 +10,8 @@ import DragAndDropContext from '../contexts/DragAndDropContext'
 import ContextualInformationContext from '../contexts/ContextualInformationContext'
 import CssClassesContext from '../contexts/CssClassesContext'
 
-import getComponentRootHierarchyIds from '../helpers/getComponentRootHierarchyIds'
-import isHierarchyOnComponent from '../helpers/isHierarchyOnComponent'
+import getComponentRootHierarchyIds from '../utils/getComponentRootHierarchyIds'
+import isHierarchyOnComponent from '../utils/isHierarchyOnComponent'
 
 import areArraysEqualAtStart from '../utils/areArraysEqualAtStart'
 import areArraysEqual from '../utils/areArraysEqual'

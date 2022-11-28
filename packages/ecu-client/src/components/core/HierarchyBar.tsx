@@ -16,7 +16,7 @@ import usePreviousWithDefault from '../../hooks/usePreviousWithDefault'
 import useEditionSearchParams from '../../hooks/useEditionSearchParams'
 import useRefetch from '../../hooks/useRefetch'
 
-import getFlattenedHierarchy from '../../helpers/getFlattenedHierarchy'
+import getFlattenedHierarchy from '../../utils/getFlattenedHierarchy'
 
 function isSelectedComponentParent(hierarchy: HierarchyItemType[], currentHierarchyItem: HierarchyItemType) {
   const selectedHierarchyItem = hierarchy[hierarchy.length - 1]

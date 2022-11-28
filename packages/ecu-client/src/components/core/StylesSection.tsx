@@ -1,6 +1,6 @@
 import { memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { Div, useDebounce } from 'honorable'
+import { Link } from 'react-router-dom'
+import { Button, Div, useDebounce } from 'honorable'
 
 import { CssAttributeType, CssValueType } from '../../types'
 import { cssAttributesMap, refetchKeys } from '../../constants'
@@ -20,12 +20,13 @@ import useThrottleAsynchronous from '../../hooks/useThrottleAsynchronous'
 import usePersistedState from '../../hooks/usePersistedState'
 import useEditionSearchParams from '../../hooks/useEditionSearchParams'
 
-import getComponentRootHierarchyIds from '../../helpers/getComponentRootHierarchyIds'
+import getComponentRootHierarchyIds from '../../utils/getComponentRootHierarchyIds'
 
 import filterClassesByClassNames from '../../utils/filterClassesByClassNames'
 import convertCssAttributeNameToJs from '../../utils/convertCssAttributeNameToJs'
 import removeCssDefaults from '../../utils/removeCssDefaults'
 import filterInvalidCssValues from '../../utils/filterInvalidCssValues'
+import getLastComponentHierarchyItem from '../../utils/getLastComponentHierarchyItem'
 
 import CssClassesSelector from './CssClassesSelector'
 import StylesSubSectionLayout from './StylesSubSectionLayout'
@@ -34,7 +35,6 @@ import StylesSubSectionSpacing from './StylesSubSectionSpacing'
 // The styles section
 // Displayed in the right panel
 function StylesSection() {
-  const { componentAddress = '' } = useParams()
   const { hierarchy } = useContext(HierarchyContext)
   const { componentDelta, hierarchyIds } = useEditionSearchParams()
   const { className, setClassName, updatedStyles, setUpdatedStyles } = useContext(CssClassesContext)
@@ -55,10 +55,11 @@ function StylesSection() {
   const [selectedClassName, setSelectedClassName] = usePersistedState('styles-section-selected-class-name', '')
   const [loading, setLoading] = useState(false)
 
+  const lastComponentHierarchyItem = useMemo(() => getLastComponentHierarchyItem(hierarchy), [hierarchy])
   const componentRootHierarchyIds = useMemo(() => getComponentRootHierarchyIds(hierarchy), [hierarchy])
   const isSomeNodeSelected = useMemo(() => hierarchy.length > 0, [hierarchy])
   const isComponentRoot = useMemo(() => componentDelta < 0 && componentRootHierarchyIds.some(x => x === hierarchyIds[hierarchyIds.length - 1]), [componentDelta, componentRootHierarchyIds, hierarchyIds])
-  const isOnAnotherComponent = useMemo(() => !hierarchy.length || hierarchy[hierarchy.length - 1].onComponentAddress !== componentAddress, [hierarchy, componentAddress])
+  const isOnAnotherComponent = useMemo(() => !hierarchy.length || (!!hierarchy[hierarchy.length - 1].componentAddress && !hierarchy[hierarchy.length - 1].isRoot), [hierarchy])
   const isNoElementSelected = useMemo(() => !hierarchy.length || hierarchy[hierarchy.length - 1].isRoot || isComponentRoot || isOnAnotherComponent, [hierarchy, isComponentRoot, isOnAnotherComponent])
   const debouncedIsNoElementSelected = useDebounce(isNoElementSelected, 6 * 16) // To prevent flickering of the section
   const debouncedIsOnAnotherComponent = useDebounce(isSomeNodeSelected && isOnAnotherComponent, 6 * 16) // To prevent flickering of the section
@@ -109,13 +110,33 @@ function StylesSection() {
 
   const renderNoElement = useCallback(() => (
     <Div
-      color="text-light"
-      fontSize="0.85rem"
       px={0.5}
+      fontSize="0.85rem"
     >
-      {debouncedIsOnAnotherComponent ? 'To edit this element you must edit its parent component' : 'No element selected'}
+      {debouncedIsOnAnotherComponent ? (
+        <>
+          <Div color="text-light">
+            To style this element you must edit its parent component
+          </Div>
+          {!!lastComponentHierarchyItem && (
+            <Button
+              as={Link}
+              to={`/_ecu_/component/${lastComponentHierarchyItem.fileAddress}/${lastComponentHierarchyItem.componentAddress}`}
+              mt={0.5}
+            >
+              Edit
+              {' '}
+              {lastComponentHierarchyItem.componentName}
+            </Button>
+          )}
+        </>
+      ) : (
+        <Div color="text-light">
+          No element selected
+        </Div>
+      )}
     </Div>
-  ), [debouncedIsOnAnotherComponent])
+  ), [debouncedIsOnAnotherComponent, lastComponentHierarchyItem])
 
   const renderNoClassNames = useCallback(() => (
     <Div
