@@ -233,38 +233,32 @@ export type CreateComponentMutationDataType = {
 
 export const AddComponentMutation = `
   mutation ($sourceComponentAddress: String!, $targetComponentAddress: String!, $targetHierarchyId: String!, $hierarchyPosition: HierarchyPosition!, $componentDelta: Int!) {
-    addComponent (sourceComponentAddress: $sourceComponentAddress, targetComponentAddress: $targetComponentAddress, targetHierarchyId: $targetHierarchyId, hierarchyPosition: $hierarchyPosition, componentDelta: $componentDelta) {
-      address
-    }
+    addComponent (sourceComponentAddress: $sourceComponentAddress, targetComponentAddress: $targetComponentAddress, targetHierarchyId: $targetHierarchyId, hierarchyPosition: $hierarchyPosition, componentDelta: $componentDelta)
   }
 `
 
 export type AddComponentMutationDataType = {
-  addComponent: FileNodeType
+  addComponent: boolean
 }
 
 export const DeleteComponentMutation = `
   mutation ($sourceComponentAddress: String!, $targetHierarchyId: String!, $componentDelta: Int!) {
-    deleteComponent (sourceComponentAddress: $sourceComponentAddress, targetHierarchyId: $targetHierarchyId, componentDelta: $componentDelta) {
-      address
-    }
+    deleteComponent (sourceComponentAddress: $sourceComponentAddress, targetHierarchyId: $targetHierarchyId, componentDelta: $componentDelta)
   }
 `
 
 export type DeleteComponentMutationDataType = {
-  deleteComponent: FileNodeType
+  deleteComponent: boolean
 }
 
 export const MoveComponentMutation = `
   mutation ($sourceComponentAddress: String!, $sourceHierarchyId: String!, $targetHierarchyId: String!, $hierarchyPosition: HierarchyPosition!) {
-    moveComponent (sourceComponentAddress: $sourceComponentAddress, sourceHierarchyId: $sourceHierarchyId, targetHierarchyId: $targetHierarchyId, hierarchyPosition: $hierarchyPosition) {
-      address
-    }
+    moveComponent (sourceComponentAddress: $sourceComponentAddress, sourceHierarchyId: $sourceHierarchyId, targetHierarchyId: $targetHierarchyId, hierarchyPosition: $hierarchyPosition)
   }
 `
 
 export type MoveComponentMutationDataType = {
-  moveComponent: FileNodeType
+  moveComponent: boolean
 }
 
 export const UpdateGlobalTypesMutation = `

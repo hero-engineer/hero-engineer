@@ -14,6 +14,8 @@ import isHierarchyOnComponent from '../helpers/isHierarchyOnComponent'
 
 import areArraysEqualAtStart from '../utils/areArraysEqualAtStart'
 import areArraysEqual from '../utils/areArraysEqual'
+import findHierarchyItemByHierarchyId from '../utils/findHierarchyItemByHierarchyId'
+import findHierarchyIdsAndComponentDelta from '../utils/findHierarchyIdsAndComponentDelta'
 
 import useForkedRef from './useForkedRef'
 import useHierarchyId from './useHierarchyId'
@@ -61,12 +63,13 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   const rootRef = useRef<T>(null)
   const hierarchyId = useHierarchyId(ecuId, rootRef)
   const { hierarchyIds, componentDelta, setEditionSearchParams } = useEditionSearchParams()
-  const { hierarchy } = useContext(HierarchyContext)
+  const { totalHierarchy, hierarchy } = useContext(HierarchyContext)
   const { dragAndDrop, setDragAndDrop } = useContext(DragAndDropContext)
   const { setContextualInformationState } = useContext(ContextualInformationContext)
   const { className: updatedClassName, setClassName, updatedStyles, setUpdatedStyles } = useContext(CssClassesContext)
   const [isEdited, setIsEdited] = useState(false)
 
+  const hierarchyItem = useMemo(() => findHierarchyItemByHierarchyId(totalHierarchy, hierarchyId), [totalHierarchy, hierarchyId])
   const isSelected = useMemo(() => componentDelta >= 0 && hierarchyIds.length > 0 && !!hierarchyId && hierarchyIds[hierarchyIds.length - 1] === hierarchyId, [componentDelta, hierarchyIds, hierarchyId])
   const componentRootHierarchyIds = useMemo(() => getComponentRootHierarchyIds(hierarchy), [hierarchy])
   const isComponentRoot = useMemo(() => componentDelta < 0 && componentRootHierarchyIds.some(x => x === hierarchyId), [componentDelta, componentRootHierarchyIds, hierarchyId])
@@ -170,25 +173,14 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
       return
     }
 
-    setEditionSearchParams({
-      hierarchyIds: x => {
-        const nextHierarchyIds: string[] = []
+    const found = findHierarchyIdsAndComponentDelta(totalHierarchy, hierarchyItem)
 
-        for (let i = 0; i < ids.length; i++) {
-          const id = ids[i]
-
-          nextHierarchyIds.push(id)
-
-          if (x[i] !== id) {
-            break
-          }
-        }
-
-        return nextHierarchyIds
-      },
-      // componentDelta > 0 means adjustment is necessary (see HierarchyBar)
-      componentDelta: 1,
-    })
+    if (found) {
+      setEditionSearchParams({
+        componentDelta: found.componentDelta,
+        hierarchyIds: found.hierarchyIds,
+      })
+    }
 
     setClassName('')
     setUpdatedStyles({})
@@ -200,6 +192,8 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
     canBeEdited,
     hierarchy,
     componentAddress,
+    totalHierarchy,
+    hierarchyItem,
     setEditionSearchParams,
     setClassName,
     setUpdatedStyles,
@@ -223,8 +217,6 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
     if (canBeEdited) {
       klassName += ' ecu-can-be-edited'
     }
-
-    if (componentDelta > 0) return klassName.trim()
 
     if (isComponentRoot) {
       klassName += ' ecu-selected-root'
@@ -258,7 +250,6 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   }, [
     updatedClassName,
     className,
-    componentDelta,
     canBeEdited,
     canDrop,
     isSelected,

@@ -1,9 +1,9 @@
 .ecu-hierarchy-label {
-  > .ecu-hierarchy-label-edit {
+  > * > .ecu-hierarchy-label-edit {
     display: none;
   }
 
-  &:hover > .ecu-hierarchy-label-edit {
+  &:hover > * > .ecu-hierarchy-label-edit {
     display: inline-block;
   }
 }

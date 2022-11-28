@@ -1,5 +1,6 @@
 import { memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { Div, Tooltip } from 'honorable'
+import { useParams } from 'react-router-dom'
+import { Div, Tooltip, useDebounce } from 'honorable'
 
 import { cssAttributesMap, refetchKeys } from '../../constants'
 
@@ -23,6 +24,9 @@ import removeCssDefaults from '../../utils/removeCssDefaults'
 import { CssAttributeType, CssValueType } from '../../types'
 
 import usePersistedState from '../../hooks/usePersistedState'
+import useEditionSearchParams from '../../hooks/useEditionSearchParams'
+
+import getComponentRootHierarchyIds from '../../helpers/getComponentRootHierarchyIds'
 
 import CssClassesSelector from './CssClassesSelector'
 import StylesLayoutSection from './StylesLayoutSection'
@@ -31,7 +35,9 @@ import StylesSpacingSection from './StylesSpacingSection'
 // The styles section
 // Displayed in the right panel
 function StylesSection() {
+  const { componentAddress = '' } = useParams()
   const { hierarchy } = useContext(HierarchyContext)
+  const { componentDelta, hierarchyIds } = useEditionSearchParams()
   const { className, setClassName, updatedStyles, setUpdatedStyles } = useContext(CssClassesContext)
   const hot = useContext(HotContext)
   const [cssClassesQueryResult, refetchCssClassesQuery] = useQuery<CssClassesQueryDataType>({
@@ -49,10 +55,15 @@ function StylesSection() {
   const [selectedClassName, setSelectedClassName] = usePersistedState('styles-section-selected-class-name', '')
   const [loading, setLoading] = useState(false)
 
+  const componentRootHierarchyIds = useMemo(() => getComponentRootHierarchyIds(hierarchy), [hierarchy])
+  const isComponentRoot = useMemo(() => componentDelta < 0 && componentRootHierarchyIds.some(x => x === hierarchyIds[hierarchyIds.length - 1]), [componentDelta, componentRootHierarchyIds, hierarchyIds])
+  const isOnAnotherComponent = useMemo(() => !hierarchy.length || hierarchy[hierarchy.length - 1].onComponentAddress !== componentAddress, [hierarchy, componentAddress])
+  const isNoElementSelected = useMemo(() => !hierarchy.length || hierarchy[hierarchy.length - 1].isRoot || isComponentRoot || isOnAnotherComponent, [hierarchy, isComponentRoot, isOnAnotherComponent])
+  const debouncedIsNoElementSelected = useDebounce(isNoElementSelected, 100) // To prevent flickering of the section
+
   const allClasses = useMemo(() => cssClassesQueryResult.data?.cssClasses || [], [cssClassesQueryResult.data])
   const classes = useMemo(() => filterClassesByClassNames(allClasses, classNames), [allClasses, classNames])
   const currentClass = useMemo(() => filterClassesByClassNames(classes, [selectedClassName]), [classes, selectedClassName])
-  const hasNoNodeSelected = useMemo(() => !hierarchy.length || hierarchy[hierarchy.length - 1].isRoot, [hierarchy])
   const finalCssValues = useJsCssValues(useCssValues(classes, cssAttributesMap), updatedStyles, cssAttributesMap)
   const workingCssValues = useJsCssValues(useCssValues(currentClass, cssAttributesMap), updatedStyles, cssAttributesMap)
 
@@ -98,9 +109,9 @@ function StylesSection() {
       fontSize="0.85rem"
       px={0.5}
     >
-      No element selected
+      {isOnAnotherComponent ? 'To edit this element you must edit its parent component' : 'No element selected'}
     </Div>
-  ), [])
+  ), [isOnAnotherComponent])
 
   const renderNoClassNames = useCallback(() => (
     <Div
@@ -223,7 +234,7 @@ function StylesSection() {
       >
         Styles
       </Div>
-      {hasNoNodeSelected ? renderNoElement() : renderSection()}
+      {debouncedIsNoElementSelected ? renderNoElement() : renderSection()}
     </Div>
   )
 }
