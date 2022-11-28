@@ -11,6 +11,7 @@ import { HierarchyQuery, HierarchyQueryDataType } from '../../queries'
 
 import HierarchyContext from '../../contexts/HierarchyContext'
 import BreakpointContext from '../../contexts/BreakpointContext'
+import LastEditedComponentContext from '../../contexts/LastEditedComponentContext'
 
 import usePreviousWithDefault from '../../hooks/usePreviousWithDefault'
 import useEditionSearchParams from '../../hooks/useEditionSearchParams'
@@ -49,6 +50,7 @@ function HierarchyBar() {
   const { hierarchyIds, componentDelta, setEditionSearchParams } = useEditionSearchParams()
   const { setHierarchy, setTotalHierarchy } = useContext(HierarchyContext)
   const { isDragging } = useContext(BreakpointContext)
+  const { setLastEditedComponent } = useContext(LastEditedComponentContext)
 
   const [hierarchyQueryResult, refetchHierarchyQuery] = useQuery<HierarchyQueryDataType>({
     query: HierarchyQuery,
@@ -65,7 +67,7 @@ function HierarchyBar() {
     skip: !componentAddress,
   })
 
-  const hierarchy = useMemo(() => JSON.parse(hierarchyQueryResult.data?.hierarchy || '""') || {}, [hierarchyQueryResult.data])
+  const hierarchy = useMemo<HierarchyItemType>(() => JSON.parse(hierarchyQueryResult.data?.hierarchy || '""') || {}, [hierarchyQueryResult.data])
   const totalHierarchy = useMemo(() => getFlattenedHierarchy(hierarchy, hierarchyIds), [hierarchy, hierarchyIds])
   const actualHierarchy = useMemo(() => totalHierarchy.slice(0, totalHierarchy.length + componentDelta), [totalHierarchy, componentDelta])
   const previousHierarchy = usePreviousWithDefault(actualHierarchy, actualHierarchy)
@@ -150,7 +152,20 @@ function HierarchyBar() {
     if (hierarchyQueryResult.fetching) return
 
     refetch(refetchKeys.componentScreenshot)
-  }, [refetch, hierarchyQueryResult.fetching, hierarchyQueryResult.data?.hierarchy])
+  }, [hierarchyQueryResult.fetching, hierarchyQueryResult.data?.hierarchy, refetch])
+
+  useEffect(() => {
+    if (!Object.keys(hierarchy).length) return
+
+    const lastEditedCompoment = { ...hierarchy }
+
+    // @ts-expect-error
+    delete lastEditedCompoment.children
+
+    console.log('xxx', lastEditedCompoment)
+
+    setLastEditedComponent(lastEditedCompoment)
+  }, [hierarchy, setLastEditedComponent])
 
   if (!componentAddress) {
     return null

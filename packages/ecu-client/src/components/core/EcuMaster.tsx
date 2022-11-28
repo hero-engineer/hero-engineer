@@ -13,6 +13,7 @@ import HotContext from '../../contexts/HotContext'
 import RefetchContext, { RefetchContextType } from '../../contexts/RefetchContext'
 import ThemeModeContext, { ThemeModeContextType } from '../../contexts/ThemeModeContext'
 import SnackBarContext, { SnackBarContextType } from '../../contexts/SnackBarContext'
+import LastEditedComponentContext, { LastEditedComponentContextType } from '../../contexts/LastEditedComponentContext'
 import IsComponentRefreshingContext, { IsComponentRefreshingContextType } from '../../contexts/IsComponentRefreshingContext'
 import HierarchyContext, { HierarchyContextType } from '../../contexts/HierarchyContext'
 import BreakpointContext, { BreakpointContextType } from '../../contexts/BreakpointContext'
@@ -44,6 +45,9 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
   const [snackBarItems, setSnackBarItems] = useState<SnackBarItemType[]>([])
   const appendSnackBarItem = useCallback((item: SnackBarItemType) => setSnackBarItems(x => [...x, item]), [])
   const snackBarContextValue = useMemo<SnackBarContextType>(() => ({ snackBarItems, setSnackBarItems, appendSnackBarItem }), [snackBarItems, appendSnackBarItem])
+
+  const [lastEditedComponent, setLastEditedComponent] = usePersistedState<HierarchyItemType | null>('last-edited-component', null)
+  const lastEditedComponentContextValue = useMemo<LastEditedComponentContextType>(() => ({ lastEditedComponent, setLastEditedComponent }), [lastEditedComponent, setLastEditedComponent])
 
   const [isComponentRefreshing, setIsComponentRefreshing] = useState(false)
   const isComponnentRefreshingContextValue = useMemo<IsComponentRefreshingContextType>(() => ({ isComponentRefreshing, setIsComponentRefreshing }), [isComponentRefreshing])
@@ -90,23 +94,25 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
             <RefetchContext.Provider value={refetchContextValue}>
               <ThemeModeContext.Provider value={themeModeContextValue}>
                 <SnackBarContext.Provider value={snackBarContextValue}>
-                  <IsComponentRefreshingContext.Provider value={isComponnentRefreshingContextValue}>
-                    <HierarchyContext.Provider value={hierarchyContextValue}>
-                      <BreakpointContext.Provider value={breakpointContextValue}>
-                        <DragAndDropContext.Provider value={dragAndDropContextValue}>
-                          <ContextualInformationContext.Provider value={contextualInformationContextValue}>
-                            <CssClassesContext.Provider value={cssClassesContextValue}>
-                              <Router>
-                                <WithEcuHomeButton>
-                                  {children}
-                                </WithEcuHomeButton>
-                              </Router>
-                            </CssClassesContext.Provider>
-                          </ContextualInformationContext.Provider>
-                        </DragAndDropContext.Provider>
-                      </BreakpointContext.Provider>
-                    </HierarchyContext.Provider>
-                  </IsComponentRefreshingContext.Provider>
+                  <LastEditedComponentContext.Provider value={lastEditedComponentContextValue}>
+                    <IsComponentRefreshingContext.Provider value={isComponnentRefreshingContextValue}>
+                      <HierarchyContext.Provider value={hierarchyContextValue}>
+                        <BreakpointContext.Provider value={breakpointContextValue}>
+                          <DragAndDropContext.Provider value={dragAndDropContextValue}>
+                            <ContextualInformationContext.Provider value={contextualInformationContextValue}>
+                              <CssClassesContext.Provider value={cssClassesContextValue}>
+                                <Router>
+                                  <WithEcuHomeButton>
+                                    {children}
+                                  </WithEcuHomeButton>
+                                </Router>
+                              </CssClassesContext.Provider>
+                            </ContextualInformationContext.Provider>
+                          </DragAndDropContext.Provider>
+                        </BreakpointContext.Provider>
+                      </HierarchyContext.Provider>
+                    </IsComponentRefreshingContext.Provider>
+                  </LastEditedComponentContext.Provider>
                 </SnackBarContext.Provider>
               </ThemeModeContext.Provider>
             </RefetchContext.Provider>

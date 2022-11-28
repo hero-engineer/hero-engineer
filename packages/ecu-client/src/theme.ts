@@ -419,6 +419,21 @@ export default mergeTheme(defaultTheme, {
           backgroundColor: 'red.700',
         },
       },
+      ({ backgroundLightDark }: any) => backgroundLightDark && {
+        backgroundColor: 'background-light-dark',
+        '&:hover': {
+          backgroundColor: 'darken(background-light-dark, 2)',
+        },
+        ':active': {
+          backgroundColor: 'darken(background-light-dark, 4)',
+        },
+        ':disabled': {
+          backgroundColor: 'darken(background-light-dark, 6)',
+          '&:hover': {
+            backgroundColor: 'darken(background-light-dark, 6)',
+          },
+        },
+      },
     ],
   },
   Input: {

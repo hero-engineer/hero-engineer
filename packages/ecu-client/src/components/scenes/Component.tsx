@@ -1,14 +1,13 @@
 import { useParams } from 'react-router-dom'
-
 import { Div } from 'honorable'
 
 import { refetchKeys } from '../../constants'
 
 import { ComponentQuery, ComponentQueryDataType } from '../../queries'
 
+import useQuery from '../../hooks/useQuery'
 import useRefetch from '../../hooks/useRefetch'
 import useIsComponentRefreshingQuery from '../../hooks/useIsComponentRefreshingQuery'
-import useQuery from '../../hooks/useQuery'
 
 import ComponentWindow from '../core/ComponentWindow'
 
