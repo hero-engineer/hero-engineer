@@ -128,9 +128,22 @@ export default mergeTheme(defaultTheme, {
   },
   colors: {
     primary: 'blue.500',
-    'background-light': '#fafcff',
-    'background-component': 'background-light',
-    border: 'darken(background-light, 10)',
+    'background-light': {
+      light: '#fafcff',
+      dark: '#22293b',
+    },
+    'background-light-dark': {
+      light: 'darken(background-light, 8)',
+      dark: 'lighten(background-light, 8)',
+    },
+    'background-component': {
+      light: 'background-light',
+      dark: 'background',
+    },
+    border: {
+      light: 'darken(background-light, 10)',
+      dark: 'lighten(background-light, 10)',
+    },
     blue,
     green,
     yellow,
@@ -322,6 +335,12 @@ export default mergeTheme(defaultTheme, {
         paddingBottom: 8,
         paddingLeft: 12,
         paddingRight: 12,
+        ':disabled': {
+          backgroundColor: 'background-light-dark',
+          ':hover': {
+            backgroundColor: 'background-light-dark',
+          },
+        },
       },
       ({ borderPrimary }: any) => borderPrimary && {
         border: '1px solid primary',

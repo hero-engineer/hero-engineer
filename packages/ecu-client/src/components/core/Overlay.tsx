@@ -16,6 +16,7 @@ import PackagesLinkButton from './PackagesLinkButton'
 import BreakpointsButtons from './BreakpointsButtons'
 import UndoRedoButtons from './UndoRedoButtons'
 import PushButton from './PushButton'
+import SettingsLinkButton from './SettingsLinkButton'
 import ViewAppButton from './ViewAppButton'
 import RetractablePanel from './RetractablePanel'
 import HierarchySection from './HierarchySection'
@@ -49,6 +50,7 @@ function Overlay({ children }: OverlayPropsType) {
         <Div flexGrow />
         <UndoRedoButtons />
         <PushButton />
+        <SettingsLinkButton borderLeft="1px solid border" />
         <ViewAppButton borderLeft="1px solid border" />
       </Div>
       <Div

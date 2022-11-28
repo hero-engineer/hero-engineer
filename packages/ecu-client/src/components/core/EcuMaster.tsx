@@ -2,10 +2,10 @@ import '../../css/common.css'
 
 import { ViteHotContext } from 'vite/types/hot'
 import { CSSProperties, PropsWithChildren, useCallback, useMemo, useState } from 'react'
-import { Provider } from 'urql'
+import { Provider as GraphqlProvider } from 'urql'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import { CssBaseline, ThemeProvider } from 'honorable'
+import { CssBaseline, ThemeProvider, mergeTheme } from 'honorable'
 
 import client from '../../client'
 import theme from '../../theme'
@@ -13,6 +13,7 @@ import theme from '../../theme'
 import ModeContext from '../../contexts/ModeContext'
 import HotContext from '../../contexts/HotContext'
 import RefetchContext, { RefetchContextType } from '../../contexts/RefetchContext'
+import ThemeModeContext, { ThemeModeContextType } from '../../contexts/ThemeModeContext'
 import SnackBarContext, { SnackBarContextType } from '../../contexts/SnackBarContext'
 import IsComponentRefreshingContext, { IsComponentRefreshingContextType } from '../../contexts/IsComponentRefreshingContext'
 import HierarchyContext, { HierarchyContextType } from '../../contexts/HierarchyContext'
@@ -38,6 +39,9 @@ type EcuMasterPropsType = PropsWithChildren<{
 function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterPropsType) {
   const { refetch, register } = useCreateRefetchRegistry()
   const refetchContextValue = useMemo<RefetchContextType>(() => ({ refetch, register }), [refetch, register])
+
+  const [themeMode, setThemeMode] = usePersistedState<'light' | 'dark'>('theme-mode', 'light')
+  const themeModeContextValue = useMemo<ThemeModeContextType>(() => ({ themeMode, setThemeMode }), [themeMode, setThemeMode])
 
   const [snackBarItems, setSnackBarItems] = useState<SnackBarItemType[]>([])
   const appendSnackBarItem = useCallback((item: SnackBarItemType) => setSnackBarItems(x => [...x, item]), [])
@@ -78,38 +82,40 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
   const cssClassesContextValue = useMemo<CssClassesContextType>(() => ({ className, setClassName, updatedStyles, setUpdatedStyles }), [className, updatedStyles])
 
   return (
-    <Provider value={client}>
+    <GraphqlProvider value={client}>
       <DndProvider backend={HTML5Backend}>
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={mergeTheme(theme, { mode: themeMode })}>
           <CssBaseline />
           <ModeContext.Provider value={mode}>
             <HotContext.Provider value={hot}>
               <RefetchContext.Provider value={refetchContextValue}>
-                <SnackBarContext.Provider value={snackBarContextValue}>
-                  <IsComponentRefreshingContext.Provider value={isComponnentRefreshingContextValue}>
-                    <HierarchyContext.Provider value={hierarchyContextValue}>
-                      <BreakpointContext.Provider value={breakpointContextValue}>
-                        <DragAndDropContext.Provider value={dragAndDropContextValue}>
-                          <ContextualInformationContext.Provider value={contextualInformationContextValue}>
-                            <CssClassesContext.Provider value={cssClassesContextValue}>
-                              <Router>
-                                <WithEcuHomeButton>
-                                  {children}
-                                </WithEcuHomeButton>
-                              </Router>
-                            </CssClassesContext.Provider>
-                          </ContextualInformationContext.Provider>
-                        </DragAndDropContext.Provider>
-                      </BreakpointContext.Provider>
-                    </HierarchyContext.Provider>
-                  </IsComponentRefreshingContext.Provider>
-                </SnackBarContext.Provider>
+                <ThemeModeContext.Provider value={themeModeContextValue}>
+                  <SnackBarContext.Provider value={snackBarContextValue}>
+                    <IsComponentRefreshingContext.Provider value={isComponnentRefreshingContextValue}>
+                      <HierarchyContext.Provider value={hierarchyContextValue}>
+                        <BreakpointContext.Provider value={breakpointContextValue}>
+                          <DragAndDropContext.Provider value={dragAndDropContextValue}>
+                            <ContextualInformationContext.Provider value={contextualInformationContextValue}>
+                              <CssClassesContext.Provider value={cssClassesContextValue}>
+                                <Router>
+                                  <WithEcuHomeButton>
+                                    {children}
+                                  </WithEcuHomeButton>
+                                </Router>
+                              </CssClassesContext.Provider>
+                            </ContextualInformationContext.Provider>
+                          </DragAndDropContext.Provider>
+                        </BreakpointContext.Provider>
+                      </HierarchyContext.Provider>
+                    </IsComponentRefreshingContext.Provider>
+                  </SnackBarContext.Provider>
+                </ThemeModeContext.Provider>
               </RefetchContext.Provider>
             </HotContext.Provider>
           </ModeContext.Provider>
         </ThemeProvider>
       </DndProvider>
-    </Provider>
+    </GraphqlProvider>
   )
 }
 

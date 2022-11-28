@@ -1,9 +1,11 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 
 import Home from '../scenes/Home'
 import Component from '../scenes/Component'
 import Components from '../scenes/Components'
 import Packages from '../scenes/Packages'
+import Settings from '../scenes/Settings'
+import SettingsGeneral from '../scenes/SettingsGeneral'
 
 import Layout from './Layout'
 import ResponsiveLayout from './ResponsiveLayout'
@@ -45,6 +47,28 @@ function Router({ children }: any) {
               </ResponsiveLayout>
             )}
           />
+          <Route
+            path="settings"
+            element={(
+              <ResponsiveLayout>
+                <Settings />
+              </ResponsiveLayout>
+            )}
+          >
+            <Route
+              index
+              element={(
+                <Navigate
+                  replace
+                  to="/_ecu_/settings/general"
+                />
+              )}
+            />
+            <Route
+              path="general"
+              element={<SettingsGeneral />}
+            />
+          </Route>
           <Route
             path="*"
             element={<div>Not found</div>}

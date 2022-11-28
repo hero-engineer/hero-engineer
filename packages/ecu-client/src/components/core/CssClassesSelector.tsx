@@ -97,7 +97,7 @@ function CssClassesSelector({ allClasses, classNames, onClassesChange, selectedC
       flexGrow
       position="relative"
       fontSize="0.85rem"
-      backgroundColor="white"
+      backgroundColor="background"
       border="1px solid border"
       borderRadius="medium"
       gap={0.25}
@@ -143,7 +143,7 @@ function CssClassChip({ children, onDiscard, onSelect, primary }: CssClassChipPr
     <Div
       xflex="x4"
       flexShrink={0}
-      backgroundColor={primary ? 'primary' : 'darken(background-light, 8)'}
+      backgroundColor={primary ? 'primary' : 'background-light-dark'}
       color={primary ? 'white' : 'text'}
       borderRadius="medium"
       p={0.25}

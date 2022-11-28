@@ -35,7 +35,10 @@ function ComponentIframeWidthExpander({ children }: ComponentIframeWidthExanderP
         ref={leftRef}
         flexGrow
       />
-      <ComponentIframeWidthExanderHandle maxWidth={maxWidth} />
+      <ComponentIframeWidthExanderHandle
+        isLeft
+        maxWidth={maxWidth}
+      />
       <Div
         ref={contentRef}
         xflex="y2s"
@@ -44,7 +47,9 @@ function ComponentIframeWidthExpander({ children }: ComponentIframeWidthExanderP
       >
         {children}
       </Div>
-      <ComponentIframeWidthExanderHandle maxWidth={maxWidth} />
+      <ComponentIframeWidthExanderHandle
+        maxWidth={maxWidth}
+      />
       <Div
         ref={rightRef}
         flexGrow
@@ -54,10 +59,11 @@ function ComponentIframeWidthExpander({ children }: ComponentIframeWidthExanderP
 }
 
 type ComponentIframeWidthExanderHandlePropsType = {
+  isLeft?: boolean
   maxWidth: number
 }
 
-function ComponentIframeWidthExanderHandle({ maxWidth }: ComponentIframeWidthExanderHandlePropsType) {
+function ComponentIframeWidthExanderHandle({ isLeft, maxWidth }: ComponentIframeWidthExanderHandlePropsType) {
   const { breakpoint, setWidth, isDragging, setIsDragging } = useContext(BreakpointContext)
 
   const handleMouseDown = useCallback(() => {
@@ -71,8 +77,8 @@ function ComponentIframeWidthExanderHandle({ maxWidth }: ComponentIframeWidthExa
   const handleMouseMove = useCallback((event: MouseEvent) => {
     if (!(isDragging && breakpoint)) return
 
-    setWidth(width => Math.max(breakpoint.min, Math.min(maxWidth, breakpoint.max, width - event.movementX)))
-  }, [isDragging, breakpoint, setWidth, maxWidth])
+    setWidth(width => Math.max(breakpoint.min, Math.min(maxWidth, breakpoint.max, width + (isLeft ? -1 : 1) * event.movementX)))
+  }, [isDragging, breakpoint, setWidth, maxWidth, isLeft])
 
   useEffect(() => {
     window.addEventListener('mouseup', handleMouseUp)

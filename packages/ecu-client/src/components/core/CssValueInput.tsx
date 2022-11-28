@@ -81,7 +81,7 @@ function CssValueInput({ value, onChange }: CssValueInputPropsType) {
         type="number"
         value={rawValue === 'auto' ? '' : rawValue}
         onChange={handleInputChange}
-        backgroundColor="white"
+        backgroundColor="background"
         endIcon={renderAdornment()}
         disabled={unit === 'auto'}
         overflow="hidden"
