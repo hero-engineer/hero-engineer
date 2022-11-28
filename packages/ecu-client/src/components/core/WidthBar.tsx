@@ -2,6 +2,9 @@ import { ReactNode, memo, useContext, useMemo, useRef } from 'react'
 import { Div } from 'honorable'
 
 import BreakpointContext from '../../contexts/BreakpointContext'
+import ThemeModeContext from '../../contexts/ThemeModeContext'
+
+import useRefresh from '../../hooks/useRefresh'
 
 const largeIncrement = 50
 const smallIncrement = 5
@@ -9,8 +12,10 @@ const tickWidth = 1
 
 function WidthBar() {
   const rootRef = useRef<HTMLDivElement>(null)
-
   const { width, isDragging } = useContext(BreakpointContext)
+  const { themeMode } = useContext(ThemeModeContext)
+
+  useRefresh([isDragging])
 
   const ticks = useMemo(() => {
     if (!rootRef.current) return null
@@ -26,7 +31,7 @@ function WidthBar() {
             flexShrink: 0,
             width: tickWidth,
             height: i % largeIncrement === 0 ? '100%' : i % (2 * smallIncrement) === 0 ? '33.333%' : '16.666%',
-            backgroundColor: 'darkslategray',
+            backgroundColor: themeMode === 'light' ? 'darkslategray' : 'white',
             marginRight: smallIncrement - tickWidth,
           }}
         />

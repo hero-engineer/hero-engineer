@@ -1,4 +1,4 @@
-import { ReactNode, memo, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
+import { MouseEvent, ReactNode, memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { Div } from 'honorable'
 
 import BreakpointContext from '../../contexts/BreakpointContext'
@@ -64,21 +64,34 @@ type ComponentIframeWidthExanderHandlePropsType = {
 }
 
 function ComponentIframeWidthExanderHandle({ isLeft, maxWidth }: ComponentIframeWidthExanderHandlePropsType) {
+  const [isDraggingCurrent, setIsDraggingCurrent] = useState(false)
+
   const { breakpoint, setWidth, isDragging, setIsDragging } = useContext(BreakpointContext)
 
   const handleMouseDown = useCallback(() => {
     setIsDragging(true)
+    setIsDraggingCurrent(true)
   }, [setIsDragging])
 
   const handleMouseUp = useCallback(() => {
     setIsDragging(false)
+    setIsDraggingCurrent(false)
   }, [setIsDragging])
 
   const handleMouseMove = useCallback((event: MouseEvent) => {
-    if (!(isDragging && breakpoint)) return
+    if (!(isDragging && isDraggingCurrent && breakpoint)) return
 
-    setWidth(width => Math.max(breakpoint.min, Math.min(maxWidth, breakpoint.max, width + (isLeft ? -1 : 1) * event.movementX)))
-  }, [isDragging, breakpoint, setWidth, maxWidth, isLeft])
+    console.log('(isLeft ? -1 : 1)', (isLeft ? -1 : 1))
+
+    setWidth(width => Math.max(breakpoint.min, Math.min(maxWidth, breakpoint.max, width + (isLeft ? -2 : 2) * event.movementX)))
+  }, [
+    isDragging,
+    isDraggingCurrent,
+    breakpoint,
+    setWidth,
+    maxWidth,
+    isLeft,
+  ])
 
   useEffect(() => {
     window.addEventListener('mouseup', handleMouseUp)
@@ -88,23 +101,27 @@ function ComponentIframeWidthExanderHandle({ isLeft, maxWidth }: ComponentIframe
     }
   }, [handleMouseUp])
 
-  useEffect(() => {
-    window.addEventListener('mousemove', handleMouseMove)
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-    }
-  }, [handleMouseMove])
-
   return (
     <Div
+      position="relative"
       width={5}
       cursor="col-resize"
       backgroundColor={isDragging ? 'primary' : undefined}
       userSelect="none"
       _hover={{ backgroundColor: 'primary' }}
       onMouseDown={handleMouseDown}
-    />
+    >
+      {isDragging && isDraggingCurrent && (
+        <Div
+          position="absolute"
+          left="-50vw"
+          right="-50vw"
+          top={0}
+          bottom={0}
+          onMouseMove={handleMouseMove}
+        />
+      )}
+    </Div>
   )
 }
 
