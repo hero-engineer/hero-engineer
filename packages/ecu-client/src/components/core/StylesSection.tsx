@@ -143,7 +143,7 @@ function StylesSection() {
           left={0}
           right={0}
           bottom={0}
-          backgroundColor="transparency(black, 95)"
+          backgroundColor="transparency(black, 98)"
         />
       )}
     </Div>

@@ -1,7 +1,8 @@
 import { useCallback } from 'react'
-import { Accordion, Button, Div } from 'honorable'
+import { Accordion, Button, Div, Tooltip } from 'honorable'
 import { CgDisplayFlex, CgDisplayFullwidth, CgDisplayGrid } from 'react-icons/cg'
 import { FaRegEyeSlash } from 'react-icons/fa'
+import { AiOutlineLine } from 'react-icons/ai'
 
 import usePersistedState from '../../hooks/usePersistedState'
 import { CssValueType } from '../../types'
@@ -20,6 +21,10 @@ const displays = [
   {
     name: 'block',
     Icon: CgDisplayFullwidth,
+  },
+  {
+    name: 'inline-block',
+    Icon: AiOutlineLine,
   },
   {
     name: 'grid',
@@ -44,14 +49,19 @@ function StylesLayoutSection({ cssValues, onChange }: StylesLayoutSectionPropsTy
         Display:
       </Div>
       {displays.map(({ name, Icon }) => (
-        <Button
-          ghost
-          toggled={cssValues.display ? cssValues.display === name : cssAttributesMap.display.defaultValue === name}
-          onClick={() => onChange('display', name)}
+        <Tooltip
           key={name}
+          label={name}
+          placement="bottom"
         >
-          <Icon />
-        </Button>
+          <Button
+            ghost
+            toggled={cssValues.display ? cssValues.display === name : cssAttributesMap.display.defaultValue === name}
+            onClick={() => onChange('display', name)}
+          >
+            <Icon />
+          </Button>
+        </Tooltip>
       ))}
     </Div>
   ), [cssValues, onChange])

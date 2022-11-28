@@ -64,7 +64,7 @@ export const cssValueUnits = [
   'pc',
 ] as const
 
-const cssDisplayValues = ['block', 'flex', 'grid', 'none']
+const cssDisplayValues = ['block', 'inline-block', 'flex', 'grid', 'none']
 
 function extractSpacing(value: CssValueType, index: number): CssValueType {
   if (typeof value === 'number') return value

@@ -84,7 +84,7 @@ function CssClassesSelector({ allClasses, classNames, onClassesChange, selectedC
     const nextClassNames = classNames.filter(c => c !== className)
 
     onClassesChange(nextClassNames)
-    setSelectedClassName(x => nextClassNames.includes(x) ? x : nextClassNames[nextClassNames.length - 1])
+    setSelectedClassName(x => nextClassNames.includes(x) ? x : '')
   }, [classNames, onClassesChange, setSelectedClassName])
 
   const handleChipSelect = useCallback((className: string) => {
