@@ -9,76 +9,79 @@ import SettingsGeneral from '../scenes/SettingsGeneral'
 
 import Layout from './Layout'
 import ResponsiveLayout from './ResponsiveLayout'
+import EcuThemeProvider from './EcuThemeProvider'
 
 // The Ecu router
 function Router({ children }: any) {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route
-          path="_ecu_"
-          element={<Layout />}
-        >
+      <EcuThemeProvider>
+        <Routes>
           <Route
-            index
-            element={(
-              <ResponsiveLayout>
-                <Home />
-              </ResponsiveLayout>
-            )}
-          />
-          <Route
-            path="components"
-            element={(
-              <ResponsiveLayout>
-                <Components />
-              </ResponsiveLayout>
-            )}
-          />
-          <Route
-            path="component/:fileAddress/:componentAddress"
-            element={<Component />}
-          />
-          <Route
-            path="packages"
-            element={(
-              <ResponsiveLayout>
-                <Packages />
-              </ResponsiveLayout>
-            )}
-          />
-          <Route
-            path="settings"
-            element={(
-              <ResponsiveLayout>
-                <Settings />
-              </ResponsiveLayout>
-            )}
+            path="_ecu_"
+            element={<Layout />}
           >
             <Route
               index
               element={(
-                <Navigate
-                  replace
-                  to="/_ecu_/settings/general"
-                />
+                <ResponsiveLayout>
+                  <Home />
+                </ResponsiveLayout>
               )}
             />
             <Route
-              path="general"
-              element={<SettingsGeneral />}
+              path="components"
+              element={(
+                <ResponsiveLayout>
+                  <Components />
+                </ResponsiveLayout>
+              )}
+            />
+            <Route
+              path="component/:fileAddress/:componentAddress"
+              element={<Component />}
+            />
+            <Route
+              path="packages"
+              element={(
+                <ResponsiveLayout>
+                  <Packages />
+                </ResponsiveLayout>
+              )}
+            />
+            <Route
+              path="settings"
+              element={(
+                <ResponsiveLayout>
+                  <Settings />
+                </ResponsiveLayout>
+              )}
+            >
+              <Route
+                index
+                element={(
+                  <Navigate
+                    replace
+                    to="/_ecu_/settings/general"
+                  />
+                )}
+              />
+              <Route
+                path="general"
+                element={<SettingsGeneral />}
+              />
+            </Route>
+            <Route
+              path="*"
+              element={<div>Not found</div>}
             />
           </Route>
           <Route
             path="*"
-            element={<div>Not found</div>}
+            element={children}
           />
-        </Route>
-        <Route
-          path="*"
-          element={children}
-        />
-      </Routes>
+        </Routes>
+      </EcuThemeProvider>
     </BrowserRouter>
   )
 }

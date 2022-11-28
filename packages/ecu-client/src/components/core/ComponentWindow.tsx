@@ -1,9 +1,9 @@
 import { memo } from 'react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import { CssBaseline, Div, ThemeProvider, mergeTheme } from 'honorable'
+import { CssBaseline, Div, ThemeProvider } from 'honorable'
 
-import theme from '../../theme'
+import themeComponent from '../../themeComponent'
 
 import ComponentIframeWidthExpander from './ComponentIframeWidthExander'
 import ComponentIframe from './ComponentIframe'
@@ -12,17 +12,6 @@ import WithIsComponentRefreshingLayer from './WithIsComponentRefreshingLayer'
 import WithComponentScrenshot from './WithComponentScrenshot'
 import EmotionProvider from './EmotionProvider'
 import ContextualInformation from './ContextualInformation'
-
-const componentTheme = mergeTheme(theme, {
-  name: 'Ecu-Component',
-  stylesheet: {
-    html: [
-      {
-        fontSize: 16,
-      },
-    ],
-  },
-})
 
 type ComponentWindowPropsType = {
   componentPath: string
@@ -46,7 +35,7 @@ function ComponentWindow({ componentPath, decoratorPaths }: ComponentWindowProps
                 backend={HTML5Backend}
                 context={window}
               >
-                <ThemeProvider theme={componentTheme}>
+                <ThemeProvider theme={themeComponent}>
                   <CssBaseline />
                   <WithIsComponentRefreshingLayer>
                     <WithComponentScrenshot>

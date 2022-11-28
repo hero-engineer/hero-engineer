@@ -5,10 +5,8 @@ import { CSSProperties, PropsWithChildren, useCallback, useMemo, useState } from
 import { Provider as GraphqlProvider } from 'urql'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import { CssBaseline, ThemeProvider, mergeTheme } from 'honorable'
 
 import client from '../../client'
-import theme from '../../theme'
 
 import ModeContext from '../../contexts/ModeContext'
 import HotContext from '../../contexts/HotContext'
@@ -87,36 +85,33 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
   return (
     <GraphqlProvider value={client}>
       <DndProvider backend={HTML5Backend}>
-        <ThemeProvider theme={mergeTheme(theme, { mode: themeMode })}>
-          <CssBaseline />
-          <ModeContext.Provider value={mode}>
-            <HotContext.Provider value={hot}>
-              <RefetchContext.Provider value={refetchContextValue}>
-                <ThemeModeContext.Provider value={themeModeContextValue}>
-                  <SnackBarContext.Provider value={snackBarContextValue}>
-                    <IsComponentRefreshingContext.Provider value={isComponnentRefreshingContextValue}>
-                      <HierarchyContext.Provider value={hierarchyContextValue}>
-                        <BreakpointContext.Provider value={breakpointContextValue}>
-                          <DragAndDropContext.Provider value={dragAndDropContextValue}>
-                            <ContextualInformationContext.Provider value={contextualInformationContextValue}>
-                              <CssClassesContext.Provider value={cssClassesContextValue}>
-                                <Router>
-                                  <WithEcuHomeButton>
-                                    {children}
-                                  </WithEcuHomeButton>
-                                </Router>
-                              </CssClassesContext.Provider>
-                            </ContextualInformationContext.Provider>
-                          </DragAndDropContext.Provider>
-                        </BreakpointContext.Provider>
-                      </HierarchyContext.Provider>
-                    </IsComponentRefreshingContext.Provider>
-                  </SnackBarContext.Provider>
-                </ThemeModeContext.Provider>
-              </RefetchContext.Provider>
-            </HotContext.Provider>
-          </ModeContext.Provider>
-        </ThemeProvider>
+        <ModeContext.Provider value={mode}>
+          <HotContext.Provider value={hot}>
+            <RefetchContext.Provider value={refetchContextValue}>
+              <ThemeModeContext.Provider value={themeModeContextValue}>
+                <SnackBarContext.Provider value={snackBarContextValue}>
+                  <IsComponentRefreshingContext.Provider value={isComponnentRefreshingContextValue}>
+                    <HierarchyContext.Provider value={hierarchyContextValue}>
+                      <BreakpointContext.Provider value={breakpointContextValue}>
+                        <DragAndDropContext.Provider value={dragAndDropContextValue}>
+                          <ContextualInformationContext.Provider value={contextualInformationContextValue}>
+                            <CssClassesContext.Provider value={cssClassesContextValue}>
+                              <Router>
+                                <WithEcuHomeButton>
+                                  {children}
+                                </WithEcuHomeButton>
+                              </Router>
+                            </CssClassesContext.Provider>
+                          </ContextualInformationContext.Provider>
+                        </DragAndDropContext.Provider>
+                      </BreakpointContext.Provider>
+                    </HierarchyContext.Provider>
+                  </IsComponentRefreshingContext.Provider>
+                </SnackBarContext.Provider>
+              </ThemeModeContext.Provider>
+            </RefetchContext.Provider>
+          </HotContext.Provider>
+        </ModeContext.Provider>
       </DndProvider>
     </GraphqlProvider>
   )
