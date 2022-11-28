@@ -1,4 +1,4 @@
-import { Link, useMatch } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { Button } from 'honorable'
 
 import { useContext } from 'react'
@@ -6,10 +6,10 @@ import { useContext } from 'react'
 import LastEditedComponentContext from '../../contexts/LastEditedComponentContext'
 
 function LastEditedComponentButton(props: any) {
+  const { componentAddress = '' } = useParams()
   const { lastEditedComponent } = useContext(LastEditedComponentContext)
-  const matched = useMatch('/_ecu_/component/*')
 
-  if (!lastEditedComponent || matched) return null
+  if (!lastEditedComponent || componentAddress) return null
 
   return (
     <Button
