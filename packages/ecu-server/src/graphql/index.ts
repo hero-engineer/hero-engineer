@@ -172,7 +172,7 @@ export const typeDefs = gql`
     updateGlobalTypes(globalTypesFileContent: String!): Boolean!
     updateFileTypes(sourceFileAddress: String!, rawTypes: String!): Boolean!
 
-    createCssClass(sourceComponentAddress: String!, targetHierarchyId: String!, componentDelta: Int!, classNames: [String!]!, shouldCombine: Boolean!, shouldUpdateElement: Boolean!): Boolean!
+    createCssClass(sourceComponentAddress: String!, targetHierarchyId: String!, componentDelta: Int!, classNames: [String!]!): Boolean!
     updateCssClass(classNames: [String!]!, attributesJson: String!): Boolean!
 
     installOrUpdatePackage(name: String!, version: String!, type: String!, shouldDelete: Boolean!): Boolean!
