@@ -48,7 +48,7 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
   const snackBarContextValue = useMemo<SnackBarContextType>(() => ({ snackBarItems, setSnackBarItems, appendSnackBarItem }), [snackBarItems, appendSnackBarItem])
 
   const [isComponentRefreshing, setIsComponentRefreshing] = useState(false)
-  const isComponnentRefreshingContextValue = useMemo<IsComponentRefreshingContextType>(() => ({ isComponentRefreshing, setIsComponentRefreshing }), [isComponentRefreshing, setIsComponentRefreshing])
+  const isComponnentRefreshingContextValue = useMemo<IsComponentRefreshingContextType>(() => ({ isComponentRefreshing, setIsComponentRefreshing }), [isComponentRefreshing])
 
   const [hierarchy, setHierarchy] = useState<HierarchyItemType[]>([])
   const [totalHierarchy, setTotalHierarchy] = useState<HierarchyItemType| null>(null)
@@ -80,6 +80,9 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
   const [className, setClassName] = useState('')
   const [updatedStyles, setUpdatedStyles] = useState<CSSProperties>({})
   const cssClassesContextValue = useMemo<CssClassesContextType>(() => ({ className, setClassName, updatedStyles, setUpdatedStyles }), [className, updatedStyles])
+
+  // Do not remove yet
+  console.log('render')
 
   return (
     <GraphqlProvider value={client}>

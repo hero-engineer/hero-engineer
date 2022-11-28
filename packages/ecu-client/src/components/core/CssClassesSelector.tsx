@@ -67,7 +67,7 @@ function CssClassesSelector({ allClasses, classNames, onClassNamesChange, select
   const refetch = useRefetch()
 
   const handleCreateClass = useCallback(async (classNames: string[]) => {
-    if (!classNames.length || isError) return
+    if (isError) return
 
     onLoading(true)
 
@@ -119,7 +119,8 @@ function CssClassesSelector({ allClasses, classNames, onClassNamesChange, select
 
     onClassNamesChange(nextClassNames)
     onSelectedClassNameChange(x => nextClassNames.includes(x) ? x : '')
-  }, [classNames, onClassNamesChange, onSelectedClassNameChange])
+    handleCreateClass(nextClassNames)
+  }, [classNames, onClassNamesChange, onSelectedClassNameChange, handleCreateClass])
 
   const handleChipSelect = useCallback((className: string) => {
     onSelectedClassNameChange(x => x === className ? '' : className)
@@ -139,7 +140,7 @@ function CssClassesSelector({ allClasses, classNames, onClassNamesChange, select
 
   return (
     <Div
-      xflex="x41"
+      xflex="y2s"
       flexGrow
       position="relative"
       fontSize="0.85rem"
@@ -149,16 +150,23 @@ function CssClassesSelector({ allClasses, classNames, onClassNamesChange, select
       gap={0.25}
       p={0.25}
     >
-      {classNames.map(className => (
-        <CssClassChip
-          key={className}
-          onDiscard={() => handleDiscardClass(className)}
-          onSelect={() => handleChipSelect(className)}
-          primary={selectedClassName === className}
+      {!!classNames.length && (
+        <Div
+          xflex="x11"
+          gap={0.25}
         >
-          {className}
-        </CssClassChip>
-      ))}
+          {classNames.map(className => (
+            <CssClassChip
+              key={className}
+              onDiscard={() => handleDiscardClass(className)}
+              onSelect={() => handleChipSelect(className)}
+              primary={selectedClassName === className}
+            >
+              {className}
+            </CssClassChip>
+          ))}
+        </Div>
+      )}
       <Autocomplete
         bare
         placeholder={`${classNames.length ? 'Add' : 'Choose'} or create class`}

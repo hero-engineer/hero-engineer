@@ -40,6 +40,7 @@ function StylesSection() {
   const { componentDelta, hierarchyIds } = useEditionSearchParams()
   const { className, setClassName, updatedStyles, setUpdatedStyles } = useContext(CssClassesContext)
   const hot = useContext(HotContext)
+
   const [cssClassesQueryResult, refetchCssClassesQuery] = useQuery<CssClassesQueryDataType>({
     query: CssClassesQuery,
   })
@@ -91,7 +92,7 @@ function StylesSection() {
   const throttledHandleCssUpdate = useThrottleAsynchronous(handleCssUpdate, 500)
 
   const handleSetClassNames = useCallback((classes: string[]) => {
-    setClassName(classes.join(' '))
+    setClassName(classes.join(' ') || ' ') // HACK to force useEditionProps to use an empty updated className
     setUpdatedStyles({})
   }, [setClassName, setUpdatedStyles])
 

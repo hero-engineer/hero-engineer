@@ -322,7 +322,7 @@ export type UpdateFileDescriptionMutationDataType = {
 }
 
 export const CreateCssClassMutation = `
-  mutation ($sourceComponentAddress: String!, $targetHierarchyId: String!, $componentDelta: Int! $classNames: [String!]!) {
+  mutation ($sourceComponentAddress: String!, $targetHierarchyId: String!, $componentDelta: Int! $classNames: [String]!) {
     createCssClass (sourceComponentAddress: $sourceComponentAddress, targetHierarchyId: $targetHierarchyId, componentDelta: $componentDelta, classNames: $classNames)
   }
 `
