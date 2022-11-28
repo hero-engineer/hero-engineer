@@ -21,9 +21,12 @@ It acts as a shield around your app to reprogram it as you create new components
 - Component screenshots
 - Packages management
 
-## Roadmap
+## Working on
 
 - Style components
+
+## Roadmap
+
 - Drag-and-drop components
 - State management
 - Delete component/file
