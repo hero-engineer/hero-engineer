@@ -216,12 +216,10 @@ function StylesSection() {
     <Div
       xflex="y2s"
       width={256}
-      py={0.5}
     >
       <Div
         fontWeight="bold"
-        mb={0.5}
-        px={0.5}
+        p={0.5}
       >
         Styles
       </Div>

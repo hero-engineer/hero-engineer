@@ -70,11 +70,11 @@ function RetractablePanel({ direction, openPersistedStateKey, defaultOpenIndex =
       {items.map(({ children }, index) => (
         <Div
           key={index}
+          xflex="y2s"
           position="absolute"
           top={0}
           left={isLeft ? '100%' : null}
           right={isRight ? '100%' : null}
-          xflex="y2s"
           display={openIndex === index ? 'flex' : 'none'}
           width="fit-content"
           height="100%"
