@@ -8,7 +8,7 @@ import ComponentImportsEditor from './ComponentImportsEditor'
 // Component imports section
 // Displayed in the right panel
 function ComponentImportsSection() {
-  const [expanded, setExpanded] = usePersistedState('ecu-component-imports-accordion-expanded', true)
+  const [expanded, setExpanded] = usePersistedState('component-imports-accordion-expanded', true)
 
   return (
     <Div

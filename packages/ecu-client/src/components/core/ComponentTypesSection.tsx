@@ -8,7 +8,7 @@ import ComponentTypesEditor from './ComponentTypesEditor'
 // The component types section
 // Displayed in the right panel
 function ComponentTypesSection() {
-  const [expanded, setExpanded] = usePersistedState('ecu-component-types-accordion-expanded', true)
+  const [expanded, setExpanded] = usePersistedState('component-types-accordion-expanded', true)
 
   return (
     <Div

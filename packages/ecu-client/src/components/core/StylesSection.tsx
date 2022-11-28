@@ -1,7 +1,7 @@
 import { memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { Div } from 'honorable'
+import { Div, Tooltip } from 'honorable'
 
-import { cssAttributesMap, refetchKeys, spacingSemanticValues } from '../../constants'
+import { cssAttributesMap, refetchKeys } from '../../constants'
 
 import { CssClassesQuery, CssClassesQueryDataType, UpdateCssClassMutation, UpdateCssClassMutationDataType } from '../../queries'
 
@@ -20,7 +20,9 @@ import filterClassesByClassNames from '../../utils/filterClassesByClassNames'
 import convertCssAttributeNameToJs from '../../utils/convertCssAttributeNameToJs'
 import removeCssDefaults from '../../utils/removeCssDefaults'
 
-import { CssValueType, SpacingsType } from '../../types'
+import { CssAttributeType, CssValueType } from '../../types'
+
+import usePersistedState from '../../hooks/usePersistedState'
 
 import CssClassesSelector from './CssClassesSelector'
 import StylesLayoutSection from './StylesLayoutSection'
@@ -44,7 +46,7 @@ function StylesSection() {
 
   const classNames = useMemo(() => className.split(' ').map(c => c.trim()).filter(Boolean), [className])
 
-  const [selectedClassName, setSelectedClassName] = useState<string>('')
+  const [selectedClassName, setSelectedClassName] = usePersistedState('styles-section-selected-class-name', '')
   const [loading, setLoading] = useState(false)
 
   const allClasses = useMemo(() => cssClassesQueryResult.data?.cssClasses || [], [cssClassesQueryResult.data])
@@ -80,10 +82,14 @@ function StylesSection() {
     setUpdatedStyles({})
   }, [setClassName, setUpdatedStyles])
 
-  const handleStyleChange = useCallback((attributeName: string, value: CssValueType) => {
-    const jsAttributeName = convertCssAttributeNameToJs(attributeName)
+  const handleStyleChange = useCallback((attributes: CssAttributeType[]) => {
+    const updatedStyles: Record<string, CssValueType> = {}
 
-    setUpdatedStyles(x => ({ ...x, [jsAttributeName]: value }))
+    attributes.forEach(({ name, value }) => {
+      updatedStyles[convertCssAttributeNameToJs(name)] = value
+    })
+
+    setUpdatedStyles(x => ({ ...x, ...updatedStyles }))
   }, [setUpdatedStyles])
 
   const renderNoElement = useCallback(() => (
@@ -133,14 +139,24 @@ function StylesSection() {
         />
       )}
       {!selectedClassName && (
-        <Div
-          position="absolute"
-          top={0}
-          left={0}
-          right={0}
-          bottom={0}
-          backgroundColor="transparency(black, 98)"
-        />
+        <Tooltip
+          label={(
+            <Div textAlign="center">
+              Select a class to edit it.
+              <br />
+              This is your styling including all classes.
+            </Div>
+          )}
+        >
+          <Div
+            position="absolute"
+            top={0}
+            left={0}
+            right={0}
+            bottom={0}
+            backgroundColor="transparency(black, 98)"
+          />
+        </Tooltip>
       )}
     </Div>
   ), [
@@ -172,6 +188,7 @@ function StylesSection() {
     allClasses,
     classNames,
     selectedClassName,
+    setSelectedClassName,
     handleSetClassNames,
     renderNoClassNames,
     renderSubSections,

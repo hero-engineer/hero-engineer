@@ -2,7 +2,7 @@ import { useMemo, useRef } from 'react'
 import { Accordion } from 'honorable'
 
 import { cssAttributesMap, spacingSemanticValues } from '../../constants'
-import { CssValueType, SpacingType, SpacingsType } from '../../types'
+import { CssAttributeType, CssValueType, SpacingsType } from '../../types'
 
 import useRefresh from '../../hooks/useRefresh'
 import usePersistedState from '../../hooks/usePersistedState'
@@ -10,7 +10,7 @@ import usePersistedState from '../../hooks/usePersistedState'
 import SpacingEditor from './SpacingEditor'
 
 type StylesSpacingSectionPropsType = {
-  onChange: (attributeName: string, value: SpacingType) => void,
+  onChange: (attributes: CssAttributeType[]) => void,
   cssValues: Record<string, CssValueType>
 }
 

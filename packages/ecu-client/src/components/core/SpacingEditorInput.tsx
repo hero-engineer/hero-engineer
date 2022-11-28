@@ -2,15 +2,15 @@ import { Ref, RefObject, forwardRef, useCallback } from 'react'
 import { Button, Div, Slider } from 'honorable'
 import { CgUndo } from 'react-icons/cg'
 
-import { SpacingType } from '../../types'
+import { CssValueType } from '../../types'
 import splitSpacingValue from '../../utils/splitSpacingValue'
 
 import CssValueInput from './CssValueInput'
 
 type SpacingEditorInputPropsType = {
   title: string
-  value: SpacingType
-  onChange: (value: SpacingType) => void
+  value: CssValueType
+  onChange: (value: CssValueType) => void
   allowNegativeValues?: boolean
   unitMenuRef: RefObject<any>
 }

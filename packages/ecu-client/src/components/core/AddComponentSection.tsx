@@ -31,9 +31,9 @@ function AddComponentSection() {
   const { hierarchyIds, componentDelta } = useEditionSearchParams()
   const { hierarchy } = useContext(HierarchyContext)
 
-  const [isAtomsAccordionExpanded, setIsAtomsAccordionExpanded] = usePersistedState('ecu-add-component-section-is-atoms-accordion-expanded', true)
-  const [isComponentsAccordionExpanded, setIsComponentsAccordionExpanded] = usePersistedState('ecu-add-component-section-is-components-accordion-expanded', true)
-  const [isSpecialAccordionExpanded, setIsSpecialAccordionExpanded] = usePersistedState('ecu-add-component-section-is-special-accordion-expanded', true)
+  const [isAtomsAccordionExpanded, setIsAtomsAccordionExpanded] = usePersistedState('add-component-section-is-atoms-accordion-expanded', true)
+  const [isComponentsAccordionExpanded, setIsComponentsAccordionExpanded] = usePersistedState('add-component-section-is-components-accordion-expanded', true)
+  const [isSpecialAccordionExpanded, setIsSpecialAccordionExpanded] = usePersistedState('add-component-section-is-special-accordion-expanded', true)
 
   const [hierarchyPosition, setHierarchyPosition] = useState<HierarchyPosition>(hierarchyPositions[0])
   const [isComponentModalOpen, setIsComponentModalOpen] = useState(false)

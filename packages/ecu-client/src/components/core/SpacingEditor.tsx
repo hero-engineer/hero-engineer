@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { Div, Path, Svg, WithOutsideClick } from 'honorable'
 
 import { cssAttributesMap, spacingSemanticValues } from '../../constants'
-import { CssValueType, SpacingType, SpacingsType } from '../../types'
+import { CssAttributeType, CssValueType, SpacingsType } from '../../types'
 
 import useRefresh from '../../hooks/useRefresh'
 
@@ -14,7 +14,7 @@ type SpacingEditorPropsType = {
   semanticName: string
   allowNegativeValues?: boolean
   value: SpacingsType
-  onChange: (attributeName: string, value: SpacingType) => void
+  onChange: (attributes: CssAttributeType[]) => void
   height?: number | string
   borderSize?: number
   offetHorizontal?: number
@@ -58,7 +58,7 @@ function SpacingEditor({
     const cssAttributeName = `${semanticName}-${spacingSemanticValues[editedIndex]}`
 
     if (!cssAttributesMap[cssAttributeName].isValueValid(editedValue)) {
-      onChange(`${semanticName}-${spacingSemanticValues[editedIndex]}`, cssAttributesMap[`${semanticName}-${spacingSemanticValues[editedIndex]}`].defaultValue)
+      onChange([{ name: `${semanticName}-${spacingSemanticValues[editedIndex]}`, value: cssAttributesMap[`${semanticName}-${spacingSemanticValues[editedIndex]}`].defaultValue }])
     }
     if (!rootRef.current?.contains(event.target as Node) || childrenRef.current?.contains(event.target as Node) || unitMenuRef.current?.contains(event.target as Node)) {
       setEditedIndex(-1)
@@ -268,7 +268,7 @@ function SpacingEditor({
         >
           <SpacingEditorInput
             value={value[editedIndex]}
-            onChange={x => onChange(`${semanticName}-${spacingSemanticValues[editedIndex]}`, x)}
+            onChange={x => onChange([{ name: `${semanticName}-${spacingSemanticValues[editedIndex]}`, value: x }])}
             title={`${semanticName}-${spacingSemanticValues[editedIndex]}`}
             allowNegativeValues={allowNegativeValues}
             unitMenuRef={unitMenuRef}

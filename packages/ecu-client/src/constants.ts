@@ -66,6 +66,7 @@ export const cssValueUnits = [
 
 const cssDisplayValues = ['block', 'inline-block', 'flex', 'grid', 'none']
 const cssFlexDirectionValues = ['row', 'column']
+const cssAlignItemsValues = ['flex-start', 'flex-end', 'center', 'stretch', 'baseline', 'space-between', 'space-around', 'space-evenly']
 
 function extractSpacing(value: CssValueType, index: number): CssValueType {
   if (typeof value === 'number') return value
@@ -216,6 +217,16 @@ export const cssAttributesMap: CSsAttributesMapType = {
     attributes: ['flex-direction'],
     defaultValue: 'row',
     isValueValid: value => typeof value === 'string' && cssFlexDirectionValues.includes(value),
+  },
+  'align-items': {
+    attributes: ['align-items'],
+    defaultValue: 'stretch',
+    isValueValid: value => typeof value === 'string' && cssAlignItemsValues.includes(value),
+  },
+  'justify-content': {
+    attributes: ['justify-content'],
+    defaultValue: 'flex-start',
+    isValueValid: value => typeof value === 'string' && cssAlignItemsValues.includes(value),
   },
 } as const
 

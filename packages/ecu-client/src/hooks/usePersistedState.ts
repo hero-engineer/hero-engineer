@@ -6,7 +6,7 @@ const identity = (x: any) => x
 function usePersistedState<T>(key: string, defaultValue: T, parser = identity): [T, Dispatch<SetStateAction<T>>] {
   const getLocalStorageValue = useCallback(() => {
     try {
-      const item = localStorage.getItem(key)
+      const item = localStorage.getItem(`ecu-${key}`)
 
       if (item) return parser(JSON.parse(item))
     }
@@ -20,7 +20,7 @@ function usePersistedState<T>(key: string, defaultValue: T, parser = identity): 
   const [state, setState] = useState<T>(getLocalStorageValue())
 
   useEffect(() => {
-    localStorage.setItem(key, JSON.stringify(state))
+    localStorage.setItem(`ecu-${key}`, JSON.stringify(state))
   }, [key, state])
 
   return [state, setState]

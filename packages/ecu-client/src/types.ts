@@ -80,9 +80,11 @@ export type BreakpointType = {
   scale: number
 }
 
+export type CssValueType = string | number
+
 export type CssAttributeType = {
   name: string
-  value: string
+  value: CssValueType
 }
 
 export type CssClassType= {
@@ -91,11 +93,7 @@ export type CssClassType= {
   attributes: CssAttributeType[]
 }
 
-export type CssValueType = string | number
-
-export type SpacingType = CssValueType
-
-export type SpacingsType = [SpacingType, SpacingType, SpacingType, SpacingType]
+export type SpacingsType = [CssValueType, CssValueType, CssValueType, CssValueType]
 
 export type CSsAttributesMapType = Record<string, {
   attributes: readonly string[]
