@@ -5,6 +5,7 @@ import traverseCss from './traverseCss.js'
 async function updateCssSelector(fileNode: FileNodeType, selector: string, attributes: CssAttributeType[]) {
   await traverseCss(fileNode, selector, (_cssClass, rule) => {
     rule.nodes.length = 0
+    rule.raws.after = '\n' // Styling
 
     attributes.forEach(attribute => {
       rule.append({
