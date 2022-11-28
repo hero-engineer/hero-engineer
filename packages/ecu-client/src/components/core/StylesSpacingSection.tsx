@@ -1,6 +1,7 @@
-import { useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import { Accordion } from 'honorable'
 
+import { cssAttributesMap, spacingSemanticValues } from '../../constants'
 import { CssValueType, SpacingType, SpacingsType } from '../../types'
 
 import useRefresh from '../../hooks/useRefresh'
@@ -9,8 +10,6 @@ import usePersistedState from '../../hooks/usePersistedState'
 import SpacingEditor from './SpacingEditor'
 
 type StylesSpacingSectionPropsType = {
-  marging: SpacingsType,
-  padding: SpacingsType,
   onChange: (attributeName: string, value: SpacingType) => void,
   cssValues: Record<string, CssValueType>
 }
@@ -19,12 +18,15 @@ const baseHeight = 128 + 32 + 8 + 2
 const borderSizeDivider = 3.58
 const spacingEditorPadding = 8
 
-function StylesSpacingSection({ marging, padding, onChange, cssValues }: StylesSpacingSectionPropsType) {
+function StylesSpacingSection({ onChange, cssValues }: StylesSpacingSectionPropsType) {
   const inputMountNodeRef = useRef<HTMLDivElement>(null)
 
   useRefresh()
 
   const [expanded, setExpanded] = usePersistedState('styles-spacing-section-expanded', true)
+
+  const margin = useMemo(() => spacingSemanticValues.map(spacingSemanticValue => `margin-${spacingSemanticValue}`).map(key => cssValues[key] ?? cssAttributesMap[key].defaultValue) as SpacingsType, [cssValues])
+  const padding = useMemo(() => spacingSemanticValues.map(spacingSemanticValue => `padding-${spacingSemanticValue}`).map(key => cssValues[key] ?? cssAttributesMap[key].defaultValue) as SpacingsType, [cssValues])
 
   return (
     <Accordion
@@ -40,7 +42,7 @@ function StylesSpacingSection({ marging, padding, onChange, cssValues }: StylesS
         allowNegativeValues
         title="Margin"
         semanticName="margin"
-        value={marging}
+        value={margin}
         height={baseHeight}
         onChange={onChange}
         borderSize={baseHeight / borderSizeDivider - spacingEditorPadding}

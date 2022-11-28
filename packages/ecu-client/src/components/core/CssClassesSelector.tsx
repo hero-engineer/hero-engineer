@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
+import { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Autocomplete, Div } from 'honorable'
 import { MdOutlineClose } from 'react-icons/md'
@@ -23,6 +23,7 @@ type CssClassesSelector = {
 }
 
 const ecuCreateOption = `__ecu_create_option__${Math.random()}`
+const anyOption = { value: ecuCreateOption, label: 'Create new class' }
 
 function CssClassesSelector({ allClasses, classNames, onClassesChange, selectedClassName, setSelectedClassName, setLoading }: CssClassesSelector) {
   const { componentAddress = '' } = useParams()
@@ -67,26 +68,28 @@ function CssClassesSelector({ allClasses, classNames, onClassesChange, selectedC
 
   const handleSelect = useCallback((selectedValue: any) => {
     const addedClassName = selectedValue === ecuCreateOption ? search : selectedValue
-    const nextClassNames = [...new Set(addedClassName ? [...classNames, addedClassName] : classNames)]
 
     setSearch('')
-    onClassesChange(nextClassNames)
-    handleCreateClass(nextClassNames)
-  }, [onClassesChange, classNames, search, handleCreateClass])
+
+    if (addedClassName) {
+      const nextClassNames = [...new Set(addedClassName ? [...classNames, addedClassName] : classNames)]
+
+      onClassesChange(nextClassNames)
+      handleCreateClass(nextClassNames)
+      setSelectedClassName(addedClassName)
+    }
+  }, [onClassesChange, classNames, search, setSelectedClassName, handleCreateClass])
 
   const handleDiscardClass = useCallback((className: string) => {
     const nextClassNames = classNames.filter(c => c !== className)
 
     onClassesChange(nextClassNames)
-  }, [classNames, onClassesChange])
+    setSelectedClassName(x => nextClassNames.includes(x) ? x : nextClassNames[nextClassNames.length - 1])
+  }, [classNames, onClassesChange, setSelectedClassName])
 
   const handleChipSelect = useCallback((className: string) => {
     setSelectedClassName(x => x === className ? '' : className)
   }, [setSelectedClassName])
-
-  useEffect(() => {
-    setSelectedClassName(classNames[classNames.length - 1])
-  }, [setSelectedClassName, classNames])
 
   return (
     <Div
@@ -112,12 +115,11 @@ function CssClassesSelector({ allClasses, classNames, onClassesChange, selectedC
       ))}
       <Autocomplete
         bare
-        autoHighlight
         placeholder={`${classNames.length ? 'Add' : 'Choose'} or create class`}
         options={options}
-        anyOption={{ value: ecuCreateOption, label: 'Create new class' }}
+        anyOption={anyOption}
         value={search}
-        onChange={setSearch}
+        onChange={x => setSearch(x === anyOption.label ? '' : x)}
         onSelect={handleSelect}
         inputProps={{ bare: true, disabled: fetching }}
         flexGrow

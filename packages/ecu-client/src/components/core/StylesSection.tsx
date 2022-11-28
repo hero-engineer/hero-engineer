@@ -53,11 +53,6 @@ function StylesSection() {
   const finalCssValues = useJsCssValues(useCssValues(classes, cssAttributesMap), updatedStyles, cssAttributesMap)
   const workingCssValues = useJsCssValues(useCssValues(currentClass, cssAttributesMap), updatedStyles, cssAttributesMap)
 
-  const margin = useMemo(() => spacingSemanticValues.map(spacingSemanticValue => `margin-${spacingSemanticValue}`).map(key => (selectedClassName ? workingCssValues[key] : finalCssValues[key]) ?? cssAttributesMap[key].defaultValue) as SpacingsType, [selectedClassName, workingCssValues, finalCssValues])
-  const padding = useMemo(() => spacingSemanticValues.map(spacingSemanticValue => `padding-${spacingSemanticValue}`).map(key => (selectedClassName ? workingCssValues[key] : finalCssValues[key]) ?? cssAttributesMap[key].defaultValue) as SpacingsType, [selectedClassName, workingCssValues, finalCssValues])
-
-  console.log('finalCssValues', finalCssValues)
-
   const handleCssUpdate = useCallback(async () => {
     if (!classNames.length) return
 
@@ -128,10 +123,8 @@ function StylesSection() {
         onChange={handleStyleChange}
       />
       <StylesSpacingSection
-        marging={margin}
-        padding={padding}
-        onChange={handleStyleChange}
         cssValues={selectedClassName ? workingCssValues : finalCssValues}
+        onChange={handleStyleChange}
       />
       {loading && (
         <Div
@@ -143,10 +136,18 @@ function StylesSection() {
           backgroundColor="transparency(black, 75)"
         />
       )}
+      {!selectedClassName && (
+        <Div
+          position="absolute"
+          top={0}
+          left={0}
+          right={0}
+          bottom={0}
+          backgroundColor="transparency(black, 95)"
+        />
+      )}
     </Div>
   ), [
-    margin,
-    padding,
     selectedClassName,
     workingCssValues,
     finalCssValues,
