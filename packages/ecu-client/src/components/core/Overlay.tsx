@@ -46,10 +46,7 @@ function Overlay({ children }: OverlayPropsType) {
         <ComponentsLinkButton borderRight="1px solid border" />
         <CreateComponentButton borderRight="1px solid border" />
         <PackagesLinkButton borderRight="1px solid border" />
-        <LastEditedComponentButton
-          ml={0.5}
-          alignSelf="center"
-        />
+        <LastEditedComponentButton borderRight="1px solid border" />
         <Div flexGrow />
         <BreakpointsButtons />
         <Div flexGrow />

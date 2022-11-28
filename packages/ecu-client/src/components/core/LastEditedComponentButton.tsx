@@ -13,8 +13,7 @@ function LastEditedComponentButton(props: any) {
 
   return (
     <Button
-      tiny
-      backgroundLightDark
+      ghost
       as={Link}
       to={`/_ecu_/component/${lastEditedComponent.fileAddress}/${lastEditedComponent.componentAddress}`}
       fontSize="0.85rem"
