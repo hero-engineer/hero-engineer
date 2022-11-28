@@ -377,6 +377,9 @@ export default mergeTheme(defaultTheme, {
         paddingLeft: 4,
         paddingRight: 4,
       },
+      ({ smallText }: any) => smallText && {
+        fontSize: '0.75rem',
+      },
       ({ danger }: any) => danger && {
         backgroundColor: 'red.500',
         '&:hover': {
