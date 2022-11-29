@@ -49,7 +49,7 @@ function EditionOverlayElement({ hierarchyItem, depth, top, left, width, height,
         left={left - 1}
         height={16}
         backgroundColor={color}
-        color={isSelected || isEdited ? 'white' : 'primary'}
+        color={isSelected || isEdited ? 'white' : isComponentRoot ? 'is-component-root' : 'primary'}
         fontSize="0.75rem"
         cursor="pointer"
         zIndex={depth}
