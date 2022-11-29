@@ -10,12 +10,13 @@ type EditionOverlayElementPropsType = {
   left: number
   width: number
   height: number
+  helperText: string
   isSelected: boolean
   isEdited: boolean
   onSelect: (event: MouseEvent) => void
 }
 
-function EditionOverlayElement({ hierarchyItem, depth, top, left, width, height, isSelected, isEdited, onSelect }: EditionOverlayElementPropsType) {
+function EditionOverlayElement({ hierarchyItem, depth, top, left, width, height, helperText, isSelected, isEdited, onSelect }: EditionOverlayElementPropsType) {
   const color = isEdited ? 'is-edited' : isSelected ? 'primary' : null
 
   return (
@@ -49,9 +50,13 @@ function EditionOverlayElement({ hierarchyItem, depth, top, left, width, height,
         backgroundColor={color}
         color={isSelected || isEdited ? 'white' : 'primary'}
         fontSize="0.75rem"
+        gap={0.25}
         px={0.25 * 2 / 3}
       >
         {hierarchyItem.displayName || hierarchyItem.label}
+        <Div xflex="x4">
+          {helperText}
+        </Div>
       </Div>
     </>
   )

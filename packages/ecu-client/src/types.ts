@@ -36,6 +36,7 @@ export type HierarchyItemType = {
   fileEmoji: string
   componentName: string
   onComponentAddress: string
+  onComponentName: string
   componentAddress?: string
   hierarchyId?: string
   isRoot: boolean

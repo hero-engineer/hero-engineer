@@ -23,6 +23,7 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
   const { totalHierarchy } = useContext(HierarchyContext)
   const { hierarchyId, setHierarchyId, componentDelta, setComponentDelta, isEdited, setIsEdited } = useContext(EditionContext)
   const [refresh, setRefresh] = useState(0)
+  const [helperText, setHelperText] = useState('')
 
   const [elementRegistry, setElementRegistry] = useState<Record<string, HTMLElement | null>>({})
   const editionOverlayContextValue = useMemo<EditionOverlayContextType>(() => ({ elementRegistry, setElementRegistry }), [elementRegistry])
@@ -30,17 +31,30 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
   const handleElementSelect = useCallback((event: ReactMouseEvent, hierarchyItem: HierarchyItemType, nextHierarchyId: string, nextComponentDelta: number) => {
     if (nextHierarchyId === hierarchyId && nextComponentDelta === componentDelta) {
       if (event.detail > 1 && hierarchyItem.isComponentEditable) {
-        event.stopPropagation()
+        if (hierarchyItem.onComponentAddress === totalHierarchy?.componentAddress) {
+          event.stopPropagation()
 
-        setIsEdited(true)
+          setIsEdited(true)
+        }
+        else {
+          setHelperText(`Editable under ${hierarchyItem.onComponentName}`)
+        }
       }
     }
     else {
       setHierarchyId(nextHierarchyId)
       setComponentDelta(nextComponentDelta)
       setIsEdited(false)
+      setHelperText('')
     }
-  }, [hierarchyId, componentDelta, setHierarchyId, setComponentDelta, setIsEdited])
+  }, [
+    hierarchyId,
+    componentDelta,
+    totalHierarchy,
+    setHierarchyId,
+    setComponentDelta,
+    setIsEdited,
+  ])
 
   const renderHierarchy: (hierarchyItem: HierarchyItemType | null, depth?: number) => ReactNode = useCallback((hierarchyItem: HierarchyItemType | null, depth = zIndexes.editionOverlay + 1) => {
     if (!hierarchyItem) return null
@@ -104,6 +118,7 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
           height={rect.height}
           isSelected={isSelected}
           isEdited={isSelected && isEdited}
+          helperText={isSelected ? helperText : ''}
           onSelect={(event: ReactMouseEvent) => handleElementSelect(event, hierarchyItem, currentHierarchyId, currentComponentDelta)}
         />
         {(hierarchyItem.children || []).map(child => (
@@ -120,6 +135,7 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
     hierarchyId,
     componentDelta,
     isEdited,
+    helperText,
     handleElementSelect,
     refresh,
   ])
@@ -172,6 +188,18 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
       window.removeEventListener('click', handleMouseClick)
     }
   }, [elementRegistry, hierarchyId, isEdited, setIsEdited])
+
+  useEffect(() => {
+    if (!helperText) return
+
+    const timeoutId = setTimeout(() => {
+      setHelperText('')
+    }, 2500)
+
+    return () => {
+      clearTimeout(timeoutId)
+    }
+  }, [helperText])
 
   return (
     <EditionOverlayContext.Provider value={editionOverlayContextValue}>

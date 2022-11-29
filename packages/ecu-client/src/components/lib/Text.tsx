@@ -46,7 +46,6 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
   const refetch = useRefetch()
 
   const handleBlur = useCallback(async () => {
-    console.log('blur')
     setIsEdited(false)
 
     if (value === children) return
@@ -87,12 +86,10 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
   const handleInputKeyDown = useCallback((event: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (((event.shiftKey || event.ctrlKey || event.metaKey) && event.key === 'Enter') || event.key === 'Tab') {
       event.preventDefault()
-      event.stopPropagation()
       handleBlur()
     }
     if (event.key === 'Escape') {
       event.preventDefault()
-      event.stopPropagation()
       setIsEdited(false)
       setValue(children)
     }
