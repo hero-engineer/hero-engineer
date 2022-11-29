@@ -28,8 +28,6 @@ function getComponentRootHierarchyIds(flattenedHierarchy: HierarchyItemType[]) {
 
   traverseHierarchy(lastHierarchyItem)
 
-  // console.log('componentRootHierarchyIds', componentRootHierarchyIds)
-
   return componentRootHierarchyIds
 }
 

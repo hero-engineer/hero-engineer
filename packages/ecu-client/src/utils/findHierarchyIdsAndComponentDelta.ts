@@ -32,7 +32,7 @@ function findHierarchyIdsAndComponentDelta(rootHierarchyItem: HierarchyItemType 
     nextHasFound = true
   }
 
-  for (const child of rootHierarchyItem.children) {
+  for (const child of (rootHierarchyItem.children || [])) {
     const found = findHierarchyIdsAndComponentDelta(child, targetHierarchyItem, nextHierarchyIds, nextComponentDelta, nextHasFound, depth + 1, nextHasFound ? hasFoundDepth + 1 : 0)
 
     if (found) return found

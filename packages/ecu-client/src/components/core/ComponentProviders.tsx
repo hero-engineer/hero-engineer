@@ -2,11 +2,13 @@ import { CSSProperties, ReactNode, useMemo, useState } from 'react'
 
 import IsComponentRefreshingContext, { IsComponentRefreshingContextType } from '../../contexts/IsComponentRefreshingContext'
 import HierarchyContext, { HierarchyContextType } from '../../contexts/HierarchyContext'
+import EditionContext, { EditionContextType } from '../../contexts/EditionContext'
 import DragAndDropContext, { DragAndDropContextType, DragAndDropType } from '../../contexts/DragAndDropContext'
 import ContextualInformationContext, { ContextualInformationContextType, ContextualInformationStateType } from '../../contexts/ContextualInformationContext'
 import CssClassesContext, { CssClassesContextType } from '../../contexts/CssClassesContext'
 
 import { HierarchyItemType } from '../../types'
+import usePersistedState from '../../hooks/usePersistedState'
 
 type ComponentProvidersPropsType = {
   children: ReactNode
@@ -20,6 +22,11 @@ function ComponentProviders({ children }: ComponentProvidersPropsType) {
   const [hierarchy, setHierarchy] = useState<HierarchyItemType[]>([])
   const [totalHierarchy, setTotalHierarchy] = useState<HierarchyItemType| null>(null)
   const hierarchyContextValue = useMemo<HierarchyContextType>(() => ({ hierarchy, setHierarchy, totalHierarchy, setTotalHierarchy }), [hierarchy, totalHierarchy])
+
+  const [hierarchyId, setHierarchyId] = usePersistedState('hierarchy-id', '')
+  const [componentDelta, setComponentDelta] = usePersistedState('component-delta', 0)
+  const [isEdited, setIsEdited] = useState(false)
+  const editionContextValue = useMemo<EditionContextType>(() => ({ hierarchyId, setHierarchyId, componentDelta, setComponentDelta, isEdited, setIsEdited }), [hierarchyId, setHierarchyId, componentDelta, setComponentDelta, isEdited, setIsEdited])
 
   const [dragAndDrop, setDragAndDrop] = useState<DragAndDropType>({
     sourceHierarchyId: '',
@@ -42,19 +49,18 @@ function ComponentProviders({ children }: ComponentProvidersPropsType) {
   const [updatedStyles, setUpdatedStyles] = useState<CSSProperties>({})
   const cssClassesContextValue = useMemo<CssClassesContextType>(() => ({ className, setClassName, style: updatedStyles, setStyle: setUpdatedStyles }), [className, updatedStyles])
 
-  // Do not remove yet
-  console.log('render')
-
   return (
     <IsComponentRefreshingContext.Provider value={isComponnentRefreshingContextValue}>
       <HierarchyContext.Provider value={hierarchyContextValue}>
-        <DragAndDropContext.Provider value={dragAndDropContextValue}>
-          <ContextualInformationContext.Provider value={contextualInformationContextValue}>
-            <CssClassesContext.Provider value={cssClassesContextValue}>
-              {children}
-            </CssClassesContext.Provider>
-          </ContextualInformationContext.Provider>
-        </DragAndDropContext.Provider>
+        <EditionContext.Provider value={editionContextValue}>
+          <DragAndDropContext.Provider value={dragAndDropContextValue}>
+            <ContextualInformationContext.Provider value={contextualInformationContextValue}>
+              <CssClassesContext.Provider value={cssClassesContextValue}>
+                {children}
+              </CssClassesContext.Provider>
+            </ContextualInformationContext.Provider>
+          </DragAndDropContext.Provider>
+        </EditionContext.Provider>
       </HierarchyContext.Provider>
     </IsComponentRefreshingContext.Provider>
   )
