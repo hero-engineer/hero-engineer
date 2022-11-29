@@ -32,7 +32,7 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
   const {
     ref: editionRef,
     hierarchyId,
-    isSelected,
+    // isSelected,
     isEdited,
     setIsEdited,
     editionProps,
@@ -46,6 +46,7 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
   const refetch = useRefetch()
 
   const handleBlur = useCallback(async () => {
+    console.log('blur')
     setIsEdited(false)
 
     if (value === children) return
@@ -64,16 +65,24 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
     else {
       refetch(refetchKeys.componentScreenshot)
     }
-  }, [updateTextValueMutation, componentAddress, hierarchyId, value, children, setIsEdited, refetch])
-
-  const handleKeyDown = useCallback((event: KeyboardEvent) => {
-    if (isSelected && event.key === 'Enter') {
-      setIsEdited(true)
-    }
   }, [
-    isSelected,
+    componentAddress,
+    hierarchyId,
+    value,
+    children,
+    updateTextValueMutation,
     setIsEdited,
+    refetch,
   ])
+
+  // const handleKeyDown = useCallback((event: KeyboardEvent) => {
+  //   if (isSelected && event.key === 'Enter') {
+  //     setIsEdited(true)
+  //   }
+  // }, [
+  //   isSelected,
+  //   setIsEdited,
+  // ])
 
   const handleInputKeyDown = useCallback((event: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (((event.shiftKey || event.ctrlKey || event.metaKey) && event.key === 'Enter') || event.key === 'Tab') {
@@ -115,8 +124,8 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
     <div
       ref={finalRef}
       {...editionProps}
-      tabIndex={-1}
-      onKeyDown={handleKeyDown}
+      // tabIndex={-1}
+      // onKeyDown={handleKeyDown}
     >
       {loading ? appendCarriageReturn(value) : isEdited ? (
         <WithOutsideClick

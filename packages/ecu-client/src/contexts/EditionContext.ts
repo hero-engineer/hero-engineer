@@ -5,6 +5,8 @@ export type EditionContextType = {
   setHierarchyId: Dispatch<SetStateAction<string>>
   componentDelta: number
   setComponentDelta: Dispatch<SetStateAction<number>>
+  isEdited: boolean
+  setIsEdited: Dispatch<SetStateAction<boolean>>
 }
 
 export default createContext<EditionContextType>({
@@ -12,4 +14,6 @@ export default createContext<EditionContextType>({
   setHierarchyId: () => {},
   componentDelta: 0,
   setComponentDelta: () => {},
+  isEdited: false,
+  setIsEdited: () => {},
 })

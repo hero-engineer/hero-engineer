@@ -41,6 +41,7 @@ export type HierarchyItemType = {
   isRoot: boolean
   isChild: boolean
   isComponentAcceptingChildren: boolean
+  isComponentEditable: boolean
   children: HierarchyItemType[]
 }
 

@@ -1,4 +1,4 @@
-import { Fragment, MouseEvent, ReactNode, memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { Fragment, MouseEvent as ReactMouseEvent, ReactNode, memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { Div } from 'honorable'
 
 import { zIndexes } from '../../constants'
@@ -27,9 +27,11 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
   const [elementRegistry, setElementRegistry] = useState<Record<string, HTMLElement | null>>({})
   const editionOverlayContextValue = useMemo<EditionOverlayContextType>(() => ({ elementRegistry, setElementRegistry }), [elementRegistry])
 
-  const handleElementSelect = useCallback((event: MouseEvent, nextHierarchyId: string, nextComponentDelta: number) => {
+  const handleElementSelect = useCallback((event: ReactMouseEvent, hierarchyItem: HierarchyItemType, nextHierarchyId: string, nextComponentDelta: number) => {
     if (nextHierarchyId === hierarchyId && nextComponentDelta === componentDelta) {
-      if (event.detail > 1) {
+      if (event.detail > 1 && hierarchyItem.isComponentEditable) {
+        event.stopPropagation()
+
         setIsEdited(true)
       }
     }
@@ -102,7 +104,7 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
           height={rect.height}
           isSelected={isSelected}
           isEdited={isSelected && isEdited}
-          onSelect={(event: MouseEvent) => handleElementSelect(event, currentHierarchyId, currentComponentDelta)}
+          onSelect={(event: ReactMouseEvent) => handleElementSelect(event, hierarchyItem, currentHierarchyId, currentComponentDelta)}
         />
         {(hierarchyItem.children || []).map(child => (
           <Fragment key={child.id}>
@@ -112,7 +114,15 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
       </>
     )
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [elementRegistry, totalHierarchy, hierarchyId, componentDelta, isEdited, refresh, handleElementSelect])
+  }, [
+    elementRegistry,
+    totalHierarchy,
+    hierarchyId,
+    componentDelta,
+    isEdited,
+    handleElementSelect,
+    refresh,
+  ])
 
   useEffect(() => {
     const observers: ResizeObserver[] = []
@@ -134,6 +144,34 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
       }
     }
   }, [elementRegistry])
+
+  useEffect(() => {
+    if (!isEdited) return
+
+    const editedElement = elementRegistry[hierarchyId]
+
+    if (!editedElement) return
+
+    let firstTrigger = true
+
+    function handleMouseClick(event: MouseEvent) {
+      if (firstTrigger) {
+        firstTrigger = false
+
+        return
+      }
+
+      if (editedElement?.contains(event.target as Node)) return
+
+      setIsEdited(false)
+    }
+
+    window.addEventListener('click', handleMouseClick)
+
+    return () => {
+      window.removeEventListener('click', handleMouseClick)
+    }
+  }, [elementRegistry, hierarchyId, isEdited, setIsEdited])
 
   return (
     <EditionOverlayContext.Provider value={editionOverlayContextValue}>

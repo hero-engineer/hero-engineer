@@ -1,25 +1,21 @@
 import '../css/edition.css'
 
-import { MouseEvent, Ref, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Ref, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import { useDebounce } from 'honorable'
 
 import HierarchyContext from '../contexts/HierarchyContext'
+import EditionContext from '../contexts/EditionContext'
 import DragAndDropContext from '../contexts/DragAndDropContext'
 import ContextualInformationContext from '../contexts/ContextualInformationContext'
 import CssClassesContext from '../contexts/CssClassesContext'
 
 import getComponentRootHierarchyIds from '../utils/getComponentRootHierarchyIds'
-import isHierarchyOnComponent from '../utils/isHierarchyOnComponent'
 
-import areArraysEqualAtStart from '../utils/areArraysEqualAtStart'
-import areArraysEqual from '../utils/areArraysEqual'
-import convertUnicode from '../utils/convertUnicode'
+// import convertUnicode from '../utils/convertUnicode'
 
 import useForkedRef from './useForkedRef'
 import useHierarchyId from './useHierarchyId'
-import useEditionSearchParams from './useEditionSearchParams'
 import useEditionOverlay from './useEditionOverlay'
 
 type DragObject = {
@@ -60,21 +56,18 @@ function getHierarchyIds(element: EventTarget | HTMLElement) {
 
 // Return common edition props for lib components
 function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', canBeEdited = false) {
-  const { componentAddress = '' } = useParams()
   const rootRef = useRef<T>(null)
 
   const hierarchyId = useHierarchyId(ecuId, rootRef)
-  const { hierarchyIds, componentDelta, setEditionSearchParams } = useEditionSearchParams()
+  const { hierarchyId: editionHierarchyId, componentDelta, isEdited, setIsEdited } = useContext(EditionContext)
   const { hierarchy } = useContext(HierarchyContext)
   const { dragAndDrop, setDragAndDrop } = useContext(DragAndDropContext)
   const { setContextualInformationState } = useContext(ContextualInformationContext)
-  const { className: updatedClassName, setClassName, style: updatedStyle, setStyle: setUpdatedStyle } = useContext(CssClassesContext)
+  const { className: updatedClassName, setClassName, style: updatedStyle } = useContext(CssClassesContext)
 
   useEditionOverlay(rootRef, hierarchyId)
 
-  const [isEdited, setIsEdited] = useState(false)
-
-  const isSelected = useMemo(() => componentDelta >= 0 && hierarchyIds.length > 0 && !!hierarchyId && hierarchyIds[hierarchyIds.length - 1] === hierarchyId, [componentDelta, hierarchyIds, hierarchyId])
+  const isSelected = useMemo(() => hierarchyId === editionHierarchyId, [hierarchyId, editionHierarchyId])
   const debouncedIsSelected = useDebounce(isSelected, 3 * 16) // 3 frames at 60fps to wait for componentDelta to adjust if positive
   const componentRootHierarchyIds = useMemo(() => getComponentRootHierarchyIds(hierarchy), [hierarchy])
   const isComponentRoot = useMemo(() => componentDelta < 0 && componentRootHierarchyIds.some(x => x === hierarchyId), [componentDelta, componentRootHierarchyIds, hierarchyId])
@@ -144,87 +137,9 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
 
   const ref = useForkedRef(rootRef, useForkedRef(drag, drop)) as Ref<T>
 
-  const handleClick = useCallback((event: MouseEvent) => {
-    if (isEdited) return
-
-    // Reset dragAndDrop
-    setDragAndDrop({
-      sourceHierarchyId: '',
-      targetHierarchyId: '',
-      sourceComponentDelta: 0,
-      targetComponentDelta: 0,
-    })
-
-    event.stopPropagation()
-
-    const ids = getHierarchyIds(event.target)
-
-    if (!ids.length) return
-
-    if (areArraysEqual(hierarchyIds, ids) || (areArraysEqualAtStart(hierarchyIds, ids) && componentDelta < 0)) {
-      if (canBeEdited && componentDelta === 0 && isHierarchyOnComponent(hierarchy, componentAddress)) {
-        setIsEdited(true)
-
-        return
-      }
-
-      setEditionSearchParams({
-        componentDelta: Math.min(0, componentDelta + 1),
-      })
-
-      setClassName('')
-      setUpdatedStyle({})
-
-      return
-    }
-
-    setEditionSearchParams({
-      hierarchyIds: x => {
-        const nextHierarchyIds: string[] = []
-
-        for (let i = 0; i < ids.length; i++) {
-          const id = ids[i]
-
-          nextHierarchyIds.push(id)
-
-          if (x[i] !== id) {
-            break
-          }
-        }
-
-        return nextHierarchyIds
-      },
-      // componentDelta > 0 means adjustment is necessary (see HierarchyBar)
-      componentDelta: 1,
-    })
-
-    setClassName('')
-    setUpdatedStyle({})
-  }, [
-    isEdited,
-    setDragAndDrop,
-    hierarchyIds,
-    componentDelta,
-    canBeEdited,
-    hierarchy,
-    componentAddress,
-    setEditionSearchParams,
-    setClassName,
-    setUpdatedStyle,
-  ])
-
-  const handleContextMenu = useCallback((event: MouseEvent) => {
-    if (!(debouncedIsSelected || isComponentRoot)) return
-
-    event.persist()
-    event.preventDefault()
-    event.stopPropagation()
-
-    setContextualInformationState(x => ({ ...x, rightClickEvent: event }))
-  }, [debouncedIsSelected, isComponentRoot, setContextualInformationState])
-
   const generateClassName = useCallback(() => {
-    let klassName = `ecu-edition-no-outline ${convertUnicode(debouncedIsSelected ? updatedClassName || className : className)}`
+    // let klassName = `ecu-edition-no-outline ${convertUnicode(debouncedIsSelected ? updatedClassName || className : className)}`
+    let klassName = `ecu-edition-no-outline ${debouncedIsSelected ? updatedClassName || className : className}`
 
     klassName = klassName.trim()
 
@@ -256,17 +171,18 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
       klassName += ' ecu-drop'
     }
 
-    if (isEdited) {
+    if (isSelected && isEdited) {
       klassName += ' ecu-edited'
     }
 
     return klassName.trim()
   }, [
-    updatedClassName,
-    className,
     canBeEdited,
+    className,
+    updatedClassName,
     canDrop,
     debouncedIsSelected,
+    isSelected,
     isEdited,
     isComponentRoot,
     isComponentRootFirstChild,
@@ -301,11 +217,9 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
     ref,
     hierarchyId,
     isSelected: debouncedIsSelected,
-    isEdited,
+    isEdited: isSelected && isEdited,
     setIsEdited,
     editionProps: {
-      onClick: handleClick,
-      onContextMenu: handleContextMenu,
       className: generateClassName(),
       style: isSelected ? updatedStyle : {},
       'data-ecu': ecuId,

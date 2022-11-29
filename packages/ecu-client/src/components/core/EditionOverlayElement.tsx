@@ -43,7 +43,7 @@ function EditionOverlayElement({ hierarchyItem, depth, top, left, width, height,
         xflex="x4"
         display={isSelected ? 'flex' : 'none'}
         position="absolute"
-        top={top - 16 - 1 < 0 ? top + height + 1 : top - 16 - 1}
+        top={top - 16 - 1 < 0 ? 0 : top - 16 - 1}
         left={left - 1}
         height={16}
         backgroundColor={color}
