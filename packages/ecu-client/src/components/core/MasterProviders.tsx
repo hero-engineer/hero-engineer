@@ -13,6 +13,7 @@ import ThemeModeContext, { ThemeModeContextType } from '../../contexts/ThemeMode
 import SnackBarContext, { SnackBarContextType } from '../../contexts/SnackBarContext'
 import LastEditedComponentContext, { LastEditedComponentContextType } from '../../contexts/LastEditedComponentContext'
 import BreakpointContext, { BreakpointContextType } from '../../contexts/BreakpointContext'
+import IsInteractiveModeContext, { IsInteractiveModeContextType } from '../../contexts/IsInteractiveModeContext'
 
 import { BreakpointType, HierarchyItemType, SnackBarItemType } from '../../types'
 
@@ -53,6 +54,9 @@ function MasterProviders({ mode, hot, children }: MasterProvidersPropsType) {
   const [isDragging, setIsDragging] = useState(false)
   const breakpointContextValue = useMemo<BreakpointContextType>(() => ({ breakpoint, setBreakpoint, width, setWidth, isDragging, setIsDragging }), [breakpoint, setBreakpoint, width, setWidth, isDragging])
 
+  const [isInteractiveMode, setIsInteractiveMode] = useState(false)
+  const isInteractiveModeContextValue = useMemo<IsInteractiveModeContextType>(() => ({ isInteractiveMode, setIsInteractiveMode }), [isInteractiveMode])
+
   return (
     <GraphqlProvider value={client}>
       <DndProvider backend={HTML5Backend}>
@@ -63,7 +67,9 @@ function MasterProviders({ mode, hot, children }: MasterProvidersPropsType) {
                 <SnackBarContext.Provider value={snackBarContextValue}>
                   <LastEditedComponentContext.Provider value={lastEditedComponentContextValue}>
                     <BreakpointContext.Provider value={breakpointContextValue}>
-                      {children}
+                      <IsInteractiveModeContext.Provider value={isInteractiveModeContextValue}>
+                        {children}
+                      </IsInteractiveModeContext.Provider>
                     </BreakpointContext.Provider>
                   </LastEditedComponentContext.Provider>
                 </SnackBarContext.Provider>

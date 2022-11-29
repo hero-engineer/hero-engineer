@@ -7,6 +7,7 @@ import HierarchyContext from '../contexts/HierarchyContext'
 import EditionContext from '../contexts/EditionContext'
 import ContextualInformationContext from '../contexts/ContextualInformationContext'
 import CssClassesContext from '../contexts/CssClassesContext'
+import IsInteractiveModeContext from '../contexts/IsInteractiveModeContext'
 
 import getComponentRootHierarchyIds from '../utils/getComponentRootHierarchyIds'
 
@@ -42,6 +43,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   const { hierarchy } = useContext(HierarchyContext)
   const { setContextualInformationState } = useContext(ContextualInformationContext)
   const { className: updatedClassName, setClassName, style: updatedStyle } = useContext(CssClassesContext)
+  const { isInteractiveMode } = useContext(IsInteractiveModeContext)
 
   useEditionOverlay(rootRef, hierarchyId)
 
@@ -115,7 +117,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
 
   const generateClassName = useCallback(() => {
     // let klassName = `ecu-edition-no-outline ${convertUnicode(debouncedIsSelected ? updatedClassName || className : className)}`
-    let klassName = `ecu-edition ${debouncedIsSelected ? updatedClassName || className : className}`
+    let klassName = `${isInteractiveMode ? '' : 'ecu-edition'} ${debouncedIsSelected ? updatedClassName || className : className}`
 
     klassName = klassName.trim()
 
@@ -123,10 +125,11 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
       klassName += ' ecu-can-be-edited'
     }
 
-    return klassName.trim()
+    return klassName
   }, [
     canBeEdited,
     className,
+    isInteractiveMode,
     updatedClassName,
     debouncedIsSelected,
   ])

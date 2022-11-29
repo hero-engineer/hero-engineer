@@ -7,6 +7,7 @@ import { HierarchyItemType } from '../../types'
 import HierarchyContext from '../../contexts/HierarchyContext'
 import EditionContext from '../../contexts/EditionContext'
 import EditionOverlayContext, { EditionOverlayContextType } from '../../contexts/EditionOverlayContext'
+import IsInteractiveModeContext from '../../contexts/IsInteractiveModeContext'
 
 import getComponentRootHierarchyIds from '../../utils/getComponentRootHierarchyIds'
 import findHierarchyIdsAndComponentDelta from '../../utils/findHierarchyIdsAndComponentDelta'
@@ -22,6 +23,8 @@ type EditionOverlayPropsType = {
 function EditionOverlay({ children }: EditionOverlayPropsType) {
   const { totalHierarchy } = useContext(HierarchyContext)
   const { hierarchyId, setHierarchyId, componentDelta, setComponentDelta, isEdited, setIsEdited } = useContext(EditionContext)
+  const { isInteractiveMode } = useContext(IsInteractiveModeContext)
+
   const [refresh, setRefresh] = useState(0)
   const [helperText, setHelperText] = useState('')
 
@@ -209,17 +212,19 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
         position="relative"
       >
         {children}
-        <Div
-          position="absolute"
-          top={0}
-          bottom={0}
-          left={0}
-          right={0}
-          zIndex={zIndexes.editionOverlay}
-          pointerEvents={isEdited ? 'none' : 'auto'}
-        >
-          {renderHierarchy(totalHierarchy)}
-        </Div>
+        {!isInteractiveMode && (
+          <Div
+            position="absolute"
+            top={0}
+            bottom={0}
+            left={0}
+            right={0}
+            zIndex={zIndexes.editionOverlay}
+            pointerEvents={isEdited ? 'none' : 'auto'}
+          >
+            {renderHierarchy(totalHierarchy)}
+          </Div>
+        )}
       </Div>
     </EditionOverlayContext.Provider>
   )

@@ -8,6 +8,7 @@ import CreateComponentButton from './CreateComponentButton'
 import PackagesLinkButton from './PackagesLinkButton'
 import LastEditedComponentButton from './LastEditedComponentButton'
 import BreakpointsButtons from './BreakpointsButtons'
+import InteractiveModeButton from './InteractiveModeButton'
 import UndoRedoButtons from './UndoRedoButtons'
 import PushButton from './PushButton'
 import SettingsLinkButton from './SettingsLinkButton'
@@ -33,6 +34,7 @@ function Overlay({ children }: OverlayPropsType) {
         <Div flexGrow />
         <BreakpointsButtons />
         <Div flexGrow />
+        <InteractiveModeButton borderLeft="1px solid border" />
         <UndoRedoButtons />
         <PushButton />
         <SettingsLinkButton borderLeft="1px solid border" />
