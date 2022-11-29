@@ -131,6 +131,7 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
     fileEmoji: memoizedFileEmoji(rootFileNode),
     componentAddress: rootCoomponentNode.address,
     onComponentAddress: rootCoomponentNode.address,
+    onComponentName: rootCoomponentNode.payload.name,
     componentName: rootCoomponentNode.payload.name,
     label: rootCoomponentNode.payload.name,
     displayName: rootCoomponentNode.payload.name,
@@ -243,6 +244,7 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
         const index = indexRegistry[componentName] = indexRegistry[componentName] + 1 || 0
         const nextPaths = [...paths, x]
         const onComponentAddress = hasChildrenPath ? hierarchy.childrenContext!.onComponentAddress! : hierarchy.componentAddress || hierarchy.onComponentAddress
+        const onComponentName = getNodeByAddress<FunctionNodeType>(onComponentAddress)?.payload.name ?? ''
         const hierarchyId = getComponentHierarchyId(x.node)
 
         // console.log('JSXElement', componentName)
@@ -260,6 +262,7 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
             fileEmoji: '',
             componentAddress: '',
             onComponentAddress,
+            onComponentName,
             componentName,
             index,
             label: `${componentName}[${index}]`,
@@ -302,6 +305,7 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
                 fileEmoji: memoizedFileEmoji(componentFileNode),
                 componentAddress: componentNode.address,
                 onComponentAddress,
+                onComponentName,
                 componentName,
                 index,
                 label: `${componentName}[${index}]`,
