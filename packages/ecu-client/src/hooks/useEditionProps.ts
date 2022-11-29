@@ -9,6 +9,7 @@ import HierarchyContext from '../contexts/HierarchyContext'
 import DragAndDropContext from '../contexts/DragAndDropContext'
 import ContextualInformationContext from '../contexts/ContextualInformationContext'
 import CssClassesContext from '../contexts/CssClassesContext'
+import BreakpointContext from '../contexts/BreakpointContext'
 
 import getComponentRootHierarchyIds from '../utils/getComponentRootHierarchyIds'
 import isHierarchyOnComponent from '../utils/isHierarchyOnComponent'
@@ -61,12 +62,15 @@ function getHierarchyIds(element: EventTarget | HTMLElement) {
 function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', canBeEdited = false) {
   const { componentAddress = '' } = useParams()
   const rootRef = useRef<T>(null)
+
   const hierarchyId = useHierarchyId(ecuId, rootRef)
   const { hierarchyIds, componentDelta, setEditionSearchParams } = useEditionSearchParams()
   const { hierarchy } = useContext(HierarchyContext)
   const { dragAndDrop, setDragAndDrop } = useContext(DragAndDropContext)
   const { setContextualInformationState } = useContext(ContextualInformationContext)
-  const { className: updatedClassName, setClassName, updatedStyles, setUpdatedStyles } = useContext(CssClassesContext)
+  const { className: updatedClassName, setClassName, breakpointToStyles, setBreakpointToStyle } = useContext(CssClassesContext)
+  const { breakpoint } = useContext(BreakpointContext)
+
   const [isEdited, setIsEdited] = useState(false)
 
   const isSelected = useMemo(() => componentDelta >= 0 && hierarchyIds.length > 0 && !!hierarchyId && hierarchyIds[hierarchyIds.length - 1] === hierarchyId, [componentDelta, hierarchyIds, hierarchyId])
@@ -76,6 +80,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   const isComponentRootFirstChild = useMemo(() => componentRootHierarchyIds.indexOf(hierarchyId) === 0, [componentRootHierarchyIds, hierarchyId])
   const isComponentRootLastChild = useMemo(() => componentRootHierarchyIds.indexOf(hierarchyId) === componentRootHierarchyIds.length - 1, [componentRootHierarchyIds, hierarchyId])
   const isDrop = useMemo(() => hierarchyId && dragAndDrop.targetHierarchyId === hierarchyId, [dragAndDrop.targetHierarchyId, hierarchyId])
+  const breakpointKey = useMemo(() => breakpoint?.max ?? '', [breakpoint])
 
   const [{ isDragging }, drag] = useDrag<DragObject, DropResult, DragCollectedProp>(() => ({
     type: 'Node',
@@ -168,7 +173,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
       })
 
       setClassName('')
-      setUpdatedStyles({})
+      setBreakpointToStyle({})
 
       return
     }
@@ -194,7 +199,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
     })
 
     setClassName('')
-    setUpdatedStyles({})
+    setBreakpointToStyle({})
   }, [
     isEdited,
     setDragAndDrop,
@@ -205,7 +210,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
     componentAddress,
     setEditionSearchParams,
     setClassName,
-    setUpdatedStyles,
+    setBreakpointToStyle,
   ])
 
   const handleContextMenu = useCallback((event: MouseEvent) => {
@@ -301,7 +306,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
       onClick: handleClick,
       onContextMenu: handleContextMenu,
       className: generateClassName(),
-      style: isSelected ? updatedStyles : {},
+      style: isSelected ? breakpointToStyles[breakpointKey] || {} : {},
       'data-ecu': ecuId,
       'data-ecu-hierarchy': hierarchyId,
     },

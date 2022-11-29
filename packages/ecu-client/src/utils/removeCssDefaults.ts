@@ -1,9 +1,9 @@
-import { CSsAttributesMapType, CssValueType } from '../types'
+import { CSsAttributesMapType, CssValuesType } from '../types'
 
-function removeCssDefaults(attributes: Record<string, CssValueType>, cssAttributeMap: CSsAttributesMapType) {
-  const nextAttributes = { ...attributes }
+function removeCssDefaults(cssValues: CssValuesType, cssAttributeMap: CSsAttributesMapType) {
+  const nextAttributes = { ...cssValues }
 
-  Object.entries(attributes).forEach(([attributeName, value]) => {
+  Object.entries(cssValues).forEach(([attributeName, value]) => {
     const { defaultValue } = cssAttributeMap[attributeName]
 
     if (value.toString() === defaultValue.toString()) {

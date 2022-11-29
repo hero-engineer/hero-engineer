@@ -22,6 +22,7 @@ const breakpoints: BreakpointType[] = [
     min: 1280,
     base: 1280,
     scale: 1,
+    isRoot: false,
   },
   {
     name: 'Desktop',
@@ -29,6 +30,7 @@ const breakpoints: BreakpointType[] = [
     min: 992,
     base: 1232,
     scale: 1,
+    isRoot: true,
   },
   {
     name: 'Tablet',
@@ -36,6 +38,7 @@ const breakpoints: BreakpointType[] = [
     min: 768,
     base: 768,
     scale: 1,
+    isRoot: false,
   },
   {
     name: 'Mobile Landscape',
@@ -43,6 +46,7 @@ const breakpoints: BreakpointType[] = [
     min: 479,
     base: 568,
     scale: 1,
+    isRoot: false,
   },
   {
     name: 'Mobile Portrait',
@@ -50,6 +54,7 @@ const breakpoints: BreakpointType[] = [
     min: 0,
     base: 320,
     scale: 1,
+    isRoot: false,
   },
 ]
 

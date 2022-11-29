@@ -40,7 +40,7 @@ function ComponentProviders({ children }: ComponentProvidersPropsType) {
 
   const [className, setClassName] = useState('')
   const [updatedStyles, setUpdatedStyles] = useState<CSSProperties>({})
-  const cssClassesContextValue = useMemo<CssClassesContextType>(() => ({ className, setClassName, updatedStyles, setUpdatedStyles }), [className, updatedStyles])
+  const cssClassesContextValue = useMemo<CssClassesContextType>(() => ({ className, setClassName, breakpointToStyles: updatedStyles, setBreakpointToStyle: setUpdatedStyles }), [className, updatedStyles])
 
   // Do not remove yet
   console.log('render')

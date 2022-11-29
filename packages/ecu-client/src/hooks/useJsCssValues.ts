@@ -1,10 +1,10 @@
 import { CSSProperties } from 'react'
 
-import { CSsAttributesMapType, CssValueType } from '../types'
+import { CSsAttributesMapType, CssValuesType } from '../types'
 
 import convertJsAttributeNameToCss from '../utils/convertJsAttributeNameToCss'
 
-function useJsCssValues(cssValues: Record<string, CssValueType>, styles: CSSProperties, cssAttributesMap: CSsAttributesMapType) {
+function useJsCssValues(cssValues: CssValuesType, styles: CSSProperties, cssAttributesMap: CSsAttributesMapType) {
   const nextCssValues = { ...cssValues }
 
   Object.entries(styles).forEach(([attributeName, value]) => {

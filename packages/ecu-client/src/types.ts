@@ -78,9 +78,12 @@ export type BreakpointType = {
   max: number
   base: number
   scale: number
+  isRoot: boolean
 }
 
 export type CssValueType = string | number
+
+export type CssValuesType = Record<string, CssValueType>
 
 export type CssAttributeType = {
   name: string
@@ -91,6 +94,7 @@ export type CssClassType= {
   selector: string
   declaration: string
   attributes: CssAttributeType[]
+  breakpointMaxValue: number | null
 }
 
 export type SpacingsType = [CssValueType, CssValueType, CssValueType, CssValueType]
@@ -99,6 +103,6 @@ export type CSsAttributesMapType = Record<string, {
   attributes: readonly string[]
   defaultValue: CssValueType
   extractValue?: (value: CssValueType) => CssValueType
-  converter?: (value: CssValueType) => Record<string, CssValueType>
+  converter?: (value: CssValueType) => CssValuesType
   isValueValid: (value: CssValueType) => boolean
 }>

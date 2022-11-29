@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { Div, Path, Svg, WithOutsideClick } from 'honorable'
 
 import { cssAttributesMap, spacingSemanticValues } from '../../constants'
-import { CssAttributeType, CssValueType, SpacingsType } from '../../types'
+import { CssAttributeType, CssValuesType, SpacingsType } from '../../types'
 
 import useRefresh from '../../hooks/useRefresh'
 
@@ -21,7 +21,8 @@ type SpacingEditorPropsType = {
   borderSize?: number
   offetHorizontal?: number
   inputMountNode: Element | null
-  cssValues: Record<string, CssValueType>
+  cssValues: CssValuesType
+  breakpointCssValues: CssValuesType
   children?: ReactNode
 }
 
@@ -36,6 +37,7 @@ function SpacingEditor({
   offetHorizontal = 0,
   inputMountNode,
   cssValues,
+  breakpointCssValues,
   children,
 }: SpacingEditorPropsType) {
   const rootRef = useRef<HTMLDivElement>(null)

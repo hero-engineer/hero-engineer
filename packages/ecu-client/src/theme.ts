@@ -154,6 +154,10 @@ export default mergeTheme(defaultTheme, {
     'is-drop': 'green.500',
     'is-edited': 'darkorchid',
     'is-component-root': 'gold',
+    breakpoint: {
+      light: 'yellow.600',
+      dark: 'yellow.300',
+    },
   },
   global: [
     mpRecipe(),

@@ -1,19 +1,21 @@
 import { useMemo } from 'react'
 import { Div } from 'honorable'
 
-import { CssValueType } from '../../types'
+import { CssValuesType } from '../../types'
 
 type StylesSubSectionTitlePropsType = {
   title: string
   expanded: boolean
-  cssValues: Record<string, CssValueType>
+  cssValues: CssValuesType
+  breakpointCssValues: CssValuesType
   attributeNames: string[]
 }
 
 // Display the title of a styles sub section
-// With a chip is modified
-function StylesSubSectionTitle({ title, expanded, cssValues, attributeNames }: StylesSubSectionTitlePropsType) {
+// With a chip if modified
+function StylesSubSectionTitle({ title, expanded, cssValues, breakpointCssValues, attributeNames }: StylesSubSectionTitlePropsType) {
   const isModified = useMemo(() => attributeNames.some(attributeName => typeof cssValues[attributeName] !== 'undefined'), [cssValues, attributeNames])
+  const isBreakpointModified = useMemo(() => attributeNames.some(attributeName => typeof breakpointCssValues[attributeName] !== 'undefined'), [breakpointCssValues, attributeNames])
 
   return (
     <Div
@@ -26,6 +28,14 @@ function StylesSubSectionTitle({ title, expanded, cssValues, attributeNames }: S
           width={5}
           height={5}
           backgroundColor="primary"
+          borderRadius="50%"
+        />
+      )}
+      {isBreakpointModified && !expanded && (
+        <Div
+          width={5}
+          height={5}
+          backgroundColor="breakpoint"
           borderRadius="50%"
         />
       )}

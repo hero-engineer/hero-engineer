@@ -2,13 +2,14 @@ import { memo, useCallback, useContext, useEffect, useMemo, useState } from 'rea
 import { Link } from 'react-router-dom'
 import { Button, Div, useDebounce } from 'honorable'
 
-import { CssAttributeType, CssValueType } from '../../types'
+import { CssAttributeType, CssValuesType } from '../../types'
 import { cssAttributesMap, refetchKeys } from '../../constants'
 
 import { CssClassesQuery, CssClassesQueryDataType, UpdateCssClassMutation, UpdateCssClassMutationDataType } from '../../queries'
 
 import HierarchyContext from '../../contexts/HierarchyContext'
 import CssClassesContext from '../../contexts/CssClassesContext'
+import BreakpointContext from '../../contexts/BreakpointContext'
 import HotContext from '../../contexts/HotContext'
 
 import useQuery from '../../hooks/useQuery'
@@ -22,7 +23,7 @@ import useEditionSearchParams from '../../hooks/useEditionSearchParams'
 
 import getComponentRootHierarchyIds from '../../utils/getComponentRootHierarchyIds'
 
-import filterClassesByClassNames from '../../utils/filterClassesByClassNames'
+import filterClassesByClassNamesAndBreakpoint from '../../utils/filterClassesByClassNamesAndBreakpoint'
 import convertCssAttributeNameToJs from '../../utils/convertCssAttributeNameToJs'
 import removeCssDefaults from '../../utils/removeCssDefaults'
 import filterInvalidCssValues from '../../utils/filterInvalidCssValues'
@@ -37,7 +38,8 @@ import StylesSubSectionSpacing from './StylesSubSectionSpacing'
 function StylesSection() {
   const { hierarchy } = useContext(HierarchyContext)
   const { componentDelta, hierarchyIds } = useEditionSearchParams()
-  const { className, setClassName, updatedStyles, setUpdatedStyles } = useContext(CssClassesContext)
+  const { className, setClassName, breakpointToStyles, setBreakpointToStyle } = useContext(CssClassesContext)
+  const { breakpoint } = useContext(BreakpointContext)
   const hot = useContext(HotContext)
 
   const [cssClassesQueryResult, refetchCssClassesQuery] = useQuery<CssClassesQueryDataType>({
@@ -65,27 +67,33 @@ function StylesSection() {
   const debouncedIsOnAnotherComponent = useDebounce(isSomeNodeSelected && isOnAnotherComponent, 6 * 16) // To prevent flickering of the section
 
   const allClasses = useMemo(() => cssClassesQueryResult.data?.cssClasses || [], [cssClassesQueryResult.data])
-  const classes = useMemo(() => filterClassesByClassNames(allClasses, classNames), [allClasses, classNames])
-  const currentClass = useMemo(() => filterClassesByClassNames(classes, [selectedClassName]), [classes, selectedClassName])
-  const finalCssValues = useJsCssValues(useCssValues(classes, cssAttributesMap), updatedStyles, cssAttributesMap)
-  const workingCssValues = useJsCssValues(useCssValues(currentClass, cssAttributesMap), updatedStyles, cssAttributesMap)
+  const baseClasses = useMemo(() => filterClassesByClassNamesAndBreakpoint(allClasses, classNames, null), [allClasses, classNames])
+  const currentBaseClass = useMemo(() => filterClassesByClassNamesAndBreakpoint(baseClasses, [selectedClassName], null), [baseClasses, selectedClassName])
+  const breakpointClasses = useMemo(() => filterClassesByClassNamesAndBreakpoint(allClasses, classNames, breakpoint?.max ?? null), [allClasses, classNames, breakpoint])
+  const currentBreakpointClass = useMemo(() => filterClassesByClassNamesAndBreakpoint(allClasses, [selectedClassName], breakpoint?.max ?? null), [allClasses, selectedClassName, breakpoint])
+  const finalBaseCssValues = useJsCssValues(useCssValues(baseClasses, cssAttributesMap), breakpointToStyles[''] ?? {}, cssAttributesMap)
+  const workingBaseCssValues = useJsCssValues(useCssValues(currentBaseClass, cssAttributesMap), breakpointToStyles[''] ?? {}, cssAttributesMap)
+  const finalBreakpointCssValues = useJsCssValues(useCssValues(breakpointClasses, cssAttributesMap), breakpointToStyles[breakpoint?.max ?? ''] ?? {}, cssAttributesMap)
+  const workingBreakpointCssValues = useJsCssValues(useCssValues(currentBreakpointClass, cssAttributesMap), breakpointToStyles[breakpoint?.max ?? ''] ?? {}, cssAttributesMap)
 
   const handleCssUpdate = useCallback(async () => {
-    if (!classNames.length) return
+    if (!(classNames.length && breakpoint)) return
 
-    const attributes = Object.entries(filterInvalidCssValues(removeCssDefaults(workingCssValues, cssAttributesMap), cssAttributesMap)).map(([name, value]) => ({ name, value }))
+    const attributes = Object.entries(filterInvalidCssValues(removeCssDefaults(workingBaseCssValues, cssAttributesMap), cssAttributesMap)).map(([name, value]) => ({ name, value }))
 
     await updateCssClass({
       classNames: selectedClassName,
       attributesJson: JSON.stringify(attributes),
+      breakpointMaxValue: breakpoint.isRoot ? null : breakpoint.max,
     })
 
     refetch(refetchKeys.cssClasses)
   }, [
-    updateCssClass,
-    workingCssValues,
-    selectedClassName,
     classNames,
+    workingBaseCssValues,
+    selectedClassName,
+    breakpoint,
+    updateCssClass,
     refetch,
   ])
 
@@ -93,20 +101,21 @@ function StylesSection() {
 
   const handleSetClassNames = useCallback((classes: string[]) => {
     setClassName(classes.join(' ') || ' ') // HACK to force useEditionProps to use an empty updated className
-    setUpdatedStyles({})
-  }, [setClassName, setUpdatedStyles])
+    setBreakpointToStyle({})
+  }, [setClassName, setBreakpointToStyle])
 
   const handleStyleChange = useCallback((attributes: CssAttributeType[]) => {
     if (!selectedClassName) return
 
-    const updatedStyles: Record<string, CssValueType> = {}
+    const key = breakpoint?.max ?? ''
+    const updatedStyles: CssValuesType = {}
 
     attributes.forEach(({ name, value }) => {
       updatedStyles[convertCssAttributeNameToJs(name)] = value
     })
 
-    setUpdatedStyles(x => ({ ...x, ...updatedStyles }))
-  }, [selectedClassName, setUpdatedStyles])
+    setBreakpointToStyle(x => ({ ...x, [key]: { ...x[key], ...updatedStyles } }))
+  }, [selectedClassName, breakpoint, setBreakpointToStyle])
 
   const renderNoElement = useCallback(() => (
     <Div
@@ -168,12 +177,14 @@ function StylesSection() {
         </Div>
       )}
       <StylesSubSectionLayout
-        cssValues={selectedClassName ? workingCssValues : finalCssValues}
+        cssValues={selectedClassName ? workingBaseCssValues : finalBaseCssValues}
+        breakpointCssValues={selectedClassName ? workingBreakpointCssValues : finalBreakpointCssValues}
         onChange={handleStyleChange}
         disabled={!selectedClassName}
       />
       <StylesSubSectionSpacing
-        cssValues={selectedClassName ? workingCssValues : finalCssValues}
+        cssValues={selectedClassName ? workingBaseCssValues : finalBaseCssValues}
+        breakpointCssValues={selectedClassName ? workingBreakpointCssValues : finalBreakpointCssValues}
         onChange={handleStyleChange}
         disabled={!selectedClassName}
       />
@@ -190,8 +201,10 @@ function StylesSection() {
     </Div>
   ), [
     selectedClassName,
-    workingCssValues,
-    finalCssValues,
+    workingBaseCssValues,
+    finalBaseCssValues,
+    workingBreakpointCssValues,
+    finalBreakpointCssValues,
     loading,
     handleStyleChange,
   ])
@@ -224,22 +237,22 @@ function StylesSection() {
   ])
 
   useEffect(() => {
-    if (!Object.keys(updatedStyles).length) return
+    if (!Object.keys(breakpointToStyles).length) return
 
     throttledHandleCssUpdate()
   // Adding throttledHandleCssUpdate as a dep seems to cause infinite useEffect trigger
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [updatedStyles])
+  }, [breakpointToStyles])
 
   useEffect(() => {
     if (hot) {
       hot.on('vite:beforeUpdate', () => {
         setTimeout(() => {
-          setUpdatedStyles({})
+          setBreakpointToStyle({})
         }, 500)
       })
     }
-  }, [hot, setUpdatedStyles])
+  }, [hot, setBreakpointToStyle])
 
   return (
     <Div

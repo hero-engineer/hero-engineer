@@ -3,13 +3,13 @@ import { CSSProperties, Dispatch, SetStateAction, createContext } from 'react'
 export type CssClassesContextType = {
   className: string
   setClassName: Dispatch<SetStateAction<string>>
-  updatedStyles: CSSProperties
-  setUpdatedStyles: Dispatch<SetStateAction<CSSProperties>>
+  breakpointToStyles: Record<string, CSSProperties>
+  setBreakpointToStyle: Dispatch<SetStateAction<Record<string, CSSProperties>>>
 }
 
 export default createContext<CssClassesContextType>({
   className: '',
   setClassName: () => {},
-  updatedStyles: {},
-  setUpdatedStyles: () => {},
+  breakpointToStyles: {},
+  setBreakpointToStyle: () => {},
 })

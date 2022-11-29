@@ -86,6 +86,7 @@ export const CssClassesQuery = `
     cssClasses {
       selector
       declaration
+      breakpointMaxValue
       attributes {
         name
         value
@@ -332,8 +333,8 @@ export type CreateCssClassMutationDataType = {
 }
 
 export const UpdateCssClassMutation = `
-  mutation ($classNames: [String!]!, $attributesJson: String!) {
-    updateCssClass (classNames: $classNames, attributesJson: $attributesJson)
+  mutation ($classNames: [String!]!, $attributesJson: String!, $breakpointMaxValue: Int) {
+    updateCssClass (classNames: $classNames, attributesJson: $attributesJson, breakpointMaxValue: $breakpointMaxValue)
   }
 `
 

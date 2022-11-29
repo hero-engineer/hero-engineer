@@ -15,7 +15,7 @@ import {
 } from 'react-icons/md'
 
 import usePersistedState from '../../hooks/usePersistedState'
-import { CssAttributeType, CssValueType } from '../../types'
+import { CssAttributeType, CssValueType, CssValuesType } from '../../types'
 import { cssAttributesMap } from '../../constants'
 
 import CssValueInput from './CssValueInput'
@@ -23,7 +23,8 @@ import StylesSubSectionTitle from './StylesSubSectionTitle'
 import StylesSubSectionDisabledOverlay from './StylesSubSectionDisabledOverlay'
 
 type StylesLayoutSectionPropsType = {
-  cssValues: Record<string, CssValueType>
+  cssValues: CssValuesType
+  breakpointCssValues: CssValuesType
   onChange: (attributes: CssAttributeType[]) => void
   disabled: boolean
 }
@@ -186,10 +187,28 @@ const justifys = [
   },
 ]
 
-function StylesSubSectionLayout({ cssValues, onChange, disabled }: StylesLayoutSectionPropsType) {
+function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disabled }: StylesLayoutSectionPropsType) {
   const [expanded, setExpanded] = usePersistedState('styles-layout-section-expanded', true)
 
-  const isToggled = useCallback((attributeName: string, values: CssValueType[]) => values.includes(cssValues[attributeName] ?? cssAttributesMap[attributeName].defaultValue), [cssValues])
+  const getValue = useCallback((attributeName: string) => breakpointCssValues[attributeName] ?? cssValues[attributeName] ?? cssAttributesMap[attributeName].defaultValue, [breakpointCssValues, cssValues])
+  const getTextColor = useCallback((attributeNames: string[]) => (
+    attributeNames
+    .map(attributeName => (
+      typeof breakpointCssValues[attributeName] !== 'undefined'
+      && breakpointCssValues[attributeName] !== cssValues[attributeName]
+      && breakpointCssValues[attributeName] !== cssAttributesMap[attributeName].defaultValue
+        ? 'breakpoint'
+        : typeof cssValues[attributeName] !== 'undefined'
+        && cssValues[attributeName] !== cssAttributesMap[attributeName].defaultValue
+          ? 'primary'
+          : 'text-light'
+    ))
+      .reduce((acc, color) => color === 'breakpoint' ? color : color === 'primary' ? color : acc, 'text-light')
+  ), [breakpointCssValues, cssValues])
+  const isToggled = useCallback((attributeName: string, values: CssValueType[]) => values.includes(getValue(attributeName)), [getValue])
+
+  console.log('cssValues.display', cssValues.display)
+  console.log('breakpointCssValues.display', breakpointCssValues.display)
 
   const renderDisplayEditor = useCallback(() => (
     <Div xflex="x4s">
@@ -197,7 +216,7 @@ function StylesSubSectionLayout({ cssValues, onChange, disabled }: StylesLayoutS
         xflex="x4"
         minWidth={54}
         fontSize="0.75rem"
-        color={cssValues.display && cssValues.display !== cssAttributesMap.display.defaultValue ? 'primary' : 'text-light'}
+        color={getTextColor(['display'])}
       >
         Display:
       </Div>
@@ -217,7 +236,7 @@ function StylesSubSectionLayout({ cssValues, onChange, disabled }: StylesLayoutS
         </Tooltip>
       ))}
     </Div>
-  ), [cssValues, onChange, isToggled])
+  ), [onChange, isToggled, getTextColor])
 
   const renderFlexDirectionEditor = useCallback(() => (
     <Div xflex="x4s">
@@ -225,7 +244,7 @@ function StylesSubSectionLayout({ cssValues, onChange, disabled }: StylesLayoutS
         xflex="x4"
         minWidth={54}
         fontSize="0.75rem"
-        color={cssValues['flex-direction'] && cssValues['flex-direction'] !== cssAttributesMap['flex-direction'].defaultValue ? 'primary' : 'text-light'}
+        color={getTextColor(['flex-direction'])}
       >
         Direction:
       </Div>
@@ -258,14 +277,14 @@ function StylesSubSectionLayout({ cssValues, onChange, disabled }: StylesLayoutS
         </Button>
       </Tooltip>
     </Div>
-  ), [cssValues, onChange, isToggled])
+  ), [cssValues, onChange, isToggled, getTextColor])
 
   const renderFlexAlignEditor = useCallback(() => (
     <Div xflex="x1">
       <Div
         minWidth={54}
         fontSize="0.75rem"
-        color={cssValues['align-items'] && cssValues['align-items'] !== cssAttributesMap['align-items'].defaultValue ? 'primary' : 'text-light'}
+        color={getTextColor(['align-items'])}
         pt={0.5}
       >
         Align:
@@ -295,14 +314,14 @@ function StylesSubSectionLayout({ cssValues, onChange, disabled }: StylesLayoutS
         })}
       </Div>
     </Div>
-  ), [cssValues, onChange, isToggled])
+  ), [cssValues, onChange, isToggled, getTextColor])
 
   const renderFlexJustifyEditor = useCallback(() => (
     <Div xflex="x1">
       <Div
         minWidth={54}
         fontSize="0.75rem"
-        color={cssValues['justify-content'] && cssValues['justify-content'] !== cssAttributesMap['justify-content'].defaultValue ? 'primary' : 'text-light'}
+        color={getTextColor(['justify-content'])}
         pt={0.5}
       >
         Justify:
@@ -332,7 +351,7 @@ function StylesSubSectionLayout({ cssValues, onChange, disabled }: StylesLayoutS
         })}
       </Div>
     </Div>
-  ), [cssValues, onChange, isToggled])
+  ), [cssValues, onChange, isToggled, getTextColor])
 
   const renderFlexGapEditor = useCallback(() => (
     <Div
@@ -343,7 +362,7 @@ function StylesSubSectionLayout({ cssValues, onChange, disabled }: StylesLayoutS
       <Div
         xflex="x4"
         minWidth={54}
-        color={(cssValues['column-gap'] && cssValues['column-gap'] !== cssAttributesMap['column-gap'].defaultValue) || (cssValues['row-gap'] && cssValues['row-gap'] !== cssAttributesMap['row-gap'].defaultValue) ? 'primary' : 'text-light'}
+        color={getTextColor(['column-gap', 'row-gap'])}
         pt={0.25}
       >
         Gap:
@@ -378,7 +397,7 @@ function StylesSubSectionLayout({ cssValues, onChange, disabled }: StylesLayoutS
         </Div>
       </Div>
     </Div>
-  ), [cssValues, onChange])
+  ), [cssValues, onChange, getTextColor])
 
   const renderFlexWrapEditor = useCallback(() => (
     <Div
@@ -389,7 +408,7 @@ function StylesSubSectionLayout({ cssValues, onChange, disabled }: StylesLayoutS
         xflex="x4"
         minWidth={54}
         fontSize="0.75rem"
-        color={cssValues['flex-wrap'] && cssValues['flex-wrap'] !== cssAttributesMap['flex-wrap'].defaultValue ? 'primary' : 'text-light'}
+        color={getTextColor(['flex-wrap'])}
       >
         Wrap:
       </Div>
@@ -416,7 +435,9 @@ function StylesSubSectionLayout({ cssValues, onChange, disabled }: StylesLayoutS
         </Tooltip>
       )}
     </Div>
-  ), [cssValues, onChange, isToggled])
+  ), [cssValues, onChange, isToggled, getTextColor])
+
+  const isFlex = isToggled('display', ['flex'])
 
   return (
     <Accordion
@@ -430,6 +451,7 @@ function StylesSubSectionLayout({ cssValues, onChange, disabled }: StylesLayoutS
           title="Layout"
           expanded={expanded}
           cssValues={cssValues}
+          breakpointCssValues={breakpointCssValues}
           attributeNames={attributeNames}
         />
       )}
@@ -442,11 +464,11 @@ function StylesSubSectionLayout({ cssValues, onChange, disabled }: StylesLayoutS
         gap={0.25}
       >
         {renderDisplayEditor()}
-        {cssValues.display === 'flex' && renderFlexDirectionEditor()}
-        {cssValues.display === 'flex' && renderFlexAlignEditor()}
-        {cssValues.display === 'flex' && renderFlexJustifyEditor()}
-        {cssValues.display === 'flex' && renderFlexGapEditor()}
-        {cssValues.display === 'flex' && renderFlexWrapEditor()}
+        {isFlex && renderFlexDirectionEditor()}
+        {isFlex && renderFlexAlignEditor()}
+        {isFlex && renderFlexJustifyEditor()}
+        {isFlex && renderFlexGapEditor()}
+        {isFlex && renderFlexWrapEditor()}
       </Div>
       {disabled && <StylesSubSectionDisabledOverlay />}
     </Accordion>

@@ -2,7 +2,7 @@ import { useMemo, useRef } from 'react'
 import { Accordion } from 'honorable'
 
 import { cssAttributesMap, spacingSemanticValues } from '../../constants'
-import { CssAttributeType, CssValueType, SpacingsType } from '../../types'
+import { CssAttributeType, CssValuesType, SpacingsType } from '../../types'
 
 import useRefresh from '../../hooks/useRefresh'
 import usePersistedState from '../../hooks/usePersistedState'
@@ -13,7 +13,8 @@ import StylesSubSectionDisabledOverlay from './StylesSubSectionDisabledOverlay'
 
 type StylesSpacingSectionPropsType = {
   onChange: (attributes: CssAttributeType[]) => void,
-  cssValues: Record<string, CssValueType>
+  cssValues: CssValuesType
+  breakpointCssValues: CssValuesType
   disabled: boolean
 }
 
@@ -32,7 +33,7 @@ const attributeNames = [
   'padding-left',
 ]
 
-function StylesSubSectionSpacing({ onChange, cssValues, disabled }: StylesSpacingSectionPropsType) {
+function StylesSubSectionSpacing({ cssValues, breakpointCssValues, onChange, disabled }: StylesSpacingSectionPropsType) {
   const inputMountNodeRef = useRef<HTMLDivElement>(null)
 
   useRefresh()
@@ -54,6 +55,7 @@ function StylesSubSectionSpacing({ onChange, cssValues, disabled }: StylesSpacin
           title="Spacing"
           expanded={expanded}
           cssValues={cssValues}
+          breakpointCssValues={breakpointCssValues}
           attributeNames={attributeNames}
         />
       )}
@@ -70,6 +72,7 @@ function StylesSubSectionSpacing({ onChange, cssValues, disabled }: StylesSpacin
         borderSize={baseHeight / borderSizeDivider - spacingEditorPadding}
         inputMountNode={inputMountNodeRef.current}
         cssValues={cssValues}
+        breakpointCssValues={breakpointCssValues}
       >
         <SpacingEditor
           title="Padding"
@@ -81,6 +84,7 @@ function StylesSubSectionSpacing({ onChange, cssValues, disabled }: StylesSpacin
           offetHorizontal={2}
           inputMountNode={inputMountNodeRef.current}
           cssValues={cssValues}
+          breakpointCssValues={breakpointCssValues}
         />
       </SpacingEditor>
       <div ref={inputMountNodeRef} />
