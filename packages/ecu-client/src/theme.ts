@@ -5,6 +5,8 @@ import gapRecipe from 'honorable-recipe-gap'
 import mapperRecipe from 'honorable-recipe-mapper'
 import xflexRecipe from 'honorable-recipe-xflex'
 
+import { zIndexes } from './constants'
+
 const borderRadiuses = {
   none: 0,
   medium: 3,
@@ -530,6 +532,7 @@ export default mergeTheme(defaultTheme, {
         backgroundColor: 'background-light',
         color: 'text',
         border: '1px solid border',
+        zIndex: zIndexes.tooltip,
       },
     ],
   },

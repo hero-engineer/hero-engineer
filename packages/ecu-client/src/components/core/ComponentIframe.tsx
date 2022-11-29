@@ -1,10 +1,8 @@
-import { ReactElement, memo, useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { ReactElement, memo, useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Iframe, IframeProps } from 'honorable'
 
 import editionStyles from '../../css/edition.css?inline'
-
-import BreakpointContext from '../../contexts/BreakpointContext'
 
 import useRefresh from '../../hooks/useRefresh'
 
@@ -21,8 +19,6 @@ function ComponentIframe({ children, ...props }: ComponentIframePropsType) {
   const rootRef = useRef<HTMLIFrameElement>(null)
 
   useRefresh()
-
-  const { isDragging } = useContext(BreakpointContext)
 
   const [height, setHeight] = useState(0)
 
@@ -81,8 +77,9 @@ function ComponentIframe({ children, ...props }: ComponentIframePropsType) {
       height={height}
       minHeight={0}
       border="none"
-      pointerEvents={isDragging ? 'none' : undefined}
       userSelect="none"
+      position="relative" // For Tooltip to be over the iframe
+      zIndex={0} // Idem
     >
       {mountNode && createPortal(children({ window: windowNode, head: headNode }), mountNode)}
     </Iframe>
