@@ -118,6 +118,7 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
           height={rect.height}
           isSelected={isSelected}
           isEdited={isSelected && isEdited}
+          isComponentRoot={!!hierarchyItem.componentAddress}
           helperText={isSelected ? helperText : ''}
           onSelect={(event: ReactMouseEvent) => handleElementSelect(event, hierarchyItem, currentHierarchyId, currentComponentDelta)}
         />

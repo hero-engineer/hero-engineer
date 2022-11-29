@@ -13,11 +13,12 @@ type EditionOverlayElementPropsType = {
   helperText: string
   isSelected: boolean
   isEdited: boolean
+  isComponentRoot: boolean
   onSelect: (event: MouseEvent) => void
 }
 
-function EditionOverlayElement({ hierarchyItem, depth, top, left, width, height, helperText, isSelected, isEdited, onSelect }: EditionOverlayElementPropsType) {
-  const color = isEdited ? 'is-edited' : isSelected ? 'primary' : null
+function EditionOverlayElement({ hierarchyItem, depth, top, left, width, height, helperText, isSelected, isEdited, isComponentRoot, onSelect }: EditionOverlayElementPropsType) {
+  const color = isEdited ? 'is-edited' : isSelected ? isComponentRoot ? 'is-component-root' : 'primary' : null
 
   return (
     <>
@@ -30,7 +31,7 @@ function EditionOverlayElement({ hierarchyItem, depth, top, left, width, height,
         zIndex={depth}
         border={color ? `1px solid ${color}` : null}
         _hover={{
-          border: `1px solid ${isEdited ? 'is-edited' : 'primary'}`,
+          border: `1px solid ${isEdited ? 'is-edited' : isComponentRoot ? 'is-component-root' : 'primary'}`,
           '& + div': {
             display: 'flex',
             '&:hover': {
@@ -50,6 +51,8 @@ function EditionOverlayElement({ hierarchyItem, depth, top, left, width, height,
         backgroundColor={color}
         color={isSelected || isEdited ? 'white' : 'primary'}
         fontSize="0.75rem"
+        cursor="pointer"
+        zIndex={depth}
         gap={0.25}
         px={0.25 * 2 / 3}
       >

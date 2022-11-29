@@ -153,7 +153,7 @@ export default mergeTheme(defaultTheme, {
     pink,
     'is-drop': 'green.500',
     'is-edited': 'darkorchid',
-    'is-component-root': 'gold',
+    'is-component-root': 'pink.500',
     breakpoint: {
       light: 'yellow.600',
       dark: 'yellow.300',
