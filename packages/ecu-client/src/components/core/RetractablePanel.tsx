@@ -3,6 +3,8 @@ import { Button, Div, Tooltip } from 'honorable'
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md'
 import { CgDockLeft, CgDockRight } from 'react-icons/cg'
 
+import { zIndexes } from '../../constants'
+
 import usePersistedState from '../../hooks/usePersistedState'
 
 import xor from '../../utils/xor'
@@ -101,7 +103,7 @@ function RetractablePanel({ height, direction, openPersistedStateKey, defaultOpe
           borderRight={isLeft ? '1px solid border' : null}
           borderLeft={isRight ? '1px solid border' : null}
           overflowY="auto"
-          zIndex={999}
+          zIndex={zIndexes.retractablePanel}
         >
           {children}
         </Div>

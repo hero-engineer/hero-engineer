@@ -2,7 +2,7 @@ import { memo, useCallback, useContext, useEffect, useMemo, useState } from 'rea
 import { Link } from 'react-router-dom'
 import { Button, Div, useDebounce } from 'honorable'
 
-import { CssAttributeType, CssValueType, CssValuesType } from '../../types'
+import { CssAttributeType, CssValuesType } from '../../types'
 import { cssAttributesMap, refetchKeys } from '../../constants'
 
 import { CssClassesQuery, CssClassesQueryDataType, UpdateCssClassMutation, UpdateCssClassMutationDataType } from '../../queries'
@@ -83,8 +83,6 @@ function StylesSection() {
   // The css values passed to sub sections
   const passedCssValues = useMemo(() => removeCssDefaults(selectedClassName ? selectedCssValues : finalCssValues, cssAttributesMap), [selectedClassName, finalCssValues, selectedCssValues])
   const passedBreakpointCssValues = useMemo(() => removeCssDefaults(selectedClassName ? selectedBreakpointCssValues : finalBreakpointCssValues, cssAttributesMap), [selectedClassName, selectedBreakpointCssValues, finalBreakpointCssValues])
-
-  console.log('passedBreakpointCssValues', passedCssValues, passedBreakpointCssValues)
 
   const handleCssUpdate = useCallback(async () => {
     if (!classNames.length) return

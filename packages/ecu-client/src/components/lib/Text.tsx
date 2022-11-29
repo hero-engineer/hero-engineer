@@ -37,6 +37,7 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
     setIsEdited,
     editionProps,
   } = useEditionProps<HTMLDivElement>(ecuId, className, true)
+
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const finalRef = useForkedRef(ref, editionRef)
 

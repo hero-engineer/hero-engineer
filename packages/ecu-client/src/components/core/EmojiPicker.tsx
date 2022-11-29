@@ -1,6 +1,8 @@
 import { useCallback, useState } from 'react'
 import { Div, Tooltip, WithOutsideClick } from 'honorable'
 
+import { zIndexes } from '../../constants'
+
 import Emoji from './Emoji'
 import EmojiPickerBase from './EmojiPickerBase'
 
@@ -53,7 +55,7 @@ function EmojiPicker({ emoji, onEmojiChange, size = 24 }: EmojiPickerPropsType) 
             position="absolute"
             top="calc(100% + 8px)"
             left={0}
-            zIndex={999999}
+            zIndex={zIndexes.emojiPicker}
           >
             <EmojiPickerBase onChange={handleEmojiSelect} />
           </Div>

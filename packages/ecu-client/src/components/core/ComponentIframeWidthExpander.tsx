@@ -1,6 +1,8 @@
 import { MouseEvent, ReactNode, memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { Div } from 'honorable'
 
+import { zIndexes } from '../../constants'
+
 import BreakpointContext from '../../contexts/BreakpointContext'
 
 import useClearHierarchyIdsAndComponentDeltaOnClick from '../../hooks/useClearHierarchyIdsAndComponentDeltaOnClick'
@@ -119,7 +121,7 @@ function ComponentIframeWidthExanderHandle({ isLeft, maxWidth }: ComponentIframe
           top={0}
           bottom={0}
           onMouseMove={handleMouseMove}
-          zIndex={9999999}
+          zIndex={zIndexes.componentIframeWidthExpanderHandle}
           cursor="col-resize"
         />
       )}

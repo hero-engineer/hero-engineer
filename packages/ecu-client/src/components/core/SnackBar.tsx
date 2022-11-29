@@ -1,6 +1,8 @@
 import { Div } from 'honorable'
 import { useContext, useEffect, useState } from 'react'
 
+import { zIndexes } from '../../constants'
+
 import SnackbarContext from '../../contexts/SnackBarContext'
 
 const duration = 5000
@@ -44,7 +46,7 @@ function SnackBar() {
       position="fixed"
       bottom={16}
       right={16}
-      zIndex={9999999}
+      zIndex={zIndexes.snackBar}
     >
       {snackBarItems.filter(x => !x.cleared).map(x => (
         <Div

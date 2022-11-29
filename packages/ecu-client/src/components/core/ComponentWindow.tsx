@@ -5,7 +5,8 @@ import { CssBaseline, Div, ThemeProvider } from 'honorable'
 
 import themeComponent from '../../themeComponent'
 
-import ComponentIframeWidthExpander from './ComponentIframeWidthExander'
+import ComponentIframeWidthExpander from './ComponentIframeWidthExpander'
+import EditionOverlay from './EditionOverlay'
 import ComponentIframe from './ComponentIframe'
 import ComponentLoader from './ComponentLoader'
 import WithIsComponentRefreshingLayer from './WithIsComponentRefreshingLayer'
@@ -28,30 +29,32 @@ function ComponentWindow({ componentPath, decoratorPaths }: ComponentWindowProps
       overflowY="auto"
     >
       <ComponentIframeWidthExpander>
-        <ComponentIframe>
-          {({ window, head }) => (
-            <EmotionProvider head={head}>
-              <DndProvider
-                backend={HTML5Backend}
-                context={window}
-              >
-                <ThemeProvider theme={themeComponent}>
-                  <CssBaseline />
-                  <WithIsComponentRefreshingLayer>
-                    <WithComponentScrenshot>
-                      <ComponentLoader
-                        head={head}
-                        componentPath={componentPath}
-                        decoratorPaths={decoratorPaths}
-                      />
-                    </WithComponentScrenshot>
-                  </WithIsComponentRefreshingLayer>
-                  <ContextualInformation />
-                </ThemeProvider>
-              </DndProvider>
-            </EmotionProvider>
-          )}
-        </ComponentIframe>
+        <EditionOverlay>
+          <ComponentIframe>
+            {({ window, head }) => (
+              <EmotionProvider head={head}>
+                <DndProvider
+                  backend={HTML5Backend}
+                  context={window}
+                >
+                  <ThemeProvider theme={themeComponent}>
+                    <CssBaseline />
+                    <WithIsComponentRefreshingLayer>
+                      <WithComponentScrenshot>
+                        <ComponentLoader
+                          head={head}
+                          componentPath={componentPath}
+                          decoratorPaths={decoratorPaths}
+                        />
+                      </WithComponentScrenshot>
+                    </WithIsComponentRefreshingLayer>
+                    <ContextualInformation />
+                  </ThemeProvider>
+                </DndProvider>
+              </EmotionProvider>
+            )}
+          </ComponentIframe>
+        </EditionOverlay>
       </ComponentIframeWidthExpander>
     </Div>
   )

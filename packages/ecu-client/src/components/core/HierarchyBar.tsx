@@ -2,9 +2,8 @@ import { Fragment, memo, useCallback, useContext, useEffect, useMemo } from 'rea
 import { useParams } from 'react-router-dom'
 import { useQuery } from 'urql'
 import { Div } from 'honorable'
-import { SlArrowRight } from 'react-icons/sl'
 
-import { refetchKeys } from '../../constants'
+import { refetchKeys, zIndexes } from '../../constants'
 import { HierarchyItemType } from '../../types'
 
 import { HierarchyQuery, HierarchyQueryDataType } from '../../queries'
@@ -196,7 +195,7 @@ function HierarchyBar() {
             textDecoration={isSelectedComponentParent(a, hierarchyItem) ? 'underline' : 'none'}
             title={isSelectedComponentParent(a, hierarchyItem) ? 'Parent of the seelected component' : undefined}
             cursor="pointer"
-            zIndex={2}
+            zIndex={zIndexes.hierarchyBarItem + 1}
           >
             {hierarchyItem.label}
           </Div>
@@ -210,7 +209,7 @@ function HierarchyBar() {
               transformOrigin="center"
               ml={`${-caretSize / 2}px`}
               mr={0.25}
-              zIndex={1}
+              zIndex={zIndexes.hierarchyBarItem}
             />
           )}
         </Fragment>

@@ -1,11 +1,10 @@
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { A, Button, Div, H3, Menu, MenuItem, Modal, P, WithOutsideClick } from 'honorable'
-
 import { SlTrash } from 'react-icons/sl'
 
 import { HierarchyPosition } from '../../types'
-import { refetchKeys } from '../../constants'
+import { refetchKeys, zIndexes } from '../../constants'
 
 import HierarchyContext from '../../contexts/HierarchyContext'
 import ContextualInformationContext from '../../contexts/ContextualInformationContext'
@@ -188,7 +187,7 @@ function ContextualInformation() {
         backgroundColor={contextualInformationState.isEdited ? 'is-edited' : contextualInformationState.isComponentRoot ? 'is-component-root' : 'primary'}
         color="white"
         fontSize="0.75rem"
-        zIndex={999999}
+        zIndex={zIndexes.contextualInformationVignette}
         userSelect="none"
         px={0.25}
       >
@@ -223,7 +222,7 @@ function ContextualInformation() {
         backgroundColor="is-drop"
         color="white"
         fontSize="0.75rem"
-        zIndex={999999}
+        zIndex={zIndexes.contextualInformationVignette}
         userSelect="none"
         gap={0.5}
         px={0.25}

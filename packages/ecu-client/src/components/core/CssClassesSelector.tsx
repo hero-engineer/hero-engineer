@@ -6,7 +6,7 @@ import { MdOutlineClose } from 'react-icons/md'
 import { HiOutlineFaceSmile } from 'react-icons/hi2'
 
 import { CssClassType } from '../../types'
-import { refetchKeys } from '../../constants'
+import { refetchKeys, zIndexes, zIndexes } from '../../constants'
 
 import { CreateCssClassMutation, CreateCssClassMutationDataType } from '../../queries'
 
@@ -210,7 +210,7 @@ function CssClassesSelector({ allClasses, classNames, onClassNamesChange, select
             left={0}
             right={0}
             bottom={0}
-            zIndex={9999998}
+            zIndex={zIndexes.cssClassesSelectorEmojiPicker}
           />
           <WithOutsideClick
             preventFirstFire
@@ -220,7 +220,7 @@ function CssClassesSelector({ allClasses, classNames, onClassNamesChange, select
               position="fixed"
               top={8}
               right={8}
-              zIndex={9999999}
+              zIndex={zIndexes.cssClassesSelectorEmojiPicker + 1}
             >
               <EmojiPickerBase onChange={handleEmojiSelect} />
             </Div>

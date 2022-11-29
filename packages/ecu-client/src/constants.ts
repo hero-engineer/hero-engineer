@@ -1,6 +1,17 @@
 import { CSsAttributesMapType, CssValueType, HierarchyPosition } from './types'
 import splitSpacingValue from './utils/splitSpacingValue'
 
+export const zIndexes = {
+  snackBar: 9999999999, // 10 9
+  cssClassesSelectorEmojiPicker: 999999999, // 9 9
+  emojiPicker: 999999999, // 9 9
+  componentIframeWidthExpanderHandle: 99999999, // 8 9
+  retractablePanel: 9999999, // 7 9
+  contextualInformationVignette: 999999 + 1, // 6 9 + 1
+  editionOverlay: 999999, // 6 9
+  hierarchyBarItem: 9, // 1 9
+}
+
 export const hierarchyPositions: HierarchyPosition[] = [
   'before',
   'after',

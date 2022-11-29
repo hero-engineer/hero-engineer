@@ -20,6 +20,7 @@ import convertUnicode from '../utils/convertUnicode'
 import useForkedRef from './useForkedRef'
 import useHierarchyId from './useHierarchyId'
 import useEditionSearchParams from './useEditionSearchParams'
+import useEditionOverlay from './useEditionOverlay'
 
 type DragObject = {
   hierarchyId: string
@@ -68,6 +69,8 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   const { dragAndDrop, setDragAndDrop } = useContext(DragAndDropContext)
   const { setContextualInformationState } = useContext(ContextualInformationContext)
   const { className: updatedClassName, setClassName, style: updatedStyle, setStyle: setUpdatedStyle } = useContext(CssClassesContext)
+
+  useEditionOverlay(rootRef, hierarchyId)
 
   const [isEdited, setIsEdited] = useState(false)
 
@@ -294,6 +297,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   }, [debouncedIsSelected, isComponentRoot, setClassName, className])
 
   return {
+    rootRef,
     ref,
     hierarchyId,
     isSelected: debouncedIsSelected,
