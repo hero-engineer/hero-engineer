@@ -115,7 +115,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
 
   const generateClassName = useCallback(() => {
     // let klassName = `ecu-edition-no-outline ${convertUnicode(debouncedIsSelected ? updatedClassName || className : className)}`
-    let klassName = `ecu-edition-no-outline ${debouncedIsSelected ? updatedClassName || className : className}`
+    let klassName = `ecu-edition ${debouncedIsSelected ? updatedClassName || className : className}`
 
     klassName = klassName.trim()
 

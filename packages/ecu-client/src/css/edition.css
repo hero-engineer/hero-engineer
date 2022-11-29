@@ -1,5 +1,6 @@
-.ecu-edition-no-outline {
+.ecu-edition {
   outline: none;
+  user-select: none;
 }
 
 .ecu-can-be-edited {
