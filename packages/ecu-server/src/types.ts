@@ -138,8 +138,19 @@ export type CssAttributeType = {
 }
 
 export type CssClassType = {
+  id: string
   selector: string
+  media: string
   declaration: string
   attributes: CssAttributeType[]
-  breakpointMaxValue: number | null
+}
+
+export type BreakpointType = {
+  id: string
+  name: string
+  min: number
+  max: number
+  base: number
+  scale: number
+  media: string
 }

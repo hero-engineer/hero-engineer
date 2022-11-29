@@ -11,6 +11,7 @@ import composeHistoryMutation from '../../history/composeHistoryMutation.js'
 import processImpactedFileNodes from '../../domain/processImpactedFileNodes.js'
 import traverseComponent from '../../domain/components/traverseComponent.js'
 import appendCssSelector from '../../domain/css/appendCssSelector.js'
+import readBreakpoints from '../../domain/css/readBreakpoints.js'
 import applyComponentDelta from '../../domain/utils/applyComponentDelta.js'
 
 type CreateCssClassMutationArgsType = {
@@ -40,6 +41,7 @@ async function createCssClassMutation(_: any, { sourceComponentAddress, targetHi
   }
 
   let componentName = ''
+  const breakpoints = readBreakpoints()
 
   function onSuccess(paths: NodePath<JSXElement>[]) {
     const finalPath = applyComponentDelta(paths, componentDelta)
@@ -71,7 +73,9 @@ async function createCssClassMutation(_: any, { sourceComponentAddress, targetHi
   if (classNames.length) {
     const selector = `.${classNames[classNames.length - 1]}`
 
-    await appendCssSelector(indexCssNode, selector)
+    for (const breakpoint of breakpoints) {
+      await appendCssSelector(indexCssNode, selector, breakpoint)
+    }
   }
 
   return {

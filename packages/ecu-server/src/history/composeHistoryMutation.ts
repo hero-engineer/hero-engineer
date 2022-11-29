@@ -7,8 +7,8 @@ import commit from '../git/commit.js'
 
 import writeEcuHistory from './writeEcuHistory.js'
 
-function composeHistoryMutation(mutate: (...args: any[]) => Promise<HistoryMutationReturnType<any>>) {
-  return async (...args: any[]) => {
+function composeHistoryMutation<T>(mutate: (...args: any[]) => Promise<HistoryMutationReturnType<T>>) {
+  return async (...args: Parameters<typeof mutate>) => {
     const { returnValue, description } = await mutate(...args)
 
     await updateGraphHash()

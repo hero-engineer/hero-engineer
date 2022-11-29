@@ -2,7 +2,7 @@ import path from 'node:path'
 
 import { jsxText } from '@babel/types'
 
-import { AtomType, ImportType } from './types.js'
+import { AtomType, BreakpointType, ImportType } from './types.js'
 
 export const appPath = path.join(process.cwd(), 'app')
 
@@ -16,9 +16,11 @@ export const ecuRelativePath = '.ecu'
 
 export const ecuScreenshotsRelativePath = 'screenshots'
 
-export const ecuGraphFileName = 'ecu-graph.json'
+export const ecuGraphFileName = 'graph.json'
 
-export const ecuHistoryFileName = 'ecu-history.json'
+export const ecuHistoryFileName = 'history.json'
+
+export const ecuBreakpointsFileName = 'breakpoints.json'
 
 export const globalTypesFileRelativePath = 'src/types.ts'
 
@@ -102,3 +104,13 @@ export const ecuAtoms: AtomType[] = [
     defaultChildren: [jsxText("Edit me I'm a Text")],
   },
 ]
+
+export const defaultBreakpoint: BreakpointType = {
+  id: 'Default',
+  name: 'Default',
+  base: 1232,
+  min: 0,
+  max: Infinity,
+  scale: 1,
+  media: '',
+}

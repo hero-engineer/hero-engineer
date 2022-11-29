@@ -1,13 +1,11 @@
-import { CssAttributeType, FileNodeType } from '../../types.js'
+import { BreakpointType, CssAttributeType, FileNodeType } from '../../types.js'
 
 import traverseCss from './traverseCss.js'
 
-async function updateCssSelector(fileNode: FileNodeType, selector: string, attributes: CssAttributeType[], breakpointMaxValue: number | null) {
-  await traverseCss(fileNode, selector, breakpointMaxValue, (_cssClass, rule) => {
-    // let foundMediaMatchingBreakpoint = mediaNodes.find(mediaNode => mediaNode.)
-
+async function updateCssSelector(fileNode: FileNodeType, selector: string, attributes: CssAttributeType[], breakpoint: BreakpointType) {
+  await traverseCss(fileNode, selector, breakpoint, (_cssClass, rule) => {
     rule.nodes.length = 0
-    rule.raws.after = '\n' // Styling
+    // rule.raws.after = '\n'  // Styling
 
     attributes.forEach(attribute => {
       rule.append({

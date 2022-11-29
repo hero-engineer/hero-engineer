@@ -6,15 +6,16 @@ import { getNodesByRole } from '../../graph/index.js'
 
 import composeHistoryMutation from '../../history/composeHistoryMutation.js'
 
+import readBreakpoints from '../../domain/css/readBreakpoints.js'
 import updateCssSelector from '../../domain/css/updateCssSelector.js'
 
 type UpdateCssClassMutationArgsType = {
-  classNames: string[]
+  classNames: string[] // Support for chained classes
+  breakpointId: string
   attributesJson: string
-  breakpointMaxValue: number | null
 }
 
-async function updateCssClassMutation(_: any, { classNames, attributesJson, breakpointMaxValue }: UpdateCssClassMutationArgsType): Promise<HistoryMutationReturnType<boolean>> {
+async function updateCssClassMutation(_: any, { classNames, breakpointId, attributesJson }: UpdateCssClassMutationArgsType): Promise<HistoryMutationReturnType<boolean>> {
   console.log('__updateCssClassMutation__')
 
   const indexCssNode = getNodesByRole<FileNodeType>('File').find(node => node.payload.relativePath === indexCssFileRelativePath)
@@ -32,9 +33,16 @@ async function updateCssClassMutation(_: any, { classNames, attributesJson, brea
     throw new Error('Invalid attributes')
   }
 
+  const breakpoints = readBreakpoints()
+  const breakpoint = breakpoints.find(breakpoint => breakpoint.id === breakpointId)
+
+  if (!breakpoint) {
+    throw new Error(`Breakpoint ${breakpointId} not found`)
+  }
+
   const selector = classNames.map(x => `.${x}`).join('')
 
-  await updateCssSelector(indexCssNode, selector, attributes, breakpointMaxValue)
+  await updateCssSelector(indexCssNode, selector, attributes, breakpoint)
 
   return {
     returnValue: true,

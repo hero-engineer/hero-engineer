@@ -3,12 +3,11 @@ import fs from 'node:fs'
 import postcss, { AtRule, Document, Root, Rule } from 'postcss'
 import posscssNested from 'postcss-nested'
 
-import { CssAttributeType, CssClassType, FileNodeType } from '../../types.js'
+import { BreakpointType, CssAttributeType, CssClassType, FileNodeType } from '../../types.js'
 
 import areSelectorsEqual from './utils/areSelectorsEqual.js'
 
-// eslint-disable-next-line default-param-last
-async function traverseCss(fileNode: FileNodeType, targetSelector?: string, breakpointMaxValue: number | null = null, onSuccess?: (cssClass: CssClassType, rule: Rule, root: Root | Document) => void, regenerate?: boolean) {
+async function traverseCss(fileNode: FileNodeType, targetSelector?: string, breakpoint?: BreakpointType, onSuccess?: (cssClass: CssClassType, rule: Rule, root: Root | Document) => void, regenerate?: boolean) {
   const { root } = await postcss([posscssNested]).process(fileNode.payload.code, { from: fileNode.payload.path })
 
   const classes: CssClassType[] = []
@@ -16,14 +15,7 @@ async function traverseCss(fileNode: FileNodeType, targetSelector?: string, brea
   root.walkRules(rule => {
     const attributes: CssAttributeType[] = []
 
-    let parentBreakpointMaxValue: number | null = null
-
-    if (rule.parent?.type === 'atrule' && (rule.parent as AtRule).params.startsWith('screen and (max-width: ')) {
-      const rawBreakpointMaxValue = (rule.parent as AtRule).params.slice('screen and (max-width: '.length, -'px)'.length)
-      const numericBreakpointMaxValue = parseInt(rawBreakpointMaxValue)
-
-      if (numericBreakpointMaxValue === numericBreakpointMaxValue) parentBreakpointMaxValue = numericBreakpointMaxValue
-    }
+    const media = rule.parent?.type === 'atrule' ? (rule.parent as AtRule).params : ''
 
     rule.nodes.forEach((node: any) => {
       attributes.push({
@@ -33,15 +25,16 @@ async function traverseCss(fileNode: FileNodeType, targetSelector?: string, brea
     })
 
     const cssClass: CssClassType = {
+      id: rule.selector + media,
       selector: rule.selector,
       declaration: rule.toString(),
       attributes,
-      breakpointMaxValue: parentBreakpointMaxValue,
+      media,
     }
 
     classes.push(cssClass)
 
-    if (targetSelector && areSelectorsEqual(cssClass.selector, targetSelector) && parentBreakpointMaxValue === breakpointMaxValue && typeof onSuccess === 'function') {
+    if (targetSelector && areSelectorsEqual(cssClass.selector, targetSelector) && media === breakpoint?.media && typeof onSuccess === 'function') {
       onSuccess(cssClass, rule, root)
     }
   })

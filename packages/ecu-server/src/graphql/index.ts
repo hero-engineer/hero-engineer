@@ -9,6 +9,7 @@ import globalTypesQuery from './queries/globalTypesQuery.js'
 import fileImportsQuery from './queries/fileImportsQuery.js'
 import fileTypesQuery from './queries/fileTypesQuery.js'
 import isComponentAcceptingChildrenQuery from './queries/isComponentAcceptingChildrenQuery.js'
+import breakpointsQuery from './queries/breakpointsQuery.js'
 import packagesQuery from './queries/packagesQuery.js'
 import packagesUpdatesQuery from './queries/packagesUpdatesQuery.js'
 import undoRedoMetadataQuery from './queries/undoRedoMetdataQuery.js'
@@ -109,16 +110,27 @@ export const typeDefs = gql`
     type: String!
   }
 
+  type Breakpoint {
+    id: String!
+    name: String!
+    min: Int!
+    max: Int!
+    base: Int!
+    scale: Float!
+    media: String!
+  }
+
   type CssAttribute {
     name: String!
     value: CssValue!
   }
 
   type CssClass {
+    id: String!
     selector: String!
+    media: String!
     declaration: String!
     attributes: [CssAttribute]!
-    breakpointMaxValue: Int
   }
 
   type FileImportsReturnValue {
@@ -145,11 +157,13 @@ export const typeDefs = gql`
     component(sourceComponentAddress: String!): ComponentReturnValue!
     components: [ComponentReturnValue]!
     hierarchy(sourceComponentAddress: String!): String!
-    cssClasses: [CssClass]!
     globalTypes: GlobalTypesReturnValue!
     fileImports(sourceFileAddress: String!): FileImportsReturnValue!
     fileTypes(sourceFileAddress: String!): FileTypesReturnValue!
     isComponentAcceptingChildren(sourceComponentAddress: String, ecuComponentName: String): Boolean!
+
+    breakpoints: [Breakpoint]!
+    cssClasses: [CssClass]!
 
     packages: [Package]!
     packagesUpdates: [Package]!
@@ -174,7 +188,7 @@ export const typeDefs = gql`
     updateFileTypes(sourceFileAddress: String!, rawTypes: String!): Boolean!
 
     createCssClass(sourceComponentAddress: String!, targetHierarchyId: String!, componentDelta: Int!, classNames: [String]!): Boolean!
-    updateCssClass(classNames: [String!]!, attributesJson: String!, breakpointMaxValue: Int): Boolean!
+    updateCssClass(classNames: [String!]!, breakpointId: String!, attributesJson: String!): Boolean!
 
     installOrUpdatePackage(name: String!, version: String!, type: String!, shouldDelete: Boolean!): Boolean!
 
@@ -192,11 +206,13 @@ export const resolvers = {
     component: componentQuery,
     components: componentsQuery,
     hierarchy: hierarchyQuery,
-    cssClasses: cssClassesQuery,
     globalTypes: globalTypesQuery,
     fileImports: fileImportsQuery,
     fileTypes: fileTypesQuery,
     isComponentAcceptingChildren: isComponentAcceptingChildrenQuery,
+
+    breakpoints: breakpointsQuery,
+    cssClasses: cssClassesQuery,
 
     packages: packagesQuery,
     packagesUpdates: packagesUpdatesQuery,
