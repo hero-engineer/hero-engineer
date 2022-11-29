@@ -9,10 +9,10 @@ import { ecuAtomPrefix, ecuAtoms, ecuSpecialPrefix, ecuSpecials, hierarchyPositi
 import { HierarchyPosition } from '../../types'
 
 import HierarchyContext from '../../contexts/HierarchyContext'
+import EditionContext from '../../contexts/EditionContext'
 
 import useMutation from '../../hooks/useMutation'
 import useQuery from '../../hooks/useQuery'
-import useEditionSearchParams from '../../hooks/useEditionSearchParams'
 import useRefetch from '../../hooks/useRefetch'
 import useIsComponentRefreshingMutation from '../../hooks/useIsComponentRefreshingMutation'
 
@@ -28,7 +28,7 @@ import usePersistedState from '../../hooks/usePersistedState'
 // Section to insert a component in the hierarchy
 function AddComponentSection() {
   const { componentAddress = '' } = useParams()
-  const { hierarchyIds, componentDelta } = useEditionSearchParams()
+  const { hierarchyId, componentDelta } = useContext(EditionContext)
   const { hierarchy } = useContext(HierarchyContext)
 
   const [isAtomsAccordionExpanded, setIsAtomsAccordionExpanded] = usePersistedState('add-component-section-is-atoms-accordion-expanded', true)
@@ -84,7 +84,7 @@ function AddComponentSection() {
     await addComponent({
       sourceComponentAddress: componentAddress,
       targetComponentAddress: selectedComponentAddress,
-      targetHierarchyId: hierarchyIds[hierarchyIds.length - 1],
+      targetHierarchyId: hierarchyId,
       hierarchyPosition,
       componentDelta,
     })
@@ -97,7 +97,7 @@ function AddComponentSection() {
     componentAddress,
     componentDelta,
     hierarchy,
-    hierarchyIds,
+    hierarchyId,
     hierarchyPosition,
     selectedComponentAddress,
     refetch,
@@ -267,7 +267,7 @@ function AddComponentSection() {
         </Select>
         <Button
           onClick={handleAddComponentClick}
-          disabled={!(selectedComponentAddress && hierarchyIds.length) || isOnComponentRoot}
+          disabled={!(selectedComponentAddress && hierarchyId) || isOnComponentRoot}
           loading={fetching}
         >
           <TbRowInsertBottom />

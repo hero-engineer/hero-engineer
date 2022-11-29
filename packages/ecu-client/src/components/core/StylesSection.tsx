@@ -10,6 +10,7 @@ import { CssClassesQuery, CssClassesQueryDataType, UpdateCssClassMutation, Updat
 import HierarchyContext from '../../contexts/HierarchyContext'
 import CssClassesContext from '../../contexts/CssClassesContext'
 import BreakpointContext from '../../contexts/BreakpointContext'
+import EditionContext from '../../contexts/EditionContext'
 import HotContext from '../../contexts/HotContext'
 
 import useQuery from '../../hooks/useQuery'
@@ -19,7 +20,6 @@ import useCssValues from '../../hooks/useCssValues'
 import useJsCssValues from '../../hooks/useJsCssValues'
 import useThrottleAsynchronous from '../../hooks/useThrottleAsynchronous'
 import usePersistedState from '../../hooks/usePersistedState'
-import useEditionSearchParams from '../../hooks/useEditionSearchParams'
 
 import getComponentRootHierarchyIds from '../../utils/getComponentRootHierarchyIds'
 
@@ -37,7 +37,7 @@ import StylesSubSectionSpacing from './StylesSubSectionSpacing'
 // Displayed in the right panel
 function StylesSection() {
   const { hierarchy } = useContext(HierarchyContext)
-  const { componentDelta, hierarchyIds } = useEditionSearchParams()
+  const { componentDelta, hierarchyId } = useContext(EditionContext)
   const { className, setClassName, style, setStyle } = useContext(CssClassesContext)
   const { breakpoint } = useContext(BreakpointContext)
   const hot = useContext(HotContext)
@@ -60,7 +60,7 @@ function StylesSection() {
   const lastComponentHierarchyItem = useMemo(() => getLastComponentHierarchyItem(hierarchy), [hierarchy])
   const componentRootHierarchyIds = useMemo(() => getComponentRootHierarchyIds(hierarchy), [hierarchy])
   const isSomeNodeSelected = useMemo(() => hierarchy.length > 0, [hierarchy])
-  const isComponentRoot = useMemo(() => componentDelta < 0 && componentRootHierarchyIds.some(x => x === hierarchyIds[hierarchyIds.length - 1]), [componentDelta, componentRootHierarchyIds, hierarchyIds])
+  const isComponentRoot = useMemo(() => componentDelta < 0 && componentRootHierarchyIds.some(x => x === hierarchyId), [componentDelta, componentRootHierarchyIds, hierarchyId])
   const isOnAnotherComponent = useMemo(() => !hierarchy.length || (!!hierarchy[hierarchy.length - 1].componentAddress && !hierarchy[hierarchy.length - 1].isRoot), [hierarchy])
   const isNoElementSelected = useMemo(() => !hierarchy.length || hierarchy[hierarchy.length - 1].isRoot || isComponentRoot || isOnAnotherComponent, [hierarchy, isComponentRoot, isOnAnotherComponent])
   const debouncedIsNoElementSelected = useDebounce(isNoElementSelected, 6 * 16) // To prevent flickering of the section

@@ -14,11 +14,11 @@ import { refetchKeys } from '../../constants'
 import { DeleteComponentMutation, DeleteComponentMutationDataType, UpdateHierarchyDisplayNameMutation, UpdateHierarchyDisplayNameMutationDataType } from '../../queries'
 
 import HierarchyContext from '../../contexts/HierarchyContext'
+import EditionContext from '../../contexts/EditionContext'
 import ContextualInformationContext from '../../contexts/ContextualInformationContext'
 
 import useMutation from '../../hooks/useMutation'
 import useRefetch from '../../hooks/useRefetch'
-import useEditionSearchParams from '../../hooks/useEditionSearchParams'
 import useIsComponentRefreshingMutation from '../../hooks/useIsComponentRefreshingMutation'
 
 import findHierarchyIdsAndComponentDelta from '../../utils/findHierarchyIdsAndComponentDelta'
@@ -31,7 +31,7 @@ function HierarchySection() {
   const { componentAddress = '' } = useParams()
   const { totalHierarchy, hierarchy } = useContext(HierarchyContext)
   const { setContextualInformationState } = useContext(ContextualInformationContext)
-  const { hierarchyIds, componentDelta, setEditionSearchParams } = useEditionSearchParams()
+  const { hierarchyId, componentDelta, setHierarchyId, setComponentDelta } = useContext(EditionContext)
 
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
   const [isFetching, setIsFetching] = useState(false)
@@ -44,34 +44,31 @@ function HierarchySection() {
     const found = findHierarchyIdsAndComponentDelta(totalHierarchy, hierarchyItem)
 
     if (found) {
-      setEditionSearchParams({
-        hierarchyIds: found.hierarchyIds,
-        componentDelta: found.componentDelta,
-      })
+      setHierarchyId(found.hierarchyIds[0])
+      setComponentDelta(found.componentDelta)
     }
-  }, [totalHierarchy, setEditionSearchParams])
+  }, [totalHierarchy, setHierarchyId, setComponentDelta])
 
   const handleDeleteComponent = useCallback(async () => {
     await deleteComponent({
       sourceComponentAddress: componentAddress,
-      targetHierarchyId: hierarchyIds[hierarchyIds.length - 1],
+      targetHierarchyId: hierarchyId,
       componentDelta,
     })
 
-    setEditionSearchParams({
-      hierarchyIds: [],
-      componentDelta: 0,
-    })
+    setHierarchyId('')
+    setComponentDelta(0)
 
     setContextualInformationState(x => ({ ...x, element: null }))
 
     refetch(refetchKeys.hierarchy)
   }, [
-    hierarchyIds,
+    hierarchyId,
     componentDelta,
     componentAddress,
     deleteComponent,
-    setEditionSearchParams,
+    setHierarchyId,
+    setComponentDelta,
     setContextualInformationState,
     refetch,
   ])

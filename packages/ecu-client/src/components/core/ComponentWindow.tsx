@@ -12,7 +12,6 @@ import ComponentLoader from './ComponentLoader'
 import WithIsComponentRefreshingLayer from './WithIsComponentRefreshingLayer'
 import WithComponentScrenshot from './WithComponentScrenshot'
 import EmotionProvider from './EmotionProvider'
-import ContextualInformation from './ContextualInformation'
 
 type ComponentWindowPropsType = {
   componentPath: string
@@ -48,7 +47,6 @@ function ComponentWindow({ componentPath, decoratorPaths }: ComponentWindowProps
                         />
                       </WithComponentScrenshot>
                     </WithIsComponentRefreshingLayer>
-                    <ContextualInformation />
                   </ThemeProvider>
                 </DndProvider>
               </EmotionProvider>

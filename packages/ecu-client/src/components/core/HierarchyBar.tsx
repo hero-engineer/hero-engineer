@@ -10,13 +10,13 @@ import { HierarchyQuery, HierarchyQueryDataType } from '../../queries'
 
 import HierarchyContext from '../../contexts/HierarchyContext'
 import BreakpointContext from '../../contexts/BreakpointContext'
+import EditionContext from '../../contexts/EditionContext'
 import LastEditedComponentContext from '../../contexts/LastEditedComponentContext'
 
-import usePreviousWithDefault from '../../hooks/usePreviousWithDefault'
-import useEditionSearchParams from '../../hooks/useEditionSearchParams'
 import useRefetch from '../../hooks/useRefetch'
 
 import getFlattenedHierarchy from '../../utils/getFlattenedHierarchy'
+import findHierarchyIdsAndComponentDelta from '../../utils/findHierarchyIdsAndComponentDelta'
 
 function isSelectedComponentParent(hierarchy: HierarchyItemType[], currentHierarchyItem: HierarchyItemType) {
   const selectedHierarchyItem = hierarchy[hierarchy.length - 1]
@@ -30,17 +30,6 @@ function isSelectedComponentParent(hierarchy: HierarchyItemType[], currentHierar
   return rightIndex === currentIndex && selectedHierarchyItem.onComponentAddress === currentHierarchyItem.componentAddress
 }
 
-function getHierarchyDelta(hierarchy: HierarchyItemType[]) {
-  let delta = 0
-
-  hierarchy.forEach(x => {
-    if (x.hierarchyId) delta = 0
-    else delta--
-  })
-
-  return delta
-}
-
 const height = 31
 const caretSize = Math.sqrt(height ** 2 / 2)
 
@@ -49,7 +38,7 @@ const caretSize = Math.sqrt(height ** 2 / 2)
 // - Update it
 function HierarchyBar() {
   const { componentAddress = '' } = useParams()
-  const { hierarchyIds, componentDelta, setEditionSearchParams } = useEditionSearchParams()
+  const { hierarchyId, componentDelta, setHierarchyId, setComponentDelta } = useContext(EditionContext)
   const { setHierarchy, setTotalHierarchy } = useContext(HierarchyContext)
   const { isDragging } = useContext(BreakpointContext)
   const { setLastEditedComponent } = useContext(LastEditedComponentContext)
@@ -70,79 +59,17 @@ function HierarchyBar() {
   })
 
   const hierarchy = useMemo<HierarchyItemType>(() => JSON.parse(hierarchyQueryResult.data?.hierarchy || '""') || {}, [hierarchyQueryResult.data])
-  const totalHierarchy = useMemo(() => getFlattenedHierarchy(hierarchy, hierarchyIds), [hierarchy, hierarchyIds])
+  const totalHierarchy = useMemo(() => getFlattenedHierarchy(hierarchy, hierarchyId), [hierarchy, hierarchyId])
   const actualHierarchy = useMemo(() => totalHierarchy.slice(0, totalHierarchy.length + componentDelta), [totalHierarchy, componentDelta])
-  const previousHierarchy = usePreviousWithDefault(actualHierarchy, actualHierarchy)
-  const displayHierarchy = useMemo(() => hierarchyIds.length ? componentDelta > 0 ? previousHierarchy : actualHierarchy : [], [hierarchyIds, componentDelta, previousHierarchy, actualHierarchy])
 
-  const handleClick = useCallback((index: number) => {
-    // If clicked on a Component node link, ...
-    if (actualHierarchy[index].componentAddress) {
-      // Reduce the hierarchyIds to the closest next DOM node
-      const nextHierarchyIds: string[] = []
+  const handleClick = useCallback((hierarchyItem: HierarchyItemType) => {
+    const found = findHierarchyIdsAndComponentDelta(hierarchy, hierarchyItem)
 
-      for (let i = 0; i < totalHierarchy.length; i++) {
-        if (totalHierarchy[i].hierarchyId) {
-          nextHierarchyIds.push(totalHierarchy[i].hierarchyId as string)
-
-          if (i >= index) break
-        }
-      }
-
-      const lastHierarchyId = nextHierarchyIds[nextHierarchyIds.length - 1]
-      const nextComponentDelta = index - totalHierarchy.findIndex(x => x.hierarchyId === lastHierarchyId)
-
-      setEditionSearchParams({
-        hierarchyIds: nextHierarchyIds,
-        componentDelta: nextComponentDelta,
-      })
-
-      return
+    if (found) {
+      setHierarchyId(found.hierarchyIds[0])
+      setComponentDelta(found.componentDelta)
     }
-
-    // If clicked on a DOM node link, reduce hierarchyIds
-    const nextHierarchyIds: string[] = []
-
-    for (let i = 0; i <= index; i++) {
-      if (actualHierarchy[i].hierarchyId) {
-        nextHierarchyIds.push(actualHierarchy[i].hierarchyId as string)
-      }
-    }
-
-    setEditionSearchParams({
-      hierarchyIds: nextHierarchyIds,
-      componentDelta: 0,
-    })
-  }, [actualHierarchy, totalHierarchy, setEditionSearchParams])
-
-  // Adjust component delta when hierarchyIds change
-  // componentDelta > 0 means adjustment is necessary
-  useEffect(() => {
-    if (componentDelta <= 0) return
-
-    const commonHierarchy: HierarchyItemType[] = []
-
-    for (let i = 0; i < previousHierarchy.length; i++) {
-      if (previousHierarchy[i].id === totalHierarchy[i].id) {
-        commonHierarchy.push(previousHierarchy[i])
-      }
-      else {
-        break
-      }
-    }
-
-    const workingHierarchyPart = totalHierarchy.slice(commonHierarchy.length, -1)
-    const nextDelta = workingHierarchyPart.length ? getHierarchyDelta(workingHierarchyPart) : 0
-
-    setEditionSearchParams({
-      componentDelta: nextDelta,
-    })
-  }, [
-    componentDelta,
-    previousHierarchy,
-    totalHierarchy,
-    setEditionSearchParams,
-  ])
+  }, [hierarchy, setHierarchyId, setComponentDelta])
 
   useEffect(() => {
     setTotalHierarchy(hierarchy)
@@ -186,11 +113,11 @@ function HierarchyBar() {
       gap={0.25}
       px={0.5}
     >
-      {displayHierarchy.map((hierarchyItem, i, a) => (
+      {actualHierarchy.map((hierarchyItem, i, a) => (
         <Fragment key={i + hierarchyItem.label}>
           <Div
             xflex="x4"
-            onClick={() => handleClick(i)}
+            onClick={() => handleClick(hierarchyItem)}
             textUnderlineOffset={3}
             textDecoration={isSelectedComponentParent(a, hierarchyItem) ? 'underline' : 'none'}
             title={isSelectedComponentParent(a, hierarchyItem) ? 'Parent of the seelected component' : undefined}
@@ -214,7 +141,7 @@ function HierarchyBar() {
           )}
         </Fragment>
       ))}
-      {displayHierarchy.length === 0 && 'No element selected'}
+      {actualHierarchy.length === 0 && 'No element selected'}
     </Div>
   )
 }

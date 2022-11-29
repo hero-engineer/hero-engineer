@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react'
+import { Dispatch, SetStateAction, useCallback, useContext, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Autocomplete, Div, WithOutsideClick } from 'honorable'
 import createEmojiRegex from 'emoji-regex'
@@ -6,13 +6,14 @@ import { MdOutlineClose } from 'react-icons/md'
 import { HiOutlineFaceSmile } from 'react-icons/hi2'
 
 import { CssClassType } from '../../types'
-import { refetchKeys, zIndexes, zIndexes } from '../../constants'
+import { refetchKeys, zIndexes } from '../../constants'
 
 import { CreateCssClassMutation, CreateCssClassMutationDataType } from '../../queries'
 
+import EditionContext from '../../contexts/EditionContext'
+
 import useMutation from '../../hooks/useMutation'
 import useRefetch from '../../hooks/useRefetch'
-import useEditionSearchParams from '../../hooks/useEditionSearchParams'
 
 import extractClassNamesFromSelector from '../../utils/extractClassNamesFromSelector'
 
@@ -38,7 +39,7 @@ const errorOption = { value: ecuErrorValue, label: 'Invalid class name' }
 
 function CssClassesSelector({ allClasses, classNames, onClassNamesChange, selectedClassName, onSelectedClassNameChange, onLoading }: CssClassesSelector) {
   const { componentAddress = '' } = useParams()
-  const { hierarchyIds, componentDelta } = useEditionSearchParams()
+  const { hierarchyId, componentDelta } = useContext(EditionContext)
 
   const [search, setSearch] = useState('')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -72,7 +73,7 @@ function CssClassesSelector({ allClasses, classNames, onClassNamesChange, select
 
     await createCssClass({
       sourceComponentAddress: componentAddress,
-      targetHierarchyId: hierarchyIds[hierarchyIds.length - 1],
+      targetHierarchyId: hierarchyId,
       componentDelta,
       classNames,
     })
@@ -83,7 +84,7 @@ function CssClassesSelector({ allClasses, classNames, onClassNamesChange, select
   }, [
     isError,
     componentAddress,
-    hierarchyIds,
+    hierarchyId,
     componentDelta,
     onLoading,
     createCssClass,

@@ -194,7 +194,7 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
 
     const timeoutId = setTimeout(() => {
       setHelperText('')
-    }, 2500)
+    }, 2000)
 
     return () => {
       clearTimeout(timeoutId)

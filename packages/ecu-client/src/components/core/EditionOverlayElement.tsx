@@ -54,7 +54,10 @@ function EditionOverlayElement({ hierarchyItem, depth, top, left, width, height,
         px={0.25 * 2 / 3}
       >
         {hierarchyItem.displayName || hierarchyItem.label}
-        <Div xflex="x4">
+        <Div
+          xflex="x4"
+          color="darken(white, 20)"
+        >
           {helperText}
         </Div>
       </Div>

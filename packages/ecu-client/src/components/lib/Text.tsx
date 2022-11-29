@@ -32,7 +32,6 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
   const {
     ref: editionRef,
     hierarchyId,
-    // isSelected,
     isEdited,
     setIsEdited,
     editionProps,
