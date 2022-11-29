@@ -12,6 +12,7 @@ import HierarchyContext from '../../contexts/HierarchyContext'
 import BreakpointContext from '../../contexts/BreakpointContext'
 import EditionContext from '../../contexts/EditionContext'
 import LastEditedComponentContext from '../../contexts/LastEditedComponentContext'
+import IsInteractiveModeContext from '../../contexts/IsInteractiveModeContext'
 
 import useRefetch from '../../hooks/useRefetch'
 
@@ -42,6 +43,7 @@ function HierarchyBar() {
   const { setHierarchy, setTotalHierarchy } = useContext(HierarchyContext)
   const { isDragging } = useContext(BreakpointContext)
   const { setLastEditedComponent } = useContext(LastEditedComponentContext)
+  const { isInteractiveMode } = useContext(IsInteractiveModeContext)
 
   const [hierarchyQueryResult, refetchHierarchyQuery] = useQuery<HierarchyQueryDataType>({
     query: HierarchyQuery,
@@ -113,7 +115,7 @@ function HierarchyBar() {
       gap={0.25}
       px={0.5}
     >
-      {actualHierarchy.map((hierarchyItem, i, a) => (
+      {!isInteractiveMode && actualHierarchy.map((hierarchyItem, i, a) => (
         <Fragment key={i + hierarchyItem.label}>
           <Div
             xflex="x4"
@@ -141,7 +143,8 @@ function HierarchyBar() {
           )}
         </Fragment>
       ))}
-      {actualHierarchy.length === 0 && 'No element selected'}
+      {!isInteractiveMode && actualHierarchy.length === 0 && 'No element selected'}
+      {isInteractiveMode && 'Interactive mode'}
     </Div>
   )
 }
