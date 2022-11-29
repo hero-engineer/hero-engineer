@@ -14,8 +14,9 @@
   "homepage": "https://github.com/dherault/ecu#readme",
   "scripts": {
     "build": "tsc && vite build",
+    "build:watch": "vite build --watch",
     "preview": "vite preview",
-    "dev": "vite build --watch",
+    "dev": "nodemon --watch node_modules --ext js,json,css --exec \"npm run build:watch\"",
     "prepublishOnly": "PRODUCTION_BUILD=true npm run build"
   },
   "dependencies": {

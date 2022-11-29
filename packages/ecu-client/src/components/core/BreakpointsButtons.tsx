@@ -23,7 +23,7 @@ const icons = [
 
 function BreakpointsButtons() {
   const { componentAddress = '' } = useParams()
-  const { breakpoint, setBreakpoint, setBreakpoints, width, setWidth } = useContext(BreakpointContext)
+  const { breakpoint, setBreakpoint, width, setWidth } = useContext(BreakpointContext)
 
   const [breakpointsQueryResult, refetchBreakpointsQuery] = useQuery<BreakpointsQueryDataType>({
     query: BreakpointsQuery,
@@ -43,13 +43,20 @@ function BreakpointsButtons() {
     if (!breakpointsQueryResult.data?.breakpoints) return
 
     const { breakpoints } = breakpointsQueryResult.data
+
+    const existingBreakpoint = breakpoints.find(b => b.id === breakpoint.id)
+
+    if (existingBreakpoint) {
+      setWidth(existingBreakpoint.base)
+
+      return
+    }
+
     const nextBreakpoint = breakpoints.find(b => !b.media) ?? breakpoints[0]
 
-    setBreakpoints(breakpoints)
-
+    setWidth(nextBreakpoint.base)
     setBreakpoint(nextBreakpoint)
-    setWidth(nextBreakpoint.max)
-  }, [breakpointsQueryResult.data, setBreakpoints, setBreakpoint, setWidth])
+  }, [breakpointsQueryResult.data, breakpoint, setBreakpoint, setWidth])
 
   if (!componentAddress) return null
 

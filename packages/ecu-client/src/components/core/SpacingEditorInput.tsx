@@ -1,8 +1,11 @@
-import { Ref, forwardRef, useCallback } from 'react'
+import { Ref, forwardRef, useCallback, useContext } from 'react'
 import { Button, Div, Slider } from 'honorable'
 import { CgUndo } from 'react-icons/cg'
 
 import { CssValueType } from '../../types'
+
+import BreakpointContext from '../../contexts/BreakpointContext'
+
 import splitSpacingValue from '../../utils/splitSpacingValue'
 
 import CssValueInput from './CssValueInput'
@@ -26,6 +29,7 @@ const designTokens = [
 ]
 
 function SpacingEditorInputRef({ title, value, onChange, allowNegativeValues }: SpacingEditorInputPropsType, ref: Ref<any>) {
+  const { breakpoint } = useContext(BreakpointContext)
   const [rawValue, unit] = splitSpacingValue(value)
   const numericValue = parseInt(rawValue)
 
@@ -74,6 +78,7 @@ function SpacingEditorInputRef({ title, value, onChange, allowNegativeValues }: 
         </Div>
         <Slider
           slim
+          backgroundBreakpoint={!!breakpoint.media}
           min={allowNegativeValues ? -128 : 0}
           max={128}
           step={1}
@@ -98,6 +103,7 @@ function SpacingEditorInputRef({ title, value, onChange, allowNegativeValues }: 
           <Button
             key={designToken}
             slim
+            backgroundBreakpoint={!!breakpoint.media}
             onClick={() => handleDesignTokenClick(designToken)}
             py={0.25 / 2}
           >

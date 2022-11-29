@@ -4,10 +4,10 @@ import { CSsAttributesMapType, CssValuesType } from '../types'
 
 import convertJsAttributeNameToCss from '../utils/convertJsAttributeNameToCss'
 
-function useJsCssValues(cssValues: CssValuesType, styles: CSSProperties, cssAttributesMap: CSsAttributesMapType) {
+function useJsCssValues(cssValues: CssValuesType, style: CSSProperties, cssAttributesMap: CSsAttributesMapType) {
   const nextCssValues = { ...cssValues }
 
-  Object.entries(styles).forEach(([attributeName, value]) => {
+  Object.entries(style).forEach(([attributeName, value]) => {
     const cssAttributeName = convertJsAttributeNameToCss(attributeName)
 
     const { converter } = cssAttributesMap[cssAttributeName]

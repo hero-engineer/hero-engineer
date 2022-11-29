@@ -438,6 +438,22 @@ export default mergeTheme(defaultTheme, {
           },
         },
       },
+      ({ backgroundBreakpoint }: any) => backgroundBreakpoint && {
+        color: defaultTheme.colors.text.light,
+        backgroundColor: 'breakpoint',
+        '&:hover': {
+          backgroundColor: 'darken(breakpoint, 2)',
+        },
+        ':active': {
+          backgroundColor: 'darken(breakpoint, 4)',
+        },
+        ':disabled': {
+          backgroundColor: 'darken(breakpoint, 6)',
+          '&:hover': {
+            backgroundColor: 'darken(breakpoint, 6)',
+          },
+        },
+      },
     ],
   },
   Input: {
@@ -521,6 +537,11 @@ export default mergeTheme(defaultTheme, {
     Root: [
       ({ slim }: any) => slim && {
         height: 4,
+      },
+    ],
+    Knob: [
+      ({ backgroundBreakpoint }: any) => backgroundBreakpoint && {
+        backgroundColor: 'breakpoint',
       },
     ],
     Track: [

@@ -5,8 +5,6 @@ import { BreakpointType } from '../types'
 export type BreakpointContextType = {
   breakpoint: BreakpointType
   setBreakpoint: Dispatch<SetStateAction<BreakpointType>>
-  breakpoints: BreakpointType[]
-  setBreakpoints: Dispatch<SetStateAction<BreakpointType[]>>
   width: number
   setWidth: Dispatch<SetStateAction<number>>
   isDragging: boolean
@@ -24,8 +22,6 @@ export default createContext<BreakpointContextType>({
     media: '',
   },
   setBreakpoint: () => {},
-  breakpoints: [],
-  setBreakpoints: () => {},
   width: 0,
   setWidth: () => {},
   isDragging: false,

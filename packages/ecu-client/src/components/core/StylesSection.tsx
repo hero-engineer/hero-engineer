@@ -2,7 +2,7 @@ import { memo, useCallback, useContext, useEffect, useMemo, useState } from 'rea
 import { Link } from 'react-router-dom'
 import { Button, Div, useDebounce } from 'honorable'
 
-import { CssAttributeType, CssValuesType } from '../../types'
+import { CssAttributeType, CssValueType, CssValuesType } from '../../types'
 import { cssAttributesMap, refetchKeys } from '../../constants'
 
 import { CssClassesQuery, CssClassesQueryDataType, UpdateCssClassMutation, UpdateCssClassMutationDataType } from '../../queries'
@@ -72,17 +72,24 @@ function StylesSection() {
   const breakpointClasses = useMemo(() => filterClassesByClassNamesAndMedia(allClasses, classNames, breakpoint.media), [allClasses, classNames, breakpoint])
   const currentBreakpointClass = useMemo(() => filterClassesByClassNamesAndMedia(allClasses, [selectedClassName], breakpoint.media), [allClasses, selectedClassName, breakpoint])
 
-  const finalBaseCssValues = useJsCssValues(useCssValues(baseClasses, cssAttributesMap), style, cssAttributesMap)
-  const workingBaseCssValues = useJsCssValues(useCssValues(currentBaseClass, cssAttributesMap), style, cssAttributesMap)
-  const finalBreakpointCssValues = useJsCssValues(useCssValues(breakpointClasses, cssAttributesMap), style, cssAttributesMap)
-  const workingBreakpointCssValues = useJsCssValues(useCssValues(currentBreakpointClass, cssAttributesMap), style, cssAttributesMap)
+  // The css values forno selected class i.e. the complete styling
+  const finalCssValues = useCssValues(baseClasses, cssAttributesMap)
+  const finalBreakpointCssValues = useCssValues(breakpointClasses, cssAttributesMap)
+
+  // The css values for the selected class
+  const selectedCssValues = useJsCssValues(useCssValues(currentBaseClass, cssAttributesMap), breakpoint.media ? {} : style, cssAttributesMap)
+  const selectedBreakpointCssValues = useJsCssValues(useCssValues(currentBreakpointClass, cssAttributesMap), style, cssAttributesMap)
+
+  // The css values passed to sub sections
+  const passedCssValues = useMemo(() => removeCssDefaults(selectedClassName ? selectedCssValues : finalCssValues, cssAttributesMap), [selectedClassName, finalCssValues, selectedCssValues])
+  const passedBreakpointCssValues = useMemo(() => removeCssDefaults(selectedClassName ? selectedBreakpointCssValues : finalBreakpointCssValues, cssAttributesMap), [selectedClassName, selectedBreakpointCssValues, finalBreakpointCssValues])
+
+  console.log('passedBreakpointCssValues', passedCssValues, passedBreakpointCssValues)
 
   const handleCssUpdate = useCallback(async () => {
     if (!classNames.length) return
 
-    const attributes = Object.entries(filterInvalidCssValues(removeCssDefaults(workingBaseCssValues, cssAttributesMap), cssAttributesMap)).map(([name, value]) => ({ name, value }))
-
-    console.log('attributes', attributes)
+    const attributes = Object.entries(filterInvalidCssValues(removeCssDefaults(selectedBreakpointCssValues, cssAttributesMap), cssAttributesMap)).map(([name, value]) => ({ name, value }))
 
     if (!attributes.length) return
 
@@ -95,7 +102,7 @@ function StylesSection() {
     refetch(refetchKeys.cssClasses)
   }, [
     classNames,
-    workingBaseCssValues,
+    selectedBreakpointCssValues,
     selectedClassName,
     breakpoint,
     updateCssClass,
@@ -112,14 +119,18 @@ function StylesSection() {
   const handleStyleChange = useCallback((attributes: CssAttributeType[]) => {
     if (!selectedClassName) return
 
-    const updatedStyles: CssValuesType = {}
+    setStyle(x => {
+      const updatedStyle: CssValuesType = { ...x }
 
-    attributes.forEach(({ name, value }) => {
-      updatedStyles[convertCssAttributeNameToJs(name)] = value
+      attributes.forEach(({ name, value }) => {
+        updatedStyle[convertCssAttributeNameToJs(name)] = value === cssAttributesMap[name].defaultValue && breakpoint.media && typeof selectedCssValues[name] !== 'undefined'
+          ? selectedCssValues[name]
+          : value
+      })
+
+      return updatedStyle
     })
-
-    setStyle(x => ({ ...x, ...updatedStyles }))
-  }, [selectedClassName, setStyle])
+  }, [selectedClassName, breakpoint, selectedCssValues, setStyle])
 
   const renderNoElement = useCallback(() => (
     <Div
@@ -181,14 +192,14 @@ function StylesSection() {
         </Div>
       )}
       <StylesSubSectionLayout
-        cssValues={selectedClassName ? workingBaseCssValues : finalBaseCssValues}
-        breakpointCssValues={selectedClassName ? workingBreakpointCssValues : finalBreakpointCssValues}
+        cssValues={passedCssValues}
+        breakpointCssValues={passedBreakpointCssValues}
         onChange={handleStyleChange}
         disabled={!selectedClassName}
       />
       <StylesSubSectionSpacing
-        cssValues={selectedClassName ? workingBaseCssValues : finalBaseCssValues}
-        breakpointCssValues={selectedClassName ? workingBreakpointCssValues : finalBreakpointCssValues}
+        cssValues={passedCssValues}
+        breakpointCssValues={passedBreakpointCssValues}
         onChange={handleStyleChange}
         disabled={!selectedClassName}
       />
@@ -204,11 +215,9 @@ function StylesSection() {
       )}
     </Div>
   ), [
+    passedCssValues,
+    passedBreakpointCssValues,
     selectedClassName,
-    workingBaseCssValues,
-    finalBaseCssValues,
-    workingBreakpointCssValues,
-    finalBreakpointCssValues,
     loading,
     handleStyleChange,
   ])
@@ -239,6 +248,11 @@ function StylesSection() {
     renderNoClassNames,
     renderSubSections,
   ])
+
+  // Reset style state on new breakpoint
+  useEffect(() => {
+    setStyle({})
+  }, [breakpoint, setStyle])
 
   useEffect(() => {
     if (!Object.keys(style).length) return

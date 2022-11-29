@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useCallback, useContext, useMemo, useState } from 'react'
+import { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Autocomplete, Div, WithOutsideClick } from 'honorable'
 import createEmojiRegex from 'emoji-regex'
@@ -9,8 +9,6 @@ import { CssClassType } from '../../types'
 import { refetchKeys } from '../../constants'
 
 import { CreateCssClassMutation, CreateCssClassMutationDataType } from '../../queries'
-
-import BreakpointContext from '../../contexts/BreakpointContext'
 
 import useMutation from '../../hooks/useMutation'
 import useRefetch from '../../hooks/useRefetch'
@@ -41,7 +39,6 @@ const errorOption = { value: ecuErrorValue, label: 'Invalid class name' }
 function CssClassesSelector({ allClasses, classNames, onClassNamesChange, selectedClassName, onSelectedClassNameChange, onLoading }: CssClassesSelector) {
   const { componentAddress = '' } = useParams()
   const { hierarchyIds, componentDelta } = useEditionSearchParams()
-  const { breakpoints } = useContext(BreakpointContext)
 
   const [search, setSearch] = useState('')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -78,7 +75,6 @@ function CssClassesSelector({ allClasses, classNames, onClassNamesChange, select
       targetHierarchyId: hierarchyIds[hierarchyIds.length - 1],
       componentDelta,
       classNames,
-      breakpointsJson: JSON.stringify(breakpoints),
     })
 
     onLoading(false)
@@ -89,7 +85,6 @@ function CssClassesSelector({ allClasses, classNames, onClassNamesChange, select
     componentAddress,
     hierarchyIds,
     componentDelta,
-    breakpoints,
     onLoading,
     createCssClass,
     refetch,

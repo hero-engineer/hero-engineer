@@ -49,10 +49,9 @@ function MasterProviders({ mode, hot, children }: MasterProvidersPropsType) {
     scale: 1,
     media: '',
   })
-  const [breakpoints, setBreakpoints] = usePersistedState<BreakpointType[]>('breakpoints', [])
   const [width, setWidth] = usePersistedState<number>('width', 0, (x: any) => parseInt(x))
   const [isDragging, setIsDragging] = useState(false)
-  const breakpointContextValue = useMemo<BreakpointContextType>(() => ({ breakpoint, setBreakpoint, breakpoints, setBreakpoints, width, setWidth, isDragging, setIsDragging }), [breakpoint, setBreakpoint, breakpoints, setBreakpoints, width, setWidth, isDragging])
+  const breakpointContextValue = useMemo<BreakpointContextType>(() => ({ breakpoint, setBreakpoint, width, setWidth, isDragging, setIsDragging }), [breakpoint, setBreakpoint, width, setWidth, isDragging])
 
   return (
     <GraphqlProvider value={client}>
