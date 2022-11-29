@@ -293,7 +293,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
         gridTemplateColumns="repeat(4, minmax(0, 1fr))"
       >
         {aligns.map(({ name, label, getIcon }) => {
-          const Icon = getIcon(['row', 'row-reverse'].includes((cssValues['flex-direction'] ?? cssAttributesMap['flex-direction'].defaultValue).toString()))
+          const Icon = getIcon(['row', 'row-reverse'].includes((breakpointCssValues['flex-direction'] ?? cssValues['flex-direction'] ?? cssAttributesMap['flex-direction'].defaultValue).toString()))
 
           return (
             <Tooltip
@@ -313,7 +313,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
         })}
       </Div>
     </Div>
-  ), [cssValues, onChange, isToggled, getTextColor])
+  ), [cssValues, breakpointCssValues, onChange, isToggled, getTextColor])
 
   const renderFlexJustifyEditor = useCallback(() => (
     <Div xflex="x1">
@@ -330,7 +330,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
         gridTemplateColumns="repeat(4, minmax(0, 1fr))"
       >
         {justifys.map(({ name, label, getIcon }) => {
-          const Icon = getIcon(['row', 'row-reverse'].includes((cssValues['flex-direction'] ?? cssAttributesMap['flex-direction'].defaultValue).toString()))
+          const Icon = getIcon(['row', 'row-reverse'].includes((breakpointCssValues['flex-direction'] ?? cssValues['flex-direction'] ?? cssAttributesMap['flex-direction'].defaultValue).toString()))
 
           return (
             <Tooltip
@@ -350,7 +350,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
         })}
       </Div>
     </Div>
-  ), [cssValues, onChange, isToggled, getTextColor])
+  ), [cssValues, breakpointCssValues, onChange, isToggled, getTextColor])
 
   const renderFlexGapEditor = useCallback(() => (
     <Div

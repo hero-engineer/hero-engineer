@@ -4,8 +4,6 @@
 
 .ecu-can-be-edited {
   white-space: pre-wrap;
-  display: flex;
-  flex-direction: column;
   min-height: 19px;
 }
 
