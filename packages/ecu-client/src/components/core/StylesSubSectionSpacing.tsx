@@ -1,8 +1,7 @@
-import { useMemo, useRef } from 'react'
+import { useRef } from 'react'
 import { Accordion } from 'honorable'
 
-import { cssAttributesMap, spacingSemanticValues } from '../../constants'
-import { CssAttributeType, CssValuesType, SpacingsType } from '../../types'
+import { CssAttributeType, CssValuesType } from '../../types'
 
 import useRefresh from '../../hooks/useRefresh'
 import usePersistedState from '../../hooks/usePersistedState'
@@ -40,9 +39,6 @@ function StylesSubSectionSpacing({ cssValues, breakpointCssValues, onChange, dis
 
   const [expanded, setExpanded] = usePersistedState('styles-spacing-section-expanded', true)
 
-  const margin = useMemo(() => spacingSemanticValues.map(spacingSemanticValue => `margin-${spacingSemanticValue}`).map(key => cssValues[key] ?? cssAttributesMap[key].defaultValue) as SpacingsType, [cssValues])
-  const padding = useMemo(() => spacingSemanticValues.map(spacingSemanticValue => `padding-${spacingSemanticValue}`).map(key => cssValues[key] ?? cssAttributesMap[key].defaultValue) as SpacingsType, [cssValues])
-
   return (
     <Accordion
       ghost
@@ -66,7 +62,6 @@ function StylesSubSectionSpacing({ cssValues, breakpointCssValues, onChange, dis
         allowNegativeValues
         title="Margin"
         semanticName="margin"
-        value={margin}
         height={baseHeight}
         onChange={onChange}
         borderSize={baseHeight / borderSizeDivider - spacingEditorPadding}
@@ -77,7 +72,6 @@ function StylesSubSectionSpacing({ cssValues, breakpointCssValues, onChange, dis
         <SpacingEditor
           title="Padding"
           semanticName="padding"
-          value={padding}
           onChange={onChange}
           height={(borderSizeDivider - 2) * baseHeight / borderSizeDivider + spacingEditorPadding}
           borderSize={baseHeight / borderSizeDivider - spacingEditorPadding}

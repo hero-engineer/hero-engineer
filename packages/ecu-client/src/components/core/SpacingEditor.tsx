@@ -2,8 +2,8 @@ import { ReactNode, useCallback, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Div, Path, Svg, WithOutsideClick } from 'honorable'
 
-import { cssAttributesMap, spacingSemanticValues } from '../../constants'
-import { CssAttributeType, CssValuesType, SpacingsType } from '../../types'
+import { cssAttributesMap } from '../../constants'
+import { CssAttributeType, CssValuesType } from '../../types'
 
 import useRefresh from '../../hooks/useRefresh'
 
@@ -15,7 +15,6 @@ type SpacingEditorPropsType = {
   title: string
   semanticName: string
   allowNegativeValues?: boolean
-  value: SpacingsType
   onChange: (attributes: CssAttributeType[]) => void
   height?: number | string
   borderSize?: number
@@ -30,7 +29,6 @@ function SpacingEditor({
   title,
   semanticName,
   allowNegativeValues,
-  value,
   onChange,
   height = '100%',
   borderSize = 25,
@@ -46,28 +44,41 @@ function SpacingEditor({
   useRefresh()
 
   const [hoveredIndex, setHoveredIndex] = useState(-1)
-  const [editedIndex, setEditedIndex] = useState(-1)
+  const [editedAttribute, setEditedAttribute] = useState('')
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const { width: svgWidth, height: svgHeight } = useMemo(() => rootRef.current?.getBoundingClientRect() ?? { width: 0, height: 0 }, [rootRef.current])
-  const cssValuesKeys = useMemo(() => Object.keys(cssValues), [cssValues])
+
+  const getValue = useCallback((attributeName: string) => breakpointCssValues[attributeName] ?? cssValues[attributeName] ?? cssAttributesMap[attributeName].defaultValue, [breakpointCssValues, cssValues])
+
+  const getTextColor = useCallback((attributeName: string) => (
+    typeof breakpointCssValues[attributeName] !== 'undefined'
+    && breakpointCssValues[attributeName] !== cssValues[attributeName]
+    && breakpointCssValues[attributeName] !== cssAttributesMap[attributeName].defaultValue
+      ? 'breakpoint'
+      : typeof cssValues[attributeName] !== 'undefined'
+      && cssValues[attributeName] !== cssAttributesMap[attributeName].defaultValue
+        ? 'primary'
+        : 'inherit'
+  ), [breakpointCssValues, cssValues])
 
   const handleHover = useCallback((index: number) => {
     setHoveredIndex(index)
   }, [])
 
   const handleInputOutsideClick = useCallback((event: MouseEvent | TouchEvent) => {
-    const editedValue = value[editedIndex]
-    const cssAttributeName = `${semanticName}-${spacingSemanticValues[editedIndex]}`
+    if (!editedAttribute) return
 
-    if (!cssAttributesMap[cssAttributeName].isValueValid(editedValue)) {
-      onChange([{ name: `${semanticName}-${spacingSemanticValues[editedIndex]}`, value: cssAttributesMap[`${semanticName}-${spacingSemanticValues[editedIndex]}`].defaultValue }])
+    const editedValue = getValue(editedAttribute)
+
+    if (!cssAttributesMap[editedAttribute].isValueValid(editedValue)) {
+      onChange([{ name: editedAttribute, value: cssAttributesMap[editedAttribute].defaultValue }])
     }
 
     if ((!rootRef.current?.contains(event.target as Node) || childrenRef.current?.contains(event.target as Node)) && !doesParentHaveId(event.target as Element, 'CssValueInput-unit-menu')) {
-      setEditedIndex(-1)
+      setEditedAttribute('')
     }
-  }, [value, editedIndex, onChange, semanticName])
+  }, [editedAttribute, onChange, getValue])
 
   return (
     <Div
@@ -115,13 +126,13 @@ function SpacingEditor({
           <Div
             xflex="x5"
             position="absolute"
-            color={cssValuesKeys.includes(`${semanticName}-top`) && value[0].toString() !== cssAttributesMap[`${semanticName}-top`].defaultValue.toString() ? 'primary' : 'inherit'}
+            color={getTextColor(`${semanticName}-top`)}
             top={-borderSize / 2}
             left={-borderSize / 2}
             right={-borderSize / 2}
             bottom={-borderSize / 2}
           >
-            {value[0]}
+            {getValue(`${semanticName}-top`)}
           </Div>
         </Div>
       )}
@@ -138,13 +149,13 @@ function SpacingEditor({
           <Div
             xflex="x5"
             position="absolute"
-            color={cssValuesKeys.includes(`${semanticName}-right`) && value[1].toString() !== cssAttributesMap[`${semanticName}-right`].defaultValue.toString() ? 'primary' : 'inherit'}
+            color={getTextColor(`${semanticName}-right`)}
             top={-borderSize / 2}
             left={-borderSize / 2}
             right={-borderSize / 2}
             bottom={-borderSize / 2}
           >
-            {value[1]}
+            {getValue(`${semanticName}-right`)}
           </Div>
         </Div>
       )}
@@ -161,13 +172,13 @@ function SpacingEditor({
           <Div
             xflex="x5"
             position="absolute"
-            color={cssValuesKeys.includes(`${semanticName}-bottom`) && value[2].toString() !== cssAttributesMap[`${semanticName}-bottom`].defaultValue.toString() ? 'primary' : 'inherit'}
+            color={getTextColor(`${semanticName}-bottom`)}
             top={-borderSize / 2}
             left={-borderSize / 2}
             right={-borderSize / 2}
             bottom={-borderSize / 2}
           >
-            {value[2]}
+            {getValue(`${semanticName}-bottom`)}
           </Div>
         </Div>
       )}
@@ -184,13 +195,13 @@ function SpacingEditor({
           <Div
             xflex="x5"
             position="absolute"
-            color={cssValuesKeys.includes(`${semanticName}-left`) && value[3].toString() !== cssAttributesMap[`${semanticName}-left`].defaultValue.toString() ? 'primary' : 'inherit'}
+            color={getTextColor(`${semanticName}-left`)}
             top={-borderSize / 2}
             left={-borderSize / 2}
             right={-borderSize / 2}
             bottom={-borderSize / 2}
           >
-            {value[3]}
+            {getValue(`${semanticName}-left`)}
           </Div>
         </Div>
       )}
@@ -223,7 +234,7 @@ function SpacingEditor({
           fill="transparent"
           onMouseEnter={() => handleHover(0)}
           onMouseLeave={() => handleHover(-1)}
-          onClick={() => setEditedIndex(0)}
+          onClick={() => setEditedAttribute(`${semanticName}-top`)}
           cursor="crosshair"
         />
         <Path
@@ -232,7 +243,7 @@ function SpacingEditor({
           fill="transparent"
           onMouseEnter={() => handleHover(1)}
           onMouseLeave={() => handleHover(-1)}
-          onClick={() => setEditedIndex(1)}
+          onClick={() => setEditedAttribute(`${semanticName}-right`)}
           cursor="crosshair"
         />
         <Path
@@ -241,7 +252,7 @@ function SpacingEditor({
           fill="transparent"
           onMouseEnter={() => handleHover(2)}
           onMouseLeave={() => handleHover(-1)}
-          onClick={() => setEditedIndex(2)}
+          onClick={() => setEditedAttribute(`${semanticName}-bottom`)}
           cursor="crosshair"
         />
         <Path
@@ -250,7 +261,7 @@ function SpacingEditor({
           fill="transparent"
           onMouseEnter={() => handleHover(3)}
           onMouseLeave={() => handleHover(-1)}
-          onClick={() => setEditedIndex(3)}
+          onClick={() => setEditedAttribute(`${semanticName}-left`)}
           cursor="crosshair"
         />
       </Svg>
@@ -265,15 +276,15 @@ function SpacingEditor({
       >
         {children}
       </Div>
-      {editedIndex !== -1 && !!inputMountNode && createPortal(
+      {!!(editedAttribute && inputMountNode) && createPortal(
         <WithOutsideClick
           preventFirstFire
           onOutsideClick={handleInputOutsideClick}
         >
           <SpacingEditorInput
-            value={value[editedIndex]}
-            onChange={x => onChange([{ name: `${semanticName}-${spacingSemanticValues[editedIndex]}`, value: x }])}
-            title={`${semanticName}-${spacingSemanticValues[editedIndex]}`}
+            value={getValue(editedAttribute)}
+            onChange={x => onChange([{ name: editedAttribute, value: x }])}
+            title={editedAttribute}
             allowNegativeValues={allowNegativeValues}
           />
         </WithOutsideClick>,

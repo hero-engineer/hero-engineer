@@ -191,6 +191,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
   const [expanded, setExpanded] = usePersistedState('styles-layout-section-expanded', true)
 
   const getValue = useCallback((attributeName: string) => breakpointCssValues[attributeName] ?? cssValues[attributeName] ?? cssAttributesMap[attributeName].defaultValue, [breakpointCssValues, cssValues])
+
   const getTextColor = useCallback((attributeNames: string[]) => (
     attributeNames
     .map(attributeName => (
@@ -205,10 +206,8 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
     ))
       .reduce((acc, color) => color === 'breakpoint' ? color : color === 'primary' ? color : acc, 'text-light')
   ), [breakpointCssValues, cssValues])
-  const isToggled = useCallback((attributeName: string, values: CssValueType[]) => values.includes(getValue(attributeName)), [getValue])
 
-  console.log('cssValues.display', cssValues.display)
-  console.log('breakpointCssValues.display', breakpointCssValues.display)
+  const isToggled = useCallback((attributeName: string, values: CssValueType[]) => values.includes(getValue(attributeName)), [getValue])
 
   const renderDisplayEditor = useCallback(() => (
     <Div xflex="x4s">
