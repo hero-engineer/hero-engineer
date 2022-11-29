@@ -2,7 +2,7 @@ import { Fragment, memo, useCallback, useContext, useEffect, useMemo } from 'rea
 import { useParams } from 'react-router-dom'
 import { useQuery } from 'urql'
 import { Div } from 'honorable'
-import { MdChevronRight } from 'react-icons/md'
+import { SlArrowRight } from 'react-icons/sl'
 
 import { refetchKeys } from '../../constants'
 import { HierarchyItemType } from '../../types'
@@ -41,6 +41,9 @@ function getHierarchyDelta(hierarchy: HierarchyItemType[]) {
 
   return delta
 }
+
+const height = 31
+const caretSize = Math.sqrt(height ** 2 / 2)
 
 // The hierarchy bar component has 2 purposes:
 // - Display the hierarchy of the current component
@@ -176,26 +179,39 @@ function HierarchyBar() {
     <Div
       xflex="x4"
       flexShrink={0}
-      height={31}
+      height={height}
       fontSize="0.75rem"
       userSelect="none"
       backgroundColor="background-light"
       borderTop="1px solid border"
       gap={0.25}
-      p={0.5}
+      px={0.5}
     >
       {displayHierarchy.map((hierarchyItem, i, a) => (
         <Fragment key={i + hierarchyItem.label}>
           <Div
+            xflex="x4"
             onClick={() => handleClick(i)}
-            textUnderlineOffset={1.5}
+            textUnderlineOffset={3}
             textDecoration={isSelectedComponentParent(a, hierarchyItem) ? 'underline' : 'none'}
             title={isSelectedComponentParent(a, hierarchyItem) ? 'Parent of the seelected component' : undefined}
+            cursor="pointer"
+            zIndex={2}
           >
             {hierarchyItem.label}
           </Div>
           {i < a.length - 1 && (
-            <MdChevronRight />
+            <Div
+              borderTop="1px solid border"
+              borderRight="1px solid border"
+              width={caretSize}
+              height={caretSize}
+              transform="scaleX(0.75) rotate(45deg)"
+              transformOrigin="center"
+              ml={`${-caretSize / 2}px`}
+              mr={0.25}
+              zIndex={1}
+            />
           )}
         </Fragment>
       ))}

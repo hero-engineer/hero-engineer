@@ -101,6 +101,7 @@ function RetractablePanel({ height, direction, openPersistedStateKey, defaultOpe
           borderRight={isLeft ? '1px solid border' : null}
           borderLeft={isRight ? '1px solid border' : null}
           overflowY="auto"
+          zIndex={999}
         >
           {children}
         </Div>
