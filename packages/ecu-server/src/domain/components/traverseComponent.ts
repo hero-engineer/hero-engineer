@@ -18,7 +18,7 @@ import {
   IndexRegistryType,
   TraverseComponentOnSuccessType,
 } from '../../types.js'
-import { ecuPropName } from '../../configuration.js'
+import { ecuAtoms, ecuPropName } from '../../configuration.js'
 
 import {
   getNodeByAddress,
@@ -139,6 +139,7 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
     isRoot: true,
     isChild: false,
     isComponentAcceptingChildren: memoizedIsComponentAcceptingChildren(rootCoomponentNode.address),
+    isComponentEditable: false,
     children: [],
   }
   const componentNodes = getNodesByRole<FunctionNodeType>('Function').filter(n => n.payload.isComponent)
@@ -267,6 +268,7 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
             isRoot: false,
             isChild: !hasAst,
             isComponentAcceptingChildren: memoizedIsComponentAcceptingChildren('', componentName),
+            isComponentEditable: ecuAtoms.find(a => a.name === componentName)?.isComponentEditable ?? false,
             children: [],
           })
 
@@ -308,6 +310,7 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
                 isRoot: false,
                 isChild: !hasAst,
                 isComponentAcceptingChildren: memoizedIsComponentAcceptingChildren(componentNode.address),
+                isComponentEditable: false,
                 children: [],
               })
             }

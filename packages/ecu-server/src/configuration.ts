@@ -94,6 +94,7 @@ export const ecuAtoms: AtomType[] = [
     name: 'Div',
     defaultClassName: 'div-remove-me',
     isComponentAcceptingChildren: true,
+    isComponentEditable: false,
     defaultChildren: [],
   },
   {
@@ -101,6 +102,7 @@ export const ecuAtoms: AtomType[] = [
     name: 'Text',
     defaultClassName: '',
     isComponentAcceptingChildren: false,
+    isComponentEditable: true,
     defaultChildren: [jsxText("Edit me I'm a Text")],
   },
 ]

@@ -100,6 +100,7 @@ export type HierarchyTreeType = {
   isRoot: boolean
   isChild: boolean
   isComponentAcceptingChildren: boolean
+  isComponentEditable: boolean
   children: HierarchyTreeType[]
 }
 
@@ -119,6 +120,7 @@ export type AtomType = {
   name: string
   defaultClassName: string
   isComponentAcceptingChildren: boolean
+  isComponentEditable: boolean
   defaultChildren: (JSXText | JSXExpressionContainer | JSXSpreadChild | JSXElement | JSXFragment)[]
 }
 
