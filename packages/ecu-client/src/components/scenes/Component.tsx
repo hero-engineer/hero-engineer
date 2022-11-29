@@ -69,6 +69,7 @@ function Component() {
         flexGrow
       >
         <RetractablePanel
+          height="calc(100vh - 31px)"
           direction="left"
           openPersistedStateKey="left-panel-open"
           items={[
@@ -98,6 +99,7 @@ function Component() {
           <WidthBar />
         </Div>
         <RetractablePanel
+          height="calc(100vh - 31px)"
           direction="right"
           openPersistedStateKey="right-panel-open"
           items={[

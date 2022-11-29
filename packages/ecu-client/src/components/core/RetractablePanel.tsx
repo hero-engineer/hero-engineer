@@ -1,6 +1,7 @@
 import { ReactNode, useCallback } from 'react'
 import { Button, Div, Tooltip } from 'honorable'
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md'
+import { CgDockLeft, CgDockRight } from 'react-icons/cg'
 
 import usePersistedState from '../../hooks/usePersistedState'
 
@@ -13,6 +14,7 @@ type RetractablePanelItemType = {
 }
 
 type RetractablePanelPropsType = {
+  height: string | number
   direction: 'left' | 'right' | string
   openPersistedStateKey: string
   defaultOpenIndex?: number
@@ -20,8 +22,9 @@ type RetractablePanelPropsType = {
 }
 
 // A panel that can be opened and closed on the side of the screen
-function RetractablePanel({ direction, openPersistedStateKey, defaultOpenIndex = -1, items }: RetractablePanelPropsType) {
+function RetractablePanel({ height, direction, openPersistedStateKey, defaultOpenIndex = -1, items }: RetractablePanelPropsType) {
   const [openIndex, setOpenIndex] = usePersistedState(openPersistedStateKey, defaultOpenIndex, (x: string) => parseInt(x))
+  const [isDocked, setIsDocked] = usePersistedState(`${openPersistedStateKey}-is-docked`, false)
 
   const isLeft = direction === 'left'
   const isRight = direction === 'right'
@@ -46,7 +49,8 @@ function RetractablePanel({ direction, openPersistedStateKey, defaultOpenIndex =
     <Div
       xflex={isLeft ? 'x4s' : 'x40s'}
       position="relative"
-      height="100%"
+      height={height}
+      maxHeight={height}
       backgroundColor="background-light"
     >
       <Div
@@ -66,18 +70,33 @@ function RetractablePanel({ direction, openPersistedStateKey, defaultOpenIndex =
             {xor(isLeft, openIndex === index) ? isLeft ? icon || <MdChevronRight /> : <MdChevronRight /> : isRight ? icon || <MdChevronLeft /> : <MdChevronLeft />}
           </Button>,
         ))}
+        <Div flexGrow />
+        <Tooltip
+          label="Dock panel"
+          placement={isLeft ? 'right' : 'left'}
+        >
+          <Button
+            ghost
+            toggled={isDocked}
+            onClick={() => setIsDocked(x => !x)}
+            borderTop="1px solid border"
+          >
+            {isLeft ? <CgDockLeft /> : <CgDockRight />}
+          </Button>
+        </Tooltip>
       </Div>
       {items.map(({ children }, index) => (
         <Div
           key={index}
           xflex="y2s"
-          position="absolute"
-          top={0}
-          left={isLeft ? '100%' : null}
-          right={isRight ? '100%' : null}
+          position={isDocked ? 'initial' : 'absolute'}
+          top={isDocked ? null : 0}
+          left={isDocked ? null : isLeft ? '100%' : null}
+          right={isDocked ? null : isRight ? '100%' : null}
           display={openIndex === index ? 'flex' : 'none'}
           width="fit-content"
           height="100%"
+          maxHeight="100%"
           backgroundColor="background-light"
           borderRight={isLeft ? '1px solid border' : null}
           borderLeft={isRight ? '1px solid border' : null}

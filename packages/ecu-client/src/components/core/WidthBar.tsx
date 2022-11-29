@@ -66,7 +66,7 @@ function WidthBar() {
       ref={rootRef}
       xflex="x4s"
       flexShrink={0}
-      height={30}
+      height={31}
       backgroundColor="background-light"
       borderTop="1px solid border"
     >

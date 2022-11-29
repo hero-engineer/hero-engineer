@@ -44,6 +44,7 @@ function ComponentIframeWidthExpander({ children }: ComponentIframeWidthExanderP
         xflex="y2s"
         width={width}
         overflowY="auto"
+        flexShrink={0}
       >
         {children}
       </Div>
