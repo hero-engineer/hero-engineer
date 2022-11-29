@@ -118,6 +118,7 @@ export const typeDefs = gql`
     selector: String!
     declaration: String!
     attributes: [CssAttribute]!
+    breakpointMaxValue: Int
   }
 
   type FileImportsReturnValue {
@@ -173,7 +174,7 @@ export const typeDefs = gql`
     updateFileTypes(sourceFileAddress: String!, rawTypes: String!): Boolean!
 
     createCssClass(sourceComponentAddress: String!, targetHierarchyId: String!, componentDelta: Int!, classNames: [String]!): Boolean!
-    updateCssClass(classNames: [String!]!, attributesJson: String!): Boolean!
+    updateCssClass(classNames: [String!]!, attributesJson: String!, breakpointMaxValue: Int): Boolean!
 
     installOrUpdatePackage(name: String!, version: String!, type: String!, shouldDelete: Boolean!): Boolean!
 

@@ -141,4 +141,5 @@ export type CssClassType = {
   selector: string
   declaration: string
   attributes: CssAttributeType[]
+  breakpointMaxValue: number | null
 }

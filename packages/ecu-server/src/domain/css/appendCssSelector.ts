@@ -7,7 +7,7 @@ import traverseCss from './traverseCss.js'
 async function appendCssSelector(fileNode: FileNodeType, selector: string) {
   let isAlradyInserted = false
 
-  await traverseCss(fileNode, selector, () => {
+  await traverseCss(fileNode, selector, null, () => {
     isAlradyInserted = true
   })
 

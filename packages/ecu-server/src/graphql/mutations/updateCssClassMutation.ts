@@ -11,9 +11,10 @@ import updateCssSelector from '../../domain/css/updateCssSelector.js'
 type UpdateCssClassMutationArgsType = {
   classNames: string[]
   attributesJson: string
+  breakpointMaxValue: number | null
 }
 
-async function updateCssClassMutation(_: any, { classNames, attributesJson }: UpdateCssClassMutationArgsType): Promise<HistoryMutationReturnType<boolean>> {
+async function updateCssClassMutation(_: any, { classNames, attributesJson, breakpointMaxValue }: UpdateCssClassMutationArgsType): Promise<HistoryMutationReturnType<boolean>> {
   console.log('__updateCssClassMutation__')
 
   const indexCssNode = getNodesByRole<FileNodeType>('File').find(node => node.payload.relativePath === indexCssFileRelativePath)
@@ -33,7 +34,7 @@ async function updateCssClassMutation(_: any, { classNames, attributesJson }: Up
 
   const selector = classNames.map(x => `.${x}`).join('')
 
-  await updateCssSelector(indexCssNode, selector, attributes)
+  await updateCssSelector(indexCssNode, selector, attributes, breakpointMaxValue)
 
   return {
     returnValue: true,
