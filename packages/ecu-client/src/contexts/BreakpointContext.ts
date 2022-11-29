@@ -3,8 +3,8 @@ import { Dispatch, SetStateAction, createContext } from 'react'
 import { BreakpointType } from '../types'
 
 export type BreakpointContextType = {
-  breakpoint: BreakpointType | null
-  setBreakpoint: Dispatch<SetStateAction<BreakpointType | null>>
+  breakpoint: BreakpointType
+  setBreakpoint: Dispatch<SetStateAction<BreakpointType>>
   breakpoints: BreakpointType[]
   setBreakpoints: Dispatch<SetStateAction<BreakpointType[]>>
   width: number
@@ -14,7 +14,15 @@ export type BreakpointContextType = {
 }
 
 export default createContext<BreakpointContextType>({
-  breakpoint: null,
+  breakpoint: {
+    id: '',
+    name: '',
+    base: 0,
+    min: 0,
+    max: 0,
+    scale: 0,
+    media: '',
+  },
   setBreakpoint: () => {},
   breakpoints: [],
   setBreakpoints: () => {},

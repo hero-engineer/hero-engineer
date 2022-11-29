@@ -6,6 +6,12 @@ import { AiOutlineDesktop, AiOutlineMobile, AiOutlineTablet } from 'react-icons/
 import { BreakpointType } from '../../types'
 
 import BreakpointContext from '../../contexts/BreakpointContext'
+import useQuery from '../../hooks/useQuery'
+import { BreakpointsQuery, BreakpointsQueryDataType } from '../../queries'
+import useRefetch from '../../hooks/useRefetch'
+import { refetchKeys } from '../../constants'
+
+const infinityValue = 999999999
 
 const icons = [
   <AiOutlineDesktop style={{ transform: 'scale(1.25, 1)' }} />,
@@ -15,52 +21,18 @@ const icons = [
   <AiOutlineMobile />,
 ]
 
-const breakpoints: BreakpointType[] = [
-  {
-    name: 'Desktop Large',
-    max: Infinity,
-    min: 1280,
-    base: 1280,
-    scale: 1,
-    isRoot: false,
-  },
-  {
-    name: 'Desktop',
-    max: 1279,
-    min: 992,
-    base: 1232,
-    scale: 1,
-    isRoot: true,
-  },
-  {
-    name: 'Tablet',
-    max: 991,
-    min: 768,
-    base: 768,
-    scale: 1,
-    isRoot: false,
-  },
-  {
-    name: 'Mobile Landscape',
-    max: 767,
-    min: 479,
-    base: 568,
-    scale: 1,
-    isRoot: false,
-  },
-  {
-    name: 'Mobile Portrait',
-    max: 478,
-    min: 0,
-    base: 320,
-    scale: 1,
-    isRoot: false,
-  },
-]
-
 function BreakpointsButtons() {
   const { componentAddress = '' } = useParams()
   const { breakpoint, setBreakpoint, setBreakpoints, width, setWidth } = useContext(BreakpointContext)
+
+  const [breakpointsQueryResult, refetchBreakpointsQuery] = useQuery<BreakpointsQueryDataType>({
+    query: BreakpointsQuery,
+  })
+
+  useRefetch({
+    key: refetchKeys.breakpoints,
+    refetch: refetchBreakpointsQuery,
+  })
 
   const updateBreakpoint = useCallback((breakpoint: BreakpointType) => {
     setBreakpoint(breakpoint)
@@ -68,17 +40,22 @@ function BreakpointsButtons() {
   }, [setBreakpoint, setWidth])
 
   useEffect(() => {
+    if (!breakpointsQueryResult.data?.breakpoints) return
+
+    const { breakpoints } = breakpointsQueryResult.data
+    const nextBreakpoint = breakpoints.find(b => !b.media) ?? breakpoints[0]
+
     setBreakpoints(breakpoints)
-  }, [setBreakpoints])
 
-  useEffect(() => {
-    if (breakpoint && breakpoints.find(bp => bp.name === breakpoint.name)) return
-
-    setBreakpoint(breakpoints[1])
-    setWidth(breakpoints[1].max)
-  }, [breakpoint, setBreakpoint, setWidth])
+    setBreakpoint(nextBreakpoint)
+    setWidth(nextBreakpoint.max)
+  }, [breakpointsQueryResult.data, setBreakpoints, setBreakpoint, setWidth])
 
   if (!componentAddress) return null
+
+  const breakpoints = breakpointsQueryResult.data?.breakpoints ?? []
+
+  if (!breakpoints.length) return null
 
   return (
     <Div
@@ -88,12 +65,12 @@ function BreakpointsButtons() {
     >
       {breakpoints.map((bp, i) => (
         <Tooltip
-          key={bp.name}
+          key={bp.id}
           label={(
             <Div xflex="y2">
               <Div>{bp.name}</Div>
               <Div>
-                {bp.max === Infinity ? '∞' : bp.max}
+                {bp.max >= infinityValue ? '∞' : bp.max}
                 px -
                 {' '}
                 {bp.min}
@@ -105,7 +82,8 @@ function BreakpointsButtons() {
         >
           <Button
             ghost
-            toggled={bp.name === breakpoint?.name}
+            toggled={bp.id === breakpoint?.id}
+            color={bp.media && bp.id === breakpoint?.id ? 'breakpoint' : 'inherit'}
             borderRight="1px solid border"
             onClick={() => updateBreakpoint(bp)}
           >

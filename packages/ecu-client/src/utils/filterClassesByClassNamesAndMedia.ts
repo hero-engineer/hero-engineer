@@ -2,9 +2,9 @@ import { CssClassType } from '../types'
 
 import extractClassNamesFromSelector from './extractClassNamesFromSelector'
 
-function filterClassesByClassNamesAndBreakpoint(classes: CssClassType[], targetClassNames: string[], breakpointMaxValue: number | null) {
+function filterClassesByClassNamesAndMedia(classes: CssClassType[], targetClassNames: string[], media: string) {
   return classes.filter(cssClass => {
-    if (cssClass.breakpointMaxValue !== breakpointMaxValue) return false
+    if (cssClass.media !== media) return false
 
     const classNames = extractClassNamesFromSelector(cssClass.selector)
 
@@ -12,4 +12,4 @@ function filterClassesByClassNamesAndBreakpoint(classes: CssClassType[], targetC
   })
 }
 
-export default filterClassesByClassNamesAndBreakpoint
+export default filterClassesByClassNamesAndMedia

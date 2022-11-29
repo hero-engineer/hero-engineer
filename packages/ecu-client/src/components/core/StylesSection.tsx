@@ -23,11 +23,11 @@ import useEditionSearchParams from '../../hooks/useEditionSearchParams'
 
 import getComponentRootHierarchyIds from '../../utils/getComponentRootHierarchyIds'
 
-import filterClassesByClassNamesAndBreakpoint from '../../utils/filterClassesByClassNamesAndBreakpoint'
 import convertCssAttributeNameToJs from '../../utils/convertCssAttributeNameToJs'
-import removeCssDefaults from '../../utils/removeCssDefaults'
+import filterClassesByClassNamesAndMedia from '../../utils/filterClassesByClassNamesAndMedia'
 import filterInvalidCssValues from '../../utils/filterInvalidCssValues'
 import getLastComponentHierarchyItem from '../../utils/getLastComponentHierarchyItem'
+import removeCssDefaults from '../../utils/removeCssDefaults'
 
 import CssClassesSelector from './CssClassesSelector'
 import StylesSubSectionLayout from './StylesSubSectionLayout'
@@ -38,7 +38,7 @@ import StylesSubSectionSpacing from './StylesSubSectionSpacing'
 function StylesSection() {
   const { hierarchy } = useContext(HierarchyContext)
   const { componentDelta, hierarchyIds } = useEditionSearchParams()
-  const { className, setClassName, breakpointToStyles, setBreakpointToStyle } = useContext(CssClassesContext)
+  const { className, setClassName, style, setStyle } = useContext(CssClassesContext)
   const { breakpoint } = useContext(BreakpointContext)
   const hot = useContext(HotContext)
 
@@ -67,24 +67,29 @@ function StylesSection() {
   const debouncedIsOnAnotherComponent = useDebounce(isSomeNodeSelected && isOnAnotherComponent, 6 * 16) // To prevent flickering of the section
 
   const allClasses = useMemo(() => cssClassesQueryResult.data?.cssClasses || [], [cssClassesQueryResult.data])
-  const baseClasses = useMemo(() => filterClassesByClassNamesAndBreakpoint(allClasses, classNames, null), [allClasses, classNames])
-  const currentBaseClass = useMemo(() => filterClassesByClassNamesAndBreakpoint(baseClasses, [selectedClassName], null), [baseClasses, selectedClassName])
-  const breakpointClasses = useMemo(() => filterClassesByClassNamesAndBreakpoint(allClasses, classNames, breakpoint?.max ?? null), [allClasses, classNames, breakpoint])
-  const currentBreakpointClass = useMemo(() => filterClassesByClassNamesAndBreakpoint(allClasses, [selectedClassName], breakpoint?.max ?? null), [allClasses, selectedClassName, breakpoint])
-  const finalBaseCssValues = useJsCssValues(useCssValues(baseClasses, cssAttributesMap), breakpointToStyles[''] ?? {}, cssAttributesMap)
-  const workingBaseCssValues = useJsCssValues(useCssValues(currentBaseClass, cssAttributesMap), breakpointToStyles[''] ?? {}, cssAttributesMap)
-  const finalBreakpointCssValues = useJsCssValues(useCssValues(breakpointClasses, cssAttributesMap), breakpointToStyles[breakpoint?.max ?? ''] ?? {}, cssAttributesMap)
-  const workingBreakpointCssValues = useJsCssValues(useCssValues(currentBreakpointClass, cssAttributesMap), breakpointToStyles[breakpoint?.max ?? ''] ?? {}, cssAttributesMap)
+  const baseClasses = useMemo(() => filterClassesByClassNamesAndMedia(allClasses, classNames, ''), [allClasses, classNames])
+  const currentBaseClass = useMemo(() => filterClassesByClassNamesAndMedia(baseClasses, [selectedClassName], ''), [baseClasses, selectedClassName])
+  const breakpointClasses = useMemo(() => filterClassesByClassNamesAndMedia(allClasses, classNames, breakpoint.media), [allClasses, classNames, breakpoint])
+  const currentBreakpointClass = useMemo(() => filterClassesByClassNamesAndMedia(allClasses, [selectedClassName], breakpoint.media), [allClasses, selectedClassName, breakpoint])
+
+  const finalBaseCssValues = useJsCssValues(useCssValues(baseClasses, cssAttributesMap), style, cssAttributesMap)
+  const workingBaseCssValues = useJsCssValues(useCssValues(currentBaseClass, cssAttributesMap), style, cssAttributesMap)
+  const finalBreakpointCssValues = useJsCssValues(useCssValues(breakpointClasses, cssAttributesMap), style, cssAttributesMap)
+  const workingBreakpointCssValues = useJsCssValues(useCssValues(currentBreakpointClass, cssAttributesMap), style, cssAttributesMap)
 
   const handleCssUpdate = useCallback(async () => {
-    if (!(classNames.length && breakpoint)) return
+    if (!classNames.length) return
 
     const attributes = Object.entries(filterInvalidCssValues(removeCssDefaults(workingBaseCssValues, cssAttributesMap), cssAttributesMap)).map(([name, value]) => ({ name, value }))
+
+    console.log('attributes', attributes)
+
+    if (!attributes.length) return
 
     await updateCssClass({
       classNames: selectedClassName,
       attributesJson: JSON.stringify(attributes),
-      breakpointMaxValue: breakpoint.isRoot ? null : breakpoint.max,
+      breakpointId: breakpoint.id,
     })
 
     refetch(refetchKeys.cssClasses)
@@ -101,21 +106,20 @@ function StylesSection() {
 
   const handleSetClassNames = useCallback((classes: string[]) => {
     setClassName(classes.join(' ') || ' ') // HACK to force useEditionProps to use an empty updated className
-    setBreakpointToStyle({})
-  }, [setClassName, setBreakpointToStyle])
+    setStyle({})
+  }, [setClassName, setStyle])
 
   const handleStyleChange = useCallback((attributes: CssAttributeType[]) => {
     if (!selectedClassName) return
 
-    const key = breakpoint?.max ?? ''
     const updatedStyles: CssValuesType = {}
 
     attributes.forEach(({ name, value }) => {
       updatedStyles[convertCssAttributeNameToJs(name)] = value
     })
 
-    setBreakpointToStyle(x => ({ ...x, [key]: { ...x[key], ...updatedStyles } }))
-  }, [selectedClassName, breakpoint, setBreakpointToStyle])
+    setStyle(x => ({ ...x, ...updatedStyles }))
+  }, [selectedClassName, setStyle])
 
   const renderNoElement = useCallback(() => (
     <Div
@@ -237,22 +241,22 @@ function StylesSection() {
   ])
 
   useEffect(() => {
-    if (!Object.keys(breakpointToStyles).length) return
+    if (!Object.keys(style).length) return
 
     throttledHandleCssUpdate()
   // Adding throttledHandleCssUpdate as a dep seems to cause infinite useEffect trigger
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [breakpointToStyles])
+  }, [style])
 
   useEffect(() => {
     if (hot) {
       hot.on('vite:beforeUpdate', () => {
         setTimeout(() => {
-          setBreakpointToStyle({})
+          setStyle({})
         }, 500)
       })
     }
-  }, [hot, setBreakpointToStyle])
+  }, [hot, setStyle])
 
   return (
     <Div

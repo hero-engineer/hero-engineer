@@ -1,4 +1,4 @@
-import { CssClassType, FileNodeType, FunctionNodeType, ImportType, PackageType, TypeType } from './types'
+import { BreakpointType, CssClassType, FileNodeType, FunctionNodeType, ImportType, PackageType, TypeType } from './types'
 
 type ComponentReturnType = {
   component: FunctionNodeType
@@ -81,12 +81,30 @@ export type HierarchyQueryDataType = {
   hierarchy: string
 }
 
+export const BreakpointsQuery = `
+  query {
+    breakpoints {
+      id
+      name
+      min
+      max
+      base
+      scale
+      media
+    }
+  }
+`
+
+export type BreakpointsQueryDataType = {
+  breakpoints: BreakpointType[]
+}
+
 export const CssClassesQuery = `
   query {
     cssClasses {
       selector
       declaration
-      breakpointMaxValue
+      media
       attributes {
         name
         value
@@ -333,8 +351,8 @@ export type CreateCssClassMutationDataType = {
 }
 
 export const UpdateCssClassMutation = `
-  mutation ($classNames: [String!]!, $attributesJson: String!, $breakpointMaxValue: Int) {
-    updateCssClass (classNames: $classNames, attributesJson: $attributesJson, breakpointMaxValue: $breakpointMaxValue)
+  mutation ($classNames: [String!]!, $breakpointId: String!, $attributesJson: String!) {
+    updateCssClass (classNames: $classNames, breakpointId: $breakpointId, attributesJson: $attributesJson)
   }
 `
 

@@ -73,12 +73,13 @@ export type PackageType = {
 }
 
 export type BreakpointType = {
+  id: string
   name: string
   min: number
   max: number
   base: number
   scale: number
-  isRoot: boolean
+  media: string
 }
 
 export type CssValueType = string | number
@@ -94,7 +95,7 @@ export type CssClassType= {
   selector: string
   declaration: string
   attributes: CssAttributeType[]
-  breakpointMaxValue: number | null
+  media: string
 }
 
 export type SpacingsType = [CssValueType, CssValueType, CssValueType, CssValueType]

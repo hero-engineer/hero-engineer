@@ -9,7 +9,6 @@ import HierarchyContext from '../contexts/HierarchyContext'
 import DragAndDropContext from '../contexts/DragAndDropContext'
 import ContextualInformationContext from '../contexts/ContextualInformationContext'
 import CssClassesContext from '../contexts/CssClassesContext'
-import BreakpointContext from '../contexts/BreakpointContext'
 
 import getComponentRootHierarchyIds from '../utils/getComponentRootHierarchyIds'
 import isHierarchyOnComponent from '../utils/isHierarchyOnComponent'
@@ -68,8 +67,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   const { hierarchy } = useContext(HierarchyContext)
   const { dragAndDrop, setDragAndDrop } = useContext(DragAndDropContext)
   const { setContextualInformationState } = useContext(ContextualInformationContext)
-  const { className: updatedClassName, setClassName, breakpointToStyles, setBreakpointToStyle } = useContext(CssClassesContext)
-  const { breakpoint } = useContext(BreakpointContext)
+  const { className: updatedClassName, setClassName, style: updatedStyle, setStyle: setUpdatedStyle } = useContext(CssClassesContext)
 
   const [isEdited, setIsEdited] = useState(false)
 
@@ -80,7 +78,6 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   const isComponentRootFirstChild = useMemo(() => componentRootHierarchyIds.indexOf(hierarchyId) === 0, [componentRootHierarchyIds, hierarchyId])
   const isComponentRootLastChild = useMemo(() => componentRootHierarchyIds.indexOf(hierarchyId) === componentRootHierarchyIds.length - 1, [componentRootHierarchyIds, hierarchyId])
   const isDrop = useMemo(() => hierarchyId && dragAndDrop.targetHierarchyId === hierarchyId, [dragAndDrop.targetHierarchyId, hierarchyId])
-  const breakpointKey = useMemo(() => breakpoint?.max ?? '', [breakpoint])
 
   const [{ isDragging }, drag] = useDrag<DragObject, DropResult, DragCollectedProp>(() => ({
     type: 'Node',
@@ -173,7 +170,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
       })
 
       setClassName('')
-      setBreakpointToStyle({})
+      setUpdatedStyle({})
 
       return
     }
@@ -199,7 +196,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
     })
 
     setClassName('')
-    setBreakpointToStyle({})
+    setUpdatedStyle({})
   }, [
     isEdited,
     setDragAndDrop,
@@ -210,7 +207,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
     componentAddress,
     setEditionSearchParams,
     setClassName,
-    setBreakpointToStyle,
+    setUpdatedStyle,
   ])
 
   const handleContextMenu = useCallback((event: MouseEvent) => {
@@ -306,7 +303,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
       onClick: handleClick,
       onContextMenu: handleContextMenu,
       className: generateClassName(),
-      style: isSelected ? breakpointToStyles[breakpointKey] || {} : {},
+      style: isSelected ? updatedStyle : {},
       'data-ecu': ecuId,
       'data-ecu-hierarchy': hierarchyId,
     },

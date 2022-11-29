@@ -40,7 +40,15 @@ function MasterProviders({ mode, hot, children }: MasterProvidersPropsType) {
   const [lastEditedComponent, setLastEditedComponent] = usePersistedState<HierarchyItemType | null>('last-edited-component', null)
   const lastEditedComponentContextValue = useMemo<LastEditedComponentContextType>(() => ({ lastEditedComponent, setLastEditedComponent }), [lastEditedComponent, setLastEditedComponent])
 
-  const [breakpoint, setBreakpoint] = usePersistedState<BreakpointType | null>('breakpoint', null)
+  const [breakpoint, setBreakpoint] = usePersistedState<BreakpointType>('breakpoint', {
+    id: 'Default',
+    name: 'Default',
+    base: 1232,
+    min: 992,
+    max: 1279,
+    scale: 1,
+    media: '',
+  })
   const [breakpoints, setBreakpoints] = usePersistedState<BreakpointType[]>('breakpoints', [])
   const [width, setWidth] = usePersistedState<number>('width', 0, (x: any) => parseInt(x))
   const [isDragging, setIsDragging] = useState(false)

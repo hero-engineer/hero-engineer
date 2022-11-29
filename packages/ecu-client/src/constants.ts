@@ -21,6 +21,7 @@ export const refetchKeys = {
   undoRedoMetadata: 'undoRedoMetadata',
   packages: 'packages',
   packagesUpdates: 'packagesUpdates',
+  breakpoints: 'breakpoints',
 }
 
 export const ecuAtoms = [
