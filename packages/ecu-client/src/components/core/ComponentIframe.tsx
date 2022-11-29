@@ -1,4 +1,4 @@
-import { ReactElement, memo, useCallback, useEffect, useRef, useState } from 'react'
+import { Dispatch, ReactElement, SetStateAction, memo, useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Iframe, IframeProps } from 'honorable'
 
@@ -9,6 +9,7 @@ import useRefresh from '../../hooks/useRefresh'
 type ComponentIframeChildrenArgsType = {
   window?: Window | null
   head?: HTMLHeadElement
+  setHeight: Dispatch<SetStateAction<number>>
 }
 
 type ComponentIframePropsType = Omit<IframeProps, 'children'> & {
@@ -55,20 +56,6 @@ function ComponentIframe({ children, ...props }: ComponentIframePropsType) {
     `)
   }, [appendCss])
 
-  useEffect(() => {
-    if (!mountNode) return
-
-    const observer = new ResizeObserver(() => {
-      setHeight(mountNode.scrollHeight)
-    })
-
-    observer.observe(mountNode)
-
-    return () => {
-      observer.disconnect()
-    }
-  }, [mountNode])
-
   return (
     <Iframe
       {...props}
@@ -81,7 +68,7 @@ function ComponentIframe({ children, ...props }: ComponentIframePropsType) {
       position="relative" // For Tooltip to be over the iframe
       zIndex={0} // Idem
     >
-      {mountNode && createPortal(children({ window: windowNode, head: headNode }), mountNode)}
+      {mountNode && createPortal(children({ window: windowNode, head: headNode, setHeight }), mountNode)}
     </Iframe>
   )
 }

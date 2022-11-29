@@ -9,7 +9,7 @@ import ComponentIframeWidthExpander from './ComponentIframeWidthExpander'
 import EditionOverlay from './EditionOverlay'
 import ComponentIframe from './ComponentIframe'
 import ComponentLoader from './ComponentLoader'
-import WithIsComponentRefreshingLayer from './WithIsComponentRefreshingLayer'
+import WithComponentIframeHeight from './WithComponentIframeHeight'
 import WithComponentScrenshot from './WithComponentScrenshot'
 import EmotionProvider from './EmotionProvider'
 
@@ -30,7 +30,7 @@ function ComponentWindow({ componentPath, decoratorPaths }: ComponentWindowProps
       <ComponentIframeWidthExpander>
         <EditionOverlay>
           <ComponentIframe>
-            {({ window, head }) => (
+            {({ window, head, setHeight }) => (
               <EmotionProvider head={head}>
                 <DndProvider
                   backend={HTML5Backend}
@@ -38,7 +38,7 @@ function ComponentWindow({ componentPath, decoratorPaths }: ComponentWindowProps
                 >
                   <ThemeProvider theme={themeComponent}>
                     <CssBaseline />
-                    <WithIsComponentRefreshingLayer>
+                    <WithComponentIframeHeight setHeight={setHeight}>
                       <WithComponentScrenshot>
                         <ComponentLoader
                           head={head}
@@ -46,7 +46,7 @@ function ComponentWindow({ componentPath, decoratorPaths }: ComponentWindowProps
                           decoratorPaths={decoratorPaths}
                         />
                       </WithComponentScrenshot>
-                    </WithIsComponentRefreshingLayer>
+                    </WithComponentIframeHeight>
                   </ThemeProvider>
                 </DndProvider>
               </EmotionProvider>

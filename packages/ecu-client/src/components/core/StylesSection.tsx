@@ -1,5 +1,5 @@
 import { memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { Button, Div, useDebounce } from 'honorable'
 
 import { CssAttributeType, CssValuesType } from '../../types'
@@ -36,6 +36,7 @@ import StylesSubSectionSpacing from './StylesSubSectionSpacing'
 // The styles section
 // Displayed in the right panel
 function StylesSection() {
+  const { componentAddress = '' } = useParams()
   const { hierarchy } = useContext(HierarchyContext)
   const { componentDelta, hierarchyId } = useContext(EditionContext)
   const { className, setClassName, style, setStyle } = useContext(CssClassesContext)
@@ -61,7 +62,7 @@ function StylesSection() {
   const componentRootHierarchyIds = useMemo(() => getComponentRootHierarchyIds(hierarchy), [hierarchy])
   const isSomeNodeSelected = useMemo(() => hierarchy.length > 0, [hierarchy])
   const isComponentRoot = useMemo(() => componentDelta < 0 && componentRootHierarchyIds.some(x => x === hierarchyId), [componentDelta, componentRootHierarchyIds, hierarchyId])
-  const isOnAnotherComponent = useMemo(() => !hierarchy.length || (!!hierarchy[hierarchy.length - 1].componentAddress && !hierarchy[hierarchy.length - 1].isRoot), [hierarchy])
+  const isOnAnotherComponent = useMemo(() => !hierarchy.length || hierarchy[hierarchy.length - 1].onComponentAddress !== componentAddress, [hierarchy, componentAddress])
   const isNoElementSelected = useMemo(() => !hierarchy.length || hierarchy[hierarchy.length - 1].isRoot || isComponentRoot || isOnAnotherComponent, [hierarchy, isComponentRoot, isOnAnotherComponent])
   const debouncedIsNoElementSelected = useDebounce(isNoElementSelected, 6 * 16) // To prevent flickering of the section
   const debouncedIsOnAnotherComponent = useDebounce(isSomeNodeSelected && isOnAnotherComponent, 6 * 16) // To prevent flickering of the section

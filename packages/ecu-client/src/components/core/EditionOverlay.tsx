@@ -8,6 +8,7 @@ import HierarchyContext from '../../contexts/HierarchyContext'
 import EditionContext from '../../contexts/EditionContext'
 import EditionOverlayContext, { EditionOverlayContextType } from '../../contexts/EditionOverlayContext'
 import IsInteractiveModeContext from '../../contexts/IsInteractiveModeContext'
+import IsComponentRefreshingContext from '../../contexts/IsComponentRefreshingContext'
 
 import getComponentRootHierarchyIds from '../../utils/getComponentRootHierarchyIds'
 import findHierarchyIdsAndComponentDelta from '../../utils/findHierarchyIdsAndComponentDelta'
@@ -24,6 +25,7 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
   const { totalHierarchy } = useContext(HierarchyContext)
   const { hierarchyId, setHierarchyId, componentDelta, setComponentDelta, isEdited, setIsEdited } = useContext(EditionContext)
   const { isInteractiveMode } = useContext(IsInteractiveModeContext)
+  const { isComponentRefreshing } = useContext(IsComponentRefreshingContext)
 
   const [refresh, setRefresh] = useState(0)
   const [helperText, setHelperText] = useState('')
@@ -221,8 +223,9 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
             right={0}
             zIndex={zIndexes.editionOverlay}
             pointerEvents={isEdited ? 'none' : 'auto'}
+            backgroundColor={isComponentRefreshing ? 'rgba(0, 0, 0, 0.5)' : null}
           >
-            {renderHierarchy(totalHierarchy)}
+            {!isComponentRefreshing && renderHierarchy(totalHierarchy)}
           </Div>
         )}
       </Div>
