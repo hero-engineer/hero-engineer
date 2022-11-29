@@ -514,6 +514,18 @@ export default mergeTheme(defaultTheme, {
       }),
     ],
   },
+  Modal: {
+    Root: [
+      {
+        zIndex: zIndexes.modal,
+      },
+    ],
+    Backdrop: [
+      {
+        zIndex: zIndexes.modal - 1,
+      },
+    ],
+  },
   Select: {
     Root: [
       ({ slim }: any) => slim && {

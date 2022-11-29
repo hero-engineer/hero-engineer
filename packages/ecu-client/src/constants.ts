@@ -4,6 +4,7 @@ import splitSpacingValue from './utils/splitSpacingValue'
 export const zIndexes = {
   tooltip: 99999999999, // 11 9
   snackBar: 9999999999, // 10 9
+  modal: 999999999, // 9 9
   cssClassesSelectorEmojiPicker: 999999999, // 9 9
   emojiPicker: 999999999, // 9 9
   componentIframeWidthExpanderHandle: 99999999, // 8 9
