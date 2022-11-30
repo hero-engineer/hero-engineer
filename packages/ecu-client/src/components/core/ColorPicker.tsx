@@ -12,6 +12,7 @@ type ColorPickerPropsType = {
 
 function ColorPicker({ size = 16, value, onChange }: ColorPickerPropsType) {
   const [isOpen, setIsOpen] = useState(false)
+  const [currentValue, setCurrentValue] = useState(value)
 
   return (
     <>
@@ -32,8 +33,8 @@ function ColorPicker({ size = 16, value, onChange }: ColorPickerPropsType) {
             userSelect="none"
           >
             <ChromePicker
-              color={value}
-              onChangeComplete={color => onChange(color.hex)}
+              color={currentValue}
+              onChange={color => setCurrentValue(color.hex)}
             />
           </Div>
         )}
@@ -47,7 +48,10 @@ function ColorPicker({ size = 16, value, onChange }: ColorPickerPropsType) {
           bottom={0}
           zIndex={zIndexes.colorPicker}
           userSelect="none"
-          onClick={() => setIsOpen(false)}
+          onClick={() => {
+            setIsOpen(false)
+            onChange(currentValue)
+          }}
         />
       )}
     </>

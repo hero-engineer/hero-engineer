@@ -169,7 +169,6 @@ function HierarchyLabel({ hierarchyItem, collapsed, isSelected, isFetching, setI
   const [displayName, setDisplayName] = useState(hierarchyItem.displayName || hierarchyItem.label || '')
   const [isEditingDisplayName, setIsEditingDisplayName] = useState(false)
   const [isLoadingDisplayName, setIsLoadingDisplayName] = useState(false)
-  const [isTextSelected, setIsTextSelected] = useState(false)
 
   const [, updateHierarchyDisplayName] = useMutation<UpdateHierarchyDisplayNameMutationDataType>(UpdateHierarchyDisplayNameMutation)
 
@@ -185,7 +184,6 @@ function HierarchyLabel({ hierarchyItem, collapsed, isSelected, isFetching, setI
     if (isFetching || hierarchyItem.isRoot || hierarchyItem.onComponentAddress !== componentAddress) return
 
     setIsEditingDisplayName(false)
-    setIsTextSelected(false)
 
     const { componentDelta, hierarchyId } = getComponentDeltaAndHierarchyId(hierarchyItem) || {}
 
@@ -219,14 +217,6 @@ function HierarchyLabel({ hierarchyItem, collapsed, isSelected, isFetching, setI
     setIsFetching,
     refetch,
   ])
-
-  const handleInputRef = useCallback((input: HTMLInputElement | null) => {
-    if (input && !isTextSelected) {
-      input.select()
-
-      setIsTextSelected(true)
-    }
-  }, [isTextSelected])
 
   useEffect(() => {
     setIsLoadingDisplayName(false)
@@ -280,9 +270,9 @@ function HierarchyLabel({ hierarchyItem, collapsed, isSelected, isFetching, setI
           {isEditingDisplayName ? (
             <WithOutsideClick onOutsideClick={handleUpdateDisplayName}>
               <Input
-                inputProps={{ ref: handleInputRef }}
                 bare
                 autoFocus
+                autoSelect
                 value={displayName}
                 onEnter={handleUpdateDisplayName}
                 onChange={event => setDisplayName(event.target.value)}

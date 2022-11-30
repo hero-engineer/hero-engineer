@@ -20,7 +20,6 @@ import EmojiPicker from '../core/EmojiPicker'
 function ComponentMetadataSection() {
   const { fileAddress = '', componentAddress = '' } = useParams()
   const descriptionRef = useRef<HTMLParagraphElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
   const [emoji, setEmoji] = useState('')
   const [description, setDescription] = useState('')
   const [isMetadataSet, setIsMetadataSet] = useState(false)
@@ -81,14 +80,6 @@ function ComponentMetadataSection() {
     setIsMetadataSet(true)
   }, [componentQueryResult.data])
 
-  // Select the content of the description input when editing
-  useEffect(() => {
-    if (!inputRef.current) return
-
-    inputRef.current.select()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inputRef.current])
-
   if (componentQueryResult.error) {
     return null
   }
@@ -137,10 +128,10 @@ function ComponentMetadataSection() {
       >
         {isEditingDescription ? (
           <Input
-            inputProps={{ ref: inputRef }}
             bare
             multiline
             autoFocus
+            autoSelect
             value={description}
             onChange={e => setDescription(e.target.value)}
             placeholder="..."

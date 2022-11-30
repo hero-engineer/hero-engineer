@@ -37,6 +37,7 @@ export const refetchKeys = {
   packagesUpdates: 'packagesUpdates',
   breakpoints: 'breakpoints',
   fonts: 'fonts',
+  colors: 'colors',
 }
 
 export const ecuAtoms = [

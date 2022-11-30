@@ -98,14 +98,6 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
     setValue(castChildren(children))
   }, [children])
 
-  // Select the content of the input when editing
-  useEffect(() => {
-    if (!inputRef.current) return
-
-    inputRef.current.select()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inputRef.current])
-
   useEffect(() => {
     if (hot) {
       hot.on('vite:beforeUpdate', () => {
@@ -132,6 +124,7 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
             bare
             multiline
             autoFocus
+            autoSelect
             width="100%"
             value={value}
             onChange={event => setValue(event.target.value)}

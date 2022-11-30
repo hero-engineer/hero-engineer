@@ -1,4 +1,4 @@
-import { BreakpointType, CssClassType, FileNodeType, FontType, FunctionNodeType, ImportType, PackageType, TypeType } from './types'
+import { BreakpointType, ColorType, CssClassType, FileNodeType, FontType, FunctionNodeType, ImportType, PackageType, TypeType } from './types'
 
 type ComponentReturnType = {
   component: FunctionNodeType
@@ -106,8 +106,8 @@ export const FontsQuery = `
     fonts {
       id
       name
-      isVariable
       weights
+      isVariable
       url
     }
   }
@@ -115,6 +115,21 @@ export const FontsQuery = `
 
 export type FontsQueryDataType = {
   fonts: FontType[]
+}
+
+export const ColorsQuery = `
+  query {
+    colors {
+      id
+      name
+      value
+      variableName
+    }
+  }
+`
+
+export type ColorsQueryDataType = {
+  colors: ColorType[]
 }
 
 export const CssClassesQuery = `
@@ -366,6 +381,16 @@ export const UpdateFontsMutation = `
 
 export type UpdateFontsMutationDataType = {
   updateFonts: boolean
+}
+
+export const UpdateColorsMutation = `
+  mutation ($colorsJson: String!) {
+    updateColors (colorsJson: $colorsJson)
+  }
+`
+
+export type UpdateColorsMutationDataType = {
+  updateColors: boolean
 }
 
 export const CreateCssClassMutation = `
