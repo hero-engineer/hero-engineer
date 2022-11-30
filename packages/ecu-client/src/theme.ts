@@ -534,9 +534,12 @@ export default mergeTheme(defaultTheme, {
       ({ slim }: any) => slim && {
         height: 32,
       },
+      ({ tiny }: any) => tiny && {
+        height: 24,
+      },
     ],
     Selected: [
-      ({ slim }: any) => slim && {
+      ({ slim, tiny }: any) => (slim || tiny) && {
         paddingBottom: 2,
       },
     ],

@@ -33,6 +33,7 @@ import CssClassesSelector from './CssClassesSelector'
 import StylesSubSectionLayout from './StylesSubSectionLayout'
 import StylesSubSectionSpacing from './StylesSubSectionSpacing'
 import StylesSubSectionSize from './StylesSubSectionSize'
+import StylesSubSectionPosition from './StylesSubSectionPosition'
 
 // The styles section
 // Displayed in the right panel
@@ -47,7 +48,7 @@ function StylesSection() {
   const [cssClassesQueryResult, refetchCssClassesQuery] = useQuery<CssClassesQueryDataType>({
     query: CssClassesQuery,
   })
-  const [, updateCssClass] = useMutation<UpdateCssClassMutationDataType>(UpdateCssClassMutation)
+  const [{ fetching }, updateCssClass] = useMutation<UpdateCssClassMutationDataType>(UpdateCssClassMutation)
 
   const refetch = useRefetch({
     key: refetchKeys.cssClasses,
@@ -213,6 +214,12 @@ function StylesSection() {
         onChange={handleStyleChange}
         disabled={!selectedClassName}
       />
+      <StylesSubSectionPosition
+        cssValues={passedCssValues}
+        breakpointCssValues={passedBreakpointCssValues}
+        onChange={handleStyleChange}
+        disabled={!selectedClassName}
+      />
       {loading && (
         <Div
           position="absolute"
@@ -259,10 +266,10 @@ function StylesSection() {
     renderSubSections,
   ])
 
-  // Reset style state on new breakpoint
+  // Reset style state on new breakpoint or new selected className
   useEffect(() => {
     setStyle({})
-  }, [breakpoint, setStyle])
+  }, [breakpoint, selectedClassName, setStyle])
 
   useEffect(() => {
     if (!Object.keys(style).length) return
@@ -271,16 +278,6 @@ function StylesSection() {
   // Adding throttledHandleCssUpdate as a dep seems to cause infinite useEffect trigger
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [style])
-
-  useEffect(() => {
-    if (hot) {
-      hot.on('vite:beforeUpdate', () => {
-        setTimeout(() => {
-          setStyle({})
-        }, 500)
-      })
-    }
-  }, [hot, setStyle])
 
   return (
     <Div

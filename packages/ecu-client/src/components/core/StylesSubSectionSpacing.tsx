@@ -61,7 +61,7 @@ function StylesSubSectionSpacing({ cssValues, breakpointCssValues, onChange, dis
       <SpacingEditor
         allowNegativeValues
         title="Margin"
-        semanticName="margin"
+        semanticName="margin-"
         height={baseHeight}
         onChange={onChange}
         borderSize={baseHeight / borderSizeDivider - spacingEditorPadding}
@@ -71,7 +71,7 @@ function StylesSubSectionSpacing({ cssValues, breakpointCssValues, onChange, dis
       >
         <SpacingEditor
           title="Padding"
-          semanticName="padding"
+          semanticName="padding-"
           onChange={onChange}
           height={(borderSizeDivider - 2) * baseHeight / borderSizeDivider + spacingEditorPadding}
           borderSize={baseHeight / borderSizeDivider - spacingEditorPadding}

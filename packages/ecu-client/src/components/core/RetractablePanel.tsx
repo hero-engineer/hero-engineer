@@ -91,7 +91,7 @@ function RetractablePanel({ height, direction, openPersistedStateKey, defaultOpe
         <Div
           key={index}
           xflex="y2s"
-          position={isDocked ? 'initial' : 'absolute'}
+          position={isDocked ? 'static' : 'absolute'}
           top={isDocked ? null : 0}
           left={isDocked ? null : isLeft ? '100%' : null}
           right={isDocked ? null : isRight ? '100%' : null}

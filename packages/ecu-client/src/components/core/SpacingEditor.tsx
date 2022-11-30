@@ -126,13 +126,13 @@ function SpacingEditor({
           <Div
             xflex="x5"
             position="absolute"
-            color={getTextColor(`${semanticName}-top`)}
+            color={getTextColor(`${semanticName}top`)}
             top={-borderSize / 2}
             left={-borderSize / 2}
             right={-borderSize / 2}
             bottom={-borderSize / 2}
           >
-            {getValue(`${semanticName}-top`)}
+            {getValue(`${semanticName}top`)}
           </Div>
         </Div>
       )}
@@ -149,13 +149,13 @@ function SpacingEditor({
           <Div
             xflex="x5"
             position="absolute"
-            color={getTextColor(`${semanticName}-right`)}
+            color={getTextColor(`${semanticName}right`)}
             top={-borderSize / 2}
             left={-borderSize / 2}
             right={-borderSize / 2}
             bottom={-borderSize / 2}
           >
-            {getValue(`${semanticName}-right`)}
+            {getValue(`${semanticName}right`)}
           </Div>
         </Div>
       )}
@@ -172,13 +172,13 @@ function SpacingEditor({
           <Div
             xflex="x5"
             position="absolute"
-            color={getTextColor(`${semanticName}-bottom`)}
+            color={getTextColor(`${semanticName}bottom`)}
             top={-borderSize / 2}
             left={-borderSize / 2}
             right={-borderSize / 2}
             bottom={-borderSize / 2}
           >
-            {getValue(`${semanticName}-bottom`)}
+            {getValue(`${semanticName}bottom`)}
           </Div>
         </Div>
       )}
@@ -195,13 +195,13 @@ function SpacingEditor({
           <Div
             xflex="x5"
             position="absolute"
-            color={getTextColor(`${semanticName}-left`)}
+            color={getTextColor(`${semanticName}left`)}
             top={-borderSize / 2}
             left={-borderSize / 2}
             right={-borderSize / 2}
             bottom={-borderSize / 2}
           >
-            {getValue(`${semanticName}-left`)}
+            {getValue(`${semanticName}left`)}
           </Div>
         </Div>
       )}
@@ -234,7 +234,7 @@ function SpacingEditor({
           fill="transparent"
           onMouseEnter={() => handleHover(0)}
           onMouseLeave={() => handleHover(-1)}
-          onClick={() => setEditedAttribute(`${semanticName}-top`)}
+          onClick={() => setEditedAttribute(`${semanticName}top`)}
           cursor="crosshair"
         />
         <Path
@@ -243,7 +243,7 @@ function SpacingEditor({
           fill="transparent"
           onMouseEnter={() => handleHover(1)}
           onMouseLeave={() => handleHover(-1)}
-          onClick={() => setEditedAttribute(`${semanticName}-right`)}
+          onClick={() => setEditedAttribute(`${semanticName}right`)}
           cursor="crosshair"
         />
         <Path
@@ -252,7 +252,7 @@ function SpacingEditor({
           fill="transparent"
           onMouseEnter={() => handleHover(2)}
           onMouseLeave={() => handleHover(-1)}
-          onClick={() => setEditedAttribute(`${semanticName}-bottom`)}
+          onClick={() => setEditedAttribute(`${semanticName}bottom`)}
           cursor="crosshair"
         />
         <Path
@@ -261,7 +261,7 @@ function SpacingEditor({
           fill="transparent"
           onMouseEnter={() => handleHover(3)}
           onMouseLeave={() => handleHover(-1)}
-          onClick={() => setEditedAttribute(`${semanticName}-left`)}
+          onClick={() => setEditedAttribute(`${semanticName}left`)}
           cursor="crosshair"
         />
       </Svg>

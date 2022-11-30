@@ -83,6 +83,7 @@ const cssFlexDirectionValues = ['row', 'column']
 const cssAlignItemsValues = ['flex-start', 'flex-end', 'center', 'stretch', 'baseline', 'space-between', 'space-around', 'space-evenly']
 const cssFlexWrapValues = ['nowrap', 'wrap', 'wrap-reverse']
 const cssOverflowValues = ['visible', 'hidden', 'scroll', 'auto']
+const cssPositionValues = ['static', 'relative', 'absolute', 'fixed', 'sticky']
 
 function extractSpacing(value: CssValueType, index: number): CssValueType {
   if (typeof value === 'number') return value
@@ -310,6 +311,31 @@ export const cssAttributesMap: CSsAttributesMapType = {
     attributes: ['overflow-y'],
     defaultValue: 'visible',
     isValueValid: value => typeof value === 'string' && cssOverflowValues.includes(value),
+  },
+  position: {
+    attributes: ['position'],
+    defaultValue: 'static',
+    isValueValid: value => typeof value === 'string' && cssPositionValues.includes(value),
+  },
+  top: {
+    attributes: ['top'],
+    defaultValue: 'auto',
+    isValueValid: isSizeValueValid,
+  },
+  right: {
+    attributes: ['right'],
+    defaultValue: 'auto',
+    isValueValid: isSizeValueValid,
+  },
+  bottom: {
+    attributes: ['bottom'],
+    defaultValue: 'auto',
+    isValueValid: isSizeValueValid,
+  },
+  left: {
+    attributes: ['left'],
+    defaultValue: 'auto',
+    isValueValid: isSizeValueValid,
   },
 } as const
 

@@ -146,21 +146,34 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
   ])
 
   useEffect(() => {
-    const observers: ResizeObserver[] = []
+    const resizeObservers: ResizeObserver[] = []
+    const mutationObservers: MutationObserver[] = []
 
     Object.keys(elementRegistry).forEach(hierarchyId => {
       const element = elementRegistry[hierarchyId]
 
       if (!element) return
 
-      const observer = new ResizeObserver(() => setRefresh(x => x + 1))
+      const resizeObserver = new ResizeObserver(() => setRefresh(x => x + 1))
 
-      observer.observe(element)
-      observers.push(observer)
+      resizeObserver.observe(element)
+      resizeObservers.push(resizeObserver)
+
+      const mutationObserver = new MutationObserver(() => setRefresh(x => x + 1))
+
+      mutationObserver.observe(element, {
+        attributes: true,
+        childList: true,
+        subtree: true,
+      })
+      mutationObservers.push(mutationObserver)
     })
 
     return () => {
-      for (const observer of observers) {
+      for (const observer of resizeObservers) {
+        observer.disconnect()
+      }
+      for (const observer of mutationObservers) {
         observer.disconnect()
       }
     }
