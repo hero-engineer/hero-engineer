@@ -1,16 +1,12 @@
 import fs from 'node:fs'
-import path from 'node:path'
 
-import { ColorType, FileNodeType, HistoryMutationReturnType } from '../../types.js'
-import { appPath, colorsEndComment, colorsStartComment, ecuColorsFileName, indexCssFileRelativePath } from '../../configuration.js'
-
-import { findNode } from '../../graph/index.js'
+import { ColorType, HistoryMutationReturnType } from '../../types.js'
+import { colorsEndComment, colorsStartComment } from '../../configuration.js'
 
 import insertBetweenComments from '../../domain/comments/insertBetweenComments.js'
+import getIndexCssNode from '../../domain/css/getIndexCssNode.js'
 
 import composeHistoryMutation from '../../history/composeHistoryMutation.js'
-
-import getEcuLocation from '../../helpers/getEcuLocation.js'
 
 type UpdateColorsMutationArgsType = {
   colorsJson: string
@@ -19,22 +15,11 @@ type UpdateColorsMutationArgsType = {
 async function updateColorsMutation(_: any, { colorsJson }: UpdateColorsMutationArgsType): Promise<HistoryMutationReturnType<boolean>> {
   try {
     const colors = JSON.parse(colorsJson) as ColorType[]
-    const ecuLocation = getEcuLocation()
-    const colorsFileLocation = path.join(ecuLocation, ecuColorsFileName)
-
-    fs.writeFileSync(colorsFileLocation, JSON.stringify(colors, null, 2))
-
     const variables = colors.map(color => `  ${color.variableName}: ${color.value}; /* ${color.name} */`).join('\n')
-    const indexCssFileLocation = path.join(appPath, indexCssFileRelativePath)
-    const indexCssNode = findNode<FileNodeType>(n => n.payload.relativePath === indexCssFileRelativePath)
-
-    if (!indexCssNode) {
-      throw new Error('index.css file not found')
-    }
-
+    const indexCssNode = getIndexCssNode()
     const code = insertBetweenComments(indexCssNode.payload.code, colorsStartComment, colorsEndComment, variables)
 
-    fs.writeFileSync(indexCssFileLocation, code)
+    fs.writeFileSync(indexCssNode.payload.path, code)
   }
   catch (error) {
     console.error(error)

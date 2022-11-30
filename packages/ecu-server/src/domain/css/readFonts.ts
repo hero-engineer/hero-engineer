@@ -1,30 +1,32 @@
-import fs from 'node:fs'
-import path from 'node:path'
-
-import { ecuFontsFileName } from '../../configuration.js'
+import { fontsEndComment, fontsStartComment } from '../../configuration.js'
 import { FontType } from '../../types.js'
+import extractBetweenComments from '../comments/extractBetweenComments.js'
 
-import getEcuLocation from '../../helpers/getEcuLocation.js'
+import getIndexCssNode from './getIndexCssNode.js'
+
+const extractRegex = /^@import\s*url\('(.*)'\);\s*\/\*\s*(.*)\s*~~~\s*(.*)\s*~~~\s*(.*)\s+\*\//
 
 function readFonts() {
-  const ecuLocation = getEcuLocation()
+  const indexCssNode = getIndexCssNode()
 
-  const fontsFileLocation = path.join(ecuLocation, ecuFontsFileName)
+  const rawImports = extractBetweenComments(indexCssNode.payload.code, fontsStartComment, fontsEndComment)
 
-  if (!fs.existsSync(fontsFileLocation)) {
-    return []
-  }
+  return rawImports.split('\n').map(line => {
+    const match = line.match(extractRegex)
 
-  try {
-    const fontsFileContent = fs.readFileSync(fontsFileLocation, 'utf8')
+    if (!match) return null
 
-    return (JSON.parse(fontsFileContent) as FontType[])
-  }
-  catch (error) {
-    console.error(error)
+    const [, url, id, name, weights] = match
+    const isVariable = weights === 'variable'
 
-    return []
-  }
+    return {
+      id,
+      name,
+      url,
+      isVariable,
+      weights: isVariable ? [] : weights.split(',').map(Number).filter(Boolean),
+    } as FontType
+  }).filter(Boolean) as FontType[]
 }
 
 export default readFonts

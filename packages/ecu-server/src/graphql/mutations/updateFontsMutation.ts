@@ -1,16 +1,12 @@
 import fs from 'node:fs'
-import path from 'node:path'
 
-import { FileNodeType, FontType, HistoryMutationReturnType } from '../../types.js'
-import { appPath, ecuFontsFileName, fontsEndComment, fontsStartComment, indexCssFileRelativePath } from '../../configuration.js'
+import { FontType, HistoryMutationReturnType } from '../../types.js'
+import { fontsEndComment, fontsStartComment } from '../../configuration.js'
 
-import { findNode } from '../../graph/index.js'
-
+import getIndexCssNode from '../../domain/css/getIndexCssNode.js'
 import insertBetweenComments from '../../domain/comments/insertBetweenComments.js'
 
 import composeHistoryMutation from '../../history/composeHistoryMutation.js'
-
-import getEcuLocation from '../../helpers/getEcuLocation.js'
 
 type UpdateFontsMutationArgsType = {
   fontsJson: string
@@ -19,22 +15,11 @@ type UpdateFontsMutationArgsType = {
 async function updateFontsMutation(_: any, { fontsJson }: UpdateFontsMutationArgsType): Promise<HistoryMutationReturnType<boolean>> {
   try {
     const fonts = JSON.parse(fontsJson) as FontType[]
-    const ecuLocation = getEcuLocation()
-    const fontsFileLocation = path.join(ecuLocation, ecuFontsFileName)
-
-    fs.writeFileSync(fontsFileLocation, JSON.stringify(fonts, null, 2))
-
-    const imports = fonts.map(font => `@import url('${font.url}');`).join('\n')
-    const indexCssFileLocation = path.join(appPath, indexCssFileRelativePath)
-    const indexCssNode = findNode<FileNodeType>(n => n.payload.relativePath === indexCssFileRelativePath)
-
-    if (!indexCssNode) {
-      throw new Error('index.css file not found')
-    }
-
+    const imports = fonts.map(font => `@import url('${font.url}'); /* ${font.id} ~~~ ${font.name} ~~~ ${font.isVariable ? 'variable' : font.weights.join(',')} */`).join('\n')
+    const indexCssNode = getIndexCssNode()
     const code = insertBetweenComments(indexCssNode.payload.code, fontsStartComment, fontsEndComment, imports)
 
-    fs.writeFileSync(indexCssFileLocation, code)
+    fs.writeFileSync(indexCssNode.payload.path, code)
   }
   catch (error) {
     console.error(error)

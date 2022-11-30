@@ -1,30 +1,30 @@
-import fs from 'node:fs'
-import path from 'node:path'
-
-import { ecuColorsFileName } from '../../configuration.js'
+import { colorsEndComment, colorsStartComment } from '../../configuration.js'
 import { ColorType } from '../../types.js'
+import extractBetweenComments from '../comments/extractBetweenComments.js'
 
-import getEcuLocation from '../../helpers/getEcuLocation.js'
+import getIndexCssNode from './getIndexCssNode.js'
+
+const extractRegex = /^\s*--color-(\w*):\s*(.*);\s*\/\*\s*(.*)\s+\*\//
 
 function readColors() {
-  const ecuLocation = getEcuLocation()
+  const indexCssNode = getIndexCssNode()
 
-  const colorsFileLocation = path.join(ecuLocation, ecuColorsFileName)
+  const rawVariables = extractBetweenComments(indexCssNode.payload.code, colorsStartComment, colorsEndComment)
 
-  if (!fs.existsSync(colorsFileLocation)) {
-    return []
-  }
+  return rawVariables.split('\n').map(line => {
+    const match = line.match(extractRegex)
 
-  try {
-    const colorsFileContent = fs.readFileSync(colorsFileLocation, 'utf8')
+    if (!match) return null
 
-    return (JSON.parse(colorsFileContent) as ColorType[])
-  }
-  catch (error) {
-    console.error(error)
+    const [, id, value, name] = match
 
-    return []
-  }
+    return {
+      id,
+      variableName: `--color-${id}`,
+      value,
+      name,
+    } as ColorType
+  }).filter(Boolean) as ColorType[]
 }
 
 export default readColors

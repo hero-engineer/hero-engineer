@@ -22,10 +22,6 @@ export const ecuHistoryFileName = 'history.json'
 
 export const ecuBreakpointsFileName = 'breakpoints.json'
 
-export const ecuFontsFileName = 'fonts.json'
-
-export const ecuColorsFileName = 'colors.json'
-
 export const globalTypesFileRelativePath = 'src/types.ts'
 
 export const indexCssFileRelativePath = 'src/index.css'
