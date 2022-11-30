@@ -8,7 +8,7 @@ import insertBetweenComments from '../../domain/comments/insertBetweenComments.j
 import composeHistoryMutation from '../../history/composeHistoryMutation.js'
 
 import getEcuLocation from '../../helpers/getEcuLocation.js'
-import { findNode, getNodesByRole } from '../../graph/index.js'
+import { findNode } from '../../graph/index.js'
 
 type UpdateFontsMutationArgsType = {
   fontsJson: string
