@@ -285,7 +285,7 @@ export default mergeTheme(defaultTheme, {
     ],
     Title: [
       ({ ghost }: any) => ghost && {
-        height: 30, // To match the height of the RetractablePanel toggle icon of 32px - 1px border
+        height: 31, // To match the height of the RetractablePanel toggle icon of 32px - 1px border
         paddingTop: 0,
         paddingBottom: 0,
         fontWeight: 500,

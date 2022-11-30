@@ -1,5 +1,4 @@
 import { Div, Img } from 'honorable'
-import { SyntheticEvent, useCallback } from 'react'
 
 import Emoji from './Emoji'
 
@@ -7,16 +6,11 @@ type ComponentThumbnailPropsType = {
   address: string
   name: string
   emoji: string
+  screenshotUrl: string
 }
 
 // A card for the components scene
-function ComponentThumbnail({ address, name, emoji }: ComponentThumbnailPropsType) {
-  const handleImageError = useCallback((event: SyntheticEvent<HTMLImageElement, Event>) => {
-    if (event.currentTarget.src !== 'http://localhost:4001/.ecu/component.svg') {
-      event.currentTarget.src = 'http://localhost:4001/.ecu/component.svg'
-    }
-  }, [])
-
+function ComponentThumbnail({ address, name, emoji, screenshotUrl }: ComponentThumbnailPropsType) {
   return (
     <Div
       xflex="y2s"
@@ -29,11 +23,10 @@ function ComponentThumbnail({ address, name, emoji }: ComponentThumbnailPropsTyp
       p={1}
     >
       <Img
-        src={`http://localhost:4001/.ecu/screenshots/${address}.png`}
+        src={screenshotUrl}
         width="100%"
         height="calc(100% - 16px - 18px)"
         objectFit="contain"
-        onError={handleImageError}
       />
       <Div
         xflex="x5"

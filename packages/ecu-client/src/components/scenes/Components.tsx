@@ -51,6 +51,7 @@ function Components() {
               address={componentAndFile.component.address}
               name={componentAndFile.component.payload.name}
               emoji={componentAndFile.file.payload.emoji}
+              screenshotUrl={componentAndFile.screenshotUrl}
             />
           </Link>
         ))}

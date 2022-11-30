@@ -77,6 +77,9 @@ export const cssValueUnits = [
   'in',
   'pt',
   'pc',
+  'svh',
+  'lvh',
+  'dvh',
 ] as const
 
 const cssDisplayValues = ['block', 'inline-block', 'flex', 'grid', 'none']

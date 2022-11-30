@@ -5,6 +5,7 @@ type ComponentReturnType = {
   file: FileNodeType
   decoratorPaths: string[]
   isComponentAcceptingChildren: boolean
+  screenshotUrl: string
 }
 
 /* --
@@ -33,6 +34,7 @@ export const ComponentsQuery = `
         }
       }
       isComponentAcceptingChildren
+      screenshotUrl
     }
   }
 `
