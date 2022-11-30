@@ -309,7 +309,7 @@ function HierarchyLabel({ hierarchyItem, collapsed, isSelected, isFetching, setI
           <A
             onClick={onDelete}
             flexShrink={0}
-            color="red.500"
+            color="danger"
             fontSize="0.75rem"
             className="ecu-hierarchy-label-edit"
             pl={0.25}

@@ -1,4 +1,4 @@
-import { BreakpointType, CssClassType, FileNodeType, FunctionNodeType, ImportType, PackageType, TypeType } from './types'
+import { BreakpointType, CssClassType, FileNodeType, FontType, FunctionNodeType, ImportType, PackageType, TypeType } from './types'
 
 type ComponentReturnType = {
   component: FunctionNodeType
@@ -97,6 +97,22 @@ export const BreakpointsQuery = `
 
 export type BreakpointsQueryDataType = {
   breakpoints: BreakpointType[]
+}
+
+export const FontsQuery = `
+  query {
+    fonts {
+      id
+      name
+      isVariable
+      weights
+      url
+    }
+  }
+`
+
+export type FontsQueryDataType = {
+  fonts: FontType[]
 }
 
 export const CssClassesQuery = `

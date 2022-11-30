@@ -7,10 +7,10 @@ import SnackbarContext from '../../contexts/SnackBarContext'
 
 const duration = 5000
 const severityToBorderColor = {
-  error: 'red.500',
-  warning: 'yellow.500',
-  info: 'blue.500',
-  success: 'green.500',
+  error: 'danger',
+  warning: 'warning',
+  info: 'info',
+  success: 'success',
 }
 
 function SnackBar() {

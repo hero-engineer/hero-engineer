@@ -184,7 +184,7 @@ function CssClassesSelector({ allClasses, classNames, onClassNamesChange, onLoad
         onForceOpen={() => setForceOpen(false)}
         inputProps={{
           bare: true,
-          color: isError ? 'red.500' : 'inherit',
+          color: isError ? 'danger' : 'inherit',
           onClick: () => setForceOpen(true),
         }}
         endIcon={(

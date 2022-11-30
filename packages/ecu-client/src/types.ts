@@ -115,5 +115,5 @@ export type FontType = {
   name: string
   url: string
   weights: number[]
-  variable: boolean
+  isVariable: boolean
 }

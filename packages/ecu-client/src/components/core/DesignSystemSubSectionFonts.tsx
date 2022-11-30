@@ -1,4 +1,4 @@
-import { FormEvent, MouseEvent, useCallback, useState } from 'react'
+import { FormEvent, MouseEvent, useCallback, useEffect, useState } from 'react'
 import { Button, Div, Form, H3, Input, Switch } from 'honorable'
 import { CiEdit } from 'react-icons/ci'
 import { SlTrash } from 'react-icons/sl'
@@ -6,28 +6,27 @@ import { BsCheck2, BsPlus } from 'react-icons/bs'
 import { IoCloseOutline } from 'react-icons/io5'
 
 import { FontType } from '../../types'
+import { refetchKeys } from '../../constants'
 
-const fonts: FontType[] = [
-  {
-    id: '1',
-    name: 'Inter',
-    url: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap',
-    variable: false,
-    weights: [400, 500, 600, 700],
-  },
-  {
-    id: '2',
-    name: 'Roboto',
-    url: 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap',
-    variable: false,
-    weights: [400, 500, 700],
-  },
-]
+import { FontsQuery, FontsQueryDataType } from '../../queries'
+
+import useQuery from '../../hooks/useQuery'
+import useRefetch from '../../hooks/useRefetch'
 
 function DesignSystemSubSectionFonts() {
+  const [fonts, setFonts] = useState<FontType[]>([])
+
+  const [fontsQueryResult, refetchFontsQuery] = useQuery<FontsQueryDataType>({
+    query: FontsQuery,
+  })
+
+  useRefetch({
+    key: refetchKeys.fonts,
+    refetch: refetchFontsQuery,
+  })
 
   const handleEdit = useCallback((fonts: FontType[]) => {
-
+    setFonts(fonts)
   }, [])
 
   const handleUpdate = useCallback((font: FontType) => {
@@ -37,13 +36,19 @@ function DesignSystemSubSectionFonts() {
     nextFonts[fontIndex] = font
 
     handleEdit(nextFonts)
-  }, [handleEdit])
+  }, [fonts, handleEdit])
 
   const handleDelete = useCallback((font: FontType) => {
     if (!window.confirm(`Are you sure you want to delete the font ${font.name}?`)) return
 
     handleEdit(fonts.filter(f => f.id !== font.id))
-  }, [handleEdit])
+  }, [fonts, handleEdit])
+
+  useEffect(() => {
+    if (!fontsQueryResult.data?.fonts) return
+
+    setFonts(fontsQueryResult.data.fonts)
+  }, [fontsQueryResult.data])
 
   return (
     <>
@@ -57,6 +62,31 @@ function DesignSystemSubSectionFonts() {
           onDelete={() => handleDelete(font)}
         />
       ))}
+      {!fonts.length && (
+        <Div
+          color="text-light"
+          py={0.5}
+        >
+          No font
+        </Div>
+      )}
+      <Button
+        onClick={() => setFonts(x => [
+          ...x,
+          {
+            id: Math.random.toString().slice(2),
+            name: '',
+            url: '',
+            isVariable: false,
+            weights: [],
+          },
+        ])}
+        alignSelf="flex-start"
+        mt={0.5}
+      >
+        Add font
+      </Button>
+
     </>
   )
 }
@@ -89,25 +119,41 @@ type FontRowPropsType = {
 }
 
 function FontRow({ font, onUpdate, onDelete }: FontRowPropsType) {
-  const [isEdited, setIsEdited] = useState(false)
+  const [isEdited, setIsEdited] = useState(!font.name)
+  const [isError, setIsError] = useState(false)
   const [name, setName] = useState(font.name)
   const [url, setUrl] = useState(font.url)
-  const [variable, setVariable] = useState(font.variable)
+  const [isVariable, setIsVariable] = useState(font.isVariable)
   const [weights, setWeights] = useState<(number | string)[]>(font.weights)
 
   const handleCancel = useCallback(() => {
     setIsEdited(false)
     setName(font.name)
     setUrl(font.url)
-    setVariable(font.variable)
+    setIsVariable(font.isVariable)
     setWeights(font.weights)
   }, [font])
 
   const handleSubmit = useCallback((event: FormEvent<HTMLFormElement> | MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
 
+    if (!(name && url && (isVariable || weights.map(Number).filter(Boolean).length))) {
+      setIsError(true)
+
+      return
+    }
+
     setIsEdited(false)
-  }, [])
+    setIsError(false)
+
+    onUpdate({
+      ...font,
+      name,
+      url,
+      isVariable,
+      weights: weights.map(Number).filter(Boolean),
+    })
+  }, [font, name, url, isVariable, weights, onUpdate])
 
   return (
     <Form
@@ -145,14 +191,14 @@ function FontRow({ font, onUpdate, onDelete }: FontRowPropsType) {
         >
           {isEdited ? (
             <FontWeightsEditor
-              variable={variable}
+              isVariable={isVariable}
               weights={weights}
-              onChange={(variable: boolean, weights: (number | string)[]) => {
-                setVariable(variable)
+              onChange={(isVariable: boolean, weights: (number | string)[]) => {
+                setIsVariable(isVariable)
                 setWeights(weights)
               }}
             />
-          ) : font.variable ? 'Variable' : font.weights.join(', ')}
+          ) : font.isVariable ? 'Variable' : font.weights.join(', ')}
         </Div>
         <Div
           ellipsis
@@ -165,6 +211,7 @@ function FontRow({ font, onUpdate, onDelete }: FontRowPropsType) {
             <Input
               slim
               width="100%"
+              placeholder="https://fonts.googleapis.com/css2?family=..."
               value={url}
               onChange={event => setUrl(event.target.value)}
             />
@@ -175,7 +222,7 @@ function FontRow({ font, onUpdate, onDelete }: FontRowPropsType) {
         <Div
           id="FontRow-actions"
           display="none"
-          xflex="x1"
+          xflex="x4"
           fontSize="0.75rem"
           gap={0.5}
           pt={0.25}
@@ -197,7 +244,7 @@ function FontRow({ font, onUpdate, onDelete }: FontRowPropsType) {
       )}
       {isEdited && (
         <Div
-          xflex="x1"
+          xflex="x4"
           fontSize="0.75rem"
           gap={0.5}
           pt={1}
@@ -216,6 +263,11 @@ function FontRow({ font, onUpdate, onDelete }: FontRowPropsType) {
           >
             <IoCloseOutline />
           </Button>
+          {isError && (
+            <Div color="danger">
+              Please fill all fields
+            </Div>
+          )}
         </Div>
       )}
     </Form>
@@ -223,12 +275,12 @@ function FontRow({ font, onUpdate, onDelete }: FontRowPropsType) {
 }
 
 type FontWeightsEditorPropsType = {
-  variable: boolean
+  isVariable: boolean
   weights: (number | string)[]
   onChange: (variable: boolean, weights: (number | string)[]) => void
 }
 
-function FontWeightsEditor({ variable, weights, onChange }: FontWeightsEditorPropsType) {
+function FontWeightsEditor({ isVariable, weights, onChange }: FontWeightsEditorPropsType) {
   return (
     <Div
       xflex="y2s"
@@ -236,13 +288,13 @@ function FontWeightsEditor({ variable, weights, onChange }: FontWeightsEditorPro
       gap={0.5}
     >
       <Switch
-        checked={variable}
+        checked={isVariable}
         onChange={event => onChange(event.target.checked, weights)}
         ml="2px"
       >
         Variable
       </Switch>
-      {!variable && (
+      {!isVariable && (
         <>
           {weights.map((weight, i) => (
             <Input
@@ -260,13 +312,13 @@ function FontWeightsEditor({ variable, weights, onChange }: FontWeightsEditorPro
 
                 nextWeights[i] = nextWeight
 
-                onChange(variable, nextWeights)
+                onChange(isVariable, nextWeights)
               }}
             />
           ))}
           <Button
             type="button"
-            onClick={() => onChange(variable, [...weights, ''])}
+            onClick={() => onChange(isVariable, [...weights, ''])}
           >
             <BsPlus />
           </Button>
