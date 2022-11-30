@@ -19,23 +19,6 @@ type StylesSubSectionSizePropsType = {
   disabled: boolean
 }
 
-function addDefaults(attributeNames: string[]) {
-  const attributes: CssAttributeType[] = []
-
-  attributeNames.forEach(name => {
-    const attribute = cssAttributesMap[name]
-
-    if (attribute) {
-      attributes.push({
-        name,
-        value: attribute.defaultValue,
-      })
-    }
-  })
-
-  return attributes
-}
-
 const attributeNames = [
   'width',
   'min-width',
@@ -129,7 +112,7 @@ function StylesSubSectionSize({ cssValues, breakpointCssValues, onChange, disabl
         <Tooltip
           key={name}
           label={capitalize(name)}
-          placement="bottom"
+          placement="top"
         >
           <Button
             ghost

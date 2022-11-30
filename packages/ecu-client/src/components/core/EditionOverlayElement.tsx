@@ -24,7 +24,7 @@ function EditionOverlayElement({ hierarchyItem, element, depth, top, left, width
   const handleWheel = useCallback((event: WheelEvent<HTMLDivElement>) => {
     if (!element) return
 
-    event.preventDefault()
+    // event.preventDefault()
     element.scrollTop += event.deltaY
     element.scrollLeft += event.deltaX
   }, [element])
