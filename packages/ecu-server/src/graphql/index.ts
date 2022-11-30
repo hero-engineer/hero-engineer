@@ -10,6 +10,7 @@ import fileImportsQuery from './queries/fileImportsQuery.js'
 import fileTypesQuery from './queries/fileTypesQuery.js'
 import isComponentAcceptingChildrenQuery from './queries/isComponentAcceptingChildrenQuery.js'
 import breakpointsQuery from './queries/breakpointsQuery.js'
+import fontsQuery from './queries/fontsQuery.js'
 import packagesQuery from './queries/packagesQuery.js'
 import packagesUpdatesQuery from './queries/packagesUpdatesQuery.js'
 import undoRedoMetadataQuery from './queries/undoRedoMetdataQuery.js'
@@ -120,6 +121,14 @@ export const typeDefs = gql`
     media: String!
   }
 
+  type Font {
+    id: String!
+    name: String!
+    isVariable: Boolean!
+    weights: [Int!]!
+    url: String!
+  }
+
   type CssAttribute {
     name: String!
     value: CssValue!
@@ -163,6 +172,7 @@ export const typeDefs = gql`
     isComponentAcceptingChildren(sourceComponentAddress: String, ecuComponentName: String): Boolean!
 
     breakpoints: [Breakpoint]!
+    fonts: [Font]!
     cssClasses: [CssClass]!
 
     packages: [Package]!
@@ -212,6 +222,7 @@ export const resolvers = {
     isComponentAcceptingChildren: isComponentAcceptingChildrenQuery,
 
     breakpoints: breakpointsQuery,
+    fonts: fontsQuery,
     cssClasses: cssClassesQuery,
 
     packages: packagesQuery,

@@ -157,3 +157,11 @@ export type BreakpointType = {
   scale: number
   media: string
 }
+
+export type FontType = {
+  id: string
+  name: string
+  isVariable: boolean
+  weights: number[]
+  url: string
+}
