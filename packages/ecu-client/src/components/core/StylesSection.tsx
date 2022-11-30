@@ -11,7 +11,6 @@ import HierarchyContext from '../../contexts/HierarchyContext'
 import CssClassesContext from '../../contexts/CssClassesContext'
 import BreakpointContext from '../../contexts/BreakpointContext'
 import EditionContext from '../../contexts/EditionContext'
-import HotContext from '../../contexts/HotContext'
 
 import useQuery from '../../hooks/useQuery'
 import useMutation from '../../hooks/useMutation'
@@ -43,12 +42,11 @@ function StylesSection() {
   const { componentDelta, hierarchyId } = useContext(EditionContext)
   const { className, setClassName, style, setStyle } = useContext(CssClassesContext)
   const { breakpoint } = useContext(BreakpointContext)
-  const hot = useContext(HotContext)
 
   const [cssClassesQueryResult, refetchCssClassesQuery] = useQuery<CssClassesQueryDataType>({
     query: CssClassesQuery,
   })
-  const [{ fetching }, updateCssClass] = useMutation<UpdateCssClassMutationDataType>(UpdateCssClassMutation)
+  const [, updateCssClass] = useMutation<UpdateCssClassMutationDataType>(UpdateCssClassMutation)
 
   const refetch = useRefetch({
     key: refetchKeys.cssClasses,
@@ -71,17 +69,17 @@ function StylesSection() {
 
   const allClasses = useMemo(() => cssClassesQueryResult.data?.cssClasses || [], [cssClassesQueryResult.data])
   const baseClasses = useMemo(() => filterClassesByClassNamesAndMedia(allClasses, classNames, ''), [allClasses, classNames])
-  const currentBaseClass = useMemo(() => filterClassesByClassNamesAndMedia(baseClasses, [selectedClassName], ''), [baseClasses, selectedClassName])
+  const currentBaseClasses = useMemo(() => filterClassesByClassNamesAndMedia(baseClasses, [selectedClassName], ''), [baseClasses, selectedClassName])
   const breakpointClasses = useMemo(() => filterClassesByClassNamesAndMedia(allClasses, classNames, breakpoint.media), [allClasses, classNames, breakpoint])
-  const currentBreakpointClass = useMemo(() => filterClassesByClassNamesAndMedia(allClasses, [selectedClassName], breakpoint.media), [allClasses, selectedClassName, breakpoint])
+  const currentBreakpointClasses = useMemo(() => filterClassesByClassNamesAndMedia(allClasses, [selectedClassName], breakpoint.media), [allClasses, selectedClassName, breakpoint])
 
   // The css values forno selected class i.e. the complete styling
   const finalCssValues = useCssValues(baseClasses, cssAttributesMap)
   const finalBreakpointCssValues = useCssValues(breakpointClasses, cssAttributesMap)
 
   // The css values for the selected class
-  const selectedCssValues = useJsCssValues(useCssValues(currentBaseClass, cssAttributesMap), breakpoint.media ? {} : style, cssAttributesMap)
-  const selectedBreakpointCssValues = useJsCssValues(useCssValues(currentBreakpointClass, cssAttributesMap), style, cssAttributesMap)
+  const selectedCssValues = useJsCssValues(useCssValues(currentBaseClasses, cssAttributesMap), breakpoint.media ? {} : style, cssAttributesMap)
+  const selectedBreakpointCssValues = useJsCssValues(useCssValues(currentBreakpointClasses, cssAttributesMap), style, cssAttributesMap)
 
   // The css values passed to sub sections
   const passedCssValues = useMemo(() => removeCssDefaults(selectedClassName ? selectedCssValues : finalCssValues, cssAttributesMap), [selectedClassName, finalCssValues, selectedCssValues])
@@ -265,6 +263,10 @@ function StylesSection() {
     renderNoClassNames,
     renderSubSections,
   ])
+
+  useEffect(() => {
+    setSelectedClassName('')
+  }, [className, setSelectedClassName])
 
   // Reset style state on new breakpoint or new selected className
   useEffect(() => {
