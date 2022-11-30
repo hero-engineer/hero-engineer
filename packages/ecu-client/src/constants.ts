@@ -243,6 +243,11 @@ export const cssAttributesMap: CSsAttributesMapType = {
     defaultValue: 'flex-start',
     isValueValid: value => typeof value === 'string' && cssAlignItemsValues.includes(value),
   },
+  'align-content': {
+    attributes: ['align-content'],
+    defaultValue: 'stretch',
+    isValueValid: value => typeof value === 'string' && cssAlignItemsValues.includes(value),
+  },
   'flex-wrap': {
     attributes: ['flex-wrap'],
     defaultValue: 'nowrap',

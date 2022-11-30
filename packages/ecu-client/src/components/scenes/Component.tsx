@@ -1,3 +1,4 @@
+import { useContext } from 'react'
 import { useParams } from 'react-router-dom'
 import { Div } from 'honorable'
 import { RiNodeTree } from 'react-icons/ri'
@@ -9,6 +10,8 @@ import { BsDiamond } from 'react-icons/bs'
 import { refetchKeys } from '../../constants'
 
 import { ComponentQuery, ComponentQueryDataType } from '../../queries'
+
+import IsInteractiveModeContext from '../../contexts/IsInteractiveModeContext'
 
 import useQuery from '../../hooks/useQuery'
 import useRefetch from '../../hooks/useRefetch'
@@ -32,6 +35,7 @@ const placeholder = <Div flexGrow />
 // Component scene
 function Component() {
   const { componentAddress = '' } = useParams()
+  const { isInteractiveMode } = useContext(IsInteractiveModeContext)
 
   const [componentQueryResult, refetchComponentQuery] = useIsComponentRefreshingQuery(useQuery<ComponentQueryDataType>({
     query: ComponentQuery,
@@ -68,23 +72,25 @@ function Component() {
         xflex="x4s"
         flexGrow
       >
-        <RetractablePanel
-          height="calc(100vh - 31px)"
-          direction="left"
-          openPersistedStateKey="left-panel-open"
-          items={[
-            {
-              label: 'Hierarchy',
-              icon: <RiNodeTree />,
-              children: <HierarchySection />,
-            },
-            {
-              label: 'Insert component',
-              icon: <CgInsertBeforeR />,
-              children: <AddComponentSection />,
-            },
-          ]}
-        />
+        {!isInteractiveMode && (
+          <RetractablePanel
+            height="calc(100vh - 31px)"
+            direction="left"
+            openPersistedStateKey="left-panel-open"
+            items={[
+              {
+                label: 'Hierarchy',
+                icon: <RiNodeTree />,
+                children: <HierarchySection />,
+              },
+              {
+                label: 'Insert component',
+                icon: <CgInsertBeforeR />,
+                children: <AddComponentSection />,
+              },
+            ]}
+          />
+        )}
         <Div
           xflex="y2s"
           flexGrow
@@ -98,33 +104,35 @@ function Component() {
           <HierarchyBar />
           <WidthBar />
         </Div>
-        <RetractablePanel
-          height="calc(100vh - 31px)"
-          direction="right"
-          openPersistedStateKey="right-panel-open"
-          items={[
-            {
-              label: 'Component',
-              icon: <BsDiamond />,
-              children: <ComponentMetadataSection />,
-            },
-            {
-              label: 'Imports and types',
-              icon: <BiNetworkChart />,
-              children: (
-                <>
-                  <ComponentImportsSection />
-                  <ComponentTypesSection />
-                </>
-              ),
-            },
-            {
-              label: 'Styles',
-              icon: <MdBrush />,
-              children: <StylesSection />,
-            },
-          ]}
-        />
+        {!isInteractiveMode && (
+          <RetractablePanel
+            height="calc(100vh - 31px)"
+            direction="right"
+            openPersistedStateKey="right-panel-open"
+            items={[
+              {
+                label: 'Component',
+                icon: <BsDiamond />,
+                children: <ComponentMetadataSection />,
+              },
+              {
+                label: 'Imports and types',
+                icon: <BiNetworkChart />,
+                children: (
+                  <>
+                    <ComponentImportsSection />
+                    <ComponentTypesSection />
+                  </>
+                ),
+              },
+              {
+                label: 'Styles',
+                icon: <MdBrush />,
+                children: <StylesSection />,
+              },
+            ]}
+          />
+        )}
       </Div>
     </ComponentProviders>
   )

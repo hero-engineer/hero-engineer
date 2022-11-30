@@ -541,7 +541,7 @@ export default mergeTheme(defaultTheme, {
   Tooltip: {
     Root: [
       {
-        backgroundColor: 'background-light',
+        backgroundColor: 'darken(background-light, 8)',
         color: 'text',
         border: '1px solid border',
         zIndex: zIndexes.tooltip,

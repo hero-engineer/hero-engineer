@@ -42,7 +42,7 @@ function HierarchyBar() {
   const { hierarchyId, componentDelta, setHierarchyId, setComponentDelta } = useContext(EditionContext)
   const { setHierarchy, setTotalHierarchy } = useContext(HierarchyContext)
   const { isDragging } = useContext(BreakpointContext)
-  const { setLastEditedComponent } = useContext(LastEditedComponentContext)
+  const { lastEditedComponent, setLastEditedComponent } = useContext(LastEditedComponentContext)
   const { isInteractiveMode } = useContext(IsInteractiveModeContext)
 
   const [hierarchyQueryResult, refetchHierarchyQuery] = useQuery<HierarchyQueryDataType>({
@@ -88,13 +88,17 @@ function HierarchyBar() {
   useEffect(() => {
     if (!Object.keys(hierarchy).length) return
 
-    const lastEditedCompoment = { ...hierarchy }
+    const nextLastEditedCompoment = { ...hierarchy }
+
+    if (nextLastEditedCompoment.id === nextLastEditedCompoment.id) return
 
     // @ts-expect-error
-    delete lastEditedCompoment.children
+    delete nextLastEditedCompoment.children
 
-    setLastEditedComponent(lastEditedCompoment)
-  }, [hierarchy, setLastEditedComponent])
+    setLastEditedComponent(nextLastEditedCompoment)
+    setHierarchyId('')
+    setComponentDelta(0)
+  }, [hierarchy, lastEditedComponent, setLastEditedComponent, setHierarchyId, setComponentDelta])
 
   if (!componentAddress) {
     return null
