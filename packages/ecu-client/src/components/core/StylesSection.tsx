@@ -66,6 +66,7 @@ function StylesSection() {
   const isNoElementSelected = useMemo(() => !hierarchy.length || hierarchy[hierarchy.length - 1].isRoot || isComponentRoot || isOnAnotherComponent, [hierarchy, isComponentRoot, isOnAnotherComponent])
   const debouncedIsNoElementSelected = useDebounce(isNoElementSelected, 6 * 16) // To prevent flickering of the section
   const debouncedIsOnAnotherComponent = useDebounce(isSomeNodeSelected && isOnAnotherComponent, 6 * 16) // To prevent flickering of the section
+  const debouncedLastComponentHierarchyItem = useDebounce(lastComponentHierarchyItem, 6 * 16) // To prevent flickering of the section
 
   const allClasses = useMemo(() => cssClassesQueryResult.data?.cssClasses || [], [cssClassesQueryResult.data])
   const baseClasses = useMemo(() => filterClassesByClassNamesAndMedia(allClasses, classNames, ''), [allClasses, classNames])
@@ -137,23 +138,28 @@ function StylesSection() {
 
   const renderNoElement = useCallback(() => (
     <Div
-      px={0.5}
+      xflex="y1"
       fontSize="0.85rem"
+      px={0.5}
     >
       {debouncedIsOnAnotherComponent ? (
         <>
           <Div color="text-light">
             To style this element you must edit its parent component
           </Div>
-          {!!lastComponentHierarchyItem && (
+          {!!debouncedLastComponentHierarchyItem && (
             <Button
               as={Link}
-              to={`/_ecu_/component/${lastComponentHierarchyItem.fileAddress}/${lastComponentHierarchyItem.componentAddress}`}
+              to={`/_ecu_/component/${debouncedLastComponentHierarchyItem.fileAddress}/${debouncedLastComponentHierarchyItem.componentAddress}`}
+              display="flex" // To allow ellipsis, inline-flex is the default
+              maxWidth="100%" // To allow ellipsis
               mt={0.5}
             >
-              Edit
-              {' '}
-              {lastComponentHierarchyItem.componentName}
+              <Div ellipsis>
+                Edit
+                {' '}
+                {debouncedLastComponentHierarchyItem.componentName}
+              </Div>
             </Button>
           )}
         </>
@@ -163,7 +169,7 @@ function StylesSection() {
         </Div>
       )}
     </Div>
-  ), [debouncedIsOnAnotherComponent, lastComponentHierarchyItem])
+  ), [debouncedIsOnAnotherComponent, debouncedLastComponentHierarchyItem])
 
   const renderNoClassNames = useCallback(() => (
     <Div

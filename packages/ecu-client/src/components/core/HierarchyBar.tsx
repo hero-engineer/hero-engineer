@@ -90,7 +90,7 @@ function HierarchyBar() {
 
     const nextLastEditedCompoment = { ...hierarchy }
 
-    if (nextLastEditedCompoment.id === nextLastEditedCompoment.id) return
+    if (nextLastEditedCompoment.id === lastEditedComponent?.id) return
 
     // @ts-expect-error
     delete nextLastEditedCompoment.children
