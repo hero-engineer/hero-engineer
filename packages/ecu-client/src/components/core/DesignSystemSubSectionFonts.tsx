@@ -8,10 +8,11 @@ import { IoCloseOutline } from 'react-icons/io5'
 import { FontType } from '../../types'
 import { refetchKeys } from '../../constants'
 
-import { FontsQuery, FontsQueryDataType } from '../../queries'
+import { FontsQuery, FontsQueryDataType, UpdateFontsMutation, UpdateFontsMutationDataType } from '../../queries'
 
 import useQuery from '../../hooks/useQuery'
 import useRefetch from '../../hooks/useRefetch'
+import useMutation from '../../hooks/useMutation'
 
 function DesignSystemSubSectionFonts() {
   const [fonts, setFonts] = useState<FontType[]>([])
@@ -19,15 +20,20 @@ function DesignSystemSubSectionFonts() {
   const [fontsQueryResult, refetchFontsQuery] = useQuery<FontsQueryDataType>({
     query: FontsQuery,
   })
+  const [, updateFonts] = useMutation<UpdateFontsMutationDataType>(UpdateFontsMutation)
 
   useRefetch({
     key: refetchKeys.fonts,
     refetch: refetchFontsQuery,
   })
 
-  const handleEdit = useCallback((fonts: FontType[]) => {
+  const handleEdit = useCallback(async (fonts: FontType[]) => {
     setFonts(fonts)
-  }, [])
+
+    await updateFonts({
+      fontsJson: JSON.stringify(fonts),
+    })
+  }, [updateFonts])
 
   const handleUpdate = useCallback((font: FontType) => {
     const nextFonts = [...fonts]
@@ -67,7 +73,7 @@ function DesignSystemSubSectionFonts() {
           color="text-light"
           py={0.5}
         >
-          No font
+          {fontsQueryResult.fetching ? 'Fetching...' : 'No fonts'}
         </Div>
       )}
       <Button

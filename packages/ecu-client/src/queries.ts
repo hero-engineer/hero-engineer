@@ -356,6 +356,16 @@ export type UpdateFileDescriptionMutationDataType = {
   updateFileDescription: boolean
 }
 
+export const UpdateFontsMutation = `
+  mutation ($fontsJson: String!) {
+    updateFonts (fontsJson: $fontsJson)
+  }
+`
+
+export type UpdateFontsMutationDataType = {
+  updateFonts: boolean
+}
+
 export const CreateCssClassMutation = `
   mutation ($sourceComponentAddress: String!, $targetHierarchyId: String!, $componentDelta: Int! $classNames: [String]!) {
     createCssClass (sourceComponentAddress: $sourceComponentAddress, targetHierarchyId: $targetHierarchyId, componentDelta: $componentDelta, classNames: $classNames)
