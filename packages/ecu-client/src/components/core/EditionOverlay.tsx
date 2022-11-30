@@ -64,11 +64,19 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
   const renderHierarchy: (hierarchyItem: HierarchyItemType | null, depth?: number) => ReactNode = useCallback((hierarchyItem: HierarchyItemType | null, depth = zIndexes.editionOverlay + 1) => {
     if (!hierarchyItem) return null
 
+    const element = elementRegistry[hierarchyItem.hierarchyId ?? ''] ?? null
     let currentHierarchyId: string
     let currentComponentDelta: number
     let rect: LimitedDOMRect
 
-    if (!hierarchyItem.hierarchyId) {
+    if (hierarchyItem.hierarchyId) {
+      if (!element) return null
+
+      currentHierarchyId = hierarchyItem.hierarchyId
+      currentComponentDelta = 0
+      rect = element.getBoundingClientRect()
+    }
+    else {
       const found = findHierarchyIdsAndComponentDelta(totalHierarchy, hierarchyItem)
 
       if (found) {
@@ -99,16 +107,6 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
           height: 0,
         })
     }
-    else {
-      currentHierarchyId = hierarchyItem.hierarchyId
-      currentComponentDelta = 0
-
-      const element = elementRegistry[hierarchyItem.hierarchyId]
-
-      if (!element) return null
-
-      rect = element.getBoundingClientRect()
-    }
 
     const isSelected = currentHierarchyId === hierarchyId && currentComponentDelta === componentDelta
 
@@ -116,6 +114,7 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
       <>
         <EditionOverlayElement
           hierarchyItem={hierarchyItem}
+          element={element}
           depth={depth}
           top={rect.top}
           left={rect.left}

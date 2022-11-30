@@ -1,10 +1,11 @@
-import { MouseEvent, memo } from 'react'
+import { MouseEvent, WheelEvent, memo, useCallback } from 'react'
 import { Div } from 'honorable'
 
 import { HierarchyItemType } from '../../types'
 
 type EditionOverlayElementPropsType = {
   hierarchyItem: HierarchyItemType
+  element: HTMLElement | null
   depth: number
   top: number
   left: number
@@ -17,8 +18,16 @@ type EditionOverlayElementPropsType = {
   onSelect: (event: MouseEvent) => void
 }
 
-function EditionOverlayElement({ hierarchyItem, depth, top, left, width, height, helperText, isSelected, isEdited, isComponentRoot, onSelect }: EditionOverlayElementPropsType) {
+function EditionOverlayElement({ hierarchyItem, element, depth, top, left, width, height, helperText, isSelected, isEdited, isComponentRoot, onSelect }: EditionOverlayElementPropsType) {
   const color = isEdited ? 'is-edited' : isSelected ? isComponentRoot ? 'is-component-root' : 'primary' : null
+
+  const handleWheel = useCallback((event: WheelEvent<HTMLDivElement>) => {
+    if (!element) return
+
+    event.preventDefault()
+    element.scrollTop += event.deltaY
+    element.scrollLeft += event.deltaX
+  }, [element])
 
   return (
     <>
@@ -40,6 +49,7 @@ function EditionOverlayElement({ hierarchyItem, depth, top, left, width, height,
           },
         }}
         onClick={onSelect}
+        onWheel={handleWheel}
       />
       <Div
         xflex="x4"
