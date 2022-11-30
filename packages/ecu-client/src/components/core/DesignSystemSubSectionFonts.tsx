@@ -4,6 +4,7 @@ import { CiEdit } from 'react-icons/ci'
 import { SlTrash } from 'react-icons/sl'
 import { BsCheck2, BsPlus } from 'react-icons/bs'
 import { IoCloseOutline } from 'react-icons/io5'
+import shortId from 'shortid'
 
 import { FontType } from '../../types'
 import { refetchKeys } from '../../constants'
@@ -80,7 +81,7 @@ function DesignSystemSubSectionFonts() {
         onClick={() => setFonts(x => [
           ...x,
           {
-            id: Math.random().toString().slice(2),
+            id: shortId(),
             name: '',
             url: '',
             isVariable: false,

@@ -134,6 +134,7 @@ function ColorItem({ color, onChange }: ColorItemPropsType) {
             value={name}
             onChange={event => setName(event.target.value)}
             onBlur={handleUpdateName}
+            onEnter={handleUpdateName}
           />
         ) : color.name}
       </Div>
