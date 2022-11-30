@@ -1,4 +1,5 @@
-// Do not edit comments or something might not work anymore
+/* Do not modify the comments or something might not work anymore */
+
 /* --
   * FONTS START
 -- */
@@ -7,12 +8,12 @@
 -- */
 
 :root {
-  /* --
-    * COLORS START
-  -- */
-  /* --
-    * COLORS END
-  -- */
+/* --
+  * COLORS START
+-- */
+/* --
+  * COLORS END
+-- */
 }
 
 .div-remove-me {
