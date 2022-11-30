@@ -24,7 +24,7 @@ async function updateColorsMutation(_: any, { colorsJson }: UpdateColorsMutation
 
     fs.writeFileSync(colorsFileLocation, JSON.stringify(colors, null, 2))
 
-    const variables = colors.map(color => `${color.variableName}: ${color.value}; // ${color.name}`).join('\n')
+    const variables = colors.map(color => `  ${color.variableName}: ${color.value}; /* ${color.name} */`).join('\n')
     const indexCssFileLocation = path.join(appPath, indexCssFileRelativePath)
     const indexCssNode = findNode<FileNodeType>(n => n.payload.relativePath === indexCssFileRelativePath)
 
