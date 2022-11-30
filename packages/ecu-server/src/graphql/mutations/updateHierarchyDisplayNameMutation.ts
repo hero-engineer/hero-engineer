@@ -20,8 +20,6 @@ type UpdateHierarchyDisplayNameMutationArgsType = {
 }
 
 async function updateHierarchyDisplayNameMutation(_: any, { sourceComponentAddress, targetHierarchyId, componentDelta, value }: UpdateHierarchyDisplayNameMutationArgsType): Promise<HistoryMutationReturnType<boolean>> {
-  console.log('__updateHierarchyDisplayNameMutation__')
-
   const sourceComponentNode = getNodeByAddress(sourceComponentAddress)
 
   if (!sourceComponentNode) {

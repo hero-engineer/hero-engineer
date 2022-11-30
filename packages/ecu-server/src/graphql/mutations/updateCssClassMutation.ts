@@ -16,8 +16,6 @@ type UpdateCssClassMutationArgsType = {
 }
 
 async function updateCssClassMutation(_: any, { classNames, breakpointId, attributesJson }: UpdateCssClassMutationArgsType): Promise<HistoryMutationReturnType<boolean>> {
-  console.log('__updateCssClassMutation__')
-
   const indexCssNode = getNodesByRole<FileNodeType>('File').find(node => node.payload.relativePath === indexCssFileRelativePath)
 
   if (!indexCssNode) {

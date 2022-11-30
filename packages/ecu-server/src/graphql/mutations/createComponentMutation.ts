@@ -27,8 +27,6 @@ type CreateComponentMutationReturnType = {
 }
 
 async function createComponentMutation(_: any, { name }: CreateComponentMutationArgsType): Promise<HistoryMutationReturnType<CreateComponentMutationReturnType>> {
-  console.log('__createComponentMutation__')
-
   if (!name) {
     throw new Error('Component name is required')
   }

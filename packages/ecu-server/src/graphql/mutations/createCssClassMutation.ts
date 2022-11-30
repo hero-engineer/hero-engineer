@@ -22,8 +22,6 @@ type CreateCssClassMutationArgsType = {
 }
 
 async function createCssClassMutation(_: any, { sourceComponentAddress, targetHierarchyId, componentDelta, classNames }: CreateCssClassMutationArgsType): Promise<HistoryMutationReturnType<boolean>> {
-  console.log('__createCssClassMutation__')
-
   const componentNode = getNodeByAddress<FunctionNodeType>(sourceComponentAddress)
 
   if (!componentNode) {

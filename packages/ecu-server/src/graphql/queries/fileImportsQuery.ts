@@ -10,8 +10,6 @@ type FileImportsQueryArgsType = {
 }
 
 function fileImportsQuery(_: any, { sourceFileAddress }: FileImportsQueryArgsType) {
-  console.log('__fileImportsQuery__')
-
   const fileNode = getNodeByAddress<FileNodeType>(sourceFileAddress)
 
   if (!fileNode) {

@@ -5,8 +5,6 @@ import { getNodesByRole } from '../../graph/index.js'
 import traverseCss from '../../domain/css/traverseCss.js'
 
 async function cssClassesQuery() {
-  console.log('__cssClassesQuery__')
-
   const cssFileNodes = getNodesByRole<FileNodeType>('File').filter(node => node.payload.extension === 'css')
 
   const classes: CssClassType[] = []

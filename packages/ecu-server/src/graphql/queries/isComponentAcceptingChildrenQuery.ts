@@ -6,8 +6,6 @@ type IsComponentAcceptingChildrenQueryArgsType = {
 }
 
 function isComponentAcceptingChildrenQuery(_: any, { sourceComponentAddress, ecuComponentName }: IsComponentAcceptingChildrenQueryArgsType) {
-  console.log('__isComponentAcceptingChildrenQuery__')
-
   return isComponentAcceptingChildren(sourceComponentAddress, ecuComponentName)
 }
 

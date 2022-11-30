@@ -22,8 +22,6 @@ function createExecQueueHandler(cmd: string, commitMessage: string) {
 }
 
 async function installOrUpdatePackageMutation(_: any, { name, version, type, shouldDelete }: InstallOrUpdatePackageMutationArgsType) {
-  console.log('__installOrUpdatePackageMutation__')
-
   if (shouldDelete) return addToExecQueue(createExecQueueHandler(`npm uninstall ${name}`, `Uninstall ${name} package`))
   if (!version) return addToExecQueue(createExecQueueHandler(`npm install --save${type === 'devDependencies' ? '-dev' : ''} ${name}`, `Install ${name} package in ${type}`))
 

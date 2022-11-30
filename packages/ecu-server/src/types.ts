@@ -165,3 +165,9 @@ export type FontType = {
   weights: number[]
   url: string
 }
+
+export type ColorType ={
+  id: string
+  name: string
+  value: string
+}

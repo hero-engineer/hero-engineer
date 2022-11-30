@@ -16,8 +16,6 @@ type UpdateFileDescriptionMutationArgsType = {
 }
 
 async function updateFileDescriptionMutation(_: any, { sourceFileAddress, description, emoji }: UpdateFileDescriptionMutationArgsType): Promise<HistoryMutationReturnType<boolean>> {
-  console.log('__updateFileDescriptionMutation__')
-
   const fileNode = getNodeByAddress<FileNodeType>(sourceFileAddress)
 
   if (!fileNode) {

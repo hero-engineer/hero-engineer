@@ -15,8 +15,6 @@ type UpdateFontsMutationArgsType = {
 }
 
 async function updateFontsMutation(_: any, { fontsJson }: UpdateFontsMutationArgsType): Promise<HistoryMutationReturnType<boolean>> {
-  console.log('_updateFontsMutation__')
-
   try {
     const fonts = JSON.parse(fontsJson) as FontType[]
     const ecuLocation = getEcuLocation()

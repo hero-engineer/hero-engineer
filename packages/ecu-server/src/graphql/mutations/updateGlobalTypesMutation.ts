@@ -12,8 +12,6 @@ type UpdateGlobalTypesMutationArgsType = {
 }
 
 async function updateGlobalTypesMutation(_: any, { globalTypesFileContent }: UpdateGlobalTypesMutationArgsType): Promise<HistoryMutationReturnType<boolean>> {
-  console.log('__updateGlobalTypesMutation__')
-
   const globalTypesFilePath = path.join(appPath, globalTypesFileRelativePath)
 
   const fileNode = getNodesByRole<FileNodeType>('File').find(n => n.payload.path === globalTypesFilePath)

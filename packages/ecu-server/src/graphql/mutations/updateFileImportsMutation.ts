@@ -14,8 +14,6 @@ type UpdateFileImportsMutationArgsType = {
 }
 
 async function updateFileImportsMutation(_: any, { sourceFileAddress, rawImports }: UpdateFileImportsMutationArgsType): Promise<HistoryMutationReturnType<boolean>> {
-  console.log('__updateFileImportsMutation__')
-
   const fileNode = getNodeByAddress<FileNodeType>(sourceFileAddress)
 
   if (!fileNode) {

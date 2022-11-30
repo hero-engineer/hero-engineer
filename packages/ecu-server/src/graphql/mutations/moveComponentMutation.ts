@@ -24,8 +24,6 @@ type MoveComponentMutationArgsType = {
 
 async function moveComponentMutation(_: any, { sourceComponentAddress, sourceHierarchyId, targetHierarchyId, hierarchyPosition }: MoveComponentMutationArgsType): Promise<void> {
 // async function moveComponentMutation(_: any, { sourceComponentAddress, sourceHierarchyIds, targetHierarchyIds, hierarchyPosition }: MoveComponentMutationArgsType): Promise<HistoryMutationReturnType<FunctionNodeType | null>> {
-  // console.log('__moveComponent__')
-
   // const sourceComponentNode = getNodeByAddress(sourceComponentAddress)
 
   // if (!sourceComponentNode) {

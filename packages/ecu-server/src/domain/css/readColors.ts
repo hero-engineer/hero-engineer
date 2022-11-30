@@ -1,15 +1,15 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import { ecuFontsFileName } from '../../configuration.js'
-import { FontType } from '../../types.js'
+import { ecuColorsFileName } from '../../configuration.js'
+import { ColorType } from '../../types.js'
 
 import getEcuLocation from '../../helpers/getEcuLocation.js'
 
-function readFonts() {
+function readColors() {
   const ecuLocation = getEcuLocation()
 
-  const fontsFileLocation = path.join(ecuLocation, ecuFontsFileName)
+  const fontsFileLocation = path.join(ecuLocation, ecuColorsFileName)
 
   if (!fs.existsSync(fontsFileLocation)) {
     return []
@@ -18,11 +18,11 @@ function readFonts() {
   try {
     const fontsFileContent = fs.readFileSync(fontsFileLocation, 'utf8')
 
-    return (JSON.parse(fontsFileContent) as FontType[])
+    return (JSON.parse(fontsFileContent) as ColorType[])
   }
   catch (error) {
     return []
   }
 }
 
-export default readFonts
+export default readColors

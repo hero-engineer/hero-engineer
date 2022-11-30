@@ -11,8 +11,6 @@ type ComponentQueryArgsType = {
 }
 
 function componentQuery(_: any, { sourceComponentAddress }: ComponentQueryArgsType) {
-  console.log('__componentQuery__')
-
   const componentNode = getNodeByAddress<FunctionNodeType>(sourceComponentAddress)
 
   if (!componentNode) {

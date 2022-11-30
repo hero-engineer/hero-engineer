@@ -7,8 +7,6 @@ import getComponentDecoratorPaths from '../../domain/components/getComponentDeco
 import getComponentScreenshotUrl from '../../domain/components/getComponentScreenshotUrl.js'
 
 function componentsQuery() {
-  console.log('__componentsQuery__')
-
   return getNodesByRole<FunctionNodeType>('Function').filter(node => node.payload.isComponent).map(componentNode => {
     const fileNode = getNodesBySecondNeighbourg(componentNode.address, 'DeclaresFunction')[0]
 

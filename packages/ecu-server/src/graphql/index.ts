@@ -1,6 +1,8 @@
 import { gql } from 'apollo-server'
 import { GraphQLScalarType, Kind } from 'graphql'
 
+import withLog from './withLog.js'
+
 import componentQuery from './queries/componentQuery.js'
 import componentsQuery from './queries/componentsQuery.js'
 import hierarchyQuery from './queries/hierarchyQuery.js'
@@ -216,50 +218,50 @@ export const typeDefs = gql`
 
 export const resolvers = {
   Query: {
-    component: componentQuery,
-    components: componentsQuery,
-    hierarchy: hierarchyQuery,
-    globalTypes: globalTypesQuery,
-    fileImports: fileImportsQuery,
-    fileTypes: fileTypesQuery,
-    isComponentAcceptingChildren: isComponentAcceptingChildrenQuery,
+    component: withLog(componentQuery),
+    components: withLog(componentsQuery),
+    hierarchy: withLog(hierarchyQuery),
+    globalTypes: withLog(globalTypesQuery),
+    fileImports: withLog(fileImportsQuery),
+    fileTypes: withLog(fileTypesQuery),
+    isComponentAcceptingChildren: withLog(isComponentAcceptingChildrenQuery),
 
-    breakpoints: breakpointsQuery,
-    fonts: fontsQuery,
-    cssClasses: cssClassesQuery,
+    breakpoints: withLog(breakpointsQuery),
+    fonts: withLog(fontsQuery),
+    cssClasses: withLog(cssClassesQuery),
 
-    packages: packagesQuery,
-    packagesUpdates: packagesUpdatesQuery,
+    packages: withLog(packagesQuery),
+    packagesUpdates: withLog(packagesUpdatesQuery),
 
-    undoRedoMetadata: undoRedoMetadataQuery,
+    undoRedoMetadata: withLog(undoRedoMetadataQuery),
   },
   Mutation: {
-    createComponent: createComponentMutation,
-    addComponent: addComponentMutation,
-    deleteComponent: deleteComponentMutation,
-    moveComponent: moveComponentMutation,
+    createComponent: withLog(createComponentMutation, true),
+    addComponent: withLog(addComponentMutation, true),
+    deleteComponent: withLog(deleteComponentMutation, true),
+    moveComponent: withLog(moveComponentMutation, true),
 
-    updateHierarchyDisplayName: updateHierarchyDisplayNameMutation,
+    updateHierarchyDisplayName: withLog(updateHierarchyDisplayNameMutation, true),
 
-    updateTextValue: updateTextValueMutation,
+    updateTextValue: withLog(updateTextValueMutation, true),
 
-    updateFileDescription: updateFileDescriptionMutation,
-    updateFileImports: updateFileImportsMutation,
-    removeFileUnusedImports: removeFileUnusedImportsMutation,
-    updateFileTypes: updateFileTypesMutation,
-    updateGlobalTypes: updateGlobalTypesMutation,
+    updateFileDescription: withLog(updateFileDescriptionMutation, true),
+    updateFileImports: withLog(updateFileImportsMutation, true),
+    removeFileUnusedImports: withLog(removeFileUnusedImportsMutation, true),
+    updateFileTypes: withLog(updateFileTypesMutation, true),
+    updateGlobalTypes: withLog(updateGlobalTypesMutation, true),
 
-    updateFonts: updateFontsMutation,
-    createCssClass: createCssClassMutation,
-    updateCssClass: updateCssClassMutation,
+    updateFonts: withLog(updateFontsMutation, true),
+    createCssClass: withLog(createCssClassMutation, true),
+    updateCssClass: withLog(updateCssClassMutation, true),
 
-    installOrUpdatePackage: installOrUpdatePackageMutation,
+    installOrUpdatePackage: withLog(installOrUpdatePackageMutation, true),
 
-    updateComponentScreenshot: updateComponentScreenshotMutation,
+    updateComponentScreenshot: withLog(updateComponentScreenshotMutation, true),
 
-    undo: undoMutation,
-    redo: redoMutation,
-    push: pushMutation,
+    undo: withLog(undoMutation, true),
+    redo: withLog(redoMutation, true),
+    push: withLog(pushMutation, true),
   },
   CssValue: new GraphQLScalarType({
     name: 'CssValue',
