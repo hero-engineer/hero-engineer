@@ -4,6 +4,7 @@ import { getNodesByRole, getNodesBySecondNeighbourg } from '../../graph/index.js
 
 import isComponentAcceptingChildren from '../../domain/components/isComponentAcceptingChildren.js'
 import getComponentDecoratorPaths from '../../domain/components/getComponentDecoratorPaths.js'
+import getComponentScreenshotUrl from '../../domain/components/getComponentScreenshotUrl.js'
 
 function componentsQuery() {
   console.log('__componentsQuery__')
@@ -20,6 +21,7 @@ function componentsQuery() {
       file: fileNode,
       decoratorPaths: getComponentDecoratorPaths(componentNode),
       isComponentAcceptingChildren: isComponentAcceptingChildren(componentNode.address),
+      screenshotUrl: getComponentScreenshotUrl(componentNode),
     }
   })
 }

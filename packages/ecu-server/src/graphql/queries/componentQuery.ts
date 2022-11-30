@@ -4,6 +4,7 @@ import { getNodeByAddress, getNodesBySecondNeighbourg } from '../../graph/index.
 
 import isComponentAcceptingChildren from '../../domain/components/isComponentAcceptingChildren.js'
 import getComponentDecoratorPaths from '../../domain/components/getComponentDecoratorPaths.js'
+import getComponentScreenshotUrl from '../../domain/components/getComponentScreenshotUrl.js'
 
 type ComponentQueryArgsType = {
   sourceComponentAddress: string
@@ -29,6 +30,7 @@ function componentQuery(_: any, { sourceComponentAddress }: ComponentQueryArgsTy
     file: fileNode,
     decoratorPaths: getComponentDecoratorPaths(componentNode),
     isComponentAcceptingChildren: isComponentAcceptingChildren(componentNode.address),
+    screenshotUrl: getComponentScreenshotUrl(componentNode),
   }
 }
 

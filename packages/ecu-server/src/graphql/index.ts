@@ -88,6 +88,7 @@ export const typeDefs = gql`
     file: FileNode!
     decoratorPaths: [String]!
     isComponentAcceptingChildren: Boolean!
+    screenshotUrl: String!
   }
 
   type GlobalTypesReturnValue {

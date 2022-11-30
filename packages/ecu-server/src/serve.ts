@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url'
 
 import { ApolloServer } from 'apollo-server'
 import express from 'express'
+import cors from 'cors'
 
 import { resolvers, typeDefs } from './graphql/index.js'
 
@@ -29,6 +30,7 @@ async function serve() {
   const __dirname = fileURLToPath(new URL('.', import.meta.url))
   const app = express()
 
+  app.use(cors())
   app.use('/.ecu', express.static(getEcuLocation()))
   app.use('/emojis', express.static(path.join(__dirname, '../data/emojis')))
 
