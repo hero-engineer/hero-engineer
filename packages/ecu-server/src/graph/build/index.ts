@@ -1,3 +1,5 @@
+import chalk from 'chalk'
+
 import createDataEcuAttributes from '../../watchers/createDataEcuAttributes.js'
 import deleteAllScreenshots from '../../watchers/deleteAllScreenshots.js'
 
@@ -13,7 +15,7 @@ async function buildGraph() {
   const hash = await getAppHash()
 
   if (getGraph().hash !== hash) {
-    console.log('App hash has changed, rebuilding graph')
+    console.log(`${chalk.red('!!!')} App hash has changed, rebuilding graph`)
 
     deleteGraph()
     buildFilesGraph()
@@ -23,7 +25,7 @@ async function buildGraph() {
     await updateGraphHash()
   }
 
-  console.log('graph', Object.keys(getGraph().nodes).length)
+  console.log(chalk.green('~~~'), `Graph: ${Object.keys(getGraph().nodes).length} nodes`)
 }
 
 export default buildGraph

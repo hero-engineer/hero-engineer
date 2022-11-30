@@ -13,6 +13,7 @@ import fileTypesQuery from './queries/fileTypesQuery.js'
 import isComponentAcceptingChildrenQuery from './queries/isComponentAcceptingChildrenQuery.js'
 import breakpointsQuery from './queries/breakpointsQuery.js'
 import fontsQuery from './queries/fontsQuery.js'
+import colorsQuery from './queries/colorsQuery.js'
 import packagesQuery from './queries/packagesQuery.js'
 import packagesUpdatesQuery from './queries/packagesUpdatesQuery.js'
 import undoRedoMetadataQuery from './queries/undoRedoMetdataQuery.js'
@@ -30,6 +31,7 @@ import removeFileUnusedImportsMutation from './mutations/removeFileUnusedImports
 import updateGlobalTypesMutation from './mutations/updateGlobalTypesMutation.js'
 import updateComponentScreenshotMutation from './mutations/updateComponentScreenshotMutation.js'
 import updateFontsMutation from './mutations/updateFontsMutation.js'
+import updateColorsMutation from './mutations/updateColorsMutation.js'
 import createCssClassMutation from './mutations/createCssClassMutation.js'
 import updateCssClassMutation from './mutations/updateCssClassMutation.js'
 import installOrUpdatePackageMutation from './mutations/installOrUpdatePackageMutation.js'
@@ -133,6 +135,13 @@ export const typeDefs = gql`
     url: String!
   }
 
+  type Color {
+    id: String!
+    name: String!
+    value: String!
+    variableName: String!
+  }
+
   type CssAttribute {
     name: String!
     value: CssValue!
@@ -177,6 +186,7 @@ export const typeDefs = gql`
 
     breakpoints: [Breakpoint]!
     fonts: [Font]!
+    colors: [Color]!
     cssClasses: [CssClass]!
 
     packages: [Package]!
@@ -202,6 +212,7 @@ export const typeDefs = gql`
     updateFileTypes(sourceFileAddress: String!, rawTypes: String!): Boolean!
 
     updateFonts(fontsJson: String!): Boolean!
+    updateColors(colorsJson: String!): Boolean!
     createCssClass(sourceComponentAddress: String!, targetHierarchyId: String!, componentDelta: Int!, classNames: [String]!): Boolean!
     updateCssClass(classNames: [String!]!, breakpointId: String!, attributesJson: String!): Boolean!
 
@@ -218,50 +229,52 @@ export const typeDefs = gql`
 
 export const resolvers = {
   Query: {
-    component: withLog(componentQuery),
-    components: withLog(componentsQuery),
-    hierarchy: withLog(hierarchyQuery),
-    globalTypes: withLog(globalTypesQuery),
-    fileImports: withLog(fileImportsQuery),
-    fileTypes: withLog(fileTypesQuery),
-    isComponentAcceptingChildren: withLog(isComponentAcceptingChildrenQuery),
+    component: withLog(componentQuery, 'component'),
+    components: withLog(componentsQuery, 'components'),
+    hierarchy: withLog(hierarchyQuery, 'hierarchy'),
+    globalTypes: withLog(globalTypesQuery, 'globalTypes'),
+    fileImports: withLog(fileImportsQuery, 'fileImports'),
+    fileTypes: withLog(fileTypesQuery, 'fileTypes'),
+    isComponentAcceptingChildren: withLog(isComponentAcceptingChildrenQuery, 'isComponentAcceptingChildren'),
 
-    breakpoints: withLog(breakpointsQuery),
-    fonts: withLog(fontsQuery),
-    cssClasses: withLog(cssClassesQuery),
+    breakpoints: withLog(breakpointsQuery, 'breakpoints'),
+    fonts: withLog(fontsQuery, 'fonts'),
+    colors: withLog(colorsQuery, 'colors'),
+    cssClasses: withLog(cssClassesQuery, 'cssClasses'),
 
-    packages: withLog(packagesQuery),
-    packagesUpdates: withLog(packagesUpdatesQuery),
+    packages: withLog(packagesQuery, 'packages'),
+    packagesUpdates: withLog(packagesUpdatesQuery, 'packagesUpdates'),
 
-    undoRedoMetadata: withLog(undoRedoMetadataQuery),
+    undoRedoMetadata: withLog(undoRedoMetadataQuery, 'undoRedoMetadata'),
   },
   Mutation: {
-    createComponent: withLog(createComponentMutation, true),
-    addComponent: withLog(addComponentMutation, true),
-    deleteComponent: withLog(deleteComponentMutation, true),
-    moveComponent: withLog(moveComponentMutation, true),
+    createComponent: withLog(createComponentMutation, 'createComponent', true),
+    addComponent: withLog(addComponentMutation, 'addComponent', true),
+    deleteComponent: withLog(deleteComponentMutation, 'deleteComponent', true),
+    moveComponent: withLog(moveComponentMutation, 'moveComponent', true),
 
-    updateHierarchyDisplayName: withLog(updateHierarchyDisplayNameMutation, true),
+    updateHierarchyDisplayName: withLog(updateHierarchyDisplayNameMutation, 'updateHierarchyDisplayName', true),
 
-    updateTextValue: withLog(updateTextValueMutation, true),
+    updateTextValue: withLog(updateTextValueMutation, 'updateTextValue', true),
 
-    updateFileDescription: withLog(updateFileDescriptionMutation, true),
-    updateFileImports: withLog(updateFileImportsMutation, true),
-    removeFileUnusedImports: withLog(removeFileUnusedImportsMutation, true),
-    updateFileTypes: withLog(updateFileTypesMutation, true),
-    updateGlobalTypes: withLog(updateGlobalTypesMutation, true),
+    updateFileDescription: withLog(updateFileDescriptionMutation, 'updateFileDescription', true),
+    updateFileImports: withLog(updateFileImportsMutation, 'updateFileImports', true),
+    removeFileUnusedImports: withLog(removeFileUnusedImportsMutation, 'removeFileUnusedImports', true),
+    updateFileTypes: withLog(updateFileTypesMutation, 'updateFileTypes', true),
+    updateGlobalTypes: withLog(updateGlobalTypesMutation, 'updateGlobalTypes', true),
 
-    updateFonts: withLog(updateFontsMutation, true),
-    createCssClass: withLog(createCssClassMutation, true),
-    updateCssClass: withLog(updateCssClassMutation, true),
+    updateFonts: withLog(updateFontsMutation, 'updateFonts', true),
+    updateColors: withLog(updateColorsMutation, 'updateColors', true),
+    createCssClass: withLog(createCssClassMutation, 'createCssClass', true),
+    updateCssClass: withLog(updateCssClassMutation, 'updateCssClass', true),
 
-    installOrUpdatePackage: withLog(installOrUpdatePackageMutation, true),
+    installOrUpdatePackage: withLog(installOrUpdatePackageMutation, 'installOrUpdatePackage', true),
 
-    updateComponentScreenshot: withLog(updateComponentScreenshotMutation, true),
+    updateComponentScreenshot: withLog(updateComponentScreenshotMutation, 'updateComponentScreenshot', true),
 
-    undo: withLog(undoMutation, true),
-    redo: withLog(redoMutation, true),
-    push: withLog(pushMutation, true),
+    undo: withLog(undoMutation, 'undo', true),
+    redo: withLog(redoMutation, 'redo', true),
+    push: withLog(pushMutation, 'push', true),
   },
   CssValue: new GraphQLScalarType({
     name: 'CssValue',

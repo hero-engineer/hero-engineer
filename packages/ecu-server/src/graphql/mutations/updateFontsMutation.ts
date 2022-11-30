@@ -2,13 +2,15 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 import { FileNodeType, FontType, HistoryMutationReturnType } from '../../types.js'
-import { appPath, fontsEndComment, fontsStartComment, indexCssFileRelativePath } from '../../configuration.js'
+import { appPath, ecuFontsFileName, fontsEndComment, fontsStartComment, indexCssFileRelativePath } from '../../configuration.js'
+
+import { findNode } from '../../graph/index.js'
 
 import insertBetweenComments from '../../domain/comments/insertBetweenComments.js'
+
 import composeHistoryMutation from '../../history/composeHistoryMutation.js'
 
 import getEcuLocation from '../../helpers/getEcuLocation.js'
-import { findNode } from '../../graph/index.js'
 
 type UpdateFontsMutationArgsType = {
   fontsJson: string
@@ -18,7 +20,7 @@ async function updateFontsMutation(_: any, { fontsJson }: UpdateFontsMutationArg
   try {
     const fonts = JSON.parse(fontsJson) as FontType[]
     const ecuLocation = getEcuLocation()
-    const fontsFileLocation = path.join(ecuLocation, 'fonts.json')
+    const fontsFileLocation = path.join(ecuLocation, ecuFontsFileName)
 
     fs.writeFileSync(fontsFileLocation, JSON.stringify(fonts, null, 2))
 

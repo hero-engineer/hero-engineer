@@ -9,18 +9,20 @@ import getEcuLocation from '../../helpers/getEcuLocation.js'
 function readColors() {
   const ecuLocation = getEcuLocation()
 
-  const fontsFileLocation = path.join(ecuLocation, ecuColorsFileName)
+  const colorsFileLocation = path.join(ecuLocation, ecuColorsFileName)
 
-  if (!fs.existsSync(fontsFileLocation)) {
+  if (!fs.existsSync(colorsFileLocation)) {
     return []
   }
 
   try {
-    const fontsFileContent = fs.readFileSync(fontsFileLocation, 'utf8')
+    const colorsFileContent = fs.readFileSync(colorsFileLocation, 'utf8')
 
-    return (JSON.parse(fontsFileContent) as ColorType[])
+    return (JSON.parse(colorsFileContent) as ColorType[])
   }
   catch (error) {
+    console.error(error)
+
     return []
   }
 }

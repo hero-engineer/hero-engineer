@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { ApolloServer } from 'apollo-server'
 import express from 'express'
 import cors from 'cors'
+import chalk from 'chalk'
 
 import { resolvers, typeDefs } from './graphql/index.js'
 
@@ -24,7 +25,7 @@ async function serve() {
   })
 
   server.listen({ port: 4000 }).then(({ url }) => {
-    console.log(`🚀 Ecu GraphQL server ready at ${url}`)
+    console.log(chalk.green('~~~'), `🚀 Ecu GraphQL server ready at ${url}`)
   })
 
   const __dirname = fileURLToPath(new URL('.', import.meta.url))
@@ -36,7 +37,7 @@ async function serve() {
 
   app.listen(4001)
 
-  console.log('🚀 Ecu static server ready at http://localhost:4001/')
+  console.log(chalk.green('~~~'), '🚀 Ecu static  server ready at http://localhost:4001/')
 }
 
 export default serve

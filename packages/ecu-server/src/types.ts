@@ -168,6 +168,7 @@ export type FontType = {
 
 export type ColorType ={
   id: string
+  variableName: string
   name: string
   value: string
 }

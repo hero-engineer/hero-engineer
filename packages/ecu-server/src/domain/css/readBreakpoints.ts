@@ -21,6 +21,8 @@ function readBreakpoints() {
     return (JSON.parse(breakpointsFileContent) as BreakpointType[]).sort((a, b) => b.max - a.max)
   }
   catch (error) {
+    console.error(error)
+
     return [defaultBreakpoint]
   }
 }

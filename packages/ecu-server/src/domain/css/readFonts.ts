@@ -21,6 +21,8 @@ function readFonts() {
     return (JSON.parse(fontsFileContent) as FontType[])
   }
   catch (error) {
+    console.error(error)
+
     return []
   }
 }

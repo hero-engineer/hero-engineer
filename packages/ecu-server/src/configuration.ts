@@ -85,6 +85,14 @@ export const fontsEndComment = `/* --
   * FONTS END
 -- */`
 
+export const colorsStartComment = `/* --
+  * COLORS START
+-- */`
+
+export const colorsEndComment = `/* --
+  * COLORS END
+-- */`
+
 export const externalModulesImports: ImportType[] = [
   {
     name: 'PropsWithChildren',
