@@ -149,15 +149,21 @@ function FontRow({ font, onUpdate, onDelete }: FontRowPropsType) {
       return
     }
 
+    if (name.includes('~~~')) { // Server-related
+      setIsError(true)
+
+      return
+    }
+
     setIsEdited(false)
     setIsError(false)
 
     onUpdate({
       ...font,
-      name,
-      url,
+      name: name.trim(),
+      url: url.trim(),
       isVariable,
-      weights: weights.map(Number).filter(Boolean),
+      weights: weights.map(x => x.toString().trim()).map(Number).filter(Boolean),
     })
   }, [font, name, url, isVariable, weights, onUpdate])
 
