@@ -80,7 +80,7 @@ function DesignSystemSubSectionFonts() {
         onClick={() => setFonts(x => [
           ...x,
           {
-            id: Math.random.toString().slice(2),
+            id: Math.random().toString().slice(2),
             name: '',
             url: '',
             isVariable: false,
