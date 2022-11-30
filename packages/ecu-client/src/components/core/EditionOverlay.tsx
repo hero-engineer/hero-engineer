@@ -9,6 +9,7 @@ import EditionContext from '../../contexts/EditionContext'
 import EditionOverlayContext, { EditionOverlayContextType } from '../../contexts/EditionOverlayContext'
 import IsInteractiveModeContext from '../../contexts/IsInteractiveModeContext'
 import IsComponentRefreshingContext from '../../contexts/IsComponentRefreshingContext'
+import CssClassesContext from '../../contexts/CssClassesContext'
 
 import getComponentRootHierarchyIds from '../../utils/getComponentRootHierarchyIds'
 import findHierarchyIdsAndComponentDelta from '../../utils/findHierarchyIdsAndComponentDelta'
@@ -26,6 +27,7 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
   const { hierarchyId, setHierarchyId, componentDelta, setComponentDelta, isEdited, setIsEdited } = useContext(EditionContext)
   const { isInteractiveMode } = useContext(IsInteractiveModeContext)
   const { isComponentRefreshing } = useContext(IsComponentRefreshingContext)
+  const { setClassName, setStyle } = useContext(CssClassesContext)
 
   const [refresh, setRefresh] = useState(0)
   const [helperText, setHelperText] = useState('')
@@ -51,6 +53,8 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
       setComponentDelta(nextComponentDelta)
       setIsEdited(false)
       setHelperText('')
+      setStyle({})
+      setClassName('')
     }
   }, [
     hierarchyId,
@@ -59,6 +63,8 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
     setHierarchyId,
     setComponentDelta,
     setIsEdited,
+    setStyle,
+    setClassName,
   ])
 
   const renderHierarchy: (hierarchyItem: HierarchyItemType | null, depth?: number) => ReactNode = useCallback((hierarchyItem: HierarchyItemType | null, depth = zIndexes.editionOverlay + 1) => {

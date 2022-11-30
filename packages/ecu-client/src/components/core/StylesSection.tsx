@@ -40,7 +40,7 @@ function StylesSection() {
   const { componentAddress = '' } = useParams()
   const { hierarchy } = useContext(HierarchyContext)
   const { componentDelta, hierarchyId } = useContext(EditionContext)
-  const { className, setClassName, style, setStyle } = useContext(CssClassesContext)
+  const { className, setClassName, selectedClassName, setSelectedClassName, style, setStyle } = useContext(CssClassesContext)
   const { breakpoint } = useContext(BreakpointContext)
 
   const [cssClassesQueryResult, refetchCssClassesQuery] = useQuery<CssClassesQueryDataType>({
@@ -55,7 +55,6 @@ function StylesSection() {
 
   const classNames = useMemo(() => className.split(' ').map(c => c.trim()).filter(Boolean), [className])
 
-  const [selectedClassName, setSelectedClassName] = usePersistedState('styles-section-selected-class-name', '')
   const [loading, setLoading] = useState(false)
 
   const lastComponentHierarchyItem = useMemo(() => getLastComponentHierarchyItem(hierarchy), [hierarchy])
@@ -253,8 +252,6 @@ function StylesSection() {
           allClasses={allClasses}
           classNames={classNames}
           onClassNamesChange={handleSetClassNames}
-          selectedClassName={selectedClassName}
-          onSelectedClassNameChange={setSelectedClassName}
           onLoading={setLoading}
         />
       </Div>
@@ -263,8 +260,6 @@ function StylesSection() {
   ), [
     allClasses,
     classNames,
-    selectedClassName,
-    setSelectedClassName,
     handleSetClassNames,
     renderNoClassNames,
     renderSubSections,

@@ -42,7 +42,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   const { hierarchyId: editionHierarchyId, componentDelta, isEdited, setIsEdited } = useContext(EditionContext)
   const { hierarchy } = useContext(HierarchyContext)
   const { setContextualInformationState } = useContext(ContextualInformationContext)
-  const { className: updatedClassName, setClassName, style: updatedStyle } = useContext(CssClassesContext)
+  const { selectedClassName, className: updatedClassName, setClassName, style: updatedStyle } = useContext(CssClassesContext)
   const { isInteractiveMode } = useContext(IsInteractiveModeContext)
 
   useEditionOverlay(rootRef, hierarchyId)
@@ -162,7 +162,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
     setIsEdited,
     editionProps: {
       className: generateClassName(),
-      style: isSelected ? updatedStyle : {},
+      style: isSelected || className.includes(selectedClassName) ? updatedStyle : {},
       'data-ecu': ecuId,
       'data-ecu-hierarchy': hierarchyId,
     },
