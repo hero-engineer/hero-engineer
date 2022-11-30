@@ -25,7 +25,7 @@ import getComponentRootHierarchyIds from '../../utils/getComponentRootHierarchyI
 
 import convertCssAttributeNameToJs from '../../utils/convertCssAttributeNameToJs'
 import filterClassesByClassNamesAndMedia from '../../utils/filterClassesByClassNamesAndMedia'
-import filterInvalidCssValues from '../../utils/filterInvalidCssValues'
+import areAttributesValid from '../../utils/areAttributesValid'
 import getLastComponentHierarchyItem from '../../utils/getLastComponentHierarchyItem'
 import removeCssDefaults from '../../utils/removeCssDefaults'
 
@@ -87,12 +87,13 @@ function StylesSection() {
   const passedBreakpointCssValues = useMemo(() => removeCssDefaults(selectedClassName ? selectedBreakpointCssValues : finalBreakpointCssValues, cssAttributesMap), [selectedClassName, selectedBreakpointCssValues, finalBreakpointCssValues])
 
   // THe attributes to be updated
-  const attributes = useMemo(() => Object.entries(filterInvalidCssValues(removeCssDefaults(selectedBreakpointCssValues, cssAttributesMap), cssAttributesMap)).map(([name, value]) => ({ name, value })), [selectedBreakpointCssValues])
+  const attributes = useMemo(() => Object.entries(removeCssDefaults(selectedBreakpointCssValues, cssAttributesMap)).map(([name, value]) => ({ name, value })), [selectedBreakpointCssValues])
   const attributesHash = useMemo(() => attributes.map(({ name, value }) => `${name}:${value}`).join(','), [attributes])
   const previousAttributesHash = usePrevious(attributesHash)
 
   const handleCssUpdate = useCallback(async () => {
     if (!(classNames.length && attributes.length) || previousAttributesHash === attributesHash) return
+    if (!areAttributesValid(attributes, cssAttributesMap)) return
 
     await updateCssClass({
       classNames: selectedClassName,

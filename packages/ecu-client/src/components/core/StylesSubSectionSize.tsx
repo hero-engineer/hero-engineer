@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 import { Accordion, Button, Div, Tooltip } from 'honorable'
+import { AiOutlineColumnHeight, AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 
 import usePersistedState from '../../hooks/usePersistedState'
 import { CssAttributeType, CssValueType, CssValuesType } from '../../types'
@@ -43,6 +44,25 @@ const attributeNames = [
   'min-height',
   'max-height',
   'overflow',
+]
+
+const overflows = [
+  {
+    name: 'visible',
+    Icon: AiOutlineEye,
+  },
+  {
+    name: 'hidden',
+    Icon: AiOutlineEyeInvisible,
+  },
+  {
+    name: 'scroll',
+    Icon: AiOutlineColumnHeight,
+  },
+  {
+    name: 'auto',
+    Icon: () => <>auto</>,
+  },
 ]
 
 function StylesSubSectionSize({ cssValues, breakpointCssValues, onChange, disabled }: StylesSubSectionSizePropsType) {
@@ -93,6 +113,36 @@ function StylesSubSectionSize({ cssValues, breakpointCssValues, onChange, disabl
     </Div>
   ), [renderSizeInput])
 
+  const renderOverflowSection = useCallback(() => (
+    <Div
+      xflex="x4"
+      fontSize="0.75rem"
+    >
+      <Div
+        xflex="x4"
+        minWidth={52}
+        color={getTextColor('overflow')}
+      >
+        Overflow
+      </Div>
+      {overflows.map(({ name, Icon }) => (
+        <Tooltip
+          key={name}
+          label={capitalize(name)}
+          placement="bottom"
+        >
+          <Button
+            ghost
+            toggled={isToggled('overflow', name)}
+            onClick={() => onChange([{ name: 'overflow', value: name }])}
+          >
+            <Icon />
+          </Button>
+        </Tooltip>
+      ))}
+    </Div>
+  ), [getTextColor, isToggled, onChange])
+
   return (
     <Accordion
       ghost
@@ -120,6 +170,7 @@ function StylesSubSectionSize({ cssValues, breakpointCssValues, onChange, disabl
           {renderSizeSection('width')}
           {renderSizeSection('height')}
         </Div>
+        {renderOverflowSection()}
       </Div>
       {disabled && <StylesSubSectionDisabledOverlay />}
     </Accordion>
