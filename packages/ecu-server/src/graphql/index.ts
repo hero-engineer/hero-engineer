@@ -27,6 +27,7 @@ import updateFileTypesMutation from './mutations/updateFileTypesMutation.js'
 import removeFileUnusedImportsMutation from './mutations/removeFileUnusedImportsMutation.js'
 import updateGlobalTypesMutation from './mutations/updateGlobalTypesMutation.js'
 import updateComponentScreenshotMutation from './mutations/updateComponentScreenshotMutation.js'
+import updateFontsMutation from './mutations/updateFontsMutation.js'
 import createCssClassMutation from './mutations/createCssClassMutation.js'
 import updateCssClassMutation from './mutations/updateCssClassMutation.js'
 import installOrUpdatePackageMutation from './mutations/installOrUpdatePackageMutation.js'
@@ -197,6 +198,7 @@ export const typeDefs = gql`
     updateGlobalTypes(globalTypesFileContent: String!): Boolean!
     updateFileTypes(sourceFileAddress: String!, rawTypes: String!): Boolean!
 
+    updateFonts(fontsJson: String!): Boolean!
     createCssClass(sourceComponentAddress: String!, targetHierarchyId: String!, componentDelta: Int!, classNames: [String]!): Boolean!
     updateCssClass(classNames: [String!]!, breakpointId: String!, attributesJson: String!): Boolean!
 
@@ -246,6 +248,7 @@ export const resolvers = {
     updateFileTypes: updateFileTypesMutation,
     updateGlobalTypes: updateGlobalTypesMutation,
 
+    updateFonts: updateFontsMutation,
     createCssClass: createCssClassMutation,
     updateCssClass: updateCssClassMutation,
 
