@@ -184,8 +184,8 @@ function CssClassesSelector({ allClasses, classNames, onClassNamesChange, select
         onForceOpen={() => setForceOpen(false)}
         inputProps={{
           bare: true,
-          disabled: fetching,
           color: isError ? 'red.500' : 'inherit',
+          onClick: () => setForceOpen(true),
         }}
         endIcon={(
           isMenuOpen
@@ -227,6 +227,16 @@ function CssClassesSelector({ allClasses, classNames, onClassNamesChange, select
             </Div>
           </WithOutsideClick>
         </>
+      )}
+      {fetching && (
+        <Div
+          position="absolute"
+          top={0}
+          bottom={0}
+          left={0}
+          right={0}
+          cursor="not-allowed"
+        />
       )}
     </Div>
   )

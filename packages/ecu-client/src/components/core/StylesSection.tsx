@@ -1,6 +1,6 @@
 import { memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { Button, Div, useDebounce } from 'honorable'
+import { Button, Div, useDebounce, usePrevious } from 'honorable'
 
 import { CssAttributeType, CssValuesType } from '../../types'
 import { cssAttributesMap, refetchKeys } from '../../constants'
@@ -32,6 +32,7 @@ import removeCssDefaults from '../../utils/removeCssDefaults'
 import CssClassesSelector from './CssClassesSelector'
 import StylesSubSectionLayout from './StylesSubSectionLayout'
 import StylesSubSectionSpacing from './StylesSubSectionSpacing'
+import StylesSubSectionSize from './StylesSubSectionSize'
 
 // The styles section
 // Displayed in the right panel
@@ -85,12 +86,13 @@ function StylesSection() {
   const passedCssValues = useMemo(() => removeCssDefaults(selectedClassName ? selectedCssValues : finalCssValues, cssAttributesMap), [selectedClassName, finalCssValues, selectedCssValues])
   const passedBreakpointCssValues = useMemo(() => removeCssDefaults(selectedClassName ? selectedBreakpointCssValues : finalBreakpointCssValues, cssAttributesMap), [selectedClassName, selectedBreakpointCssValues, finalBreakpointCssValues])
 
+  // THe attributes to be updated
+  const attributes = useMemo(() => Object.entries(filterInvalidCssValues(removeCssDefaults(selectedBreakpointCssValues, cssAttributesMap), cssAttributesMap)).map(([name, value]) => ({ name, value })), [selectedBreakpointCssValues])
+  const attributesHash = useMemo(() => attributes.map(({ name, value }) => `${name}:${value}`).join(','), [attributes])
+  const previousAttributesHash = usePrevious(attributesHash)
+
   const handleCssUpdate = useCallback(async () => {
-    if (!classNames.length) return
-
-    const attributes = Object.entries(filterInvalidCssValues(removeCssDefaults(selectedBreakpointCssValues, cssAttributesMap), cssAttributesMap)).map(([name, value]) => ({ name, value }))
-
-    if (!attributes.length) return
+    if (!(classNames.length && attributes.length) || previousAttributesHash === attributesHash) return
 
     await updateCssClass({
       classNames: selectedClassName,
@@ -101,7 +103,9 @@ function StylesSection() {
     refetch(refetchKeys.cssClasses)
   }, [
     classNames,
-    selectedBreakpointCssValues,
+    attributes,
+    attributesHash,
+    previousAttributesHash,
     selectedClassName,
     breakpoint,
     updateCssClass,
@@ -197,6 +201,12 @@ function StylesSection() {
         disabled={!selectedClassName}
       />
       <StylesSubSectionSpacing
+        cssValues={passedCssValues}
+        breakpointCssValues={passedBreakpointCssValues}
+        onChange={handleStyleChange}
+        disabled={!selectedClassName}
+      />
+      <StylesSubSectionSize
         cssValues={passedCssValues}
         breakpointCssValues={passedBreakpointCssValues}
         onChange={handleStyleChange}

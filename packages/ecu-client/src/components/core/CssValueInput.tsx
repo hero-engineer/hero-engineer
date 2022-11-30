@@ -78,6 +78,7 @@ function CssValueInput({ value, onChange }: CssValueInputPropsType) {
       <Input
         slim
         short
+        disabledNoBackground
         type="number"
         value={rawValue === 'auto' ? '' : rawValue}
         onChange={handleInputChange}

@@ -22,7 +22,7 @@ import CssValueInput from './CssValueInput'
 import StylesSubSectionTitle from './StylesSubSectionTitle'
 import StylesSubSectionDisabledOverlay from './StylesSubSectionDisabledOverlay'
 
-type StylesLayoutSectionPropsType = {
+type StylesSubSectionLayoutPropsType = {
   cssValues: CssValuesType
   breakpointCssValues: CssValuesType
   onChange: (attributes: CssAttributeType[]) => void
@@ -187,8 +187,8 @@ const justifys = [
   },
 ]
 
-function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disabled }: StylesLayoutSectionPropsType) {
-  const [expanded, setExpanded] = usePersistedState('styles-layout-section-expanded', true)
+function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disabled }: StylesSubSectionLayoutPropsType) {
+  const [expanded, setExpanded] = usePersistedState('styles-sub-section-layout-expanded', true)
 
   const getValue = useCallback((attributeName: string) => breakpointCssValues[attributeName] ?? cssValues[attributeName] ?? cssAttributesMap[attributeName].defaultValue, [breakpointCssValues, cssValues])
 

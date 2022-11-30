@@ -482,6 +482,9 @@ export default mergeTheme(defaultTheme, {
       ({ slim }: any) => slim && {
         lineHeight: 'inherit',
       },
+      ({ disabledNoBackground, disabled }: any) => disabledNoBackground && disabled && {
+        backgroundColor: 'transparent',
+      },
     ],
     TextArea: [
       ({ bare }: any) => bare && {

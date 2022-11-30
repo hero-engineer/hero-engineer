@@ -15,9 +15,6 @@ type EcuMasterPropsType = {
 
 // The master component that wraps the entire application
 function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterPropsType) {
-  // Do not remove yet
-  console.log('render')
-
   return (
     <MasterProviders
       mode={mode}

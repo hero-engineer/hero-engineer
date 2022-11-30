@@ -82,6 +82,7 @@ const cssDisplayValues = ['block', 'inline-block', 'flex', 'grid', 'none']
 const cssFlexDirectionValues = ['row', 'column']
 const cssAlignItemsValues = ['flex-start', 'flex-end', 'center', 'stretch', 'baseline', 'space-between', 'space-around', 'space-evenly']
 const cssFlexWrapValues = ['nowrap', 'wrap', 'wrap-reverse']
+const cssOverflowValues = ['visible', 'hidden', 'scroll', 'auto']
 
 function extractSpacing(value: CssValueType, index: number): CssValueType {
   if (typeof value === 'number') return value
@@ -161,6 +162,8 @@ function isSpacingsValueValid(value: CssValueType) {
 
   return values.length <= 4 && values.every(isSpacingValueValid)
 }
+
+const isSizeValueValid = isSpacingValueValid
 
 export const cssAttributesMap: CSsAttributesMapType = {
   margin: {
@@ -262,6 +265,51 @@ export const cssAttributesMap: CSsAttributesMapType = {
     attributes: ['column-gap'],
     defaultValue: '0px',
     isValueValid: isSpacingValueValid,
+  },
+  width: {
+    attributes: ['width'],
+    defaultValue: 'auto',
+    isValueValid: isSizeValueValid,
+  },
+  'min-width': {
+    attributes: ['min-width'],
+    defaultValue: 'auto',
+    isValueValid: isSizeValueValid,
+  },
+  'max-width': {
+    attributes: ['max-width'],
+    defaultValue: 'auto',
+    isValueValid: isSizeValueValid,
+  },
+  height: {
+    attributes: ['height'],
+    defaultValue: 'auto',
+    isValueValid: isSizeValueValid,
+  },
+  'min-height': {
+    attributes: ['min-height'],
+    defaultValue: 'auto',
+    isValueValid: isSizeValueValid,
+  },
+  'max-height': {
+    attributes: ['max-height'],
+    defaultValue: 'auto',
+    isValueValid: isSizeValueValid,
+  },
+  overflow: {
+    attributes: ['overflow'],
+    defaultValue: 'visible',
+    isValueValid: value => typeof value === 'string' && cssOverflowValues.includes(value),
+  },
+  'overflow-x': {
+    attributes: ['overflow-x'],
+    defaultValue: 'visible',
+    isValueValid: value => typeof value === 'string' && cssOverflowValues.includes(value),
+  },
+  'overflow-y': {
+    attributes: ['overflow-y'],
+    defaultValue: 'visible',
+    isValueValid: value => typeof value === 'string' && cssOverflowValues.includes(value),
   },
 } as const
 

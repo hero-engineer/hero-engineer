@@ -10,7 +10,7 @@ import SpacingEditor from './SpacingEditor'
 import StylesSubSectionTitle from './StylesSubSectionTitle'
 import StylesSubSectionDisabledOverlay from './StylesSubSectionDisabledOverlay'
 
-type StylesSpacingSectionPropsType = {
+type StylesSubSectionSpacingPropsType = {
   onChange: (attributes: CssAttributeType[]) => void,
   cssValues: CssValuesType
   breakpointCssValues: CssValuesType
@@ -32,12 +32,12 @@ const attributeNames = [
   'padding-left',
 ]
 
-function StylesSubSectionSpacing({ cssValues, breakpointCssValues, onChange, disabled }: StylesSpacingSectionPropsType) {
+function StylesSubSectionSpacing({ cssValues, breakpointCssValues, onChange, disabled }: StylesSubSectionSpacingPropsType) {
   const inputMountNodeRef = useRef<HTMLDivElement>(null)
 
   useRefresh()
 
-  const [expanded, setExpanded] = usePersistedState('styles-spacing-section-expanded', true)
+  const [expanded, setExpanded] = usePersistedState('styles-sub-section-spacing-expanded', true)
 
   return (
     <Accordion
