@@ -20,11 +20,11 @@ function readFonts() {
     const isVariable = weights === 'variable'
 
     return {
-      id,
-      name,
+      id: id.trim(),
+      name: name.trim(),
       url,
       isVariable,
-      weights: isVariable ? [] : weights.split(',').map(Number).filter(Boolean),
+      weights: isVariable ? [] : weights.trim().split(',').map(Number).filter(Boolean),
     } as FontType
   }).filter(Boolean) as FontType[]
 }
