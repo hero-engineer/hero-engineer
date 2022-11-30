@@ -1,7 +1,7 @@
 import { FormEvent, useCallback, useEffect, useState } from 'react'
 import { Button, Div, Form, Input } from 'honorable'
-import { SlTrash } from 'react-icons/sl'
 import { CiEdit } from 'react-icons/ci'
+import { SlTrash } from 'react-icons/sl'
 import { VscRunAbove } from 'react-icons/vsc'
 
 import { PackageType } from '../../types'

@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import Home from '../scenes/Home'
 import Component from '../scenes/Component'
 import Components from '../scenes/Components'
+import DesignSystem from '../scenes/DesignSystem'
 import Packages from '../scenes/Packages'
 import Settings from '../scenes/Settings'
 import SettingsGeneral from '../scenes/SettingsGeneral'
@@ -40,6 +41,14 @@ function Router({ children }: any) {
             <Route
               path="component/:fileAddress/:componentAddress"
               element={<Component />}
+            />
+            <Route
+              path="design-system"
+              element={(
+                <ResponsiveLayout>
+                  <DesignSystem />
+                </ResponsiveLayout>
+              )}
             />
             <Route
               path="packages"

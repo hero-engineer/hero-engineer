@@ -74,7 +74,7 @@ function Component() {
       >
         {!isInteractiveMode && (
           <RetractablePanel
-            height="calc(100vh - 31px)"
+            height="calc(100vh - 32px)"
             direction="left"
             openPersistedStateKey="left-panel-open"
             items={[
@@ -106,7 +106,7 @@ function Component() {
         </Div>
         {!isInteractiveMode && (
           <RetractablePanel
-            height="calc(100vh - 31px)"
+            height="calc(100vh - 32px)"
             direction="right"
             openPersistedStateKey="right-panel-open"
             items={[

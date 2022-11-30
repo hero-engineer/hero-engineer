@@ -109,3 +109,11 @@ export type CSsAttributesMapType = Record<string, {
   converter?: (value: CssValueType) => CssValuesType
   isValueValid: (value: CssValueType) => boolean
 }>
+
+export type FontType = {
+  id: string
+  name: string
+  url: string
+  weights: number[]
+  variable: boolean
+}

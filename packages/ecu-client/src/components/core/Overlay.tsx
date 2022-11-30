@@ -5,6 +5,7 @@ import SnackBar from './SnackBar'
 import EcuButton from './EcuButton'
 import ComponentsLinkButton from './ComponentsLinkButton'
 import CreateComponentButton from './CreateComponentButton'
+import DesignLinkButton from './DesignLinkButton'
 import PackagesLinkButton from './PackagesLinkButton'
 import LastEditedComponentButton from './LastEditedComponentButton'
 import BreakpointsButtons from './BreakpointsButtons'
@@ -29,8 +30,10 @@ function Overlay({ children }: OverlayPropsType) {
         <EcuButton borderRight="1px solid border" />
         <ComponentsLinkButton borderRight="1px solid border" />
         <CreateComponentButton borderRight="1px solid border" />
+        <DesignLinkButton borderRight="1px solid border" />
         <PackagesLinkButton borderRight="1px solid border" />
         <LastEditedComponentButton borderRight="1px solid border" />
+        <Div width={32} />
         <Div flexGrow />
         <BreakpointsButtons />
         <Div flexGrow />

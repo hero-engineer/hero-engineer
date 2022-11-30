@@ -31,7 +31,7 @@ function isSelectedComponentParent(hierarchy: HierarchyItemType[], currentHierar
   return rightIndex === currentIndex && selectedHierarchyItem.onComponentAddress === currentHierarchyItem.componentAddress
 }
 
-const height = 31
+const height = 32
 const caretSize = Math.sqrt(height ** 2 / 2)
 
 // The hierarchy bar component has 2 purposes:

@@ -67,9 +67,14 @@ function BreakpointsButtons() {
   return (
     <Div
       xflex="x4"
-      borderLeft="1px solid border"
       userSelect="none"
     >
+      {!!breakpoint && (
+        <Div
+          minWidth={42}
+          mr={0.5}
+        />
+      )}
       {breakpoints.map((bp, i) => (
         <Tooltip
           key={bp.id}
@@ -92,6 +97,9 @@ function BreakpointsButtons() {
             toggled={bp.id === breakpoint?.id}
             color={bp.media && bp.id === breakpoint?.id ? 'breakpoint' : 'inherit'}
             borderRight="1px solid border"
+            _first={{
+              borderLeft: '1px solid border',
+            }}
             onClick={() => updateBreakpoint(bp)}
           >
             {icons[i]}
