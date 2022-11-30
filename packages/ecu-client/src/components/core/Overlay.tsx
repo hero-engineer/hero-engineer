@@ -27,7 +27,10 @@ function Overlay({ children }: OverlayPropsType) {
         backgroundColor="background-light"
         borderBottom="1px solid border"
       >
-        <EcuButton borderRight="1px solid border" />
+        <EcuButton
+          borderLeft="1px solid transparent"
+          borderRight="1px solid border"
+        />
         <ComponentsLinkButton borderRight="1px solid border" />
         <CreateComponentButton borderRight="1px solid border" />
         <DesignLinkButton borderRight="1px solid border" />
@@ -41,7 +44,10 @@ function Overlay({ children }: OverlayPropsType) {
         <UndoRedoButtons />
         <PushButton />
         <SettingsLinkButton borderLeft="1px solid border" />
-        <ViewAppButton borderLeft="1px solid border" />
+        <ViewAppButton
+          borderLeft="1px solid border"
+          borderRight="1px solid transparent"
+        />
       </Div>
       <Div
         xflex="y2s"

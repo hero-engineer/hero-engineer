@@ -117,3 +117,9 @@ export type FontType = {
   weights: number[]
   isVariable: boolean
 }
+
+export type ColorType ={
+  id: string
+  name: string
+  value: string
+}

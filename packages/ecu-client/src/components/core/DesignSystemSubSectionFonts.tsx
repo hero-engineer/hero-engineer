@@ -57,7 +57,7 @@ function DesignSystemSubSectionFonts() {
   }, [fontsQueryResult.data])
 
   return (
-    <>
+    <Div xflex="y2s">
       <H3 mb={1}>Fonts</H3>
       <FontHeader />
       {fonts.map(font => (
@@ -88,12 +88,11 @@ function DesignSystemSubSectionFonts() {
           },
         ])}
         alignSelf="flex-start"
-        mt={0.5}
+        mt={1}
       >
         Add font
       </Button>
-
-    </>
+    </Div>
   )
 }
 

@@ -10,6 +10,7 @@ import EditionOverlayContext, { EditionOverlayContextType } from '../../contexts
 import IsInteractiveModeContext from '../../contexts/IsInteractiveModeContext'
 import IsComponentRefreshingContext from '../../contexts/IsComponentRefreshingContext'
 import CssClassesContext from '../../contexts/CssClassesContext'
+import BreakpointContext from '../../contexts/BreakpointContext'
 
 import getComponentRootHierarchyIds from '../../utils/getComponentRootHierarchyIds'
 import findHierarchyIdsAndComponentDelta from '../../utils/findHierarchyIdsAndComponentDelta'
@@ -28,6 +29,7 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
   const { isInteractiveMode } = useContext(IsInteractiveModeContext)
   const { isComponentRefreshing } = useContext(IsComponentRefreshingContext)
   const { setClassName, setStyle } = useContext(CssClassesContext)
+  const { isDragging } = useContext(BreakpointContext)
 
   const [refresh, setRefresh] = useState(0)
   const [helperText, setHelperText] = useState('')
@@ -243,7 +245,7 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
             pointerEvents={isEdited ? 'none' : 'auto'}
             backgroundColor={isComponentRefreshing ? 'rgba(0, 0, 0, 0.5)' : null}
           >
-            {!isComponentRefreshing && renderHierarchy(totalHierarchy)}
+            {!isComponentRefreshing && !isDragging && renderHierarchy(totalHierarchy)}
           </Div>
         )}
       </Div>

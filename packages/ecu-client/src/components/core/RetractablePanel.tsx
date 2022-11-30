@@ -57,6 +57,7 @@ function RetractablePanel({ height, direction, openPersistedStateKey, defaultOpe
     >
       <Div
         xflex="y2s"
+        width={32}
         borderRight={isLeft ? '1px solid border' : null}
         borderLeft={isRight ? '1px solid border' : null}
       >

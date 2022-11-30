@@ -35,6 +35,7 @@
     "honorable-recipe-xflex": "^0.0.0",
     "honorable-theme-default": "^0.77.0",
     "html2canvas": "^1.4.1",
+    "react-color": "^2.19.3",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-icons": "^4.7.1",
@@ -44,6 +45,7 @@
   },
   "devDependencies": {
     "@types/react": "^18.0.25",
+    "@types/react-color": "^3.0.6",
     "@types/react-dom": "^18.0.9",
     "@vitejs/plugin-react": "^2.2.0",
     "cssnano": "^5.1.14",
