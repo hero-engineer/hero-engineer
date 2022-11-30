@@ -11,6 +11,7 @@ function StylesSubSectionDisabledOverlay() {
       bottom={0}
       backgroundColor="background-styles-overlay"
       cursor="not-allowed"
+      title="Select a class to edit it"
     />
   )
 }

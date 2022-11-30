@@ -1,4 +1,4 @@
-import { MouseEvent, WheelEvent, memo, useCallback } from 'react'
+import { MouseEvent, memo, useCallback, useEffect, useRef } from 'react'
 import { Div } from 'honorable'
 
 import { HierarchyItemType } from '../../types'
@@ -19,9 +19,11 @@ type EditionOverlayElementPropsType = {
 }
 
 function EditionOverlayElement({ hierarchyItem, element, depth, top, left, width, height, helperText, isSelected, isEdited, isComponentRoot, onSelect }: EditionOverlayElementPropsType) {
+  const rootRef = useRef<HTMLDivElement>(null)
+
   const color = isEdited ? 'is-edited' : isSelected ? isComponentRoot ? 'is-component-root' : 'primary' : null
 
-  const handleWheel = useCallback((event: WheelEvent<HTMLDivElement>) => {
+  const handleWheel = useCallback((event: WheelEvent) => {
     if (!element) return
 
     // event.preventDefault()
@@ -29,9 +31,22 @@ function EditionOverlayElement({ hierarchyItem, element, depth, top, left, width
     element.scrollLeft += event.deltaX
   }, [element])
 
+  useEffect(() => {
+    const { current } = rootRef
+
+    if (!current) return
+
+    current.addEventListener('wheel', handleWheel, { passive: false }) // Passive is needed to prevent default
+
+    return () => {
+      current.removeEventListener('wheel', handleWheel)
+    }
+  }, [handleWheel])
+
   return (
     <>
       <Div
+        ref={rootRef}
         position="absolute"
         top={top - 1}
         left={left - 1}
@@ -49,7 +64,6 @@ function EditionOverlayElement({ hierarchyItem, element, depth, top, left, width
           },
         }}
         onClick={onSelect}
-        onWheel={handleWheel}
       />
       <Div
         xflex="x4"
