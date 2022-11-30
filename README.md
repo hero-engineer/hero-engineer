@@ -31,7 +31,10 @@ It acts as a shield around your app to reprogram it as you create new components
 ## Roadmap
 
 - Drag-and-drop components
+- Props editing
+- Routing
 - State management
+- Context management
 - Delete component/file
 
 And much more!
