@@ -13,8 +13,9 @@ async function traverseCss(fileNode: FileNodeType, targetSelector?: string, brea
   const classes: CssClassType[] = []
 
   root.walkRules(rule => {
-    const attributes: CssAttributeType[] = []
+    if (!rule.selector.startsWith('.')) return
 
+    const attributes: CssAttributeType[] = []
     const media = rule.parent?.type === 'atrule' ? (rule.parent as AtRule).params : ''
 
     rule.nodes.forEach((node: any) => {
