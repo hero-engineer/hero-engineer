@@ -100,8 +100,6 @@ export type CssClassType= {
   media: string
 }
 
-export type SpacingsType = [CssValueType, CssValueType, CssValueType, CssValueType]
-
 export type CSsAttributesMapType = Record<string, {
   attributes: readonly string[]
   defaultValue: CssValueType
@@ -119,6 +117,13 @@ export type FontType = {
 }
 
 export type ColorType ={
+  id: string
+  variableName: string
+  name: string
+  value: string
+}
+
+export type SpacingType ={
   id: string
   variableName: string
   name: string

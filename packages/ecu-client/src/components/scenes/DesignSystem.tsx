@@ -2,6 +2,7 @@ import { Div, H1 } from 'honorable'
 
 import DesignSystemSectionTypography from '../core/DesignSystemSectionTypography'
 import DesignSystemSectionColors from '../core/DesignSystemSectionColors'
+import DesignSystemSectionSpacings from '../core/DesignSystemSectionSpacings'
 
 // Design scene
 function DesignSystem() {
@@ -15,6 +16,7 @@ function DesignSystem() {
       >
         <DesignSystemSectionTypography />
         <DesignSystemSectionColors />
+        <DesignSystemSectionSpacings />
       </Div>
     </>
   )

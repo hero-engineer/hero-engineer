@@ -114,11 +114,16 @@ function ColorItem({ color, onChange }: ColorItemPropsType) {
       minWidth={0}// For ellipsis to work
       gap={0.75}
     >
-      <ColorPicker
-        size={128}
-        value={color.value}
-        onChange={value => onChange({ ...color, value })}
-      />
+      <Div
+        xflex="x5"
+        elevation={1}
+      >
+        <ColorPicker
+          size={128}
+          value={color.value}
+          onChange={value => onChange({ ...color, value })}
+        />
+      </Div>
       <Div
         ellipsis
         onClick={() => setIsEdited(true)}

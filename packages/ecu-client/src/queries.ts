@@ -1,4 +1,4 @@
-import { BreakpointType, ColorType, CssClassType, FileNodeType, FontType, FunctionNodeType, ImportType, PackageType, TypeType } from './types'
+import { BreakpointType, ColorType, CssClassType, FileNodeType, FontType, FunctionNodeType, ImportType, PackageType, SpacingType, TypeType } from './types'
 
 type ComponentReturnType = {
   component: FunctionNodeType
@@ -130,6 +130,21 @@ export const ColorsQuery = `
 
 export type ColorsQueryDataType = {
   colors: ColorType[]
+}
+
+export const SpacingsQuery = `
+  query {
+    spacings {
+      id
+      name
+      value
+      variableName
+    }
+  }
+`
+
+export type SpacingsQueryDataType = {
+  spacings: SpacingType[]
 }
 
 export const CssClassesQuery = `
@@ -391,6 +406,16 @@ export const UpdateColorsMutation = `
 
 export type UpdateColorsMutationDataType = {
   updateColors: boolean
+}
+
+export const UpdateSpacingsMutation = `
+  mutation ($spacingsJson: String!) {
+    updateSpacings (spacingsJson: $spacingsJson)
+  }
+`
+
+export type UpdateSpacingsMutationDataType = {
+  updateSpacings: boolean
 }
 
 export const CreateCssClassMutation = `

@@ -9,9 +9,10 @@ import trimLeadingZeroes from '../../utils/trimLeadingZeroes'
 type CssValueInputPropsType = {
   value: string
   onChange: (value: string) => void
+  large?: boolean
 }
 
-function CssValueInput({ value, onChange }: CssValueInputPropsType) {
+function CssValueInput({ value, onChange, large }: CssValueInputPropsType) {
   const [rawValue, unit = 'auto'] = splitSpacingValue(value)
 
   const [isUnitMenuOpen, setIsUnitMenuOpen] = useState(false)
@@ -31,12 +32,14 @@ function CssValueInput({ value, onChange }: CssValueInputPropsType) {
 
   const renderAdornment = useCallback(() => (
     <Div
-      py={0.25 / 2}
-      px={0.25}
+      xflex="x4"
+      alignSelf="stretch"
       backgroundColor="background-light"
       borderLeft="1px solid border"
       cursor="pointer"
       onClick={() => setIsUnitMenuOpen(x => !x)}
+      py={0.25 / 2}
+      px={0.25}
     >
       {unit}
     </Div>
@@ -77,7 +80,7 @@ function CssValueInput({ value, onChange }: CssValueInputPropsType) {
     >
       <Input
         slim
-        short
+        short={!large}
         disabledNoBackground
         type="number"
         value={rawValue === 'auto' ? '' : rawValue}
@@ -85,6 +88,7 @@ function CssValueInput({ value, onChange }: CssValueInputPropsType) {
         backgroundColor="background"
         endIcon={renderAdornment()}
         disabled={unit === 'auto'}
+        width={large ? 128 - 32 : null}
         overflow="hidden"
         pr={0}
       />
