@@ -89,6 +89,14 @@ export const colorsEndComment = `/* --
   * COLORS END
 -- */`
 
+export const spacingsStartComment = `/* --
+  * SPACINGS START
+-- */`
+
+export const spacingsEndComment = `/* --
+  * SPACINGS END
+-- */`
+
 export const externalModulesImports: ImportType[] = [
   {
     name: 'PropsWithChildren',

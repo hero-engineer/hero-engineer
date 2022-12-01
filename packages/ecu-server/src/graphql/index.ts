@@ -14,6 +14,7 @@ import isComponentAcceptingChildrenQuery from './queries/isComponentAcceptingChi
 import breakpointsQuery from './queries/breakpointsQuery.js'
 import fontsQuery from './queries/fontsQuery.js'
 import colorsQuery from './queries/colorsQuery.js'
+import spacingsQuery from './queries/spacingsQuery.js'
 import packagesQuery from './queries/packagesQuery.js'
 import packagesUpdatesQuery from './queries/packagesUpdatesQuery.js'
 import undoRedoMetadataQuery from './queries/undoRedoMetdataQuery.js'
@@ -32,6 +33,7 @@ import updateGlobalTypesMutation from './mutations/updateGlobalTypesMutation.js'
 import updateComponentScreenshotMutation from './mutations/updateComponentScreenshotMutation.js'
 import updateFontsMutation from './mutations/updateFontsMutation.js'
 import updateColorsMutation from './mutations/updateColorsMutation.js'
+import updateSpacingsMutation from './mutations/updateSpacingsMutation.js'
 import createCssClassMutation from './mutations/createCssClassMutation.js'
 import updateCssClassMutation from './mutations/updateCssClassMutation.js'
 import installOrUpdatePackageMutation from './mutations/installOrUpdatePackageMutation.js'
@@ -142,6 +144,13 @@ export const typeDefs = gql`
     variableName: String!
   }
 
+  type Spacing {
+    id: String!
+    name: String!
+    value: String!
+    variableName: String!
+  }
+
   type CssAttribute {
     name: String!
     value: CssValue!
@@ -187,6 +196,7 @@ export const typeDefs = gql`
     breakpoints: [Breakpoint]!
     fonts: [Font]!
     colors: [Color]!
+    spacings: [Spacing]!
     cssClasses: [CssClass]!
 
     packages: [Package]!
@@ -213,6 +223,7 @@ export const typeDefs = gql`
 
     updateFonts(fontsJson: String!): Boolean!
     updateColors(colorsJson: String!): Boolean!
+    updateSpacings(spacingsJson: String!): Boolean!
     createCssClass(sourceComponentAddress: String!, targetHierarchyId: String!, componentDelta: Int!, classNames: [String]!): Boolean!
     updateCssClass(classNames: [String!]!, breakpointId: String!, attributesJson: String!): Boolean!
 
@@ -240,6 +251,7 @@ export const resolvers = {
     breakpoints: withLog(breakpointsQuery, 'breakpoints'),
     fonts: withLog(fontsQuery, 'fonts'),
     colors: withLog(colorsQuery, 'colors'),
+    spacings: withLog(spacingsQuery, 'spacings'),
     cssClasses: withLog(cssClassesQuery, 'cssClasses'),
 
     packages: withLog(packagesQuery, 'packages'),
@@ -265,6 +277,7 @@ export const resolvers = {
 
     updateFonts: withLog(updateFontsMutation, 'updateFonts', true),
     updateColors: withLog(updateColorsMutation, 'updateColors', true),
+    updateSpacings: withLog(updateSpacingsMutation, 'updateSpacings', true),
     createCssClass: withLog(createCssClassMutation, 'createCssClass', true),
     updateCssClass: withLog(updateCssClassMutation, 'updateCssClass', true),
 

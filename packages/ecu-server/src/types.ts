@@ -172,3 +172,10 @@ export type ColorType ={
   name: string
   value: string
 }
+
+export type SpacingType ={
+  id: string
+  variableName: string
+  name: string
+  value: string
+}
