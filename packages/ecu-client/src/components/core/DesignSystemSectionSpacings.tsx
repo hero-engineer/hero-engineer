@@ -118,15 +118,10 @@ function SpacingItem({ spacing, onChange }: SpacingItemPropsType) {
       minWidth={0}// For ellipsis to work
       gap={1}
     >
-      <CssValueInput
-        large
-        value={spacing.value}
-        onChange={value => onChange({ ...spacing, value })}
-      />
       <Div
         ellipsis
         onClick={() => setIsEdited(true)}
-        minWidth={42}
+        px={0.5}
       >
         {isEdited ? (
           <Input
@@ -142,6 +137,11 @@ function SpacingItem({ spacing, onChange }: SpacingItemPropsType) {
           />
         ) : spacing.name}
       </Div>
+      <CssValueInput
+        large
+        value={spacing.value}
+        onChange={value => onChange({ ...spacing, value })}
+      />
       <Div
         width={spacing.value}
         height={spacing.value}
