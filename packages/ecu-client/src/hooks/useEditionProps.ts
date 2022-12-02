@@ -48,7 +48,6 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   useEditionOverlay(rootRef, hierarchyId)
 
   const isSelected = useMemo(() => hierarchyId === editionHierarchyId, [hierarchyId, editionHierarchyId])
-  const debouncedIsSelected = useDebounce(isSelected, 3 * 16) // 3 frames at 60fps to wait for componentDelta to adjust if positive
   const componentRootHierarchyIds = useMemo(() => getComponentRootHierarchyIds(hierarchy), [hierarchy])
   const isComponentRoot = useMemo(() => componentDelta < 0 && componentRootHierarchyIds.some(x => x === hierarchyId), [componentDelta, componentRootHierarchyIds, hierarchyId])
   const isComponentRootFirstChild = useMemo(() => componentRootHierarchyIds.indexOf(hierarchyId) === 0, [componentRootHierarchyIds, hierarchyId])
@@ -83,11 +82,11 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   //     isDragging: monitor.isDragging(),
   //     handlerId: monitor.getHandlerId(),
   //   }),
-  //   canDrag: (debouncedIsSelected || isComponentRoot) && !isEdited,
+  //   canDrag: (isSelected || isComponentRoot) && !isEdited,
   // }), [
   //   hierarchyId,
   //   componentDelta,
-  //   debouncedIsSelected,
+  //   isSelected,
   //   isComponentRoot,
   //   isEdited,
   //   setDragAndDrop,
@@ -116,8 +115,8 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   // const ref = useForkedRef(rootRef, useForkedRef(drag, drop)) as Ref<T>
 
   const generateClassName = useCallback(() => {
-    // let klassName = `ecu-edition-no-outline ${convertUnicode(debouncedIsSelected ? updatedClassName || className : className)}`
-    let klassName = `${isInteractiveMode ? '' : 'ecu-edition'} ${debouncedIsSelected ? updatedClassName || className : className}`
+    // let klassName = `ecu-edition-no-outline ${convertUnicode(isSelected ? updatedClassName || className : className)}`
+    let klassName = `${isInteractiveMode ? '' : 'ecu-edition'} ${isSelected ? updatedClassName || className : className}`
 
     klassName = klassName.trim()
 
@@ -131,33 +130,27 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
     className,
     isInteractiveMode,
     updatedClassName,
-    debouncedIsSelected,
+    isSelected,
   ])
 
   useEffect(() => {
     if (!rootRef.current) return
 
-    if (debouncedIsSelected || (isComponentRoot && isComponentRootFirstChild)) {
+    if (isSelected || (isComponentRoot && isComponentRootFirstChild)) {
       setContextualInformationState(x => ({ ...x, isEdited, isComponentRoot: isComponentRootFirstChild, element: rootRef.current }))
     }
   }, [
-    debouncedIsSelected,
+    isSelected,
     isComponentRoot,
     isComponentRootFirstChild,
     isEdited,
     setContextualInformationState,
   ])
 
-  useEffect(() => {
-    if (!debouncedIsSelected || isComponentRoot) return
-
-    setClassName(className)
-  }, [debouncedIsSelected, isComponentRoot, setClassName, className])
-
   return {
     ref: rootRef,
     hierarchyId,
-    isSelected: debouncedIsSelected,
+    isSelected,
     isEdited: isSelected && isEdited,
     setIsEdited,
     editionProps: {

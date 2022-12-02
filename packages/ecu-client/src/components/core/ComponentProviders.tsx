@@ -45,10 +45,10 @@ function ComponentProviders({ children }: ComponentProvidersPropsType) {
   })
   const contextualInformationContextValue = useMemo<ContextualInformationContextType>(() => ({ contextualInformationState, setContextualInformationState }), [contextualInformationState])
 
-  const [className, setClassName] = useState('')
+  const [className, setClassName] = usePersistedState('class-name', '')
   const [selectedClassName, setSelectedClassName] = usePersistedState('selected-class-name', '')
   const [style, setStyle] = useState<CSSProperties>({})
-  const cssClassesContextValue = useMemo<CssClassesContextType>(() => ({ className, setClassName, selectedClassName, setSelectedClassName, style, setStyle }), [className, selectedClassName, setSelectedClassName, style])
+  const cssClassesContextValue = useMemo<CssClassesContextType>(() => ({ className, setClassName, selectedClassName, setSelectedClassName, style, setStyle }), [className, setClassName, selectedClassName, setSelectedClassName, style])
 
   return (
     <IsComponentRefreshingContext.Provider value={isComponnentRefreshingContextValue}>

@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
 import { Div, Input, Menu, MenuItem, WithOutsideClick } from 'honorable'
+import { AiOutlineFunction } from 'react-icons/ai'
 
 import { cssValueUnits } from '../../constants'
 
@@ -23,7 +24,10 @@ function CssValueInput({ value, onChange, large }: CssValueInputPropsType) {
   }, [onChange, rawValue, unit])
 
   const handleInputChange = useCallback((event: any) => {
-    onChange(`${event.target.value === '0' ? event.target.value : trimLeadingZeroes(event.target.value)}${unit?.toString()}`)
+    const nextValue = event.target.value === '0' ? event.target.value : trimLeadingZeroes(event.target.value)
+    const nextUnit = unit === 'auto' && nextValue ? 'px' : unit
+
+    onChange(`${nextValue}${nextUnit}`)
   }, [onChange, unit])
 
   const handleMenuClose = useCallback(() => {
@@ -41,7 +45,7 @@ function CssValueInput({ value, onChange, large }: CssValueInputPropsType) {
       py={0.25 / 2}
       px={0.25}
     >
-      {unit}
+      {unit !== 'function' ? unit : <AiOutlineFunction />}
     </Div>
   ), [unit])
 
@@ -66,7 +70,7 @@ function CssValueInput({ value, onChange, large }: CssValueInputPropsType) {
             noFocus // Would move the menu scroll otherwise
             onClick={() => handleUnitClick(unit)}
           >
-            {unit}
+            {unit !== 'function' ? unit : <AiOutlineFunction />}
           </MenuItem>
         ))}
       </Menu>
@@ -77,6 +81,7 @@ function CssValueInput({ value, onChange, large }: CssValueInputPropsType) {
     <Div
       xflex="x4"
       position="relative"
+      lineHeight="100%"
     >
       <Input
         slim
@@ -87,7 +92,6 @@ function CssValueInput({ value, onChange, large }: CssValueInputPropsType) {
         onChange={handleInputChange}
         backgroundColor="background"
         endIcon={renderAdornment()}
-        disabled={unit === 'auto'}
         width={large ? 128 - 32 : undefined}
         overflow="hidden"
         pr={0}

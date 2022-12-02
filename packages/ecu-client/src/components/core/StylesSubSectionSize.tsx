@@ -73,7 +73,7 @@ function StylesSubSectionSize({ cssValues, breakpointCssValues, onChange, disabl
     >
       <Div
         xflex="x4"
-        minWidth={42}
+        minWidth={38}
         color={getTextColor(attributeName)}
       >
         {label}

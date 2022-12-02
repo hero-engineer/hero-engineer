@@ -64,6 +64,7 @@ export const ecuSpecials = [
 export const ecuSpecialPrefix = '__ecu_special__'
 
 export const cssValueUnits = [
+  'function', // Special unit for calc and variables values
   'auto',
   'px',
   '%',

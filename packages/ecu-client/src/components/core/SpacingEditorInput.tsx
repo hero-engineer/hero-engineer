@@ -95,8 +95,7 @@ function SpacingEditorInputRef({ title, value, onChange, allowNegativeValues }: 
       <Div
         display="grid"
         gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-        columnGap={4}
-        rowGap={4}
+        gap={0.25}
         mt={0.5}
       >
         {designTokens.map(designToken => (

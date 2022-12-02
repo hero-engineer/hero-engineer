@@ -28,7 +28,7 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
   const { hierarchyId, setHierarchyId, componentDelta, setComponentDelta, isEdited, setIsEdited } = useContext(EditionContext)
   const { isInteractiveMode } = useContext(IsInteractiveModeContext)
   const { isComponentRefreshing } = useContext(IsComponentRefreshingContext)
-  const { setClassName, setStyle } = useContext(CssClassesContext)
+  const { setClassName, setSelectedClassName, setStyle } = useContext(CssClassesContext)
   const { isDragging } = useContext(BreakpointContext)
 
   const [refresh, setRefresh] = useState(0)
@@ -37,7 +37,7 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
   const [elementRegistry, setElementRegistry] = useState<Record<string, HTMLElement | null>>({})
   const editionOverlayContextValue = useMemo<EditionOverlayContextType>(() => ({ elementRegistry, setElementRegistry }), [elementRegistry])
 
-  const handleElementSelect = useCallback((event: ReactMouseEvent, hierarchyItem: HierarchyItemType, nextHierarchyId: string, nextComponentDelta: number) => {
+  const handleElementSelect = useCallback((event: ReactMouseEvent, hierarchyItem: HierarchyItemType, element: HTMLElement | null, nextHierarchyId: string, nextComponentDelta: number) => {
     if (nextHierarchyId === hierarchyId && nextComponentDelta === componentDelta) {
       if (event.detail > 1 && hierarchyItem.isComponentEditable) {
         if (hierarchyItem.onComponentAddress === totalHierarchy?.componentAddress) {
@@ -51,12 +51,15 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
       }
     }
     else {
+      const classNames = element?.getAttribute('class')?.split(' ').map(x => x.trim()).filter(x => !x.startsWith('ecu-')) ?? []
+
       setHierarchyId(nextHierarchyId)
       setComponentDelta(nextComponentDelta)
       setIsEdited(false)
       setHelperText('')
       setStyle({})
-      setClassName('')
+      setClassName(classNames.join(' '))
+      setSelectedClassName(x => classNames.includes(x) ? x : '')
     }
   }, [
     hierarchyId,
@@ -67,6 +70,7 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
     setIsEdited,
     setStyle,
     setClassName,
+    setSelectedClassName,
   ])
 
   const renderHierarchy: (hierarchyItem: HierarchyItemType | null, depth?: number) => ReactNode = useCallback((hierarchyItem: HierarchyItemType | null, depth = zIndexes.editionOverlay + 1) => {
@@ -132,7 +136,7 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
           isEdited={isSelected && isEdited}
           isComponentRoot={!!hierarchyItem.componentAddress}
           helperText={isSelected ? helperText : ''}
-          onSelect={(event: ReactMouseEvent) => handleElementSelect(event, hierarchyItem, currentHierarchyId, currentComponentDelta)}
+          onSelect={(event: ReactMouseEvent) => handleElementSelect(event, hierarchyItem, element, currentHierarchyId, currentComponentDelta)}
         />
         {(hierarchyItem.children || []).map(child => (
           <Fragment key={child.id}>
