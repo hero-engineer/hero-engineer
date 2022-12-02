@@ -446,7 +446,8 @@ export default mergeTheme(defaultTheme, {
         },
       },
       ({ backgroundBreakpoint }: any) => backgroundBreakpoint && {
-        color: defaultTheme.colors.text.light,
+        // @ts-expect-error
+        color: defaultTheme.colors?.text.light,
         backgroundColor: 'breakpoint',
         '&:hover': {
           backgroundColor: 'darken(breakpoint, 2)',

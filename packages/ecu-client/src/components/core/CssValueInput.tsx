@@ -88,7 +88,7 @@ function CssValueInput({ value, onChange, large }: CssValueInputPropsType) {
         backgroundColor="background"
         endIcon={renderAdornment()}
         disabled={unit === 'auto'}
-        width={large ? 128 - 32 : null}
+        width={large ? 128 - 32 : undefined}
         overflow="hidden"
         pr={0}
       />
