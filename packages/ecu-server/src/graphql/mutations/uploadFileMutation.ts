@@ -10,12 +10,12 @@ import { HistoryMutationReturnType } from '../../types.js'
 
 import composeHistoryMutation from '../../history/composeHistoryMutation.js'
 
-type UploadImageMutationMutationArgsType = {
+type UploadFileMutationArgsType = {
   file: Upload
   fileName: string
 }
 
-async function uploadFileMutation(_: any, { file }: UploadImageMutationMutationArgsType): Promise<HistoryMutationReturnType<string>> {
+async function uploadFileMutation(_: any, { file }: UploadFileMutationArgsType): Promise<HistoryMutationReturnType<string>> {
   const { createReadStream, filename /* , mimetype, encoding */ } = await file
 
   const stream = createReadStream()

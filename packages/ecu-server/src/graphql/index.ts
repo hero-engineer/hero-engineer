@@ -42,6 +42,7 @@ import updateSpacingsMutation from './mutations/updateSpacingsMutation.js'
 import updateRootCssMutation from './mutations/updateRootCssMutation.js'
 import createCssClassMutation from './mutations/createCssClassMutation.js'
 import updateCssClassMutation from './mutations/updateCssClassMutation.js'
+import updateFaviconMutation from './mutations/updateFaviconMutation.js'
 import installOrUpdatePackageMutation from './mutations/installOrUpdatePackageMutation.js'
 import uploadFileMutation from './mutations/uploadFileMutation.js'
 import undoMutation from './mutations/undoMutation.js'
@@ -248,6 +249,8 @@ export const typeDefs = gql`
 
     uploadFile(file: Upload!, fileName: String!): String!
 
+    updateFavicon(url: String!): Boolean!
+
     installOrUpdatePackage(name: String!, version: String!, type: String!, shouldDelete: Boolean!): Boolean!
 
     updateComponentScreenshot(sourceComponentAddress: String!, dataUrl: String!): Boolean!
@@ -308,6 +311,8 @@ export const resolvers = {
     updateCssClass: withLog(updateCssClassMutation, 'updateCssClass', true),
 
     uploadFile: withLog(uploadFileMutation, 'uploadFile', true),
+
+    updateFavicon: withLog(updateFaviconMutation, 'updateFavicon', true),
 
     installOrUpdatePackage: withLog(installOrUpdatePackageMutation, 'installOrUpdatePackage', true),
 
