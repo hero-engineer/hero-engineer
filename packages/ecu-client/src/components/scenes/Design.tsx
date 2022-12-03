@@ -1,4 +1,5 @@
 import { Div } from 'honorable'
+import { textAlign } from 'html2canvas/dist/types/css/property-descriptors/text-align'
 import { Link, Outlet } from 'react-router-dom'
 
 const linkStyle = {
@@ -18,7 +19,8 @@ const tabProps = {
   },
 }
 
-function Settings() {
+// Design scene
+function Design() {
   return (
     <Div
       flexGrow
@@ -31,14 +33,22 @@ function Settings() {
         width={128 + 32 + 8 + 2}
       >
         <Link
-          to="/_ecu_/settings/general"
+          to="/_ecu_/design/system"
           style={linkStyle}
         >
           <Div
             {...tabProps}
             borderTop="1px solid border"
           >
-            General
+            Design System
+          </Div>
+        </Link>
+        <Link
+          to="/_ecu_/design/root-styles"
+          style={linkStyle}
+        >
+          <Div {...tabProps}>
+            Root Styles
           </Div>
         </Link>
       </Div>
@@ -53,4 +63,4 @@ function Settings() {
   )
 }
 
-export default Settings
+export default Design

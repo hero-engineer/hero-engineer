@@ -4,7 +4,7 @@ import DesignSystemSectionTypography from '../core/DesignSystemSectionTypography
 import DesignSystemSectionColors from '../core/DesignSystemSectionColors'
 import DesignSystemSectionSpacings from '../core/DesignSystemSectionSpacings'
 
-// Design scene
+// Design/system scene
 function DesignSystem() {
   return (
     <>

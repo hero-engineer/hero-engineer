@@ -1,0 +1,7 @@
+.CssFunctionEditor > .DraftEditor-root {
+  width: 100%;
+}
+
+.CssFunctionEditor :global(.public-DraftEditor-content) {
+  min-height: 140px;
+}

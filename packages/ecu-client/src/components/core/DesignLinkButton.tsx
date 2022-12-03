@@ -6,13 +6,13 @@ import { MdOutlineWorkspaces } from 'react-icons/md'
 function DesignLinkButton(props: any) {
   return (
     <Tooltip
-      label="Design System"
+      label="Design"
       placement="bottom-start"
     >
       <Button
         ghost
         as={Link}
-        to="/_ecu_/design-system"
+        to="/_ecu_/design"
         {...props}
       >
         <MdOutlineWorkspaces />

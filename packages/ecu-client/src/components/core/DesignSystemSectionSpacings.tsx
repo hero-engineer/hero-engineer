@@ -115,7 +115,7 @@ function SpacingItem({ spacing, onChange }: SpacingItemPropsType) {
       xflex="y2"
       width={128}
       maxWidth="100%"
-      minWidth={0}// For ellipsis to work
+      minWidth={0} // For ellipsis to work
       gap={1}
     >
       <Div
@@ -137,11 +137,15 @@ function SpacingItem({ spacing, onChange }: SpacingItemPropsType) {
           />
         ) : spacing.name}
       </Div>
-      <CssValueInput
-        large
-        value={spacing.value}
-        onChange={value => onChange({ ...spacing, value })}
-      />
+      <Div
+        xflex="x5"
+        fontSize="0.75rem"
+      >
+        <CssValueInput
+          value={spacing.value}
+          onChange={value => onChange({ ...spacing, value })}
+        />
+      </Div>
       <Div
         width={spacing.value}
         height={spacing.value}

@@ -3,7 +3,9 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import Home from '../scenes/Home'
 import Component from '../scenes/Component'
 import Components from '../scenes/Components'
+import Design from '../scenes/Design'
 import DesignSystem from '../scenes/DesignSystem'
+import DesignRootStyles from '../scenes/DesignRootStyles'
 import Packages from '../scenes/Packages'
 import Settings from '../scenes/Settings'
 import SettingsGeneral from '../scenes/SettingsGeneral'
@@ -43,13 +45,31 @@ function Router({ children }: any) {
               element={<Component />}
             />
             <Route
-              path="design-system"
+              path="design"
               element={(
                 <ResponsiveLayout>
-                  <DesignSystem />
+                  <Design />
                 </ResponsiveLayout>
               )}
-            />
+            >
+              <Route
+                index
+                element={(
+                  <Navigate
+                    replace
+                    to="system"
+                  />
+                )}
+              />
+              <Route
+                path="system"
+                element={<DesignSystem />}
+              />
+              <Route
+                path="root-styles"
+                element={<DesignRootStyles />}
+              />
+            </Route>
             <Route
               path="packages"
               element={(
@@ -71,7 +91,7 @@ function Router({ children }: any) {
                 element={(
                   <Navigate
                     replace
-                    to="/_ecu_/settings/general"
+                    to="general"
                   />
                 )}
               />
