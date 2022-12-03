@@ -1,5 +1,7 @@
-import { gql } from 'apollo-server'
+import { gql } from 'apollo-server-express'
 import { GraphQLScalarType, Kind } from 'graphql'
+// @ts-expect-error
+import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs'
 
 import withLog from './withLog.js'
 
@@ -17,6 +19,7 @@ import fontsQuery from './queries/fontsQuery.js'
 import colorsQuery from './queries/colorsQuery.js'
 import spacingsQuery from './queries/spacingsQuery.js'
 import rootCssQuery from './queries/rootCssQuery.js'
+import faviconQuery from './queries/faviconQuery.js'
 import packagesQuery from './queries/packagesQuery.js'
 import packagesUpdatesQuery from './queries/packagesUpdatesQuery.js'
 import undoRedoMetadataQuery from './queries/undoRedoMetdataQuery.js'
@@ -40,11 +43,14 @@ import updateRootCssMutation from './mutations/updateRootCssMutation.js'
 import createCssClassMutation from './mutations/createCssClassMutation.js'
 import updateCssClassMutation from './mutations/updateCssClassMutation.js'
 import installOrUpdatePackageMutation from './mutations/installOrUpdatePackageMutation.js'
+import uploadFileMutation from './mutations/uploadFileMutation.js'
 import undoMutation from './mutations/undoMutation.js'
 import redoMutation from './mutations/redoMutation.js'
 import pushMutation from './mutations/pushMutation.js'
 
 export const typeDefs = gql`
+
+  scalar Upload
 
   scalar CssValue
 
@@ -209,6 +215,8 @@ export const typeDefs = gql`
     rootCss: String!
     cssClasses: [CssClass]!
 
+    favicon: String!
+
     packages: [Package]!
     packagesUpdates: [Package]!
 
@@ -237,6 +245,8 @@ export const typeDefs = gql`
     updateRootCss(rootCss: String!): Boolean!
     createCssClass(sourceComponentAddress: String!, targetHierarchyId: String!, componentDelta: Int!, classNames: [String]!): Boolean!
     updateCssClass(classNames: [String!]!, breakpointId: String!, attributesJson: String!): Boolean!
+
+    uploadFile(file: Upload!, fileName: String!): String!
 
     installOrUpdatePackage(name: String!, version: String!, type: String!, shouldDelete: Boolean!): Boolean!
 
@@ -267,6 +277,8 @@ export const resolvers = {
     rootCss: withLog(rootCssQuery, 'rootCss'),
     cssClasses: withLog(cssClassesQuery, 'cssClasses'),
 
+    favicon: withLog(faviconQuery, 'favicon'),
+
     packages: withLog(packagesQuery, 'packages'),
     packagesUpdates: withLog(packagesUpdatesQuery, 'packagesUpdates'),
 
@@ -295,6 +307,8 @@ export const resolvers = {
     createCssClass: withLog(createCssClassMutation, 'createCssClass', true),
     updateCssClass: withLog(updateCssClassMutation, 'updateCssClass', true),
 
+    uploadFile: withLog(uploadFileMutation, 'uploadFile', true),
+
     installOrUpdatePackage: withLog(installOrUpdatePackageMutation, 'installOrUpdatePackage', true),
 
     updateComponentScreenshot: withLog(updateComponentScreenshotMutation, 'updateComponentScreenshot', true),
@@ -303,6 +317,7 @@ export const resolvers = {
     redo: withLog(redoMutation, 'redo', true),
     push: withLog(pushMutation, 'push', true),
   },
+  Upload: GraphQLUpload,
   CssValue: new GraphQLScalarType({
     name: 'CssValue',
     description: 'A string or number representing a CSS value',

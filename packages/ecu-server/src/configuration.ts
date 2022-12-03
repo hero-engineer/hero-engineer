@@ -36,6 +36,10 @@ export const ecuCommonDecoratorName = 'EcuCommonDecorator'
 
 export const ecuDisplayNameCommentPrefix = 'ecu-display-name '
 
+export const faviconStartComment = '<!-- FAVICON START -->'
+
+export const faviconEndComment = '<!-- FAVICON END -->'
+
 export const globalTypesFileBegginingComment = `/* ---
   Please do not delete this file
   as it is needed by the ecu core engine

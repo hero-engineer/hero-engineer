@@ -1,8 +1,10 @@
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { ApolloServer } from 'apollo-server'
+import { ApolloServer } from 'apollo-server-express'
 import express from 'express'
+// @ts-expect-error
+import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.mjs'
 import cors from 'cors'
 import chalk from 'chalk'
 
@@ -19,23 +21,32 @@ async function serve() {
     typeDefs,
     resolvers,
     csrfPrevention: true,
-    cors: {
-      origin: '*',
-    },
+    cache: 'bounded',
   })
 
-  server.listen({ port: 4000 }).then(({ url }) => {
-    console.log(chalk.green('~~~'), `🚀 Ecu GraphQL server ready at ${url}`)
+  await server.start()
+
+  const graphqlApp = express()
+
+  graphqlApp.use(cors())
+  graphqlApp.use(graphqlUploadExpress())
+
+  server.applyMiddleware({ app: graphqlApp })
+
+  await new Promise<void>(resolve => {
+    graphqlApp.listen({ port: 4000 }, resolve)
   })
+
+  console.log(chalk.green('~~~'), '🚀 Ecu GraphQL server ready at http://localhost:4000/')
 
   const __dirname = fileURLToPath(new URL('.', import.meta.url))
-  const app = express()
+  const staticApp = express()
 
-  app.use(cors())
-  app.use('/.ecu', express.static(getEcuLocation()))
-  app.use('/emojis', express.static(path.join(__dirname, '../data/emojis')))
+  staticApp.use(cors())
+  staticApp.use('/.ecu', express.static(getEcuLocation()))
+  staticApp.use('/emojis', express.static(path.join(__dirname, '../data/emojis')))
 
-  app.listen(4001)
+  staticApp.listen(4001)
 
   console.log(chalk.green('~~~'), '🚀 Ecu static  server ready at http://localhost:4001/')
 }
