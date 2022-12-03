@@ -1,5 +1,4 @@
 import { Div } from 'honorable'
-import { textAlign } from 'html2canvas/dist/types/css/property-descriptors/text-align'
 import { Link, Outlet } from 'react-router-dom'
 
 const linkStyle = {
@@ -49,6 +48,14 @@ function Design() {
         >
           <Div {...tabProps}>
             Root CSS
+          </Div>
+        </Link>
+        <Link
+          to="/_ecu_/design/favicon"
+          style={linkStyle}
+        >
+          <Div {...tabProps}>
+            Favicon
           </Div>
         </Link>
       </Div>

@@ -47,7 +47,7 @@ function CssFunctionEditor({ value, onChange }: CssFunctionEditorPropsType) {
   const colors = useMemo(() => colorsQueryResult.data?.colors ?? [], [colorsQueryResult.data])
   const spacings = useMemo(() => spacingsQueryResult.data?.spacings ?? [], [spacingsQueryResult.data])
 
-  const handleEditorChange = useCallback(async (value?: string) => {
+  const handleEditorChange = useCallback((value?: string) => {
     setUnvalidatedValue(value ?? '')
   }, [])
 
@@ -119,6 +119,7 @@ function CssFunctionEditor({ value, onChange }: CssFunctionEditorPropsType) {
         value={unvalidatedValue}
         onChange={handleEditorChange}
         options={{
+          tabSize: 2,
           minimap: {
             enabled: false,
           },

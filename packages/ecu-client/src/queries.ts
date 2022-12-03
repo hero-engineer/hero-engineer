@@ -245,6 +245,16 @@ export type FileImportsQueryDataType = {
   }
 }
 
+export const FaviconQuery = `
+  query {
+    favicon
+  }
+`
+
+export type FaviconQueryDataType = {
+  favicon: string
+}
+
 // Unused
 export const IsComponentAcceptingChildrenQuery = `
   query ($sourceComponentAddress: String, $ecuComponentName: String) {
@@ -472,6 +482,16 @@ export const UpdateCssClassMutation = `
 
 export type UpdateCssClassMutationDataType = {
   updateCssClass: boolean
+}
+
+export const UploadFileMutation = `
+  mutation ($file: Upload!, $fileName: String!) {
+    uploadFile (file: $file, fileName: $fileName)
+  }
+`
+
+export type UploadFileMutationDataType = {
+  uploadFile: string
 }
 
 export const InstallOrUpdatePackageMutation = `

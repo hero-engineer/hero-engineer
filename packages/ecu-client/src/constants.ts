@@ -40,6 +40,7 @@ export const refetchKeys = {
   colors: 'colors',
   spacings: 'spacings',
   rootCss: 'rootCss',
+  favicon: 'favicon',
 }
 
 export const ecuAtoms = [

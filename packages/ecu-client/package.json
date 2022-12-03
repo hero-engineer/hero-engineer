@@ -25,6 +25,8 @@
     "@emotion/styled": "^11.10.5",
     "@emotion/weak-memoize": "^0.3.0",
     "@monaco-editor/react": "^4.4.6",
+    "@urql/exchange-multipart-fetch": "^1.0.1",
+    "@urql/exchange-persisted-fetch": "^2.0.0",
     "css.gg": "^2.0.0",
     "emoji-picker-react": "^4.4.6",
     "emoji-regex": "^10.2.1",
