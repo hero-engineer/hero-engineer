@@ -20,6 +20,7 @@ It acts as a shield around your app to reprogram it as you create new components
 - Undo/Redo
 - Component screenshots
 - Packages management
+- Design system
 - Fonts and CSS variables management
 - Favicon management
 - Dark mode
