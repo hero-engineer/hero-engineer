@@ -3,7 +3,7 @@ import { Button, Div, H1, Img } from 'honorable'
 
 import { refetchKeys } from '../../constants'
 
-import { FaviconQuery, FaviconQueryDataType, UploadFileMutation, UploadFileMutationDataType } from '../../queries'
+import { FaviconQuery, FaviconQueryDataType, UpdateFaviconMutation, UpdateFaviconMutationDataType, UploadFileMutation, UploadFileMutationDataType } from '../../queries'
 
 import useQuery from '../../hooks/useQuery'
 import useMutation from '../../hooks/useMutation'
@@ -19,6 +19,7 @@ function DesignFavicon() {
     query: FaviconQuery,
   })
   const [, uploadFile] = useMutation<UploadFileMutationDataType>(UploadFileMutation)
+  const [, updateFavicon] = useMutation<UpdateFaviconMutationDataType>(UpdateFaviconMutation)
 
   useRefetch({
     key: refetchKeys.favicon,
@@ -41,10 +42,19 @@ function DesignFavicon() {
       fileName: event.target.files[0].name,
     })
 
-    console.log('url', response.data?.uploadFile)
-    setIsLoading(false)
+    if (!response.data?.uploadFile) {
+      setIsLoading(false)
 
-  }, [uploadFile])
+      return
+    }
+
+    await updateFavicon({
+      url: response.data.uploadFile,
+    })
+
+    // No need to refetch favicon query, because vitejs will reload the page
+    setIsLoading(false)
+  }, [uploadFile, updateFavicon])
 
   const renderFavicon = useCallback(() => {
     if (faviconUrl) {
@@ -87,7 +97,7 @@ function DesignFavicon() {
       </Button>
       <input
         type="file"
-        accept=".jpg, .png, .jpeg, .svg|image/*"
+        accept="image/*"
         ref={inputRef}
         onChange={handleFileChange}
         style={{ display: 'none' }}

@@ -494,6 +494,16 @@ export type UploadFileMutationDataType = {
   uploadFile: string
 }
 
+export const UpdateFaviconMutation = `
+  mutation ($url: String!) {
+    updateFavicon (url: $url)
+  }
+`
+
+export type UpdateFaviconMutationDataType = {
+  updateFavicon: boolean
+}
+
 export const InstallOrUpdatePackageMutation = `
   mutation ($name: String!, $version: String!, $type: String!, $shouldDelete: Boolean!) {
     installOrUpdatePackage (name: $name, version: $version, type: $type, shouldDelete: $shouldDelete)
