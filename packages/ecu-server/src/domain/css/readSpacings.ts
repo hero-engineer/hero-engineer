@@ -11,8 +11,6 @@ function readSpacings() {
 
   const rawVariables = extractBetweenComments(indexCssNode.payload.code, spacingsStartComment, spacingsEndComment)
 
-  console.log('rawVariables', rawVariables)
-
   return rawVariables.split('\n').map(line => {
     const match = line.match(extractRegex)
 

@@ -7,8 +7,10 @@ import { BreakpointType, CssAttributeType, CssClassType, FileNodeType } from '..
 
 import areSelectorsEqual from './utils/areSelectorsEqual.js'
 
+const postcssInstance = postcss([posscssNested])
+
 async function traverseCss(fileNode: FileNodeType, targetSelector?: string, breakpoint?: BreakpointType, onSuccess?: (cssClass: CssClassType, rule: Rule, root: Root | Document) => void, regenerate?: boolean) {
-  const { root } = await postcss([posscssNested]).process(fileNode.payload.code, { from: fileNode.payload.path })
+  const { root } = await postcssInstance.process(fileNode.payload.code, { from: fileNode.payload.path })
 
   const classes: CssClassType[] = []
 

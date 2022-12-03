@@ -97,6 +97,14 @@ export const spacingsEndComment = `/* --
   * SPACINGS END
 -- */`
 
+export const rootCssStartComment = `/* --
+  * ROOT CSS START
+-- */`
+
+export const rootCssEndComment = `/* --
+  * ROOT CSS END
+-- */`
+
 export const externalModulesImports: ImportType[] = [
   {
     name: 'PropsWithChildren',
