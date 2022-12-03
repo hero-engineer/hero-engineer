@@ -44,11 +44,11 @@ function Design() {
           </Div>
         </Link>
         <Link
-          to="/_ecu_/design/root-styles"
+          to="/_ecu_/design/root-css"
           style={linkStyle}
         >
           <Div {...tabProps}>
-            Root Styles
+            Root CSS
           </Div>
         </Link>
       </Div>

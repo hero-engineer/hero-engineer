@@ -83,6 +83,22 @@ export type HierarchyQueryDataType = {
   hierarchy: string
 }
 
+export const IsCssValidQuery = `
+  query ($css: String!){
+    isCssValid (css: $css) {
+      isCssValid
+      css
+    }
+  }
+`
+
+export type IsCssValidQueryDataType = {
+  isCssValid: {
+    isCssValid: boolean
+    css: string
+  }
+}
+
 export const BreakpointsQuery = `
   query {
     breakpoints {
@@ -145,6 +161,16 @@ export const SpacingsQuery = `
 
 export type SpacingsQueryDataType = {
   spacings: SpacingType[]
+}
+
+export const RootCssQuery = `
+  query {
+    rootCss
+  }
+`
+
+export type RootCssQueryDataType = {
+  rootCss: string
 }
 
 export const CssClassesQuery = `
@@ -416,6 +442,16 @@ export const UpdateSpacingsMutation = `
 
 export type UpdateSpacingsMutationDataType = {
   updateSpacings: boolean
+}
+
+export const UpdateRootCssMutation = `
+  mutation ($rootCss: String!) {
+    updateRootCss (rootCss: $rootCss)
+  }
+`
+
+export type UpdateRootCssMutationDataType = {
+  updateRootCss: boolean
 }
 
 export const CreateCssClassMutation = `

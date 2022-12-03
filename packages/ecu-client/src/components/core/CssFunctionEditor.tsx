@@ -1,10 +1,10 @@
-import { useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import Editor, { useMonaco } from '@monaco-editor/react'
 import { Div } from 'honorable'
 
 import { refetchKeys } from '../../constants'
 
-import { ColorsQuery, ColorsQueryDataType, SpacingsQuery, SpacingsQueryDataType } from '../../queries'
+import { ColorsQuery, ColorsQueryDataType, IsCssValidQuery, IsCssValidQueryDataType, SpacingsQuery, SpacingsQueryDataType } from '../../queries'
 
 import useQuery from '../../hooks/useQuery'
 import useRefetch from '../../hooks/useRefetch'
@@ -16,12 +16,21 @@ type CssFunctionEditorPropsType = {
 
 function CssFunctionEditor({ value, onChange }: CssFunctionEditorPropsType) {
   const monaco = useMonaco()
+  const [unvalidatedValue, setUnvalidatedValue] = useState(value)
+  const [isError, setIsError] = useState(false)
 
   const [colorsQueryResult, refetchColorsQuery] = useQuery<ColorsQueryDataType>({
     query: ColorsQuery,
   })
   const [spacingsQueryResult, refetchSpacingsQuery] = useQuery<SpacingsQueryDataType>({
     query: SpacingsQuery,
+  })
+  const [isCssValidQueryResult] = useQuery<IsCssValidQueryDataType>({
+    query: IsCssValidQuery,
+    variables: {
+      css: unvalidatedValue,
+    },
+    pause: !unvalidatedValue,
   })
 
   useRefetch(
@@ -37,6 +46,26 @@ function CssFunctionEditor({ value, onChange }: CssFunctionEditorPropsType) {
 
   const colors = useMemo(() => colorsQueryResult.data?.colors ?? [], [colorsQueryResult.data])
   const spacings = useMemo(() => spacingsQueryResult.data?.spacings ?? [], [spacingsQueryResult.data])
+
+  const handleEditorChange = useCallback(async (value?: string) => {
+    setUnvalidatedValue(value ?? '')
+  }, [])
+
+  useEffect(() => {
+    if (isCssValidQueryResult.fetching || !isCssValidQueryResult.data) return
+
+    if (isCssValidQueryResult.data.isCssValid.isCssValid && isCssValidQueryResult.data.isCssValid.css !== value) {
+      setIsError(false)
+      onChange(isCssValidQueryResult.data.isCssValid.css)
+    }
+    else if (!isCssValidQueryResult.data.isCssValid.isCssValid) {
+      setIsError(true)
+    }
+  }, [isCssValidQueryResult.fetching, isCssValidQueryResult.data, value, onChange])
+
+  useEffect(() => {
+    setUnvalidatedValue(value)
+  }, [value])
 
   useEffect(() => {
     if (!monaco) return
@@ -79,16 +108,16 @@ function CssFunctionEditor({ value, onChange }: CssFunctionEditorPropsType) {
     >
       <Div
         fontSize="0.85rem"
-        color="text-light"
+        color={isError ? 'danger' : 'text-light'}
       >
-        Type @ to insert a variable
+        {isError ? 'Invalid CSS' : 'Type @ to insert a variable'}
       </Div>
       <Editor
         height="256px"
         language="css"
         theme="vs-dark"
-        value={value}
-        onChange={x => onChange(x ?? '')}
+        value={unvalidatedValue}
+        onChange={handleEditorChange}
         options={{
           minimap: {
             enabled: false,

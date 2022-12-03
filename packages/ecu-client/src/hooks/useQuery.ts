@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from 'react'
-import { UseQueryArgs, UseQueryState, useQuery as externalUseQuery } from 'urql'
+import { OperationContext, UseQueryArgs, UseQueryState, useQuery as externalUseQuery } from 'urql'
 
 import SnackbarContext from '../contexts/SnackBarContext'
 
@@ -21,7 +21,7 @@ function useQuery<T>(args: UseQueryArgs): [UseQueryState<T>, (args: any) => void
     })
   }, [retval0, id, snackBarItems, appendSnackBarItem])
 
-  const handleRefetch = useCallback((options?: any) => {
+  const handleRefetch = useCallback((options?: Partial<OperationContext>) => {
     setId(Date.now())
 
     return retval1(options)

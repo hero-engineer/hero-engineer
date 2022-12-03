@@ -5,7 +5,7 @@ import Component from '../scenes/Component'
 import Components from '../scenes/Components'
 import Design from '../scenes/Design'
 import DesignSystem from '../scenes/DesignSystem'
-import DesignRootStyles from '../scenes/DesignRootStyles'
+import DesignRootCss from '../scenes/DesignRootCss'
 import Packages from '../scenes/Packages'
 import Settings from '../scenes/Settings'
 import SettingsGeneral from '../scenes/SettingsGeneral'
@@ -66,8 +66,8 @@ function Router({ children }: any) {
                 element={<DesignSystem />}
               />
               <Route
-                path="root-styles"
-                element={<DesignRootStyles />}
+                path="root-css"
+                element={<DesignRootCss />}
               />
             </Route>
             <Route
