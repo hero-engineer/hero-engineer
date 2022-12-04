@@ -48,8 +48,6 @@ function EditionOverlayElement({
 }: EditionOverlayElementPropsType) {
   const rootRef = useRef<HTMLDivElement>(null)
 
-  const color = isDrop ? 'drag-and-drop' : isEdited ? 'is-edited' : isSelected ? isComponentRoot ? 'is-component-root' : 'primary' : null
-
   const handleWheel = useCallback((event: WheelEvent) => {
     if (!element) return
 
@@ -73,7 +71,9 @@ function EditionOverlayElement({
     }
   }, [isDisabled, handleWheel])
 
-  if (isDisabled) return null
+  if (isDisabled && !isSelected) return null
+
+  const color = isDrop ? 'drag-and-drop' : isEdited ? 'is-edited' : isSelected ? isComponentRoot ? 'is-component-root' : 'primary' : null
 
   return (
     <>
@@ -88,14 +88,15 @@ function EditionOverlayElement({
         zIndex={depth}
         border={color ? `1px solid ${color}` : null}
         _hover={{
-          border: isHoverDisabled && !isDrop ? null : `1px solid ${isDrop ? 'drag-and-drop' : isEdited ? 'is-edited' : isComponentRoot ? 'is-component-root' : 'primary'}`,
+          border: isHoverDisabled && !isSelected ? null : `1px solid ${isDrop ? 'drag-and-drop' : isEdited ? 'is-edited' : isComponentRoot ? 'is-component-root' : 'primary'}`,
           '& + div': {
-            display: isHoverDisabled ? 'none' : 'flex',
+            display: isHoverDisabled && !isSelected ? 'none' : 'flex',
             '&:hover': {
               display: isSelected ? 'flex' : 'none',
             },
           },
         }}
+        pointerEvents={isDisabled ? 'none' : 'auto'}
         onClick={onSelect}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
@@ -105,9 +106,9 @@ function EditionOverlayElement({
             position="absolute"
             top={isDropVertical ? dropKnobPosition : 2}
             left={isDropVertical ? 2 : dropKnobPosition}
-            width={isDropVertical ? 'calc(100% - 4px)' : 1}
-            height={isDropVertical ? 1 : 'calc(100% - 4px)'}
-            backgroundColor="drag-and-drop"
+            width={isDropVertical ? 'calc(100% - 4px)' : 1.5}
+            height={isDropVertical ? 1.5 : 'calc(100% - 4px)'}
+            backgroundColor="drag-and-drop-knob"
           />
         )}
       </Div>

@@ -2,7 +2,7 @@ import { Fragment, MouseEvent as ReactMouseEvent, ReactNode, memo, useCallback, 
 import { Div } from 'honorable'
 
 import { zIndexes } from '../../constants'
-import { HierarchyItemType, XYType } from '../../types'
+import { HierarchyItemType } from '../../types'
 
 import HierarchyContext from '../../contexts/HierarchyContext'
 import EditionContext from '../../contexts/EditionContext'
@@ -28,6 +28,11 @@ type DragAndDropStateType = {
   childrenIndex?: number
   childrenPosition?: 'before' | 'after'
   knobPosition?: number
+}
+
+type IndexAndPositionType = {
+  index: number,
+  position: 'before' | 'after'
 }
 
 type EditionOverlayPropsType = {
@@ -60,14 +65,6 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
     setDragAndDropState({ isDragging: false })
   }, [])
 
-  // const handleMouseMove = useCallback((event: MouseEvent) => {
-  //   if (!overlayRef.current) return
-
-  //   const { top, left } = overlayRef.current.getBoundingClientRect()
-
-  //   setDragAndDropPosition({ x: event.clientX - left, y: event.clientY - top })
-  // }, [])
-
   const handleElementMouseMove = useCallback((event: ReactMouseEvent, hierarchyItem: HierarchyItemType, hierarchyId: string, componentDelta: number) => {
     if (!dragAndDropState.isDragging) return
     if (!hierarchyItem.isComponentAcceptingChildren) return
@@ -85,7 +82,7 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
       isVertical = !((display === 'flex' || display === 'inline-flex') && flexDirection === 'row')
     }
 
-    const knobPosition = 3
+    let knobPosition = -1
     let childrenIndex = -1
     let childrenPosition: 'before' | 'after' = 'before'
 
@@ -100,24 +97,42 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
         childrenRects.push(childElement.getBoundingClientRect())
       }
 
-      const indexAndPosition = childrenRects
-        .map((rect, index) => isVertical ? ({ index, min: rect.top, max: rect.bottom }) : ({ index, min: rect.left, max: rect.right }))
-        .reduce<{ index: number, position: 'before' | 'after'}>((acc, { index, min, max }) => {
-          if (axisValue > min) {
-            return {
-              index,
-              position: axisValue > min + (max - min) / 2 ? 'after' : 'before',
-            }
+      const minAndMaxs = childrenRects.map((rect, index) => isVertical ? ({ index, min: rect.top, max: rect.bottom }) : ({ index, min: rect.left, max: rect.right }))
+      const indexAndPosition = minAndMaxs.reduce<IndexAndPositionType>((acc, { index, min, max }) => {
+        if (axisValue > min) {
+          return {
+            index,
+            position: axisValue > min + (max - min) / 2 ? 'after' : 'before',
           }
+        }
 
-          return acc
-        }, { index: 0, position: 'before' })
+        return acc
+      }, { index: 0, position: 'before' })
 
       childrenIndex = indexAndPosition.index
       childrenPosition = indexAndPosition.position
+      const elementRect = element.getBoundingClientRect()
+      const elementOffset = isVertical ? elementRect.top : elementRect.left
+      const elementMax = isVertical ? elementRect.height : elementRect.width
+
+      const min = childrenPosition === 'after'
+        ? minAndMaxs[childrenIndex].max - elementOffset
+        : childrenIndex
+          ? minAndMaxs[childrenIndex - 1].max - elementOffset
+          : 0
+      const max = childrenPosition === 'after'
+        ? childrenIndex === minAndMaxs.length - 1
+          ? elementMax
+          : minAndMaxs[childrenIndex + 1].min - elementOffset
+        : minAndMaxs[childrenIndex].min - elementOffset
+
+      knobPosition = min + (max - min) / 2
+
+      if (knobPosition === 0) knobPosition += 2
+      if (knobPosition === elementMax) knobPosition -= 2
     }
 
-    console.log('xxx', childrenIndex, childrenPosition)
+    // console.log('xxx', childrenIndex, childrenPosition)
 
     setDragAndDropState(x => ({ ...x, isVertical, hierarchyId, componentDelta, childrenIndex, childrenPosition, knobPosition }))
   }, [dragAndDropState.isDragging, elementRegistry])
@@ -298,16 +313,6 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
       window.removeEventListener('mouseup', handleMouseUp)
     }
   }, [dragAndDropState.isDragging, handleMouseUp])
-
-  // useEffect(() => {
-  //   if (!dragAndDropState.isDragging) return
-
-  //   window.addEventListener('mousemove', handleMouseMove)
-
-  //   return () => {
-  //     window.removeEventListener('mousemove', handleMouseMove)
-  //   }
-  // }, [dragAndDropState.isDragging, handleMouseMove])
 
   return (
     <Div
