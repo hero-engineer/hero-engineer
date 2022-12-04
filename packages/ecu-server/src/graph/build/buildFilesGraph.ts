@@ -7,12 +7,12 @@ import addFile from '../add/addFile.js'
 import addFileDependencies from '../add/addFileDependencies.js'
 import { getNodesByRole } from '../index.js'
 
-function buildFilesGraph() {
+async function buildFilesGraph() {
   traverseDirectories(appPath)
 
-  getNodesByRole('File').forEach(fileNode => {
-    addFileDependencies(fileNode)
-  })
+  for (const fileNode of getNodesByRole('File')) {
+    await addFileDependencies(fileNode)
+  }
 }
 
 function traverseDirectories(rootPath: string) {

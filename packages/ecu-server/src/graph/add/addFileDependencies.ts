@@ -8,6 +8,7 @@ import { appPath, ecuFunctionIdCommentPrefix } from '../../configuration.js'
 import { FileNodeType, FunctionNodeType } from '../../types.js'
 
 import traverse from '../../domain/traverse.js'
+import regenerate from '../../domain/regenerate.js'
 
 import possiblyAddExtension from '../../utils/possiblyAddExtension.js'
 
@@ -15,7 +16,7 @@ import { addEdge, addNode, getNodesByRole } from '../index.js'
 
 import createFunctionNode from '../models/createFunctionNode.js'
 
-function addFileDependencies(fileNode: FileNodeType) {
+async function addFileDependencies(fileNode: FileNodeType) {
   const { ast } = fileNode.payload
   const fileNodes = getNodesByRole('File')
 
@@ -45,9 +46,16 @@ function addFileDependencies(fileNode: FileNodeType) {
   FUNCTIONS
   --- */
 
+  let modified = false
+
   traverse(ast, {
     FunctionDeclaration(path) {
-      const address = extractFunctionId(path) || appendFunctionId(path)
+      let address = extractFunctionId(path)
+
+      if (!address) {
+        address = appendFunctionId(path)
+        modified = true
+      }
 
       const functionNode = createFunctionNode({
         address,
@@ -118,6 +126,12 @@ function addFileDependencies(fileNode: FileNodeType) {
     },
   })
 
+  /* ---
+    REGENERATION
+  --- */
+
+  if (modified) await regenerate(fileNode, ast)
+
   return fileNode
 }
 
@@ -134,7 +148,7 @@ function extractFunctionId(path: NodePath<FunctionDeclaration>) {
 
 function appendFunctionId(path: NodePath<FunctionDeclaration>) {
   const id = shortId()
-  const comment = `// ${ecuFunctionIdCommentPrefix} ${id}`
+  const comment = `${ecuFunctionIdCommentPrefix} ${id}`
 
   addComment(path.node, 'leading', comment, true)
 
