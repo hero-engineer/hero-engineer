@@ -64,17 +64,17 @@ function WithComponentScrenshot({ children }: WithComponentScrenshotPropsType) {
     })
   }, [updateComponentScreenshot, componentAddress])
 
-  const takeScreenshotWithTimeout = useCallback(() => {
-    setTimeout(takeScreenshot, 1000)
-  }, [takeScreenshot])
+  // const takeScreenshotWithTimeout = useCallback(() => {
+  //   setTimeout(takeScreenshot, 1000)
+  // }, [takeScreenshot])
 
-  useRefetch(
-    {
-      key: refetchKeys.componentScreenshot,
-      refetch: takeScreenshotWithTimeout,
-      skip: !componentAddress,
-    }
-  )
+  // useRefetch(
+  //   {
+  //     key: refetchKeys.componentScreenshot,
+  //     refetch: takeScreenshotWithTimeout,
+  //     skip: !componentAddress,
+  //   }
+  // )
 
   return (
     <div ref={componentRef}>

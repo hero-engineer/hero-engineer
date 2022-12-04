@@ -7,36 +7,3 @@
   white-space: pre-wrap;
   min-height: 19px;
 }
-
-.ecu-selected-root {
-  border-left: 1px solid var(--color-is-component-root);
-  border-right: 1px solid var(--color-is-component-root);
-  margin-left: -1px;
-  margin-right: -1px;
-}
-
-.ecu-selected-root-first {
-  border-top: 1px solid var(--color-is-component-root);
-  margin-top: -1px;
-}
-
-.ecu-selected-root-last {
-  border-bottom: 1px solid var(--color-is-component-root);
-  margin-bottom: -1px;
-}
-
-.ecu-selected {
-  outline: 1px solid var(--color-primary);
-}
-
-.ecu-drag {
-  opacity: 0.5;
-}
-
-.ecu-drop {
-  outline: 1px solid var(--color-is-drop);
-}
-
-.ecu-edited {
-  outline: 1px solid var(--color-is-edited);
-}

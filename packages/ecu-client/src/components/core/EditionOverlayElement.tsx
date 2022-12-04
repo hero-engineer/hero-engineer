@@ -12,26 +12,56 @@ type EditionOverlayElementPropsType = {
   width: number
   height: number
   helperText: string
+  dropKnobPosition: number
   isSelected: boolean
   isEdited: boolean
   isComponentRoot: boolean
+  isDisabled: boolean
+  isHoverDisabled: boolean
+  isDrop: boolean
+  isDropVertical: boolean
   onSelect: (event: MouseEvent) => void
+  onMouseDown: (event: MouseEvent) => void
+  onMouseMove: (event: MouseEvent) => void
 }
 
-function EditionOverlayElement({ hierarchyItem, element, depth, top, left, width, height, helperText, isSelected, isEdited, isComponentRoot, onSelect }: EditionOverlayElementPropsType) {
+function EditionOverlayElement({
+  hierarchyItem,
+  element,
+  depth,
+  top,
+  left,
+  width,
+  height,
+  helperText,
+  dropKnobPosition,
+  isSelected,
+  isEdited,
+  isComponentRoot,
+  isDisabled,
+  isHoverDisabled,
+  isDrop,
+  isDropVertical,
+  onSelect,
+  onMouseDown,
+  onMouseMove,
+}: EditionOverlayElementPropsType) {
   const rootRef = useRef<HTMLDivElement>(null)
 
-  const color = isEdited ? 'is-edited' : isSelected ? isComponentRoot ? 'is-component-root' : 'primary' : null
+  const color = isDrop ? 'drag-and-drop' : isEdited ? 'is-edited' : isSelected ? isComponentRoot ? 'is-component-root' : 'primary' : null
 
   const handleWheel = useCallback((event: WheelEvent) => {
     if (!element) return
 
-    // event.preventDefault()
+    event.preventDefault()
+
     element.scrollTop += event.deltaY
     element.scrollLeft += event.deltaX
   }, [element])
 
   useEffect(() => {
+    if (isDisabled) return
+
     const { current } = rootRef
 
     if (!current) return
@@ -41,13 +71,16 @@ function EditionOverlayElement({ hierarchyItem, element, depth, top, left, width
     return () => {
       current.removeEventListener('wheel', handleWheel)
     }
-  }, [handleWheel])
+  }, [isDisabled, handleWheel])
+
+  if (isDisabled) return null
 
   return (
     <>
       <Div
         ref={rootRef}
         position="absolute"
+        xflex={isDropVertical ? 'y2' : 'x4'}
         top={top - 1}
         left={left - 1}
         width={width + 2}
@@ -55,16 +88,29 @@ function EditionOverlayElement({ hierarchyItem, element, depth, top, left, width
         zIndex={depth}
         border={color ? `1px solid ${color}` : null}
         _hover={{
-          border: `1px solid ${isEdited ? 'is-edited' : isComponentRoot ? 'is-component-root' : 'primary'}`,
+          border: isHoverDisabled && !isDrop ? null : `1px solid ${isDrop ? 'drag-and-drop' : isEdited ? 'is-edited' : isComponentRoot ? 'is-component-root' : 'primary'}`,
           '& + div': {
-            display: 'flex',
+            display: isHoverDisabled ? 'none' : 'flex',
             '&:hover': {
               display: isSelected ? 'flex' : 'none',
             },
           },
         }}
         onClick={onSelect}
-      />
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+      >
+        {dropKnobPosition > 0 && (
+          <Div
+            position="absolute"
+            top={isDropVertical ? dropKnobPosition : 2}
+            left={isDropVertical ? 2 : dropKnobPosition}
+            width={isDropVertical ? 'calc(100% - 4px)' : 1}
+            height={isDropVertical ? 1 : 'calc(100% - 4px)'}
+            backgroundColor="drag-and-drop"
+          />
+        )}
+      </Div>
       <Div
         xflex="x4"
         display={isSelected ? 'flex' : 'none'}
@@ -76,6 +122,7 @@ function EditionOverlayElement({ hierarchyItem, element, depth, top, left, width
         color={isSelected || isEdited ? 'white' : isComponentRoot ? 'is-component-root' : 'primary'}
         fontSize="0.75rem"
         cursor="pointer"
+        userSelect="none"
         zIndex={depth}
         gap={0.25}
         px={0.25 * 2 / 3}

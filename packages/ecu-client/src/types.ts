@@ -129,3 +129,8 @@ export type SpacingType ={
   name: string
   value: string
 }
+
+export type XYType = {
+  x: number
+  y: number
+}

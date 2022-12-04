@@ -157,7 +157,7 @@ export default mergeTheme(defaultTheme, {
     success: 'green.500',
     warning: 'yellow.500',
     danger: 'red.500',
-    'is-drop': 'green.500',
+    'drag-and-drop': 'green.500',
     'is-edited': 'darkorchid',
     'is-component-root': 'pink.500',
     breakpoint: {

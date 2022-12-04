@@ -1,8 +1,8 @@
-import { Fragment, MouseEvent as ReactMouseEvent, ReactNode, memo, useCallback, useContext, useEffect, useState } from 'react'
+import { Fragment, MouseEvent as ReactMouseEvent, ReactNode, memo, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { Div } from 'honorable'
 
 import { zIndexes } from '../../constants'
-import { HierarchyItemType } from '../../types'
+import { HierarchyItemType, XYType } from '../../types'
 
 import HierarchyContext from '../../contexts/HierarchyContext'
 import EditionContext from '../../contexts/EditionContext'
@@ -20,17 +20,30 @@ import EditionOverlayElement from './EditionOverlayElement'
 
 type LimitedDOMRect = Pick<DOMRect, 'top' | 'left' | 'width' | 'height'>
 
+type DragAndDropStateType = {
+  isDragging: boolean
+  isVertical?: boolean
+  hierarchyId?: string
+  componentDelta?: number
+  childrenIndex?: number
+  childrenPosition?: 'before' | 'after'
+  knobPosition?: number
+}
+
 type EditionOverlayPropsType = {
   children: ReactNode
 }
 
 function EditionOverlay({ children }: EditionOverlayPropsType) {
+  const overlayRef = useRef<HTMLDivElement>(null)
+
   const { totalHierarchy } = useContext(HierarchyContext)
   const { hierarchyId, componentDelta, isEdited, setIsEdited } = useContext(EditionContext)
   const { elementRegistry } = useContext(EditionOverlayContext)
   const { isInteractiveMode } = useContext(IsInteractiveModeContext)
   const { isComponentRefreshing } = useContext(IsComponentRefreshingContext)
   const { isDragging } = useContext(BreakpointContext)
+  const [dragAndDropState, setDragAndDropState] = useState<DragAndDropStateType>({ isDragging: false })
 
   const [refresh, setRefresh] = useState(0)
   const [helperText, setHelperText] = useState('')
@@ -42,6 +55,72 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
 
     setHelperText(isOnComponent ? '' : `Editable under ${hierarchyItem.onComponentName}`)
   }, [handleHierarchySelect])
+
+  const handleMouseUp = useCallback(() => {
+    setDragAndDropState({ isDragging: false })
+  }, [])
+
+  // const handleMouseMove = useCallback((event: MouseEvent) => {
+  //   if (!overlayRef.current) return
+
+  //   const { top, left } = overlayRef.current.getBoundingClientRect()
+
+  //   setDragAndDropPosition({ x: event.clientX - left, y: event.clientY - top })
+  // }, [])
+
+  const handleElementMouseMove = useCallback((event: ReactMouseEvent, hierarchyItem: HierarchyItemType, hierarchyId: string, componentDelta: number) => {
+    if (!dragAndDropState.isDragging) return
+    if (!hierarchyItem.isComponentAcceptingChildren) return
+    if (!overlayRef.current) return
+
+    event.stopPropagation()
+
+    const element = elementRegistry[hierarchyId] ?? null
+
+    let isVertical = true
+
+    if (element) {
+      const { display, flexDirection } = window.getComputedStyle(element)
+
+      isVertical = !((display === 'flex' || display === 'inline-flex') && flexDirection === 'row')
+    }
+
+    const knobPosition = 3
+    let childrenIndex = -1
+    let childrenPosition: 'before' | 'after' = 'before'
+
+    if (element) {
+      const { top: globalTop, left: globalLeft } = overlayRef.current.getBoundingClientRect()
+      const axisValue = isVertical ? event.clientY - globalTop : event.clientX - globalLeft
+      const childrenRects: DOMRect[] = []
+
+      for (let i = 0; i < element.children.length; i++) {
+        const childElement = element.children[i] as HTMLElement
+
+        childrenRects.push(childElement.getBoundingClientRect())
+      }
+
+      const indexAndPosition = childrenRects
+        .map((rect, index) => isVertical ? ({ index, min: rect.top, max: rect.bottom }) : ({ index, min: rect.left, max: rect.right }))
+        .reduce<{ index: number, position: 'before' | 'after'}>((acc, { index, min, max }) => {
+          if (axisValue > min) {
+            return {
+              index,
+              position: axisValue > min + (max - min) / 2 ? 'after' : 'before',
+            }
+          }
+
+          return acc
+        }, { index: 0, position: 'before' })
+
+      childrenIndex = indexAndPosition.index
+      childrenPosition = indexAndPosition.position
+    }
+
+    console.log('xxx', childrenIndex, childrenPosition)
+
+    setDragAndDropState(x => ({ ...x, isVertical, hierarchyId, componentDelta, childrenIndex, childrenPosition, knobPosition }))
+  }, [dragAndDropState.isDragging, elementRegistry])
 
   const renderHierarchy: (hierarchyItem: HierarchyItemType | null, depth?: number) => ReactNode = useCallback((hierarchyItem: HierarchyItemType | null, depth = zIndexes.editionOverlay + 1) => {
     if (!hierarchyItem) return null
@@ -91,6 +170,7 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
     }
 
     const isSelected = currentHierarchyId === hierarchyId && currentComponentDelta === componentDelta
+    const isDrop = !isSelected && dragAndDropState.hierarchyId === currentHierarchyId && dragAndDropState.componentDelta === currentComponentDelta
 
     return (
       <>
@@ -105,8 +185,15 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
           isSelected={isSelected}
           isEdited={isSelected && isEdited}
           isComponentRoot={!!hierarchyItem.componentAddress}
+          isHoverDisabled={dragAndDropState.isDragging}
+          isDisabled={dragAndDropState.isDragging && !hierarchyItem.isComponentAcceptingChildren}
+          isDrop={isDrop}
+          dropKnobPosition={isDrop ? dragAndDropState.knobPosition ?? 0 : -1}
+          isDropVertical={isDrop ? dragAndDropState.isVertical ?? false : false}
           helperText={isSelected ? helperText : ''}
           onSelect={(event: ReactMouseEvent) => handleElementSelect(event, hierarchyItem, currentHierarchyId, currentComponentDelta)}
+          onMouseDown={(event: ReactMouseEvent) => event.detail < 2 && isSelected && !isEdited && setDragAndDropState({ isDragging: true })}
+          onMouseMove={(event: ReactMouseEvent) => handleElementMouseMove(event, hierarchyItem, currentHierarchyId, currentComponentDelta)}
         />
         {(hierarchyItem.children || []).map(child => (
           <Fragment key={child.id}>
@@ -123,6 +210,7 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
     componentDelta,
     isEdited,
     helperText,
+    dragAndDropState,
     handleElementSelect,
     refresh,
   ])
@@ -201,6 +289,26 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
     }
   }, [helperText])
 
+  useEffect(() => {
+    if (!dragAndDropState.isDragging) return
+
+    window.addEventListener('mouseup', handleMouseUp)
+
+    return () => {
+      window.removeEventListener('mouseup', handleMouseUp)
+    }
+  }, [dragAndDropState.isDragging, handleMouseUp])
+
+  // useEffect(() => {
+  //   if (!dragAndDropState.isDragging) return
+
+  //   window.addEventListener('mousemove', handleMouseMove)
+
+  //   return () => {
+  //     window.removeEventListener('mousemove', handleMouseMove)
+  //   }
+  // }, [dragAndDropState.isDragging, handleMouseMove])
+
   return (
     <Div
       xflex="y2s"
@@ -209,6 +317,7 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
       {children}
       {!isInteractiveMode && (
         <Div
+          ref={overlayRef}
           position="absolute"
           top={0}
           bottom={0}
