@@ -11,7 +11,7 @@ type EcuThemeProviderPropsType = {
   children: ReactNode
 }
 
-function EcuThemeProvider({ children }: EcuThemeProviderPropsType) {
+function ProviderTheme({ children }: EcuThemeProviderPropsType) {
   const ecuRouteMatched = useMatch('/_ecu_/*')
 
   const { themeMode } = useContext(ThemeModeContext)
@@ -24,4 +24,4 @@ function EcuThemeProvider({ children }: EcuThemeProviderPropsType) {
   )
 }
 
-export default EcuThemeProvider
+export default ProviderTheme

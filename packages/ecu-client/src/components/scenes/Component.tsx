@@ -1,6 +1,6 @@
-import { useContext } from 'react'
-import { useParams } from 'react-router-dom'
-import { Div } from 'honorable'
+import { useCallback, useContext } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import { Button, Div, H3 } from 'honorable'
 import { RiNodeTree } from 'react-icons/ri'
 import { BiNetworkChart } from 'react-icons/bi'
 import { CgInsertBeforeR } from 'react-icons/cg'
@@ -17,20 +17,17 @@ import useQuery from '../../hooks/useQuery'
 import useRefetch from '../../hooks/useRefetch'
 import useIsComponentRefreshingQuery from '../../hooks/useIsComponentRefreshingQuery'
 
-import ComponentProviders from '../core/ComponentProviders'
+import ProviderComponent from '../core/ProviderComponent'
 import ComponentWindow from '../core/ComponentWindow'
-
-import HierarchyBar from '../core/HierarchyBar'
 import RetractablePanel from '../core/RetractablePanel'
-import HierarchySection from '../core/HierarchySection'
-import AddComponentSection from '../core/AddComponentSection'
-import ComponentMetadataSection from '../core/ComponentMetadataSection'
-import ComponentTypesSection from '../core/ComponentTypesSection'
-import ComponentImportsSection from '../core/ComponentImportsSection'
-import StylesSection from '../core/StylesSection'
+import PanelHierarchy from '../core/PanelHierarchy'
+import PanelAddComponent from '../core/PanelAddComponent'
+import PanelMetadata from '../core/PanelMetadata'
+import PanelTypes from '../core/PanelTypes'
+import PanelImports from '../core/PanelImports'
+import PanelStyles from '../core/PanelStyles'
+import HierarchyBar from '../core/HierarchyBar'
 import WidthBar from '../core/WidthBar'
-
-const placeholder = <Div flexGrow />
 
 // Component scene
 function Component() {
@@ -53,21 +50,39 @@ function Component() {
     },
   )
 
+  const renderNotFound = useCallback(() => (
+    <Div
+      flexGrow
+      xflex="y2"
+    >
+      <H3 mt={1}>Component not found</H3>
+      <Div my={1}>
+        Either your app hash has changed or this component has been deleted.
+      </Div>
+      <Button
+        as={Link}
+        to="/_ecu_/components"
+      >
+        Back to components
+      </Button>
+    </Div>
+  ), [])
+
   if (componentQueryResult.error) {
-    return placeholder
+    return renderNotFound()
   }
   if (!componentQueryResult.data?.component) {
-    return placeholder
+    return renderNotFound()
   }
 
   const { component, decoratorPaths } = componentQueryResult.data.component
 
   if (!component) {
-    return placeholder
+    return renderNotFound()
   }
 
   return (
-    <ComponentProviders>
+    <ProviderComponent>
       <Div
         xflex="x4s"
         flexGrow
@@ -81,12 +96,12 @@ function Component() {
               {
                 label: 'Hierarchy',
                 icon: <RiNodeTree />,
-                children: <HierarchySection />,
+                children: <PanelHierarchy />,
               },
               {
                 label: 'Insert component',
                 icon: <CgInsertBeforeR />,
-                children: <AddComponentSection />,
+                children: <PanelAddComponent />,
               },
             ]}
           />
@@ -113,28 +128,28 @@ function Component() {
               {
                 label: 'Component',
                 icon: <BsDiamond />,
-                children: <ComponentMetadataSection />,
+                children: <PanelMetadata />,
               },
               {
                 label: 'Imports and types',
                 icon: <BiNetworkChart />,
                 children: (
                   <>
-                    <ComponentImportsSection />
-                    <ComponentTypesSection />
+                    <PanelImports />
+                    <PanelTypes />
                   </>
                 ),
               },
               {
                 label: 'Styles',
                 icon: <MdBrush />,
-                children: <StylesSection />,
+                children: <PanelStyles />,
               },
             ]}
           />
         )}
       </Div>
-    </ComponentProviders>
+    </ProviderComponent>
   )
 }
 

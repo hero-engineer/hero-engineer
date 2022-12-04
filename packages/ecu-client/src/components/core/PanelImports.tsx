@@ -7,7 +7,7 @@ import ComponentImportsEditor from './ComponentImportsEditor'
 
 // Component imports section
 // Displayed in the right panel
-function ComponentImportsSection() {
+function PanelImports() {
   const [expanded, setExpanded] = usePersistedState('component-imports-accordion-expanded', true)
 
   return (
@@ -27,4 +27,4 @@ function ComponentImportsSection() {
   )
 }
 
-export default memo(ComponentImportsSection)
+export default memo(PanelImports)

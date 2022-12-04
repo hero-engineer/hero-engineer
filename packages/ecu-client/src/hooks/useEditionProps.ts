@@ -1,7 +1,6 @@
 import '../css/edition.css'
 
 import { useCallback, useContext, useEffect, useMemo, useRef } from 'react'
-import { useDebounce } from 'honorable'
 
 import HierarchyContext from '../contexts/HierarchyContext'
 import EditionContext from '../contexts/EditionContext'
@@ -10,8 +9,6 @@ import CssClassesContext from '../contexts/CssClassesContext'
 import IsInteractiveModeContext from '../contexts/IsInteractiveModeContext'
 
 import getComponentRootHierarchyIds from '../utils/getComponentRootHierarchyIds'
-
-// import convertUnicode from '../utils/convertUnicode'
 
 import useHierarchyId from './useHierarchyId'
 import useEditionOverlay from './useEditionOverlay'
@@ -42,7 +39,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   const { hierarchyId: editionHierarchyId, componentDelta, isEdited, setIsEdited } = useContext(EditionContext)
   const { hierarchy } = useContext(HierarchyContext)
   const { setContextualInformationState } = useContext(ContextualInformationContext)
-  const { selectedClassName, className: updatedClassName, setClassName, style: updatedStyle } = useContext(CssClassesContext)
+  const { selectedClassName, className: updatedClassName, style: updatedStyle } = useContext(CssClassesContext)
   const { isInteractiveMode } = useContext(IsInteractiveModeContext)
 
   useEditionOverlay(rootRef, hierarchyId)
@@ -115,7 +112,6 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
   // const ref = useForkedRef(rootRef, useForkedRef(drag, drop)) as Ref<T>
 
   const generateClassName = useCallback(() => {
-    // let klassName = `ecu-edition-no-outline ${convertUnicode(isSelected ? updatedClassName || className : className)}`
     let klassName = `${isInteractiveMode ? '' : 'ecu-edition'} ${isSelected ? updatedClassName || className : className}`
 
     klassName = klassName.trim()

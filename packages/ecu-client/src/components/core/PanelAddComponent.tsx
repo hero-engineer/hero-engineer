@@ -26,7 +26,7 @@ import usePersistedState from '../../hooks/usePersistedState'
 
 // Displayed in the left panel
 // Section to insert a component in the hierarchy
-function AddComponentSection() {
+function PanelAddComponent() {
   const { componentAddress = '' } = useParams()
   const { hierarchyId, componentDelta } = useContext(EditionContext)
   const { hierarchy } = useContext(HierarchyContext)
@@ -341,4 +341,4 @@ function AddComponentSection() {
   )
 }
 
-export default AddComponentSection
+export default PanelAddComponent

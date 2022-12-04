@@ -1,4 +1,4 @@
-import { Fragment, MouseEvent as ReactMouseEvent, ReactNode, memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { Fragment, MouseEvent as ReactMouseEvent, ReactNode, memo, useCallback, useContext, useEffect, useState } from 'react'
 import { Div } from 'honorable'
 
 import { zIndexes } from '../../constants'
@@ -6,14 +6,15 @@ import { HierarchyItemType } from '../../types'
 
 import HierarchyContext from '../../contexts/HierarchyContext'
 import EditionContext from '../../contexts/EditionContext'
-import EditionOverlayContext, { EditionOverlayContextType } from '../../contexts/EditionOverlayContext'
+import EditionOverlayContext from '../../contexts/EditionOverlayContext'
 import IsInteractiveModeContext from '../../contexts/IsInteractiveModeContext'
 import IsComponentRefreshingContext from '../../contexts/IsComponentRefreshingContext'
-import CssClassesContext from '../../contexts/CssClassesContext'
 import BreakpointContext from '../../contexts/BreakpointContext'
 
+import useHierarchySelection from '../../hooks/useHierarchySelection'
+
 import getComponentRootHierarchyIds from '../../utils/getComponentRootHierarchyIds'
-import findHierarchyIdsAndComponentDelta from '../../utils/findHierarchyIdsAndComponentDelta'
+import findHierarchyIdAndComponentDelta from '../../utils/findHierarchyIdAndComponentDelta'
 
 import EditionOverlayElement from './EditionOverlayElement'
 
@@ -25,53 +26,22 @@ type EditionOverlayPropsType = {
 
 function EditionOverlay({ children }: EditionOverlayPropsType) {
   const { totalHierarchy } = useContext(HierarchyContext)
-  const { hierarchyId, setHierarchyId, componentDelta, setComponentDelta, isEdited, setIsEdited } = useContext(EditionContext)
+  const { hierarchyId, componentDelta, isEdited, setIsEdited } = useContext(EditionContext)
+  const { elementRegistry } = useContext(EditionOverlayContext)
   const { isInteractiveMode } = useContext(IsInteractiveModeContext)
   const { isComponentRefreshing } = useContext(IsComponentRefreshingContext)
-  const { setClassName, setSelectedClassName, setStyle } = useContext(CssClassesContext)
   const { isDragging } = useContext(BreakpointContext)
 
   const [refresh, setRefresh] = useState(0)
   const [helperText, setHelperText] = useState('')
 
-  const [elementRegistry, setElementRegistry] = useState<Record<string, HTMLElement | null>>({})
-  const editionOverlayContextValue = useMemo<EditionOverlayContextType>(() => ({ elementRegistry, setElementRegistry }), [elementRegistry])
+  const handleHierarchySelect = useHierarchySelection()
 
-  const handleElementSelect = useCallback((event: ReactMouseEvent, hierarchyItem: HierarchyItemType, element: HTMLElement | null, nextHierarchyId: string, nextComponentDelta: number) => {
-    if (nextHierarchyId === hierarchyId && nextComponentDelta === componentDelta) {
-      if (event.detail > 1 && hierarchyItem.isComponentEditable) {
-        if (hierarchyItem.onComponentAddress === totalHierarchy?.componentAddress) {
-          event.stopPropagation()
+  const handleElementSelect = useCallback((event: ReactMouseEvent, hierarchyItem: HierarchyItemType, nextHierarchyId: string, nextComponentDelta: number) => {
+    const isOnComponent = handleHierarchySelect(event, hierarchyItem, nextHierarchyId, nextComponentDelta)
 
-          setIsEdited(true)
-        }
-        else {
-          setHelperText(`Editable under ${hierarchyItem.onComponentName}`)
-        }
-      }
-    }
-    else {
-      const classNames = element?.getAttribute('class')?.split(' ').map(x => x.trim()).filter(x => !x.startsWith('ecu-')) ?? []
-
-      setHierarchyId(nextHierarchyId)
-      setComponentDelta(nextComponentDelta)
-      setIsEdited(false)
-      setHelperText('')
-      setStyle({})
-      setClassName(classNames.join(' '))
-      setSelectedClassName(x => classNames.includes(x) ? x : '')
-    }
-  }, [
-    hierarchyId,
-    componentDelta,
-    totalHierarchy,
-    setHierarchyId,
-    setComponentDelta,
-    setIsEdited,
-    setStyle,
-    setClassName,
-    setSelectedClassName,
-  ])
+    setHelperText(isOnComponent ? '' : `Editable under ${hierarchyItem.onComponentName}`)
+  }, [handleHierarchySelect])
 
   const renderHierarchy: (hierarchyItem: HierarchyItemType | null, depth?: number) => ReactNode = useCallback((hierarchyItem: HierarchyItemType | null, depth = zIndexes.editionOverlay + 1) => {
     if (!hierarchyItem) return null
@@ -89,10 +59,10 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
       rect = element.getBoundingClientRect()
     }
     else {
-      const found = findHierarchyIdsAndComponentDelta(totalHierarchy, hierarchyItem)
+      const found = findHierarchyIdAndComponentDelta(totalHierarchy, hierarchyItem)
 
       if (found) {
-        [currentHierarchyId] = found.hierarchyIds
+        currentHierarchyId = found.hierarchyId
         currentComponentDelta = found.componentDelta
       }
       else {
@@ -136,7 +106,7 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
           isEdited={isSelected && isEdited}
           isComponentRoot={!!hierarchyItem.componentAddress}
           helperText={isSelected ? helperText : ''}
-          onSelect={(event: ReactMouseEvent) => handleElementSelect(event, hierarchyItem, element, currentHierarchyId, currentComponentDelta)}
+          onSelect={(event: ReactMouseEvent) => handleElementSelect(event, hierarchyItem, currentHierarchyId, currentComponentDelta)}
         />
         {(hierarchyItem.children || []).map(child => (
           <Fragment key={child.id}>
@@ -232,28 +202,26 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
   }, [helperText])
 
   return (
-    <EditionOverlayContext.Provider value={editionOverlayContextValue}>
-      <Div
-        xflex="y2s"
-        position="relative"
-      >
-        {children}
-        {!isInteractiveMode && (
-          <Div
-            position="absolute"
-            top={0}
-            bottom={0}
-            left={0}
-            right={0}
-            zIndex={zIndexes.editionOverlay}
-            pointerEvents={isEdited ? 'none' : 'auto'}
-            backgroundColor={isComponentRefreshing ? 'rgba(0, 0, 0, 0.5)' : null}
-          >
-            {!isComponentRefreshing && !isDragging && renderHierarchy(totalHierarchy)}
-          </Div>
-        )}
-      </Div>
-    </EditionOverlayContext.Provider>
+    <Div
+      xflex="y2s"
+      position="relative"
+    >
+      {children}
+      {!isInteractiveMode && (
+        <Div
+          position="absolute"
+          top={0}
+          bottom={0}
+          left={0}
+          right={0}
+          zIndex={zIndexes.editionOverlay}
+          pointerEvents={isEdited ? 'none' : 'auto'}
+          backgroundColor={isComponentRefreshing ? 'rgba(0, 0, 0, 0.5)' : null}
+        >
+          {!isComponentRefreshing && !isDragging && renderHierarchy(totalHierarchy)}
+        </Div>
+      )}
+    </Div>
   )
 }
 

@@ -13,13 +13,13 @@ import SettingsGeneral from '../scenes/SettingsGeneral'
 
 import Layout from './Layout'
 import ResponsiveLayout from './ResponsiveLayout'
-import EcuThemeProvider from './EcuThemeProvider'
+import ProviderTheme from './ProviderTheme'
 
 // The Ecu router
 function Router({ children }: any) {
   return (
     <BrowserRouter>
-      <EcuThemeProvider>
+      <ProviderTheme>
         <Routes>
           <Route
             path="_ecu_"
@@ -115,7 +115,7 @@ function Router({ children }: any) {
             element={children}
           />
         </Routes>
-      </EcuThemeProvider>
+      </ProviderTheme>
     </BrowserRouter>
   )
 }

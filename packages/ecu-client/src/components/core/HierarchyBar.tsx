@@ -17,7 +17,7 @@ import IsInteractiveModeContext from '../../contexts/IsInteractiveModeContext'
 import useRefetch from '../../hooks/useRefetch'
 
 import getFlattenedHierarchy from '../../utils/getFlattenedHierarchy'
-import findHierarchyIdsAndComponentDelta from '../../utils/findHierarchyIdsAndComponentDelta'
+import findHierarchyIdAndComponentDelta from '../../utils/findHierarchyIdAndComponentDelta'
 
 function isSelectedComponentParent(hierarchy: HierarchyItemType[], currentHierarchyItem: HierarchyItemType) {
   const selectedHierarchyItem = hierarchy[hierarchy.length - 1]
@@ -65,10 +65,10 @@ function HierarchyBar() {
   const actualHierarchy = useMemo(() => totalHierarchy.slice(0, totalHierarchy.length + componentDelta), [totalHierarchy, componentDelta])
 
   const handleClick = useCallback((hierarchyItem: HierarchyItemType) => {
-    const found = findHierarchyIdsAndComponentDelta(hierarchy, hierarchyItem)
+    const found = findHierarchyIdAndComponentDelta(hierarchy, hierarchyItem)
 
     if (found) {
-      setHierarchyId(found.hierarchyIds[0])
+      setHierarchyId(found.hierarchyId)
       setComponentDelta(found.componentDelta)
     }
   }, [hierarchy, setHierarchyId, setComponentDelta])

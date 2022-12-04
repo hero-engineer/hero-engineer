@@ -20,14 +20,15 @@ import ContextualInformationContext from '../../contexts/ContextualInformationCo
 import useMutation from '../../hooks/useMutation'
 import useRefetch from '../../hooks/useRefetch'
 import useIsComponentRefreshingMutation from '../../hooks/useIsComponentRefreshingMutation'
+import useHierarchySelection from '../../hooks/useHierarchySelection'
 
-import findHierarchyIdsAndComponentDelta from '../../utils/findHierarchyIdsAndComponentDelta'
+import findHierarchyIdAndComponentDelta from '../../utils/findHierarchyIdAndComponentDelta'
 
 import Emoji from './Emoji'
 
 // The hierarchy section
 // Displayed in the left panel
-function HierarchySection() {
+function PanelHierarchy() {
   const { componentAddress = '' } = useParams()
   const { totalHierarchy, hierarchy } = useContext(HierarchyContext)
   const { setContextualInformationState } = useContext(ContextualInformationContext)
@@ -36,18 +37,19 @@ function HierarchySection() {
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
   const [isFetching, setIsFetching] = useState(false)
 
+  const handleHierarchySelect = useHierarchySelection()
+
   const [, deleteComponent] = useIsComponentRefreshingMutation(useMutation<DeleteComponentMutationDataType>(DeleteComponentMutation))
 
   const refetch = useRefetch()
 
-  const handleSelect = useCallback((hierarchyItem: HierarchyItemType) => {
-    const found = findHierarchyIdsAndComponentDelta(totalHierarchy, hierarchyItem)
+  const handleSelect = useCallback((event: MouseEvent, hierarchyItem: HierarchyItemType) => {
+    const found = findHierarchyIdAndComponentDelta(totalHierarchy, hierarchyItem)
 
-    if (found) {
-      setHierarchyId(found.hierarchyIds[0])
-      setComponentDelta(found.componentDelta)
-    }
-  }, [totalHierarchy, setHierarchyId, setComponentDelta])
+    if (!found) return
+
+    handleHierarchySelect(event, hierarchyItem, found.hierarchyId, found.componentDelta)
+  }, [totalHierarchy, handleHierarchySelect])
 
   const handleDeleteComponent = useCallback(async () => {
     await deleteComponent({
@@ -89,7 +91,7 @@ function HierarchySection() {
             isFetching={isFetching}
             setIsFetching={setIsFetching}
             onExpand={() => setCollapsed(x => ({ ...x, [hierarchyItem.id]: !collapsed[hierarchyItem.id] }))}
-            onSelect={() => handleSelect(hierarchyItem)}
+            onSelect={event => handleSelect(event, hierarchyItem)}
             onDelete={handleDeleteComponent}
           />
         )}
@@ -159,7 +161,7 @@ type HierarchyLabelPropsType = {
   isFetching: boolean
   setIsFetching: (isFetching: boolean) => void
   onExpand: () => void
-  onSelect: () => void
+  onSelect: (event: MouseEvent) => void
   onDelete: () => void
 }
 
@@ -313,4 +315,4 @@ function HierarchyLabel({ hierarchyItem, collapsed, isSelected, isFetching, setI
   )
 }
 
-export default memo(HierarchySection)
+export default memo(PanelHierarchy)

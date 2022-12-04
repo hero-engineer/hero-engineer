@@ -35,7 +35,7 @@ import StylesSubSectionPosition from './StylesSubSectionPosition'
 
 // The styles section
 // Displayed in the right panel
-function StylesSection() {
+function PanelStyles() {
   const { componentAddress = '' } = useParams()
   const { hierarchy } = useContext(HierarchyContext)
   const { componentDelta, hierarchyId } = useContext(EditionContext)
@@ -289,4 +289,4 @@ function StylesSection() {
   )
 }
 
-export default memo(StylesSection)
+export default memo(PanelStyles)

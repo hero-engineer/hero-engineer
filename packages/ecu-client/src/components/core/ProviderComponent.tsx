@@ -4,8 +4,8 @@ import IsComponentRefreshingContext, { IsComponentRefreshingContextType } from '
 import HierarchyContext, { HierarchyContextType } from '../../contexts/HierarchyContext'
 import EditionContext, { EditionContextType } from '../../contexts/EditionContext'
 import DragAndDropContext, { DragAndDropContextType, DragAndDropType } from '../../contexts/DragAndDropContext'
-import ContextualInformationContext, { ContextualInformationContextType, ContextualInformationStateType } from '../../contexts/ContextualInformationContext'
 import CssClassesContext, { CssClassesContextType } from '../../contexts/CssClassesContext'
+import EditionOverlayContext, { EditionOverlayContextType } from '../../contexts/EditionOverlayContext'
 
 import { HierarchyItemType } from '../../types'
 import usePersistedState from '../../hooks/usePersistedState'
@@ -15,7 +15,7 @@ type ComponentProvidersPropsType = {
 }
 
 // The providers for the component scene
-function ComponentProviders({ children }: ComponentProvidersPropsType) {
+function ProviderComponent({ children }: ComponentProvidersPropsType) {
   const [isComponentRefreshing, setIsComponentRefreshing] = useState(false)
   const isComponnentRefreshingContextValue = useMemo<IsComponentRefreshingContextType>(() => ({ isComponentRefreshing, setIsComponentRefreshing }), [isComponentRefreshing])
 
@@ -36,14 +36,8 @@ function ComponentProviders({ children }: ComponentProvidersPropsType) {
   })
   const dragAndDropContextValue = useMemo<DragAndDropContextType>(() => ({ dragAndDrop, setDragAndDrop }), [dragAndDrop])
 
-  const [contextualInformationState, setContextualInformationState] = useState<ContextualInformationStateType>({
-    isEdited: false,
-    isComponentRoot: false,
-    rightClickEvent: null,
-    element: null,
-    dropElement: null,
-  })
-  const contextualInformationContextValue = useMemo<ContextualInformationContextType>(() => ({ contextualInformationState, setContextualInformationState }), [contextualInformationState])
+  const [elementRegistry, setElementRegistry] = useState<Record<string, HTMLElement | null>>({})
+  const editionOverlayContextValue = useMemo<EditionOverlayContextType>(() => ({ elementRegistry, setElementRegistry }), [elementRegistry])
 
   const [className, setClassName] = usePersistedState('class-name', '')
   const [selectedClassName, setSelectedClassName] = usePersistedState('selected-class-name', '')
@@ -55,11 +49,11 @@ function ComponentProviders({ children }: ComponentProvidersPropsType) {
       <HierarchyContext.Provider value={hierarchyContextValue}>
         <EditionContext.Provider value={editionContextValue}>
           <DragAndDropContext.Provider value={dragAndDropContextValue}>
-            <ContextualInformationContext.Provider value={contextualInformationContextValue}>
+            <EditionOverlayContext.Provider value={editionOverlayContextValue}>
               <CssClassesContext.Provider value={cssClassesContextValue}>
                 {children}
               </CssClassesContext.Provider>
-            </ContextualInformationContext.Provider>
+            </EditionOverlayContext.Provider>
           </DragAndDropContext.Provider>
         </EditionContext.Provider>
       </HierarchyContext.Provider>
@@ -67,4 +61,4 @@ function ComponentProviders({ children }: ComponentProvidersPropsType) {
   )
 }
 
-export default ComponentProviders
+export default ProviderComponent

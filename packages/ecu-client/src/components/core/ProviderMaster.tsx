@@ -27,7 +27,7 @@ type MasterProvidersPropsType = {
 }
 
 // The providers for the whole application
-function MasterProviders({ mode, hot, children }: MasterProvidersPropsType) {
+function ProviderMaster({ mode, hot, children }: MasterProvidersPropsType) {
   const { refetch, register } = useCreateRefetchRegistry()
   const refetchContextValue = useMemo<RefetchContextType>(() => ({ refetch, register }), [refetch, register])
 
@@ -82,4 +82,4 @@ function MasterProviders({ mode, hot, children }: MasterProvidersPropsType) {
   )
 }
 
-export default MasterProviders
+export default ProviderMaster

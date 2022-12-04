@@ -1,11 +1,11 @@
 import { HierarchyItemType } from '../types'
 
 type HierarchyIdsAndComponentDeltaType = {
-  hierarchyIds: string[]
+  hierarchyId: string
   componentDelta: number
 }
 
-function findHierarchyIdsAndComponentDelta(rootHierarchyItem: HierarchyItemType | null, targetHierarchyItem: HierarchyItemType | null, hierarchyIds: string[] = [], componentDelta = 0, hasFound = false, depth = 0, hasFoundDepth = 0): HierarchyIdsAndComponentDeltaType | null {
+function findHierarchyIdAndComponentDelta(rootHierarchyItem: HierarchyItemType | null, targetHierarchyItem: HierarchyItemType | null, hierarchyIds: string[] = [], componentDelta = 0, hasFound = false, depth = 0, hasFoundDepth = 0): HierarchyIdsAndComponentDeltaType | null {
   if (!(rootHierarchyItem && targetHierarchyItem)) return null
 
   let nextHasFound = hasFound
@@ -16,7 +16,7 @@ function findHierarchyIdsAndComponentDelta(rootHierarchyItem: HierarchyItemType 
 
   if (nextHasFound && rootHierarchyItem.hierarchyId) {
     return {
-      hierarchyIds: nextHierarchyIds,
+      hierarchyId: nextHierarchyIds[nextHierarchyIds.length - 1],
       componentDelta: nextComponentDelta - hasFoundDepth + depth,
     }
   }
@@ -24,7 +24,7 @@ function findHierarchyIdsAndComponentDelta(rootHierarchyItem: HierarchyItemType 
   if (rootHierarchyItem.id === targetHierarchyItem.id) {
     if (rootHierarchyItem.hierarchyId) {
       return {
-        hierarchyIds: nextHierarchyIds,
+        hierarchyId: nextHierarchyIds[nextHierarchyIds.length - 1],
         componentDelta: nextComponentDelta,
       }
     }
@@ -33,7 +33,7 @@ function findHierarchyIdsAndComponentDelta(rootHierarchyItem: HierarchyItemType 
   }
 
   for (const child of (rootHierarchyItem.children || [])) {
-    const found = findHierarchyIdsAndComponentDelta(child, targetHierarchyItem, nextHierarchyIds, nextComponentDelta, nextHasFound, depth + 1, nextHasFound ? hasFoundDepth + 1 : 0)
+    const found = findHierarchyIdAndComponentDelta(child, targetHierarchyItem, nextHierarchyIds, nextComponentDelta, nextHasFound, depth + 1, nextHasFound ? hasFoundDepth + 1 : 0)
 
     if (found) return found
   }
@@ -41,4 +41,4 @@ function findHierarchyIdsAndComponentDelta(rootHierarchyItem: HierarchyItemType 
   return null
 }
 
-export default findHierarchyIdsAndComponentDelta
+export default findHierarchyIdAndComponentDelta

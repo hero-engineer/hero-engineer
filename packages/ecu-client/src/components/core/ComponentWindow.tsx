@@ -11,7 +11,7 @@ import ComponentIframe from './ComponentIframe'
 import ComponentLoader from './ComponentLoader'
 import WithComponentIframeHeight from './WithComponentIframeHeight'
 import WithComponentScrenshot from './WithComponentScrenshot'
-import EmotionProvider from './EmotionProvider'
+import ProviderEmotion from './ProviderEmotion'
 
 type ComponentWindowPropsType = {
   componentPath: string
@@ -31,7 +31,7 @@ function ComponentWindow({ componentPath, decoratorPaths }: ComponentWindowProps
         <EditionOverlay>
           <ComponentIframe>
             {({ window, head, setHeight }) => (
-              <EmotionProvider head={head}>
+              <ProviderEmotion head={head}>
                 <DndProvider
                   backend={HTML5Backend}
                   context={window}
@@ -49,7 +49,7 @@ function ComponentWindow({ componentPath, decoratorPaths }: ComponentWindowProps
                     </WithComponentIframeHeight>
                   </ThemeProvider>
                 </DndProvider>
-              </EmotionProvider>
+              </ProviderEmotion>
             )}
           </ComponentIframe>
         </EditionOverlay>

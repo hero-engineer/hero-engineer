@@ -15,9 +15,9 @@ import {
 import useRefetch from '../../hooks/useRefetch'
 import useIsComponentRefreshingQuery from '../../hooks/useIsComponentRefreshingQuery'
 
-import EmojiPicker from '../core/EmojiPicker'
+import EmojiPicker from './EmojiPicker'
 
-function ComponentMetadataSection() {
+function PanelMetadata() {
   const { fileAddress = '', componentAddress = '' } = useParams()
   const descriptionRef = useRef<HTMLParagraphElement>(null)
   const [emoji, setEmoji] = useState('')
@@ -144,4 +144,4 @@ function ComponentMetadataSection() {
   )
 }
 
-export default ComponentMetadataSection
+export default PanelMetadata

@@ -37,7 +37,6 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
     editionProps,
   } = useEditionProps<HTMLDivElement>(ecuId, className, true)
 
-  const inputRef = useRef<HTMLTextAreaElement>(null)
   const finalRef = useForkedRef(ref, editionRef)
 
   const [, updateTextValueMutation] = useMutation<UpdateTextValueMutationDataType>(UpdateTextValueMutation)
@@ -120,7 +119,6 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
           onOutsideClick={handleBlur}
         >
           <Input
-            inputProps={{ ref: inputRef }}
             bare
             multiline
             autoFocus

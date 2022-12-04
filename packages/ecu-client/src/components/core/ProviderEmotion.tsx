@@ -12,7 +12,7 @@ type EmotionProviderPropsType = {
 // https://github.com/emotion-js/emotion/issues/760#issuecomment-404353706
 const memoizedCreateCacheWithContainer = weakMemoize((container: HTMLElement) => createCache({ container, key: 'ecu-iframe' }))
 
-function EmotionProvider({ children, head }: EmotionProviderPropsType) {
+function ProviderEmotion({ children, head }: EmotionProviderPropsType) {
   if (!head) {
     return null
   }
@@ -24,4 +24,4 @@ function EmotionProvider({ children, head }: EmotionProviderPropsType) {
   )
 }
 
-export default EmotionProvider
+export default ProviderEmotion

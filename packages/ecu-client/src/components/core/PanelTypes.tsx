@@ -7,7 +7,7 @@ import ComponentTypesEditor from './ComponentTypesEditor'
 
 // The component types section
 // Displayed in the right panel
-function ComponentTypesSection() {
+function PanelTypes() {
   const [expanded, setExpanded] = usePersistedState('component-types-accordion-expanded', true)
 
   return (
@@ -27,4 +27,4 @@ function ComponentTypesSection() {
   )
 }
 
-export default memo(ComponentTypesSection)
+export default memo(PanelTypes)
