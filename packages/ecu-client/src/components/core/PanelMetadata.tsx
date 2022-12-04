@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useMutation, useQuery } from 'urql'
-import { Div, H4, Input, P, useOutsideClick } from 'honorable'
+import { Div, H4, Input, P, Tooltip, useOutsideClick } from 'honorable'
 
 import { refetchKeys } from '../../constants'
 
@@ -15,7 +15,8 @@ import {
 import useRefetch from '../../hooks/useRefetch'
 import useIsComponentRefreshingQuery from '../../hooks/useIsComponentRefreshingQuery'
 
-import EmojiPicker from './EmojiPicker'
+import Emoji from './Emoji'
+import EmojiPickerBase from './EmojiPickerBase'
 
 function PanelMetadata() {
   const { fileAddress = '', componentAddress = '' } = useParams()
@@ -24,6 +25,7 @@ function PanelMetadata() {
   const [description, setDescription] = useState('')
   const [isMetadataSet, setIsMetadataSet] = useState(false)
   const [isEditingDescription, setIsEditingDescription] = useState(false)
+  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false)
 
   const [componentQueryResult, refetchComponentQuery] = useIsComponentRefreshingQuery(useQuery<ComponentQueryDataType>({
     query: ComponentQuery,
@@ -80,6 +82,10 @@ function PanelMetadata() {
     setIsMetadataSet(true)
   }, [componentQueryResult.data])
 
+  useEffect(() => {
+    handleDescriptionSubmit()
+  }, [emoji, handleDescriptionSubmit])
+
   if (componentQueryResult.error) {
     return null
   }
@@ -94,53 +100,81 @@ function PanelMetadata() {
   }
 
   return (
-    <Div
-      width={256}
-      minWidth={0}
-      p={1}
-    >
+    <>
       <Div
-        xflex="x4"
-        gap={0.5}
+        width={256}
         minWidth={0}
+        p={1}
       >
-        <EmojiPicker
-          emoji={emoji}
-          onEmojiChange={setEmoji}
-        />
-        <H4 ellipsis>{component.payload.name}</H4>
+        <Div
+          xflex="x4"
+          gap={0.5}
+          minWidth={0}
+        >
+          <Tooltip
+            label="Pick an emoji for this file"
+            placement="bottom-start"
+          >
+            <Emoji
+              emoji={emoji}
+              size={24}
+              cursor="pointer"
+              onClick={() => setIsEmojiPickerOpen(x => !x)}
+            />
+          </Tooltip>
+          <H4 ellipsis>{component.payload.name}</H4>
+        </Div>
+        <P
+          ellipsis
+          color="text-light"
+          fontSize={12}
+          mt={1}
+        >
+          {component.payload.relativePath}
+        </P>
+        <Div
+          ref={descriptionRef}
+          color="text-light"
+          cursor="pointer"
+          minHeight={19} // To match the Input min-height
+          mt={0.5}
+          onClick={handleEditDescription}
+        >
+          {isEditingDescription ? (
+            <Input
+              bare
+              multiline
+              autoFocus
+              autoSelect
+              value={description}
+              onChange={e => setDescription(e.target.value)}
+              placeholder="..."
+              width="100%"
+              color="text-light"
+            />
+          ) : description || 'Click to add a description'}
+        </Div>
       </Div>
-      <P
-        ellipsis
-        color="text-light"
-        fontSize={12}
-        mt={1}
-      >
-        {component.payload.relativePath}
-      </P>
-      <Div
-        ref={descriptionRef}
-        color="text-light"
-        cursor="pointer"
-        minHeight={19} // To match the Input min-height
-        mt={0.5}
-        onClick={handleEditDescription}
-      >
-        {isEditingDescription ? (
-          <Input
-            bare
-            multiline
-            autoFocus
-            autoSelect
-            value={description}
-            onChange={e => setDescription(e.target.value)}
-            placeholder="..."
-            width="100%"
-            color="text-light"
-          />
-        ) : description || 'Click to add a description'}
-      </Div>
-    </Div>
+      {isEmojiPickerOpen && (
+        <Div
+          position="fixed"
+          top={0}
+          bottom={0}
+          right={0}
+          left={0}
+          onClick={() => setIsEmojiPickerOpen(false)}
+        >
+          <Div
+            xflex="x5"
+            position="absolute"
+            top={8}
+            right={8}
+          >
+            <EmojiPickerBase onChange={setEmoji} />
+          </Div>
+        </Div>
+      )}
+    </>
   )
 }
 

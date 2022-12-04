@@ -71,6 +71,9 @@ function Component() {
   if (componentQueryResult.error) {
     return renderNotFound()
   }
+  if (componentQueryResult.fetching && !componentQueryResult.data) {
+    return <Div flexGrow />
+  }
   if (!componentQueryResult.data?.component) {
     return renderNotFound()
   }
