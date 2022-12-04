@@ -58,6 +58,9 @@ function createAddComponentOnSuccess(targetComponentName: string, targetComponen
       const inserted = jsxElement(jsxOpeningElement(identifier, attributes, selfClosing), hasChildren ? jsxClosingElement(identifier) : null, targetComponentChildren, selfClosing)
 
       finalPath.node.children.push(inserted)
+      finalPath.node.selfClosing = false
+      finalPath.node.openingElement.selfClosing = false
+      finalPath.node.closingElement = jsxClosingElement(finalPath.node.openingElement.name)
     }
     else if (hierarchyPosition === 'parent') {
       const inserted = jsxElement(jsxOpeningElement(identifier, attributes, false), jsxClosingElement(identifier), [finalPath.node], false)
