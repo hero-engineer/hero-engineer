@@ -132,8 +132,6 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
       if (knobPosition === elementMax) knobPosition -= 2
     }
 
-    // console.log('xxx', childrenIndex, childrenPosition)
-
     setDragAndDropState(x => ({ ...x, isVertical, hierarchyId, componentDelta, childrenIndex, childrenPosition, knobPosition }))
   }, [dragAndDropState.isDragging, elementRegistry])
 

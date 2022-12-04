@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useMutation, useQuery } from 'urql'
-import { Div, H4, Input, P, Tooltip, useOutsideClick } from 'honorable'
+import { Div, H4, Input, P, Tooltip, WithOutsideClick, useOutsideClick } from 'honorable'
 
-import { refetchKeys } from '../../constants'
+import { refetchKeys, zIndexes } from '../../constants'
 
 import {
   ComponentQuery,
@@ -43,6 +43,10 @@ function PanelMetadata() {
       skip: !componentAddress,
     },
   )
+
+  const handleEmojiOutsideClick = useCallback(() => {
+    setIsEmojiPickerOpen(false)
+  }, [])
 
   const handleEditDescription = useCallback(() => {
     setIsEditingDescription(true)
@@ -162,16 +166,21 @@ function PanelMetadata() {
           bottom={0}
           right={0}
           left={0}
-          onClick={() => setIsEmojiPickerOpen(false)}
+          zIndex={zIndexes.emojiPicker}
         >
-          <Div
-            xflex="x5"
-            position="absolute"
-            top={8}
-            right={8}
+          <WithOutsideClick
+            preventFirstFire
+            onOutsideClick={handleEmojiOutsideClick}
           >
-            <EmojiPickerBase onChange={setEmoji} />
-          </Div>
+            <Div
+              xflex="x5"
+              position="absolute"
+              top={8}
+              right={8}
+            >
+              <EmojiPickerBase onChange={setEmoji} />
+            </Div>
+          </WithOutsideClick>
         </Div>
       )}
     </>
