@@ -34,7 +34,11 @@ export const ecuDecoratorNameSuffix = 'Decorator'
 
 export const ecuCommonDecoratorName = 'EcuCommonDecorator'
 
-export const ecuDisplayNameCommentPrefix = 'ecu-display-name '
+export const ecuFileIdCommentPrefix = 'ecu-file-id'
+
+export const ecuFunctionIdCommentPrefix = 'ecu-function-id'
+
+export const ecuDisplayNameCommentPrefix = 'ecu-display-name'
 
 export const faviconStartComment = '<!-- FAVICON START -->'
 

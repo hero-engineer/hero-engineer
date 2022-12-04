@@ -43,7 +43,7 @@ async function updateHierarchyDisplayNameMutation(_: any, { sourceComponentAddre
     if (value) {
       comments.push({
         type: 'CommentLine',
-        value: ` ${ecuDisplayNameCommentPrefix}${value}`,
+        value: ` ${ecuDisplayNameCommentPrefix} ${value}`,
       })
     }
 

@@ -13,7 +13,7 @@ function traverseDisplayName(x: NodePath<JSXElement>) {
       const comment = (x.node.trailingComments || []).find(c => c.value.trim().startsWith(ecuDisplayNameCommentPrefix))
 
       if (comment) {
-        displayName = comment.value.trim().slice(ecuDisplayNameCommentPrefix.length)
+        displayName = comment.value.trim().slice(ecuDisplayNameCommentPrefix.length + 1)
 
         x.stop()
       }

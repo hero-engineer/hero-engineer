@@ -1,8 +1,10 @@
 import path from 'node:path'
 
+import { NodePath } from '@babel/traverse'
+import { FunctionDeclaration, addComment } from '@babel/types'
 import shortId from 'shortid'
 
-import { appPath } from '../../configuration.js'
+import { appPath, ecuFunctionIdCommentPrefix } from '../../configuration.js'
 import { FileNodeType, FunctionNodeType } from '../../types.js'
 
 import traverse from '../../domain/traverse.js'
@@ -45,8 +47,10 @@ function addFileDependencies(fileNode: FileNodeType) {
 
   traverse(ast, {
     FunctionDeclaration(path) {
+      const address = extractFunctionId(path) || appendFunctionId(path)
+
       const functionNode = createFunctionNode({
-        address: shortId(),
+        address,
         role: 'Function',
         state: null,
         payload: {
@@ -115,6 +119,26 @@ function addFileDependencies(fileNode: FileNodeType) {
   })
 
   return fileNode
+}
+
+function extractFunctionId(path: NodePath<FunctionDeclaration>) {
+  const lastComment = path.node.leadingComments?.[path.node.leadingComments.length - 1]?.value
+  const comment = `// ${ecuFunctionIdCommentPrefix} `
+
+  if (lastComment?.startsWith(comment)) {
+    return lastComment.replace(comment, '').trim()
+  }
+
+  return ''
+}
+
+function appendFunctionId(path: NodePath<FunctionDeclaration>) {
+  const id = shortId()
+  const comment = `// ${ecuFunctionIdCommentPrefix} ${id}`
+
+  addComment(path.node, 'leading', comment, true)
+
+  return id
 }
 
 export default addFileDependencies
