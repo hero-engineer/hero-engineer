@@ -1,18 +1,32 @@
 import { DocumentNode } from 'graphql'
 import { useCallback, useContext, useEffect, useState } from 'react'
-import { AnyVariables, OperationContext, OperationResult, TypedDocumentNode, UseMutationState, useMutation as externalUseMutation } from 'urql'
+import { AnyVariables, OperationContext, TypedDocumentNode, UseMutationResponse, useMutation as externalUseMutation } from 'urql'
+
+import { refetchKeys } from '../constants'
 
 import SnackbarContext from '../contexts/SnackBarContext'
 
-type MutateType<T, V extends AnyVariables = AnyVariables> = (variables: V, context?: Partial<OperationContext>) => Promise<OperationResult<T, V>>
+import useRefetch from './useRefetch'
 
-function useMutation<T>(args: string | DocumentNode | TypedDocumentNode): [UseMutationState<T>, MutateType<T>] {
+function useMutation<T, V extends AnyVariables = AnyVariables>(args: string | DocumentNode | TypedDocumentNode): UseMutationResponse<T, V> {
   const { snackBarItems, appendSnackBarItem } = useContext(SnackbarContext)
   const [id, setId] = useState(0)
-  const [retval0, retval1] = externalUseMutation<T>(args)
+  const [mutationData, mutate] = externalUseMutation<T, V>(args)
+
+  const refetch = useRefetch()
+
+  const handleMutation = useCallback(async (args: V, context?: Partial<OperationContext> | undefined) => {
+    setId(Date.now())
+
+    const retval = await mutate(args, context)
+
+    refetch(refetchKeys.undoRedoMetadata)
+
+    return retval
+  }, [mutate, refetch])
 
   useEffect(() => {
-    const { error } = retval0
+    const { error } = mutationData
 
     if (!error) return
     if (snackBarItems.some(x => x.id === id)) return
@@ -22,15 +36,9 @@ function useMutation<T>(args: string | DocumentNode | TypedDocumentNode): [UseMu
       content: error.message,
       severity: 'error',
     })
-  }, [retval0, id, snackBarItems, appendSnackBarItem])
+  }, [mutationData, id, snackBarItems, appendSnackBarItem])
 
-  const handleMutation = useCallback((args: any) => {
-    setId(Date.now())
-
-    return retval1(args)
-  }, [retval1])
-
-  return [retval0, handleMutation]
+  return [mutationData, handleMutation]
 }
 
 export default useMutation

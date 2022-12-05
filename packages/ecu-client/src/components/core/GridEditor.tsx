@@ -65,7 +65,7 @@ function GridEditor({ cssValues, breakpointCssValues, onChange }: GridEditorProp
           toggled={isDense}
           onClick={() => onChange([{
             name: 'grid-auto-flow',
-            value: isDense ? cssValues['grid-auto-flow'].toString().slice(0, -' dense'.length) : `${breakpointCssValues['grid-auto-flow'] ?? cssValues['grid-auto-flow'] ?? cssAttributesMap['grid-auto-flow'].defaultValue} dense`,
+            value: isDense ? (breakpointCssValues['grid-auto-flow'] ?? cssValues['grid-auto-flow']).toString().slice(0, -' dense'.length) : `${breakpointCssValues['grid-auto-flow'] ?? cssValues['grid-auto-flow'] ?? cssAttributesMap['grid-auto-flow'].defaultValue} dense`,
           }])}
         >
           Dense

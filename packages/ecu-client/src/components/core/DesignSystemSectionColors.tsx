@@ -115,16 +115,6 @@ function ColorItem({ color, onChange }: ColorItemPropsType) {
       gap={0.75}
     >
       <Div
-        xflex="x5"
-        elevation={1}
-      >
-        <ColorPicker
-          size={128}
-          value={color.value}
-          onChange={value => onChange({ ...color, value })}
-        />
-      </Div>
-      <Div
         ellipsis
         onClick={() => setIsEdited(true)}
         px={0.5}
@@ -142,6 +132,19 @@ function ColorItem({ color, onChange }: ColorItemPropsType) {
             onEnter={handleUpdateName}
           />
         ) : color.name}
+      </Div>
+      <Div>
+        {color.value}
+      </Div>
+      <Div
+        xflex="x5"
+        elevation={1}
+      >
+        <ColorPicker
+          size={128}
+          value={color.value}
+          onChange={value => onChange({ ...color, value })}
+        />
       </Div>
     </Div>
   )

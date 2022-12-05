@@ -316,7 +316,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
           <Button
             ghost
             toggled={isReverse}
-            onClick={() => onChange([{ name: 'flex-direction', value: isReverse ? cssValues['flex-direction'].toString().slice(0, -'-reverse'.length) : `${breakpointCssValues['flex-direction'] ?? cssValues['flex-direction'] ?? cssAttributesMap['flex-direction'].defaultValue}-reverse` }])}
+            onClick={() => onChange([{ name: 'flex-direction', value: isReverse ? (breakpointCssValues['flex-direction'] ?? cssValues['flex-direction']).toString().slice(0, -'-reverse'.length) : `${breakpointCssValues['flex-direction'] ?? cssValues['flex-direction'] ?? cssAttributesMap['flex-direction'].defaultValue}-reverse` }])}
           >
             <MdOutlineSwapHoriz />
           </Button>
