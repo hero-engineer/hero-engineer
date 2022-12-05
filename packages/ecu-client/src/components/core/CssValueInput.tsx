@@ -19,17 +19,14 @@ const validationRegex = /^auto|inherit|[0-9-+*%/\s]+(?:px|%|rem|em|vw|vh|vmin|vm
 
 function CssValueInput({ value, onChange, allowInherit = false, large }: CssValueInputPropsType) {
   const [rawValue, unit = allowInherit ? 'inherit' : 'auto'] = splitSpacingValue(value)
+  const [isUnitMenuOpen, setIsUnitMenuOpen] = useState(false)
 
   const isError = useMemo(() => !validationRegex.test(value), [value])
 
-  console.log('isError', rawValue, isError)
-
-  const [isUnitMenuOpen, setIsUnitMenuOpen] = useState(false)
-
   const handleUnitClick = useCallback((nextUnit: string) => {
     setIsUnitMenuOpen(false)
-    onChange(nextUnit === 'auto' ? nextUnit : `${unit === 'auto' ? 0 : rawValue}${nextUnit}`)
-  }, [onChange, rawValue, unit])
+    onChange(nextUnit === 'auto' || nextUnit === 'inherit' ? nextUnit : `${rawValue}${nextUnit}`)
+  }, [onChange, rawValue])
 
   const handleInputChange = useCallback((event: any) => {
     const nextValue = event.target.value === '0' ? event.target.value : trimLeadingZeroes(event.target.value)

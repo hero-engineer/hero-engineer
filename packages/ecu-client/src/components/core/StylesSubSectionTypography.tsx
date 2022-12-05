@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import { Accordion, Button, Div, MenuItem, Select } from 'honorable'
+import { TfiAlignCenter, TfiAlignJustify, TfiAlignLeft, TfiAlignRight } from 'react-icons/tfi'
 
-import { CssAttributeType, CssValuesType } from '../../types'
+import { CssAttributeType, CssValueType, CssValuesType } from '../../types'
 import { cssAttributesMap, refetchKeys } from '../../constants'
 
 import { FontsQuery, FontsQueryDataType } from '../../queries'
@@ -37,6 +38,29 @@ const attributeNames = [
   'color',
 ]
 
+const textAligns = [
+  {
+    name: 'left',
+    Icon: TfiAlignLeft,
+  },
+  {
+    name: 'center',
+    Icon: TfiAlignCenter,
+  },
+  {
+    name: 'right',
+    Icon: TfiAlignRight,
+  },
+  {
+    name: 'justify',
+    Icon: TfiAlignJustify,
+  },
+  {
+    name: 'inherit',
+    Icon: () => <>inherit</>,
+  },
+]
+
 const defaultWeights = [100, 200, 300, 400, 500, 600, 700, 800, 900]
 
 const prepareFontFamily = (fontName: string) => fontName.includes(' ') ? `"${fontName}", sans-serif` : `${fontName}, sans-serif`
@@ -68,7 +92,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
         : 'inherit'
   ), [breakpointCssValues, cssValues])
 
-  // const isToggled = useCallback((attributeName: string, value: CssValueType) => value === getValue(attributeName), [getValue])
+  const isToggled = useCallback((attributeName: string, value: CssValueType) => value === getValue(attributeName), [getValue])
 
   const fonts = useMemo(() => fontsQueryResult.data?.fonts ?? [], [fontsQueryResult.data])
   const fontFamily = getValue('font-family')
@@ -162,13 +186,17 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
       <Select
         tiny
         menuOnTop
-        value={parseInt(getValue('font-weight').toString())}
-        onChange={event => onChange([{ name: 'font-weight', value: parseInt(event.target.value) }])}
+        value={getValue('font-weight')}
+        // @ts-expect-error
+        onChange={event => console.log(event.target.value) || onChange([{ name: 'font-weight', value: event.target.value }])}
       >
+        <MenuItem value="inherit">
+          inherit
+        </MenuItem>
         {weights.map(weight => (
           <MenuItem
             key={weight}
-            value={weight}
+            value={weight.toString()}
           >
             {weight}
           </MenuItem>
@@ -250,14 +278,44 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
     )
   }, [getTextColor, getValue, onChange])
 
+  const renderAlignSection = useCallback(() => (
+    <Div
+      xflex="x4"
+      fontSize="0.75rem"
+    >
+      <Div
+        xflex="x4"
+        minWidth={52}
+        color={getTextColor('color')}
+      >
+        Align
+      </Div>
+      {textAligns.map(({ name, Icon }) => (
+        <Button
+          key={name}
+          ghost
+          toggled={isToggled('text-align', name)}
+          onClick={() => onChange([{ name: 'text-align', value: name }])}
+        >
+          <Icon />
+        </Button>
+      ))}
+    </Div>
+  ), [getTextColor, isToggled, onChange])
+
   // Find the closest weight when the font change
   useEffect(() => {
-    const weight = parseInt(getValue('font-weight').toString())
+    const weight = getValue('font-weight').toString()
 
-    if (weights.includes(weight)) return
+    if (weight === 'inherit') return
 
-    const closestWeight = weights.reduce((previous, current) => Math.abs(current - weight) < Math.abs(previous - weight) ? current : previous, Infinity)
+    const numericWeight = parseInt(weight)
 
+    if (weights.includes(numericWeight)) return
+
+    const closestWeight = weights.reduce((previous, current) => Math.abs(current - numericWeight) < Math.abs(previous - numericWeight) ? current : previous, Math.max(...weights))
+
+    // Infinity should never happen
     onChange([{ name: 'font-weight', value: closestWeight }])
   // Add fontFamily as the trigger
   }, [fontFamily, weights, getValue, onChange])
@@ -289,6 +347,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
         {renderWeightsSection()}
         {renderSizeSection()}
         {renderColorSection()}
+        {renderAlignSection()}
       </Div>
       {disabled && <StylesSubSectionDisabledOverlay />}
     </Accordion>

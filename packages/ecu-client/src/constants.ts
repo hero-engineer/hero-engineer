@@ -180,6 +180,12 @@ function isSpacingsValueValid(value: CssValueType) {
 
 const isSizeValueValid = isSpacingValueValid
 
+function isNumberOrNumberString(value: CssValueType) {
+  const numericValue = parseFloat(value.toString())
+
+  return numericValue === numericValue
+}
+
 export const cssAttributesMap: CSsAttributesMapType = {
   margin: {
     attributes: ['margin'],
@@ -373,28 +379,28 @@ export const cssAttributesMap: CSsAttributesMapType = {
   },
   'font-weight': {
     attributes: ['font-weight'],
-    defaultValue: 400,
-    isValueValid: value => typeof value === 'number',
+    defaultValue: 'inherit',
+    isValueValid: value => isNumberOrNumberString(value) || value === 'inherit',
   },
   'font-style': {
     attributes: ['font-style'],
-    defaultValue: 'normal',
-    isValueValid: value => typeof value === 'string' && cssFontStyleValues.includes(value),
+    defaultValue: 'inherit',
+    isValueValid: value => typeof value === 'string' && cssFontStyleValues.includes(value) || value === 'inherit',
   },
   'text-align': {
     attributes: ['text-align'],
     defaultValue: 'inherit',
-    isValueValid: value => typeof value === 'string' && cssTextAlignValues.includes(value),
+    isValueValid: value => typeof value === 'string' && cssTextAlignValues.includes(value) || value === 'inherit',
   },
   'text-decoration': {
     attributes: ['text-decoration'],
-    defaultValue: 'none',
-    isValueValid: value => typeof value === 'string' && cssTextDecorationValues.includes(value),
+    defaultValue: 'inherit',
+    isValueValid: value => typeof value === 'string' && cssTextDecorationValues.includes(value) || value === 'inherit',
   },
   'text-transform': {
     attributes: ['text-transform'],
-    defaultValue: 'none',
-    isValueValid: value => typeof value === 'string' && cssTextTransformValues.includes(value),
+    defaultValue: 'inherit',
+    isValueValid: value => typeof value === 'string' && cssTextTransformValues.includes(value) || value === 'inherit',
   },
   'text-shadow': {
     attributes: ['text-shadow'],
