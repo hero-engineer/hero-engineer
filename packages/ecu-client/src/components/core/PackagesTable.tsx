@@ -24,6 +24,7 @@ function PackagesTable({ packages, updatedPackages }: PackagesTablePropsType) {
       borderRadius="large"
       elevation={2}
       pb={0.5}
+      backgroundColor="background-light"
     >
       <Div
         xflex="x4"
