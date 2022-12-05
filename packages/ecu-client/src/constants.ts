@@ -92,6 +92,7 @@ const cssDisplayValues = ['block', 'inline-block', 'flex', 'grid', 'none']
 const cssFlexDirectionValues = ['row', 'column']
 const cssAlignItemsValues = ['flex-start', 'flex-end', 'center', 'stretch', 'baseline', 'space-between', 'space-around', 'space-evenly']
 const cssFlexWrapValues = ['nowrap', 'wrap', 'wrap-reverse']
+const cssGridAutoFlowValues = ['row', 'column', 'row dense', 'column dense']
 const cssOverflowValues = ['visible', 'hidden', 'scroll', 'auto']
 const cssPositionValues = ['static', 'relative', 'absolute', 'fixed', 'sticky']
 
@@ -276,6 +277,11 @@ export const cssAttributesMap: CSsAttributesMapType = {
     attributes: ['row-gap'],
     defaultValue: '0px', // A bit of a hack, to make the gap editor display no modified value on 0px
     isValueValid: isSpacingValueValid,
+  },
+  'grid-auto-flow': {
+    attributes: ['grid-auto-flow'],
+    defaultValue: 'row',
+    isValueValid: value => typeof value === 'string' && cssGridAutoFlowValues.includes(value),
   },
   'column-gap': {
     attributes: ['column-gap'],

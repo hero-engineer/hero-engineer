@@ -403,6 +403,10 @@ export default mergeTheme(defaultTheme, {
           backgroundColor: 'darken(background-light, 4)',
         },
       },
+      ({ ghostBorder }: any) => ghostBorder && {
+        border: '1px solid text',
+        borderRadius: 'medium',
+      },
       ({ slim }: any) => slim && {
         paddingTop: 0,
         paddingBottom: 0,
