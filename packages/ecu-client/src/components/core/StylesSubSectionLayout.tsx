@@ -231,7 +231,7 @@ const gridJustifys = [
 
 function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disabled }: StylesSubSectionLayoutPropsType) {
   const [expanded, setExpanded] = usePersistedState('styles-sub-section-layout-expanded', true)
-  const [isGridModalOpen, setIsGridModalOpen] = useState(true)
+  const [isGridModalOpen, setIsGridModalOpen] = useState(false)
 
   const getValue = useCallback((attributeName: string) => breakpointCssValues[attributeName] ?? cssValues[attributeName] ?? cssAttributesMap[attributeName].defaultValue, [breakpointCssValues, cssValues])
 

@@ -1,4 +1,5 @@
 import { Fragment, MouseEvent as ReactMouseEvent, ReactNode, memo, useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { Div } from 'honorable'
 
 import { zIndexes } from '../../constants'
@@ -27,7 +28,7 @@ type DragAndDropStateType = {
   componentDelta?: number
   childrenIndex?: number
   childrenPosition?: 'before' | 'after'
-  knobPosition?: number
+  knobRect?: LimitedDOMRect
 }
 
 type IndexAndPositionType = {
@@ -39,8 +40,11 @@ type EditionOverlayPropsType = {
   children: ReactNode
 }
 
+const dragAndDropKnobOffset = 2
+
 function EditionOverlay({ children }: EditionOverlayPropsType) {
   const overlayRef = useRef<HTMLDivElement>(null)
+  const { componentAddress = '' } = useParams()
 
   const { totalHierarchy } = useContext(HierarchyContext)
   const { hierarchyId, componentDelta, isEdited, setIsEdited } = useContext(EditionContext)
@@ -68,6 +72,7 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
   const handleElementMouseMove = useCallback((event: ReactMouseEvent, hierarchyItem: HierarchyItemType, hierarchyId: string, componentDelta: number) => {
     if (!dragAndDropState.isDragging) return
     if (!hierarchyItem.isComponentAcceptingChildren) return
+    if (hierarchyItem.onComponentAddress !== componentAddress) return
     if (!overlayRef.current) return
 
     event.stopPropagation()
@@ -82,7 +87,7 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
       isVertical = !((display === 'flex' || display === 'inline-flex') && flexDirection === 'row')
     }
 
-    let knobPosition = -1
+    let knobRect: LimitedDOMRect | undefined
     let childrenIndex = -1
     let childrenPosition: 'before' | 'after' = 'before'
 
@@ -126,14 +131,21 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
           : minAndMaxs[childrenIndex + 1].min - elementOffset
         : minAndMaxs[childrenIndex].min - elementOffset
 
-      knobPosition = min + (max - min) / 2
+      let knobPosition = min + (max - min) / 2
 
       if (knobPosition === 0) knobPosition += 2
       if (knobPosition === elementMax) knobPosition -= 2
+
+      knobRect = {
+        top: elementRect.top + (isVertical ? knobPosition : dragAndDropKnobOffset),
+        left: elementRect.left + (isVertical ? dragAndDropKnobOffset : knobPosition),
+        width: isVertical ? elementRect.width - 2 * dragAndDropKnobOffset : 1,
+        height: isVertical ? 1 : elementRect.height - 2 * dragAndDropKnobOffset,
+      }
     }
 
-    setDragAndDropState(x => ({ ...x, isVertical, hierarchyId, componentDelta, childrenIndex, childrenPosition, knobPosition }))
-  }, [dragAndDropState.isDragging, elementRegistry])
+    setDragAndDropState(x => ({ ...x, isVertical, hierarchyId, componentDelta, childrenIndex, childrenPosition, knobRect }))
+  }, [componentAddress, dragAndDropState.isDragging, elementRegistry])
 
   const renderHierarchy: (hierarchyItem: HierarchyItemType | null, depth?: number) => ReactNode = useCallback((hierarchyItem: HierarchyItemType | null, depth = zIndexes.editionOverlay + 1) => {
     if (!hierarchyItem) return null
@@ -199,9 +211,8 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
           isEdited={isSelected && isEdited}
           isComponentRoot={!!hierarchyItem.componentAddress}
           isHoverDisabled={dragAndDropState.isDragging}
-          isDisabled={dragAndDropState.isDragging && !hierarchyItem.isComponentAcceptingChildren}
+          isDisabled={dragAndDropState.isDragging && !(hierarchyItem.isComponentAcceptingChildren && hierarchyItem.onComponentAddress === componentAddress)}
           isDrop={isDrop}
-          dropKnobPosition={isDrop ? dragAndDropState.knobPosition ?? 0 : -1}
           isDropVertical={isDrop ? dragAndDropState.isVertical ?? false : false}
           helperText={isSelected ? helperText : ''}
           onSelect={(event: ReactMouseEvent) => handleElementSelect(event, hierarchyItem, currentHierarchyId, currentComponentDelta)}
@@ -217,6 +228,7 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
     )
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    componentAddress,
     elementRegistry,
     totalHierarchy,
     hierarchyId,
@@ -331,6 +343,16 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
           backgroundColor={isComponentRefreshing ? 'rgba(0, 0, 0, 0.5)' : null}
         >
           {!isComponentRefreshing && !isDragging && renderHierarchy(totalHierarchy)}
+          {dragAndDropState.knobRect && (
+            <Div
+              position="absolute"
+              top={dragAndDropState.knobRect.top}
+              left={dragAndDropState.knobRect.left}
+              width={dragAndDropState.knobRect.width}
+              height={dragAndDropState.knobRect.height}
+              backgroundColor="drag-and-drop-knob"
+            />
+          )}
         </Div>
       )}
     </Div>

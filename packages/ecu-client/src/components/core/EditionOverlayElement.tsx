@@ -12,7 +12,6 @@ type EditionOverlayElementPropsType = {
   width: number
   height: number
   helperText: string
-  dropKnobPosition: number
   isSelected: boolean
   isEdited: boolean
   isComponentRoot: boolean
@@ -34,7 +33,6 @@ function EditionOverlayElement({
   width,
   height,
   helperText,
-  dropKnobPosition,
   isSelected,
   isEdited,
   isComponentRoot,
@@ -100,18 +98,7 @@ function EditionOverlayElement({
         onClick={onSelect}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
-      >
-        {dropKnobPosition > 0 && (
-          <Div
-            position="absolute"
-            top={isDropVertical ? dropKnobPosition : 2}
-            left={isDropVertical ? 2 : dropKnobPosition}
-            width={isDropVertical ? 'calc(100% - 4px)' : 1}
-            height={isDropVertical ? 1 : 'calc(100% - 4px)'}
-            backgroundColor="drag-and-drop-knob"
-          />
-        )}
-      </Div>
+      />
       <Div
         xflex="x4"
         display={isSelected ? 'flex' : 'none'}
