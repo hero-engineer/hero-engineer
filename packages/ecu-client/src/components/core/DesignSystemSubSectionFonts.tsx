@@ -12,8 +12,8 @@ import { refetchKeys } from '../../constants'
 import { FontsQuery, FontsQueryDataType, UpdateFontsMutation, UpdateFontsMutationDataType } from '../../queries'
 
 import useQuery from '../../hooks/useQuery'
-import useRefetch from '../../hooks/useRefetch'
 import useMutation from '../../hooks/useMutation'
+import useRefetch from '../../hooks/useRefetch'
 
 function DesignSystemSubSectionFonts() {
   const [fonts, setFonts] = useState<FontType[]>([])

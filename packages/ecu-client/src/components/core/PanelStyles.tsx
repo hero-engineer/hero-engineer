@@ -32,6 +32,7 @@ import StylesSubSectionLayout from './StylesSubSectionLayout'
 import StylesSubSectionSpacing from './StylesSubSectionSpacing'
 import StylesSubSectionSize from './StylesSubSectionSize'
 import StylesSubSectionPosition from './StylesSubSectionPosition'
+import StylesSubSectionTypography from './StylesSubSectionTypography'
 
 // The styles section
 // Displayed in the right panel
@@ -213,6 +214,12 @@ function PanelStyles() {
         disabled={!selectedClassName}
       />
       <StylesSubSectionPosition
+        cssValues={passedCssValues}
+        breakpointCssValues={passedBreakpointCssValues}
+        onChange={handleStyleChange}
+        disabled={!selectedClassName}
+      />
+      <StylesSubSectionTypography
         cssValues={passedCssValues}
         breakpointCssValues={passedBreakpointCssValues}
         onChange={handleStyleChange}

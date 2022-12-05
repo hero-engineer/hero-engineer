@@ -95,6 +95,10 @@ const cssFlexWrapValues = ['nowrap', 'wrap', 'wrap-reverse']
 const cssGridAutoFlowValues = ['row', 'column', 'row dense', 'column dense']
 const cssOverflowValues = ['visible', 'hidden', 'scroll', 'auto']
 const cssPositionValues = ['static', 'relative', 'absolute', 'fixed', 'sticky']
+const cssFontStyleValues = ['normal', 'italic', 'oblique']
+const cssTextAlignValues = ['left', 'right', 'center', 'justify', 'justify-all', 'start', 'end', 'match-parent']
+const cssTextDecorationValues = ['none', 'underline', 'overline', 'line-through', 'blink']
+const cssTextTransformValues = ['none', 'capitalize', 'uppercase', 'lowercase', 'full-width', 'full-size-kana']
 
 function extractSpacing(value: CssValueType, index: number): CssValueType {
   if (typeof value === 'number') return value
@@ -161,10 +165,9 @@ function isSpacingValueValid(value: CssValueType) {
   if (typeof value === 'number') return true
 
   const [rawValue, unit] = splitSpacingValue(value)
-
   const numericValue = parseFloat(rawValue)
 
-  return (rawValue === 'auto' || numericValue === numericValue) && unit !== null && cssValueUnits.includes(unit)
+  return (rawValue === 'auto' || rawValue === 'inherit' || numericValue === numericValue) && (unit === 'inherit' || cssValueUnits.includes(unit))
 }
 
 function isSpacingsValueValid(value: CssValueType) {
@@ -357,6 +360,66 @@ export const cssAttributesMap: CSsAttributesMapType = {
     attributes: ['left'],
     defaultValue: 'auto',
     isValueValid: isSizeValueValid,
+  },
+  'font-family': {
+    attributes: ['font-family'],
+    defaultValue: 'inherit',
+    isValueValid: value => typeof value === 'string',
+  },
+  'font-size': {
+    attributes: ['font-size'],
+    defaultValue: 'inherit',
+    isValueValid: isSizeValueValid,
+  },
+  'font-weight': {
+    attributes: ['font-weight'],
+    defaultValue: 400,
+    isValueValid: value => typeof value === 'number',
+  },
+  'font-style': {
+    attributes: ['font-style'],
+    defaultValue: 'normal',
+    isValueValid: value => typeof value === 'string' && cssFontStyleValues.includes(value),
+  },
+  'text-align': {
+    attributes: ['text-align'],
+    defaultValue: 'inherit',
+    isValueValid: value => typeof value === 'string' && cssTextAlignValues.includes(value),
+  },
+  'text-decoration': {
+    attributes: ['text-decoration'],
+    defaultValue: 'none',
+    isValueValid: value => typeof value === 'string' && cssTextDecorationValues.includes(value),
+  },
+  'text-transform': {
+    attributes: ['text-transform'],
+    defaultValue: 'none',
+    isValueValid: value => typeof value === 'string' && cssTextTransformValues.includes(value),
+  },
+  'text-shadow': {
+    attributes: ['text-shadow'],
+    defaultValue: 'none',
+    isValueValid: value => typeof value === 'string',
+  },
+  'line-height': {
+    attributes: ['line-height'],
+    defaultValue: 'inherit',
+    isValueValid: value => isSizeValueValid(value) || value === 'inherit',
+  },
+  'letter-spacing': {
+    attributes: ['letter-spacing'],
+    defaultValue: 'inherit',
+    isValueValid: value => isSizeValueValid(value) || value === 'inherit',
+  },
+  'word-spacing': {
+    attributes: ['word-spacing'],
+    defaultValue: 'inherit',
+    isValueValid: value => isSizeValueValid(value) || value === 'inherit',
+  },
+  color: {
+    attributes: ['color'],
+    defaultValue: 'inherit',
+    isValueValid: value => typeof value === 'string',
   },
 } as const
 

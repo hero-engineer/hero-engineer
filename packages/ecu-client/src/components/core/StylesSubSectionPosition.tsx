@@ -45,7 +45,7 @@ function StylesSubSectionPosition({ cssValues, breakpointCssValues, onChange, di
 
   useRefresh()
 
-  const [expanded, setExpanded] = usePersistedState('styles-sub-section-size-expanded', true)
+  const [expanded, setExpanded] = usePersistedState('styles-sub-section-position-expanded', true)
 
   const getValue = useCallback((attributeName: string) => breakpointCssValues[attributeName] ?? cssValues[attributeName] ?? cssAttributesMap[attributeName].defaultValue, [breakpointCssValues, cssValues])
 

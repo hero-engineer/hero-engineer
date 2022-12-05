@@ -504,6 +504,11 @@ export default mergeTheme(defaultTheme, {
         paddingBottom: 0,
       },
     ],
+    EndIcon: [
+      ({ noEndIconPadding }: any) => noEndIconPadding && {
+        paddingLeft: 0,
+      },
+    ],
   },
   Menu: {
     Root: [
