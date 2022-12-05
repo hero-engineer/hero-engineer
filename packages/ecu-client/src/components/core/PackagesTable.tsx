@@ -171,7 +171,7 @@ function PackageTableRow({ pkg, updatedPackages }: PackageTableRowPropsType) {
         >
           <SlTrash />
         </Button>
-        {updatedPackage && (
+        {updatedPackage && updatedPackage.version !== pkg.version && (
           <Button
             secondary
             spinnerColor="primary"
