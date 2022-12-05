@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from 'react'
-import { Accordion, Div, MenuItem, Select } from 'honorable'
+import { Accordion, Button, Div, MenuItem, Select } from 'honorable'
 
 import { CssAttributeType, CssValuesType } from '../../types'
 import { cssAttributesMap, refetchKeys } from '../../constants'
@@ -13,6 +13,7 @@ import usePersistedState from '../../hooks/usePersistedState'
 import StylesSubSectionTitle from './StylesSubSectionTitle'
 import StylesSubSectionDisabledOverlay from './StylesSubSectionDisabledOverlay'
 import CssValueInput from './CssValueInput'
+import ColorPicker from './ColorPicker'
 
 type StylesSubSectionTypographyPropsType = {
   cssValues: CssValuesType
@@ -215,6 +216,41 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
     </Div>
   ), [getTextColor, getValue, onChange])
 
+  const renderColorSection = useCallback(() => {
+    const color = getValue('color').toString()
+
+    return (
+      <Div
+        xflex="x4"
+        fontSize="0.75rem"
+      >
+        <Div
+          xflex="x4"
+          minWidth={52}
+          color={getTextColor('color')}
+        >
+          Color
+        </Div>
+        <ColorPicker
+          withOverlay
+          value={color === 'inherit' ? null : color}
+          onChange={value => onChange([{ name: 'color', value }])}
+          size={16}
+          pickerLeftOffset={-29} // Adjusted from sight
+        />
+        <Button
+          ghost
+          toggled={color === 'inherit'}
+          onClick={() => onChange([{ name: 'color', value: 'inherit' }])}
+          ml={0.25}
+        >
+          inherit
+        </Button>
+      </Div>
+    )
+  }, [getTextColor, getValue, onChange])
+
+  // Find the closest weight when the font change
   useEffect(() => {
     const weight = parseInt(getValue('font-weight').toString())
 
@@ -252,6 +288,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
         {renderFamilySection()}
         {renderWeightsSection()}
         {renderSizeSection()}
+        {renderColorSection()}
       </Div>
       {disabled && <StylesSubSectionDisabledOverlay />}
     </Accordion>
