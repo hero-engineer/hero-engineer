@@ -106,8 +106,8 @@ function EditionOverlayElement({
             position="absolute"
             top={isDropVertical ? dropKnobPosition : 2}
             left={isDropVertical ? 2 : dropKnobPosition}
-            width={isDropVertical ? 'calc(100% - 4px)' : 1.5}
-            height={isDropVertical ? 1.5 : 'calc(100% - 4px)'}
+            width={isDropVertical ? 'calc(100% - 4px)' : 1}
+            height={isDropVertical ? 1 : 'calc(100% - 4px)'}
             backgroundColor="drag-and-drop-knob"
           />
         )}

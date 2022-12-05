@@ -252,6 +252,11 @@ export const cssAttributesMap: CSsAttributesMapType = {
     defaultValue: 'stretch',
     isValueValid: value => typeof value === 'string' && cssAlignItemsValues.includes(value),
   },
+  'justify-items': {
+    attributes: ['justify-items'],
+    defaultValue: 'stretch',
+    isValueValid: value => typeof value === 'string' && cssAlignItemsValues.includes(value),
+  },
   'justify-content': {
     attributes: ['justify-content'],
     defaultValue: 'flex-start',

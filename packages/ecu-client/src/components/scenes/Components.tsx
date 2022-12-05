@@ -38,8 +38,8 @@ function Components() {
         mt={2}
         display="grid"
         gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-        gridColumnGap={32}
-        gridRowGap={32}
+        columnGap={2}
+        rowGap={2}
       >
         {components.map(componentAndFile => (
           <Link

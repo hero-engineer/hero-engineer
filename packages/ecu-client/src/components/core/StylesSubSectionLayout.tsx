@@ -14,9 +14,10 @@ import {
   MdOutlineSwapHoriz,
 } from 'react-icons/md'
 
-import usePersistedState from '../../hooks/usePersistedState'
 import { CssAttributeType, CssValueType, CssValuesType } from '../../types'
 import { cssAttributesMap } from '../../constants'
+
+import usePersistedState from '../../hooks/usePersistedState'
 
 import CssValueInput from './CssValueInput'
 import StylesSubSectionTitle from './StylesSubSectionTitle'
@@ -29,29 +30,16 @@ type StylesSubSectionLayoutPropsType = {
   disabled: boolean
 }
 
-function addDefaults(attributeNames: string[]) {
-  const attributes: CssAttributeType[] = []
-
-  attributeNames.forEach(name => {
-    const attribute = cssAttributesMap[name]
-
-    if (attribute) {
-      attributes.push({
-        name,
-        value: attribute.defaultValue,
-      })
-    }
-  })
-
-  return attributes
-}
-
 const attributeNames = [
   'display',
   'flex-direction',
   'flex-wrap',
   'align-items',
+  'justify-items',
+  'align-content',
   'justify-content',
+  'row-gap',
+  'column-gap',
 ]
 
 const displays = [
@@ -59,49 +47,30 @@ const displays = [
     name: 'flex',
     label: 'Flex',
     Icon: CgDisplayFlex,
-    onValueChange: (onChange: (attributes: CssAttributeType[]) => void) => onChange([
-      { name: 'display', value: 'flex' },
-    ]),
   },
   {
     name: 'block',
     label: 'Block',
     Icon: CgDisplayFullwidth,
-    onValueChange: (onChange: (attributes: CssAttributeType[]) => void) => onChange([
-      { name: 'display', value: 'block' },
-      ...addDefaults(['flex-direction', 'align-items', 'justify-content']),
-    ]),
   },
   {
     name: 'inline-block',
     label: 'Inline Block',
     Icon: AiOutlineLine,
-    onValueChange: (onChange: (attributes: CssAttributeType[]) => void) => onChange([
-      { name: 'display', value: 'inline-block' },
-      ...addDefaults(['flex-direction', 'align-items', 'justify-content']),
-    ]),
   },
   {
     name: 'grid',
     label: 'Grid',
     Icon: CgDisplayGrid,
-    onValueChange: (onChange: (attributes: CssAttributeType[]) => void) => onChange([
-      { name: 'display', value: 'grid' },
-      ...addDefaults(['flex-direction', 'align-items', 'justify-content']),
-    ]),
   },
   {
     name: 'none',
     label: 'None',
     Icon: FaRegEyeSlash,
-    onValueChange: (onChange: (attributes: CssAttributeType[]) => void) => onChange([
-      { name: 'display', value: 'none' },
-      ...addDefaults(['flex-direction', 'align-items', 'justify-content']),
-    ]),
   },
 ]
 
-const aligns = [
+const flexAligns = [
   {
     name: 'flex-start',
     label: 'Start',
@@ -144,7 +113,7 @@ const aligns = [
   },
 ]
 
-const justifys = [
+const flexJustifys = [
   {
     name: 'flex-start',
     label: 'Start',
@@ -164,6 +133,77 @@ const justifys = [
     name: 'stretch',
     label: 'Stretch',
     getIcon: (isRow: boolean) => isRow ? CgArrowAlignH : CgArrowAlignV,
+  },
+  {
+    name: 'baseline',
+    label: 'Baseline',
+    getIcon: (isRow: boolean) => isRow ? BiQuestionMark : BiQuestionMark,
+  },
+  {
+    name: 'space-between',
+    label: 'Space Between',
+    getIcon: (isRow: boolean) => isRow ? BiQuestionMark : BiQuestionMark,
+  },
+  {
+    name: 'space-around',
+    label: 'Space Around',
+    getIcon: (isRow: boolean) => isRow ? BiQuestionMark : BiQuestionMark,
+  },
+  {
+    name: 'space-evenly',
+    label: 'Space Evenly',
+    getIcon: (isRow: boolean) => isRow ? BiQuestionMark : BiQuestionMark,
+  },
+]
+
+const gridAligns = [
+  {
+    name: 'flex-start',
+    label: 'Start',
+    getIcon: (isRow: boolean) => isRow ? MdAlignVerticalTop : MdAlignHorizontalLeft,
+  },
+  {
+    name: 'center',
+    label: 'Center',
+    getIcon: (isRow: boolean) => isRow ? MdAlignVerticalCenter : MdOutlineAlignHorizontalCenter,
+  },
+  {
+    name: 'flex-end',
+    label: 'End',
+    getIcon: (isRow: boolean) => isRow ? MdAlignVerticalBottom : MdOutlineAlignHorizontalRight,
+  },
+  {
+    name: 'stretch',
+    label: 'Stretch',
+    getIcon: (isRow: boolean) => isRow ? CgArrowAlignV : CgArrowAlignH,
+  },
+  {
+    name: 'baseline',
+    label: 'Baseline',
+    getIcon: (isRow: boolean) => isRow ? BiQuestionMark : BiQuestionMark,
+  },
+]
+
+const gridJustifys = [
+  {
+    name: 'flex-start',
+    label: 'Start',
+    getIcon: (isRow: boolean) => isRow ? BiQuestionMark : BiQuestionMark,
+  },
+  {
+    name: 'center',
+    label: 'Center',
+    getIcon: (isRow: boolean) => isRow ? BiQuestionMark : BiQuestionMark,
+  },
+  {
+    name: 'flex-end',
+    label: 'End',
+    getIcon: (isRow: boolean) => isRow ? BiQuestionMark : BiQuestionMark,
+  },
+  {
+    name: 'stretch',
+    label: 'Stretch',
+    getIcon: (isRow: boolean) => isRow ? BiQuestionMark : BiQuestionMark,
   },
   {
     name: 'baseline',
@@ -219,7 +259,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
       >
         Display
       </Div>
-      {displays.map(({ name, label, Icon, onValueChange }) => (
+      {displays.map(({ name, label, Icon }) => (
         <Tooltip
           key={name}
           label={label}
@@ -228,7 +268,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
           <Button
             ghost
             toggled={isToggled('display', [name])}
-            onClick={() => onValueChange(onChange)}
+            onClick={() => onChange([{ name: 'display', value: name }])}
           >
             <Icon />
           </Button>
@@ -292,7 +332,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
         display="grid"
         gridTemplateColumns="repeat(4, minmax(0, 1fr))"
       >
-        {aligns.map(({ name, label, getIcon }) => {
+        {flexAligns.map(({ name, label, getIcon }) => {
           const Icon = getIcon(['row', 'row-reverse'].includes((breakpointCssValues['flex-direction'] ?? cssValues['flex-direction'] ?? cssAttributesMap['flex-direction'].defaultValue).toString()))
 
           return (
@@ -329,7 +369,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
         display="grid"
         gridTemplateColumns="repeat(4, minmax(0, 1fr))"
       >
-        {justifys.map(({ name, label, getIcon }) => {
+        {flexJustifys.map(({ name, label, getIcon }) => {
           const Icon = getIcon(['row', 'row-reverse'].includes((breakpointCssValues['flex-direction'] ?? cssValues['flex-direction'] ?? cssAttributesMap['flex-direction'].defaultValue).toString()))
 
           return (
@@ -453,7 +493,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
         display="grid"
         gridTemplateColumns="repeat(4, minmax(0, 1fr))"
       >
-        {aligns.map(({ name, label, getIcon }) => {
+        {flexAligns.map(({ name, label, getIcon }) => {
           const Icon = getIcon(['row', 'row-reverse'].includes((breakpointCssValues['flex-direction'] ?? cssValues['flex-direction'] ?? cssAttributesMap['flex-direction'].defaultValue).toString()))
 
           return (
@@ -476,7 +516,120 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
     </Div>
   ), [cssValues, breakpointCssValues, onChange, isToggled, getTextColor])
 
+  const renderGridAlignEditor = useCallback(() => (
+    <Div xflex="x1">
+      <Div
+        minWidth={54}
+        fontSize="0.75rem"
+        color={getTextColor(['align-items', 'justify-items'])}
+        pt={0.5}
+      >
+        Align
+      </Div>
+      <Div
+        display="grid"
+        gridTemplateColumns="repeat(5, minmax(0, 1fr))"
+      >
+        {gridAligns.map(({ name, label, getIcon }) => {
+          const Icon = getIcon(true)
+
+          return (
+            <Tooltip
+              key={name}
+              label={`Align items ${label}`}
+              placement="bottom"
+            >
+              <Button
+                ghost
+                toggled={isToggled('align-items', [name])}
+                onClick={() => onChange([{ name: 'align-items', value: name }])}
+              >
+                <Icon />
+              </Button>
+            </Tooltip>
+          )
+        })}
+        {gridAligns.map(({ name, label, getIcon }) => {
+          const Icon = getIcon(false)
+
+          return (
+            <Tooltip
+              key={name}
+              label={`Justify items ${label}`}
+              placement="bottom"
+            >
+              <Button
+                ghost
+                toggled={isToggled('justify-items', [name])}
+                onClick={() => onChange([{ name: 'justify-items', value: name }])}
+              >
+                <Icon />
+              </Button>
+            </Tooltip>
+          )
+        })}
+      </Div>
+    </Div>
+  ), [onChange, isToggled, getTextColor])
+
+  const renderGridJustifyEditor = useCallback(() => (
+    <Div xflex="x1">
+      <Div
+        minWidth={54}
+        fontSize="0.75rem"
+        color={getTextColor(['align-content', 'justify-content'])}
+        pt={0.5}
+      >
+        Distribute
+      </Div>
+      <Div
+        display="grid"
+        gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+      >
+        {gridJustifys.map(({ name, label, getIcon }) => {
+          const Icon = getIcon(true)
+
+          return (
+            <Tooltip
+              key={name}
+              label={`Align content ${label}`}
+              placement="bottom"
+            >
+              <Button
+                ghost
+                toggled={isToggled('align-content', [name])}
+                onClick={() => onChange([{ name: 'align-content', value: name }])}
+              >
+                <Icon />
+              </Button>
+            </Tooltip>
+          )
+        })}
+        {gridJustifys.map(({ name, label, getIcon }) => {
+          const Icon = getIcon(false)
+
+          return (
+            <Tooltip
+              key={name}
+              label={`Justify content ${label}`}
+              placement="bottom"
+            >
+              <Button
+                ghost
+                toggled={isToggled('justify-content', [name])}
+                onClick={() => onChange([{ name: 'justify-content', value: name }])}
+              >
+                <Icon />
+              </Button>
+            </Tooltip>
+          )
+        })}
+      </Div>
+    </Div>
+  ), [onChange, isToggled, getTextColor])
+
   const isFlex = isToggled('display', ['flex'])
+  const isGrid = isToggled('display', ['grid'])
   const isWrap = isToggled('flex-wrap', ['wrap', 'wrap-reverse'])
 
   return (
@@ -510,6 +663,8 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
         {isFlex && renderFlexGapEditor()}
         {isFlex && renderFlexWrapEditor()}
         {isWrap && renderFlexContentEditor()}
+        {isGrid && renderGridAlignEditor()}
+        {isGrid && renderGridJustifyEditor()}
       </Div>
       {disabled && <StylesSubSectionDisabledOverlay />}
     </Accordion>
