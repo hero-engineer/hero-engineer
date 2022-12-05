@@ -8,6 +8,9 @@ import SnackbarContext from '../contexts/SnackBarContext'
 
 import useRefetch from './useRefetch'
 
+// Has two responsibilities:
+// - Show a snackbar item when the mutation fails
+// - Refetch the undo/redo metadata after the mutation succeeds
 function useMutation<T, V extends AnyVariables = AnyVariables>(args: string | DocumentNode | TypedDocumentNode): UseMutationResponse<T, V> {
   const { snackBarItems, appendSnackBarItem } = useContext(SnackbarContext)
   const [id, setId] = useState(0)
