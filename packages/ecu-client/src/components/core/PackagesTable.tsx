@@ -21,10 +21,10 @@ function PackagesTable({ packages, updatedPackages }: PackagesTablePropsType) {
   return (
     <Div
       xflex="y2s"
+      backgroundColor="background-light"
       borderRadius="large"
       elevation={2}
       pb={0.5}
-      backgroundColor="background-light"
     >
       <Div
         xflex="x4"

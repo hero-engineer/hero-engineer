@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Button, Div, H2, Input } from 'honorable'
+import { A, Button, Div, H2, Input } from 'honorable'
 import shortId from 'shortid'
 
 import { SpacingType } from '../../types'
@@ -98,9 +98,10 @@ type SpacingItemPropsType = {
 function SpacingItem({ spacing, onChange }: SpacingItemPropsType) {
   const [name, setName] = useState(spacing.name)
   const [isEdited, setIsEdited] = useState(false)
+  const [isNameEdited, setIsNameEdited] = useState(false)
 
   const handleUpdateName = useCallback(() => {
-    setIsEdited(false)
+    setIsNameEdited(false)
 
     if (!name) return
 
@@ -113,17 +114,21 @@ function SpacingItem({ spacing, onChange }: SpacingItemPropsType) {
   return (
     <Div
       xflex="y2"
-      width={128}
-      maxWidth="100%"
+      width={`calc(max(${spacing.value}, 128px))`}
       minWidth={0} // For ellipsis to work
       gap={1}
+      _hover={{
+        '> #SpacingItem-edit': {
+          opacity: 1,
+        },
+      }}
     >
       <Div
         ellipsis
-        onClick={() => setIsEdited(true)}
+        onClick={() => setIsNameEdited(true)}
         px={0.5}
       >
-        {isEdited ? (
+        {isNameEdited ? (
           <Input
             bare
             autoFocus
@@ -137,20 +142,31 @@ function SpacingItem({ spacing, onChange }: SpacingItemPropsType) {
           />
         ) : spacing.name}
       </Div>
-      <Div
-        xflex="x5"
-        fontSize="0.75rem"
-      >
-        <CssValueInput
-          value={spacing.value}
-          onChange={value => onChange({ ...spacing, value })}
-        />
-      </Div>
+      {isEdited && (
+        <Div
+          xflex="x5"
+          fontSize="0.75rem"
+        >
+          <CssValueInput
+            value={spacing.value}
+            onChange={value => onChange({ ...spacing, value })}
+          />
+        </Div>
+      )}
       <Div
         width={spacing.value}
         height={spacing.value}
         backgroundColor="primary"
       />
+      <Div
+        id="SpacingItem-edit"
+        fontWeight="0.75rem"
+        opacity={isEdited ? 1 : 0}
+      >
+        <A onClick={() => setIsEdited(x => !x)}>
+          {isEdited ? 'End editing' : 'Edit'}
+        </A>
+      </Div>
     </Div>
   )
 }
