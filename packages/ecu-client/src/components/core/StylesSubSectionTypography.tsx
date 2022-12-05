@@ -5,7 +5,7 @@ import { TfiAlignCenter, TfiAlignJustify, TfiAlignLeft, TfiAlignRight } from 're
 import { CssAttributeType, CssValueType, CssValuesType } from '../../types'
 import { cssAttributesMap, refetchKeys } from '../../constants'
 
-import { FontsQuery, FontsQueryDataType } from '../../queries'
+import { ColorsQuery, ColorsQueryDataType, FontsQuery, FontsQueryDataType } from '../../queries'
 
 import useQuery from '../../hooks/useQuery'
 import useRefetch from '../../hooks/useRefetch'
@@ -71,6 +71,9 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
   const [fontsQueryResult, refetchFontsQuery] = useQuery<FontsQueryDataType>({
     query: FontsQuery,
   })
+  const [colorsQueryResult, refetchColorsQuery] = useQuery<ColorsQueryDataType>({
+    query: ColorsQuery,
+  })
 
   useRefetch(
     {
@@ -95,6 +98,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
   const isToggled = useCallback((attributeName: string, value: CssValueType) => value === getValue(attributeName), [getValue])
 
   const fonts = useMemo(() => fontsQueryResult.data?.fonts ?? [], [fontsQueryResult.data])
+  const colors = useMemo(() => colorsQueryResult.data?.colors ?? [], [colorsQueryResult.data])
   const fontFamily = getValue('font-family')
   const weights = useMemo(() => {
     const font = fonts.find(({ name }) => fontFamily === prepareFontFamily(name))
@@ -265,6 +269,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
           onChange={value => onChange([{ name: 'color', value }])}
           size={16}
           pickerLeftOffset={-29} // Adjusted from sight
+          colors={colors}
         />
         <Button
           ghost
@@ -276,7 +281,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
         </Button>
       </Div>
     )
-  }, [getTextColor, getValue, onChange])
+  }, [colors, getTextColor, getValue, onChange])
 
   const renderAlignSection = useCallback(() => (
     <Div

@@ -1,7 +1,8 @@
 import { ReactNode, useCallback, useState } from 'react'
-import { Div, WithOutsideClick } from 'honorable'
+import { Div, MenuItem, Select, WithOutsideClick } from 'honorable'
 import { ChromePicker } from 'react-color'
 
+import { ColorType } from '../../types'
 import { zIndexes } from '../../constants'
 
 type ColorPickerPropsType = {
@@ -10,9 +11,10 @@ type ColorPickerPropsType = {
   size?: number
   pickerLeftOffset?: number
   withOverlay?: boolean
+  colors?: ColorType[]
 }
 
-function ColorPicker({ value, onChange, size = 16, pickerLeftOffset = 0, withOverlay = false }: ColorPickerPropsType) {
+function ColorPicker({ value, onChange, size = 16, pickerLeftOffset = 0, withOverlay = false, colors = [] }: ColorPickerPropsType) {
   const [isOpen, setIsOpen] = useState(false)
   const [currentValue, setCurrentValue] = useState(value === null ? '#ffffff' : value)
 
@@ -86,11 +88,42 @@ function ColorPicker({ value, onChange, size = 16, pickerLeftOffset = 0, withOve
             left={pickerLeftOffset}
             zIndex={zIndexes.colorPicker + 1}
             userSelect="none"
+            backgroundColor="white"
           >
             <ChromePicker
               color={currentValue}
               onChange={color => setCurrentValue(color.hex)}
             />
+            {!!colors.length && (
+              <Div p={0.25}>
+                <Select
+                  menuOnTop
+                  width="100%"
+                  value={currentValue}
+                  onChange={event => setCurrentValue(event.target.value)}
+                  placeholder="Select a color"
+                >
+                  {colors.map(color => (
+                    <MenuItem
+                      key={color.id}
+                      value={`var(${color.variableName})`}
+                    >
+                      <Div
+                        xflex="x4"
+                        gap={0.5}
+                      >
+                        <Div
+                          width={12}
+                          height={12}
+                          backgroundColor={`var(${color.variableName})`}
+                        />
+                        {color.name}
+                      </Div>
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Div>
+            )}
           </Div>
         )}
       </Div>
