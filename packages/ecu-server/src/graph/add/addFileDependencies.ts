@@ -137,13 +137,9 @@ async function addFileDependencies(fileNode: FileNodeType) {
 
 function extractFunctionId(path: NodePath<FunctionDeclaration>) {
   const lastComment = path.node.leadingComments?.[path.node.leadingComments.length - 1]?.value
-  const comment = `// ${ecuFunctionIdCommentPrefix} `
+  const comment = ` ${ecuFunctionIdCommentPrefix} `
 
-  if (lastComment?.startsWith(comment)) {
-    return lastComment.replace(comment, '').trim()
-  }
-
-  return ''
+  return lastComment?.startsWith(comment) ? lastComment.slice(comment.length).trim() : ''
 }
 
 function appendFunctionId(path: NodePath<FunctionDeclaration>) {

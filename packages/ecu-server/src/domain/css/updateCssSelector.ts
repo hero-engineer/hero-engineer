@@ -14,17 +14,7 @@ async function updateCssSelector(fileNode: FileNodeType, selector: string, attri
 
       // Styling: prepend spaces to the declaration
       rule.nodes[rule.nodes.length - 1].raws.before = breakpoint.media ? '\n    ' : '\n  '
-
-      if (attribute.comment) {
-        rule.append({
-          text: attribute.comment,
-        })
-
-        // Styling: put the comment on the same line as the declaration
-        rule.nodes[rule.nodes.length - 1].raws.before = ' '
-      }
     })
-
   }, true)
 }
 
