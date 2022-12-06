@@ -1,4 +1,4 @@
-import { MouseEvent, memo, useCallback } from 'react'
+import { MouseEvent, memo, useCallback, useEffect, useRef } from 'react'
 import { Div } from 'honorable'
 
 import { HierarchyItemType } from '@types'
@@ -46,30 +46,37 @@ function EditionOverlayElement({
   onMouseDown,
   onMouseMove,
 }: EditionOverlayElementPropsType) {
-  // const rootRef = useRef<HTMLDivElement>(null)
+  const rootRef = useRef<HTMLDivElement>(null)
 
-  // const handleWheel = useCallback((event: WheelEvent) => {
-  //   if (!element) return
+  // Scroll sub element
+  // Prevent the page from scrolling if a sub element has scrolled
+  const handleWheel = useCallback((event: WheelEvent) => {
+    if (!element) return
 
-  //   // event.preventDefault()
+    const beforeTop = element.scrollTop
+    const beforeLeft = element.scrollLeft
 
-  //   element.scrollTop += event.deltaY
-  //   element.scrollLeft += event.deltaX
-  // }, [element])
+    element.scrollTop += event.deltaY
+    element.scrollLeft += event.deltaX
 
-  // useEffect(() => {
-  //   if (isDisabled) return
+    if (beforeTop === element.scrollTop && beforeLeft === element.scrollLeft) return
 
-  //   const { current } = rootRef
+    event.preventDefault()
+  }, [element])
 
-  //   if (!current) return
+  useEffect(() => {
+    if (isDisabled) return
 
-  //   current.addEventListener('wheel', handleWheel, { passive: false }) // Passive is needed to prevent default
+    const { current } = rootRef
 
-  //   return () => {
-  //     current.removeEventListener('wheel', handleWheel)
-  //   }
-  // }, [isDisabled, handleWheel])
+    if (!current) return
+
+    current.addEventListener('wheel', handleWheel, { passive: false }) // Passive is needed to prevent default
+
+    return () => {
+      current.removeEventListener('wheel', handleWheel)
+    }
+  }, [isDisabled, handleWheel])
 
   if (isDisabled && !isSelected) return null
 
@@ -78,7 +85,7 @@ function EditionOverlayElement({
   return (
     <>
       <Div
-        // ref={rootRef}
+        ref={rootRef}
         position="absolute"
         xflex={isDropVertical ? 'y2' : 'x4'}
         top={top - 1}
@@ -100,7 +107,6 @@ function EditionOverlayElement({
         onClick={onSelect}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
-        // onWheel={handleWheel}
       />
       <Div
         xflex="x4"
