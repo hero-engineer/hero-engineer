@@ -64,11 +64,10 @@ function PanelStyles() {
   const isOnAnotherComponent = useMemo(() => !hierarchy.length || hierarchy[hierarchy.length - 1].onComponentAddress !== componentAddress, [hierarchy, componentAddress])
   const isNoElementSelected = useMemo(() => !hierarchy.length || hierarchy[hierarchy.length - 1].isRoot || isComponentRoot || isOnAnotherComponent, [hierarchy, isComponentRoot, isOnAnotherComponent])
 
-  const masterBreakpoint = useMemo(() => breakpoints.find(b => !b.media)!, [breakpoints])
-  const indexOfMasterBreakpoint = useMemo(() => breakpoints.indexOf(masterBreakpoint), [breakpoints, masterBreakpoint])
-  const indexOfCurrentBreakpoint = useMemo(() => breakpoints.indexOf(breakpoint), [breakpoints, breakpoint])
   // The medias that can impact the current breakpoint
   const concernedMedias = useMemo(() => {
+    const indexOfMasterBreakpoint = breakpoints.findIndex(b => !b.media)
+    const indexOfCurrentBreakpoint = breakpoints.findIndex(b => b.id === breakpoint.id)
     // Determines weither the current breakpoint is going upscreen or downscreen from the master breakpoint
     const isGoingUpscreen = indexOfMasterBreakpoint > indexOfCurrentBreakpoint
     const concernedMedias: string[] = []
@@ -86,7 +85,7 @@ function PanelStyles() {
     }
 
     return concernedMedias
-  }, [breakpoints, indexOfMasterBreakpoint, indexOfCurrentBreakpoint])
+  }, [breakpoints, breakpoint])
 
   // Arrays of CssClasses
   // All classes
@@ -122,13 +121,13 @@ function PanelStyles() {
   const passedCssValues = selectedClassName ? selectedCssValues : fullCssValues
   const passedBreakpointCssValues = selectedClassName ? selectedBreakpointCssValues : fullBreakpointCssValues
 
-  console.log('concernedMedias', concernedMedias)
-  console.log('v, bv', passedCssValues, passedBreakpointCssValues)
-
   // The attributes to be updated
   const attributes = useMemo(() => Object.entries(selectedBreakpointCssValues).map(([name, value]) => ({ name, value })), [selectedBreakpointCssValues])
   const attributesHash = useMemo(() => attributes.map(({ name, value }) => `${name}:${value}`).join('_'), [attributes])
   const previousAttributesHash = usePrevious(attributesHash)
+
+  // console.log('concernedMedias', concernedMedias)
+  // console.log('v, bv', passedCssValues, passedBreakpointCssValues)
 
   const handleCssUpdate = useCallback(async () => {
     if (!classNames.length || previousAttributesHash === attributesHash) return
