@@ -1,4 +1,4 @@
-import { MouseEvent, memo, useCallback, useEffect, useRef } from 'react'
+import { MouseEvent, memo, useCallback } from 'react'
 import { Div } from 'honorable'
 
 import { HierarchyItemType } from '@types'
@@ -46,30 +46,30 @@ function EditionOverlayElement({
   onMouseDown,
   onMouseMove,
 }: EditionOverlayElementPropsType) {
-  const rootRef = useRef<HTMLDivElement>(null)
+  // const rootRef = useRef<HTMLDivElement>(null)
 
-  const handleWheel = useCallback((event: WheelEvent) => {
-    if (!element) return
+  // const handleWheel = useCallback((event: WheelEvent) => {
+  //   if (!element) return
 
-    event.preventDefault()
+  //   // event.preventDefault()
 
-    element.scrollTop += event.deltaY
-    element.scrollLeft += event.deltaX
-  }, [element])
+  //   element.scrollTop += event.deltaY
+  //   element.scrollLeft += event.deltaX
+  // }, [element])
 
-  useEffect(() => {
-    if (isDisabled) return
+  // useEffect(() => {
+  //   if (isDisabled) return
 
-    const { current } = rootRef
+  //   const { current } = rootRef
 
-    if (!current) return
+  //   if (!current) return
 
-    current.addEventListener('wheel', handleWheel, { passive: false }) // Passive is needed to prevent default
+  //   current.addEventListener('wheel', handleWheel, { passive: false }) // Passive is needed to prevent default
 
-    return () => {
-      current.removeEventListener('wheel', handleWheel)
-    }
-  }, [isDisabled, handleWheel])
+  //   return () => {
+  //     current.removeEventListener('wheel', handleWheel)
+  //   }
+  // }, [isDisabled, handleWheel])
 
   if (isDisabled && !isSelected) return null
 
@@ -78,7 +78,7 @@ function EditionOverlayElement({
   return (
     <>
       <Div
-        ref={rootRef}
+        // ref={rootRef}
         position="absolute"
         xflex={isDropVertical ? 'y2' : 'x4'}
         top={top - 1}
@@ -100,6 +100,7 @@ function EditionOverlayElement({
         onClick={onSelect}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
+        // onWheel={handleWheel}
       />
       <Div
         xflex="x4"

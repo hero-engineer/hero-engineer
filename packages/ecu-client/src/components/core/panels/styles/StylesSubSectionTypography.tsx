@@ -363,9 +363,10 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
   return (
     <Accordion
       ghost
-      smallPadding
-      smallTitle
       backgroundTitle
+      smallTitle
+      smallTitlePadding
+      smallChildrenPadding
       childrenPositionRelative
       title={(
         <StylesSubSectionTitle

@@ -330,6 +330,7 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
     <Div
       xflex="y2s"
       position="relative"
+      overflow="hidden" // This is important for preventing an annoying scrollbar
     >
       {children}
       {!isInteractiveMode && (

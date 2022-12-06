@@ -16,7 +16,6 @@ type RetractablePanelItemType = {
 }
 
 type RetractablePanelPropsType = {
-  height: string | number
   direction: 'left' | 'right' | string
   openPersistedStateKey: string
   defaultOpenIndex?: number
@@ -24,7 +23,7 @@ type RetractablePanelPropsType = {
 }
 
 // A panel that can be opened and closed on the side of the screen
-function RetractablePanel({ height, direction, openPersistedStateKey, defaultOpenIndex = -1, items }: RetractablePanelPropsType) {
+function RetractablePanel({ direction, openPersistedStateKey, defaultOpenIndex = -1, items }: RetractablePanelPropsType) {
   const [openIndex, setOpenIndex] = usePersistedState(openPersistedStateKey, defaultOpenIndex, (x: string) => parseInt(x))
   const [isDocked, setIsDocked] = usePersistedState(`${openPersistedStateKey}-is-docked`, false)
 
@@ -51,8 +50,7 @@ function RetractablePanel({ height, direction, openPersistedStateKey, defaultOpe
     <Div
       xflex={isLeft ? 'x4s' : 'x40s'}
       position="relative"
-      height={height}
-      maxHeight={height}
+      height="100%"
       backgroundColor="background-light"
     >
       <Div

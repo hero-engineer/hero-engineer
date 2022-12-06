@@ -159,7 +159,11 @@ function PanelAddComponent() {
         </P>
         <Accordion
           ghost
+          smallTitle
+          smallTitlePadding
           noChildrenPadding
+          backgroundTitle
+          childrenPositionRelative
           title="Atoms"
           expanded={isAtomsAccordionExpanded}
           onExpand={setIsAtomsAccordionExpanded}
@@ -185,7 +189,11 @@ function PanelAddComponent() {
         </Accordion>
         <Accordion
           ghost
+          smallTitle
+          smallTitlePadding
           noChildrenPadding
+          backgroundTitle
+          childrenPositionRelative
           title="Components"
           expanded={isComponentsAccordionExpanded}
           onExpand={setIsComponentsAccordionExpanded}
@@ -213,7 +221,11 @@ function PanelAddComponent() {
         </Accordion>
         <Accordion
           ghost
+          smallTitle
+          smallTitlePadding
           noChildrenPadding
+          backgroundTitle
+          childrenPositionRelative
           title="Special"
           expanded={isSpecialAccordionExpanded}
           onExpand={setIsSpecialAccordionExpanded}

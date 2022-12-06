@@ -286,12 +286,12 @@ export default mergeTheme(defaultTheme, {
     ],
     Title: [
       ({ ghost }: any) => ghost && {
-        height: 31, // To match the height of the RetractablePanel toggle icon of 32px - 1px border
+        height: 32, // To match the height of any ghost button
         paddingTop: 0,
         paddingBottom: 0,
         fontWeight: 500,
       },
-      ({ smallPadding }: any) => smallPadding && {
+      ({ smallTitlePadding }: any) => smallTitlePadding && {
         paddingLeft: 8,
         paddingRight: 8,
       },
@@ -301,7 +301,6 @@ export default mergeTheme(defaultTheme, {
       ({ backgroundTitle, expanded, isExpanding }: any) => backgroundTitle && {
         backgroundColor: 'darken(background-light, 8)',
         borderBottom: expanded || isExpanding ? '1px solid border' : null,
-        boxSizing: 'content-box', // To prevent layout adjustments when the border is added
       },
     ],
     Children: [
@@ -312,7 +311,7 @@ export default mergeTheme(defaultTheme, {
       ({ noChildrenPadding }: any) => noChildrenPadding && {
         paddingBottom: 0,
       },
-      ({ smallPadding }: any) => smallPadding && {
+      ({ smallChildrenPadding }: any) => smallChildrenPadding && {
         paddingTop: 8,
         paddingBottom: 8,
         paddingLeft: 8,

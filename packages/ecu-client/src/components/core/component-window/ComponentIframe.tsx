@@ -67,6 +67,7 @@ function ComponentIframe({ children, ...props }: ComponentIframePropsType) {
       userSelect="none"
       position="relative" // For Tooltip to be over the iframe
       zIndex={0} // Idem
+      top={0.5} // For the overlay top menu border to be visible
     >
       {mountNode && createPortal(children({ window: windowNode, head: headNode, setHeight }), mountNode)}
     </Iframe>

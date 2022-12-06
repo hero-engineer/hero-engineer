@@ -42,9 +42,10 @@ function StylesSubSectionSpacing({ cssValues, breakpointCssValues, onChange, dis
   return (
     <Accordion
       ghost
-      smallPadding
-      smallTitle
       backgroundTitle
+      smallTitle
+      smallTitlePadding
+      smallChildrenPadding
       childrenPositionRelative
       title={(
         <StylesSubSectionTitle

@@ -89,10 +89,10 @@ function Component() {
       <Div
         xflex="x4s"
         flexGrow
+        maxHeight="100%"
       >
         {!isInteractiveMode && (
           <RetractablePanel
-            height="calc(100vh - 32px)"
             direction="left"
             openPersistedStateKey="left-panel-open"
             items={[
@@ -113,7 +113,7 @@ function Component() {
           xflex="y2s"
           flexGrow
           maxHeight="100%"
-          overflow="hidden"
+          overflowY="auto"
         >
           <ComponentWindow
             componentPath={component.payload.path}
@@ -124,7 +124,6 @@ function Component() {
         </Div>
         {!isInteractiveMode && (
           <RetractablePanel
-            height="calc(100vh - 32px)"
             direction="right"
             openPersistedStateKey="right-panel-open"
             items={[

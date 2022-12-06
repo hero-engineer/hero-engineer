@@ -661,9 +661,10 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
   return (
     <Accordion
       ghost
-      smallPadding
-      smallTitle
       backgroundTitle
+      smallTitle
+      smallTitlePadding
+      smallChildrenPadding
       childrenPositionRelative
       title={(
         <StylesSubSectionTitle
