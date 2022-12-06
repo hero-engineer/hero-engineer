@@ -2,7 +2,7 @@ import { NodePath } from '@babel/traverse'
 import { JSXAttribute, JSXElement, JSXIdentifier, jsxAttribute, jsxIdentifier, stringLiteral } from '@babel/types'
 
 import { indexCssFileRelativePath } from '../../configuration.js'
-import { FileNodeType, FunctionNodeType, HistoryMutationReturnType } from '../../types.js'
+import { BreakpointType, FileNodeType, FunctionNodeType, HistoryMutationReturnType } from '../../types.js'
 
 import { getNodeByAddress, getNodesByRole } from '../../graph/index.js'
 
@@ -19,6 +19,13 @@ type CreateCssClassMutationArgsType = {
   targetHierarchyId: string
   componentDelta: number
   classNames: string[]
+}
+
+function sortBreakpoints(a: BreakpointType, b: BreakpointType) {
+  if (!a.media && b.media) return -1
+  if (a.media && !b.media) return 1
+
+  return b.base - a.base
 }
 
 async function createCssClassMutation(_: any, { sourceComponentAddress, targetHierarchyId, componentDelta, classNames }: CreateCssClassMutationArgsType): Promise<HistoryMutationReturnType<boolean>> {
@@ -71,7 +78,7 @@ async function createCssClassMutation(_: any, { sourceComponentAddress, targetHi
   if (classNames.length) {
     const selector = `.${classNames[classNames.length - 1]}`
 
-    for (const breakpoint of breakpoints) {
+    for (const breakpoint of breakpoints.sort(sortBreakpoints)) {
       await appendCssSelector(indexCssNode, selector, breakpoint)
     }
   }
