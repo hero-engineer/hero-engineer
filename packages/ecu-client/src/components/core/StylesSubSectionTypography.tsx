@@ -295,7 +295,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
       <Div
         xflex="x4"
         minWidth={52}
-        color={getTextColor('color')}
+        color={getTextColor('text-align')}
       >
         Align
       </Div>
