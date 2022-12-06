@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect } from 'react'
+import { useCallback, useContext, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { Button, Div, Tooltip } from 'honorable'
 import { AiOutlineDesktop, AiOutlineMobile, AiOutlineTablet } from 'react-icons/ai'
@@ -26,28 +26,28 @@ const icons = [
 
 function BreakpointsButtons() {
   const { componentAddress = '' } = useParams()
-  const { breakpoint, setBreakpoint, width, setWidth } = useContext(BreakpointContext)
+  const { breakpoint, setBreakpoint, breakpoints, setBreakpoints, width, setWidth } = useContext(BreakpointContext)
 
   const [breakpointsQueryResult, refetchBreakpointsQuery] = useQuery<BreakpointsQueryDataType>({
     query: BreakpointsQuery,
   })
+
+  const workingBreakpoints = useMemo(() => breakpointsQueryResult.data?.breakpoints ?? breakpoints, [breakpointsQueryResult.data, breakpoints])
 
   useRefetch({
     key: refetchKeys.breakpoints,
     refetch: refetchBreakpointsQuery,
   })
 
-  const updateBreakpoint = useCallback((breakpoint: BreakpointType) => {
+  const handleBreakpointClick = useCallback((breakpoint: BreakpointType) => {
     setBreakpoint(breakpoint)
     setWidth(breakpoint.base)
   }, [setBreakpoint, setWidth])
 
   useEffect(() => {
-    if (!breakpointsQueryResult.data?.breakpoints) return
+    if (!workingBreakpoints.length) return
 
-    const { breakpoints } = breakpointsQueryResult.data
-
-    const existingBreakpoint = breakpoints.find(b => b.id === breakpoint.id)
+    const existingBreakpoint = workingBreakpoints.find(b => b.id === breakpoint.id)
 
     if (existingBreakpoint) {
       setWidth(existingBreakpoint.base)
@@ -55,17 +55,18 @@ function BreakpointsButtons() {
       return
     }
 
-    const nextBreakpoint = breakpoints.find(b => !b.media) ?? breakpoints[0]
+    const nextBreakpoint = workingBreakpoints.find(b => !b.media) ?? workingBreakpoints[0]
 
     setWidth(nextBreakpoint.base)
     setBreakpoint(nextBreakpoint)
-  }, [breakpointsQueryResult.data, breakpoint, setBreakpoint, setWidth])
+  }, [workingBreakpoints, breakpoint, setBreakpoint, setWidth])
+
+  useEffect(() => {
+    setBreakpoints(workingBreakpoints)
+  }, [workingBreakpoints, setBreakpoints])
 
   if (!componentAddress) return null
-
-  const breakpoints = breakpointsQueryResult.data?.breakpoints ?? []
-
-  if (!breakpoints.length) return null
+  if (!workingBreakpoints.length) return null
 
   return (
     <Div
@@ -78,7 +79,7 @@ function BreakpointsButtons() {
           mr={0.5}
         />
       )}
-      {breakpoints.map((bp, i) => (
+      {workingBreakpoints.map((bp, i) => (
         <Tooltip
           key={bp.id}
           label={(
@@ -103,7 +104,7 @@ function BreakpointsButtons() {
             _first={{
               borderLeft: '1px solid border',
             }}
-            onClick={() => updateBreakpoint(bp)}
+            onClick={() => handleBreakpointClick(bp)}
           >
             {icons[i]}
           </Button>

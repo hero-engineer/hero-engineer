@@ -15,7 +15,7 @@ function useStyleSubSectionHelpers(cssValues: CssValuesType, breakpointCssValues
       && (typeof cssValues[attributeName] !== 'undefined' || breakpointCssValues[attributeName] !== cssAttributesMap[attributeName].defaultValue)
         ? 'breakpoint'
         : typeof cssValues[attributeName] !== 'undefined'
-        && cssValues[attributeName] !== cssAttributesMap[attributeName].defaultValue
+        && (typeof breakpointCssValues[attributeName] !== 'undefined' || cssValues[attributeName] !== cssAttributesMap[attributeName].defaultValue)
           ? 'primary'
           : 'text-light'
     ))

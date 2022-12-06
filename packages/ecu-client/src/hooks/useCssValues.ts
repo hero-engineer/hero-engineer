@@ -1,14 +1,16 @@
 import { useMemo } from 'react'
 
-import { CSsAttributesMapType, CssClassType, CssValuesType } from '@types'
+import { CssClassType, CssValuesType } from '@types'
+
+import { cssAttributesMap } from '@constants'
 
 import extractValueFromClasses from '@utils/extractValueFromClasses'
 
-function useCssValues(classes: CssClassType[], attributeMap: CSsAttributesMapType) {
+function useCssValues(classes: CssClassType[]) {
   return useMemo(() => {
     const values: CssValuesType = {}
 
-    Object.entries(attributeMap).forEach(([key, { attributes, extractValue }]) => {
+    Object.entries(cssAttributesMap).forEach(([key, { attributes, extractValue }]) => {
       const extractedRawValue = extractValueFromClasses(classes, ...attributes)
 
       if (extractedRawValue !== null) {
@@ -17,7 +19,7 @@ function useCssValues(classes: CssClassType[], attributeMap: CSsAttributesMapTyp
     })
 
     return values
-  }, [classes, attributeMap])
+  }, [classes])
 }
 
 export default useCssValues

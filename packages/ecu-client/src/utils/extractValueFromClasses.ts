@@ -1,7 +1,7 @@
-import { CssClassType } from '@types'
+import { CssClassType, CssValueType } from '@types'
 
 function extractValueFromClasses(classes: CssClassType[], ...propNames: string[]) {
-  let value = ''
+  let value: CssValueType | null = null
 
   classes.forEach(cssClass => {
     cssClass.attributes.forEach(attribute => {
@@ -11,7 +11,7 @@ function extractValueFromClasses(classes: CssClassType[], ...propNames: string[]
     })
   })
 
-  return value || null
+  return value as CssValueType | null
 }
 
 export default extractValueFromClasses

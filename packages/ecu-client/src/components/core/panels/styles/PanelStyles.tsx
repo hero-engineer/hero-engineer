@@ -11,7 +11,7 @@ import StylesSubSectionPosition from './StylesSubSectionPosition'
 
 import { CssAttributeType, CssValuesType } from '@types'
 
-import { cssAttributesMap, refetchKeys } from '@constants'
+import { refetchKeys } from '@constants'
 
 import { CssClassesQuery, CssClassesQueryDataType, UpdateCssClassMutation, UpdateCssClassMutationDataType } from '@queries'
 
@@ -31,7 +31,7 @@ import useThrottleAsynchronous from '@hooks/useThrottleAsynchronous'
 import getComponentRootHierarchyIds from '@utils/getComponentRootHierarchyIds'
 import getLastComponentHierarchyItem from '@utils/getLastComponentHierarchyItem'
 import convertCssAttributeNameToJs from '@utils/convertCssAttributeNameToJs'
-import filterClassesByClassNamesAndMedia from '@utils/filterClassesByClassNamesAndMedia'
+import filterClassesByClassNamesAndMedias from '@utils/filterClassesByClassNamesAndMedias'
 import areAttributesValid from '@utils/areAttributesValid'
 
 // The styles section
@@ -41,7 +41,7 @@ function PanelStyles() {
   const { hierarchy } = useContext(HierarchyContext)
   const { componentDelta, hierarchyId } = useContext(EditionContext)
   const { className, setClassName, selectedClassName, style, setStyle } = useContext(CssClassesContext)
-  const { breakpoint } = useContext(BreakpointContext)
+  const { breakpoint, breakpoints } = useContext(BreakpointContext)
 
   const [cssClassesQueryResult, refetchCssClassesQuery] = useQuery<CssClassesQueryDataType>({
     query: CssClassesQuery,
@@ -64,23 +64,66 @@ function PanelStyles() {
   const isOnAnotherComponent = useMemo(() => !hierarchy.length || hierarchy[hierarchy.length - 1].onComponentAddress !== componentAddress, [hierarchy, componentAddress])
   const isNoElementSelected = useMemo(() => !hierarchy.length || hierarchy[hierarchy.length - 1].isRoot || isComponentRoot || isOnAnotherComponent, [hierarchy, isComponentRoot, isOnAnotherComponent])
 
-  const allClasses = useMemo(() => cssClassesQueryResult.data?.cssClasses || [], [cssClassesQueryResult.data])
-  const baseClasses = useMemo(() => filterClassesByClassNamesAndMedia(allClasses, classNames, ''), [allClasses, classNames])
-  const currentBaseClasses = useMemo(() => filterClassesByClassNamesAndMedia(baseClasses, [selectedClassName], ''), [baseClasses, selectedClassName])
-  const breakpointClasses = useMemo(() => filterClassesByClassNamesAndMedia(allClasses, classNames, breakpoint.media), [allClasses, classNames, breakpoint])
-  const currentBreakpointClasses = useMemo(() => filterClassesByClassNamesAndMedia(allClasses, [selectedClassName], breakpoint.media), [allClasses, selectedClassName, breakpoint])
+  const masterBreakpoint = useMemo(() => breakpoints.find(b => !b.media)!, [breakpoints])
+  const indexOfMasterBreakpoint = useMemo(() => breakpoints.indexOf(masterBreakpoint), [breakpoints, masterBreakpoint])
+  const indexOfCurrentBreakpoint = useMemo(() => breakpoints.indexOf(breakpoint), [breakpoints, breakpoint])
+  // The medias that can impact the current breakpoint
+  const concernedMedias = useMemo(() => {
+    // Determines weither the current breakpoint is going upscreen or downscreen from the master breakpoint
+    const isGoingUpscreen = indexOfMasterBreakpoint > indexOfCurrentBreakpoint
+    const concernedMedias: string[] = []
+
+    let i = indexOfMasterBreakpoint
+
+    while (true) {
+      concernedMedias.push(breakpoints[i].media)
+
+      if (i === indexOfCurrentBreakpoint) break
+
+      i += isGoingUpscreen ? -1 : 1
+
+      if (!breakpoints[i]) break
+    }
+
+    return concernedMedias
+  }, [breakpoints, indexOfMasterBreakpoint, indexOfCurrentBreakpoint])
+
+  // Arrays of CssClasses
+  // All classes
+  const allClasses = useMemo(() => cssClassesQueryResult.data?.cssClasses ?? [], [cssClassesQueryResult.data])
+  // Master breakpoint classes for the full className
+  const masterBreakpointClasses = useMemo(() => filterClassesByClassNamesAndMedias(allClasses, classNames, ['']), [allClasses, classNames])
+  // Master breakpoint classes for the selected className
+  const selectedMasterBreakpointClasses = useMemo(() => filterClassesByClassNamesAndMedias(masterBreakpointClasses, [selectedClassName], ['']), [masterBreakpointClasses, selectedClassName])
+  // Current breakpoint classes for the full className
+  const currentBreakpointClasses = useMemo(() => (
+    breakpoint.media
+      ? filterClassesByClassNamesAndMedias(allClasses, classNames, concernedMedias)
+      : filterClassesByClassNamesAndMedias(allClasses, classNames, [breakpoint.media])
+  ), [allClasses, classNames, breakpoint, concernedMedias])
+  // Current breakpoint classes for the selected className
+  const selectedCurrentBreakpointClasses = useMemo(() => (
+    breakpoint.media
+      ? filterClassesByClassNamesAndMedias(allClasses, [selectedClassName], concernedMedias)
+      : filterClassesByClassNamesAndMedias(allClasses, [selectedClassName], [breakpoint.media])
+  ), [allClasses, selectedClassName, breakpoint, concernedMedias])
 
   // The css values for the complete styling
-  const finalCssValues = useCssValues(baseClasses, cssAttributesMap)
-  const finalBreakpointCssValues = useCssValues(breakpointClasses, cssAttributesMap)
+  // Displayed when no class is selected
+  const fullCssValues = useCssValues(masterBreakpointClasses)
+  const fullBreakpointCssValues = useCssValues(currentBreakpointClasses)
 
   // The css values for the selected class
-  const selectedCssValues = useJsCssValues(useCssValues(currentBaseClasses, cssAttributesMap), breakpoint.media ? {} : style, cssAttributesMap)
-  const selectedBreakpointCssValues = useJsCssValues(useCssValues(currentBreakpointClasses, cssAttributesMap), style, cssAttributesMap)
+  // Displayed when a class is selected
+  const selectedCssValues = useJsCssValues(useCssValues(selectedMasterBreakpointClasses), breakpoint.media ? {} : style)
+  const selectedBreakpointCssValues = useJsCssValues(useCssValues(selectedCurrentBreakpointClasses), style)
 
   // The css values passed to sub sections
-  const passedCssValues = selectedClassName ? selectedCssValues : finalCssValues
-  const passedBreakpointCssValues = selectedClassName ? selectedBreakpointCssValues : finalBreakpointCssValues
+  const passedCssValues = selectedClassName ? selectedCssValues : fullCssValues
+  const passedBreakpointCssValues = selectedClassName ? selectedBreakpointCssValues : fullBreakpointCssValues
+
+  console.log('concernedMedias', concernedMedias)
+  console.log('v, bv', passedCssValues, passedBreakpointCssValues)
 
   // The attributes to be updated
   const attributes = useMemo(() => Object.entries(selectedBreakpointCssValues).map(([name, value]) => ({ name, value })), [selectedBreakpointCssValues])
@@ -89,7 +132,7 @@ function PanelStyles() {
 
   const handleCssUpdate = useCallback(async () => {
     if (!classNames.length || previousAttributesHash === attributesHash) return
-    if (!areAttributesValid(attributes, cssAttributesMap)) return
+    if (!areAttributesValid(attributes)) return
     if (!isStyleUpdated) return
 
     await updateCssClass({

@@ -1,6 +1,8 @@
-import { CSsAttributesMapType, CssAttributeType } from '@types'
+import { CssAttributeType } from '@types'
 
-function areAttributesValid(attributes: CssAttributeType[], cssAttributesMap: CSsAttributesMapType) {
+import { cssAttributesMap } from '@constants'
+
+function areAttributesValid(attributes: CssAttributeType[]) {
   return attributes.every(attribute => cssAttributesMap[attribute.name].isValueValid(attribute.value))
 }
 
