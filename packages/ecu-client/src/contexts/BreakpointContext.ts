@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, createContext } from 'react'
 
-import { BreakpointType } from '../types'
+import { BreakpointType } from '@types'
 
 export type BreakpointContextType = {
   breakpoint: BreakpointType

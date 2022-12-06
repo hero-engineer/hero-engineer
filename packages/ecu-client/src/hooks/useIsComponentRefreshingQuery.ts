@@ -1,7 +1,7 @@
 import { useContext, useEffect } from 'react'
 import { AnyVariables, UseQueryResponse } from 'urql'
 
-import IsComponentRefreshingContext from '../contexts/IsComponentRefreshingContext'
+import IsComponentRefreshingContext from '@contexts/IsComponentRefreshingContext'
 
 function useIsComponentRefreshingQuery<T, V extends AnyVariables = AnyVariables>(query: UseQueryResponse<T, V>) {
   const { setIsComponentRefreshing } = useContext(IsComponentRefreshingContext)

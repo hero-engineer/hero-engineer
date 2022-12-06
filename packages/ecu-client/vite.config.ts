@@ -1,9 +1,11 @@
 import path from 'node:path'
 
-import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
+import { typescriptPaths } from 'rollup-plugin-typescript-paths'
+
+import react from '@vitejs/plugin-react'
 
 const isProductionBuild = process.env.PRODUCTION_BUILD === 'true'
 
@@ -28,6 +30,7 @@ export default defineConfig({
       fileName: format => `ecu-client.${format}.js`,
     },
     rollupOptions: {
+      plugins: [typescriptPaths({ preserveExtensions: true })],
       external: ['react', 'react-dom'],
       output: {
         globals: {

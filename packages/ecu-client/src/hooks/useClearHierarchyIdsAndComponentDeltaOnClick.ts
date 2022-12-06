@@ -1,7 +1,7 @@
 import { RefObject, useCallback, useContext, useEffect } from 'react'
 
-import EditionContext from '../contexts/EditionContext'
-import DragAndDropContext from '../contexts/DragAndDropContext'
+import EditionContext from '@contexts/EditionContext'
+import DragAndDropContext from '@contexts/DragAndDropContext'
 
 // Reset hierarchyIds and componentDelta on outside of component double click
 function useClearHierarchyIdsAndComponentDeltaOnClick(clickRef: RefObject<HTMLElement>) {

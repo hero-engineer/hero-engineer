@@ -1,4 +1,4 @@
-import { cssValueUnits } from '../constants'
+import { cssValueUnits } from '@constants'
 
 function splitSpacingValue(cssValue: string | number): [string, typeof cssValueUnits[number] | 'inherit'] {
   if (typeof cssValue === 'number') return [cssValue.toString(), 'px']

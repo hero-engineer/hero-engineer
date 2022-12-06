@@ -1,18 +1,17 @@
-import { HTMLProps, KeyboardEvent, Ref, forwardRef, useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { HTMLProps, KeyboardEvent, Ref, forwardRef, useCallback, useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useMutation } from 'urql'
-
 import { Input, WithOutsideClick } from 'honorable'
 
-import { refetchKeys } from '../../constants'
+import { refetchKeys } from '@constants'
 
-import { UpdateTextValueMutation, UpdateTextValueMutationDataType } from '../../queries'
+import { UpdateTextValueMutation, UpdateTextValueMutationDataType } from '@queries'
 
-import HotContext from '../../contexts/HotContext'
+import HotContext from '@contexts/HotContext'
 
-import useEditionProps from '../../hooks/useEditionProps'
-import useForkedRef from '../../hooks/useForkedRef'
-import useRefetch from '../../hooks/useRefetch'
+import useEditionProps from '@hooks/useEditionProps'
+import useForkedRef from '@hooks/useForkedRef'
+import useRefetch from '@hooks/useRefetch'
 
 type TextPropsType = Omit<HTMLProps<HTMLDivElement>, 'children'> & {
   'data-ecu': string

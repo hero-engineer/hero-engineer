@@ -1,4 +1,4 @@
-import { CssClassType } from '../types'
+import { CssClassType } from '@types'
 
 function extractValueFromClasses(classes: CssClassType[], ...propNames: string[]) {
   let value = ''

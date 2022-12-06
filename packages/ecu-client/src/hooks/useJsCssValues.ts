@@ -1,8 +1,8 @@
 import { CSSProperties } from 'react'
 
-import { CSsAttributesMapType, CssValuesType } from '../types'
+import { CSsAttributesMapType, CssValuesType } from '@types'
 
-import convertJsAttributeNameToCss from '../utils/convertJsAttributeNameToCss'
+import convertJsAttributeNameToCss from '@utils/convertJsAttributeNameToCss'
 
 function useJsCssValues(cssValues: CssValuesType, style: CSSProperties, cssAttributesMap: CSsAttributesMapType) {
   const nextCssValues = { ...cssValues }

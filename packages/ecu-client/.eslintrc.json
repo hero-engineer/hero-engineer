@@ -1,5 +1,70 @@
 {
+  "settings": {
+    "import/parsers": {
+			"@typescript-eslint/parser": [".ts", ".tsx"]
+		},
+    "import/internal-regex": "^@"
+  },
   "rules": {
-    "react/jsx-closing-bracket-location": "error"
+    "react/jsx-closing-bracket-location": "error",
+    "import/order": [
+      "error",
+      {
+        "newlines-between": "always",
+        "pathGroupsExcludedImportTypes": [],
+        "pathGroups": [
+          {
+            "pattern": "@css/**",
+            "group": "internal",
+            "position": "before"
+          },
+          {
+            "pattern": "@types",
+            "group": "internal",
+            "position": "before"
+          },
+          {
+            "pattern": "@constants",
+            "group": "internal",
+            "position": "before"
+          },
+          {
+            "pattern": "@queries",
+            "group": "internal",
+            "position": "before"
+          },
+          {
+            "pattern": "@contexts/**",
+            "group": "internal",
+            "position": "before"
+          },
+          {
+            "pattern": "@hooks/**",
+            "group": "internal",
+            "position": "before"
+          },
+          {
+            "pattern": "@utils/**",
+            "group": "internal",
+            "position": "before"
+          },
+          {
+            "pattern": "@scenes/**",
+            "group": "internal",
+            "position": "before"
+          },
+          {
+            "pattern": "@core/**",
+            "group": "internal",
+            "position": "before"
+          },
+          {
+            "pattern": "@lib/**",
+            "group": "internal",
+            "position": "before"
+          }
+        ]
+      }
+    ]
   }
 }

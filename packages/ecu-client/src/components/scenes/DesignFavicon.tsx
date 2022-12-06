@@ -1,13 +1,13 @@
 import { ChangeEvent, useCallback, useMemo, useRef, useState } from 'react'
 import { Button, Div, H1, Img } from 'honorable'
 
-import { refetchKeys } from '../../constants'
+import { refetchKeys } from '@constants'
 
-import { FaviconQuery, FaviconQueryDataType, UpdateFaviconMutation, UpdateFaviconMutationDataType, UploadFileMutation, UploadFileMutationDataType } from '../../queries'
+import { FaviconQuery, FaviconQueryDataType, UpdateFaviconMutation, UpdateFaviconMutationDataType, UploadFileMutation, UploadFileMutationDataType } from '@queries'
 
-import useQuery from '../../hooks/useQuery'
-import useMutation from '../../hooks/useMutation'
-import useRefetch from '../../hooks/useRefetch'
+import useQuery from '@hooks/useQuery'
+import useMutation from '@hooks/useMutation'
+import useRefetch from '@hooks/useRefetch'
 
 // Design/favicon scene
 function DesignFavicon() {

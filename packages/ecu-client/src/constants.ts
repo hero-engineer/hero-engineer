@@ -1,5 +1,6 @@
-import { CSsAttributesMapType, CssValueType, HierarchyPosition } from './types'
 import splitSpacingValue from './utils/splitSpacingValue'
+
+import { CSsAttributesMapType, CssValueType, HierarchyPosition } from '@types'
 
 export const zIndexes = {
   tooltip: 99999999999, // 11 9

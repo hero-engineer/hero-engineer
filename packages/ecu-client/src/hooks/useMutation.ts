@@ -2,11 +2,11 @@ import { DocumentNode } from 'graphql'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { AnyVariables, OperationContext, TypedDocumentNode, UseMutationResponse, useMutation as externalUseMutation } from 'urql'
 
-import { refetchKeys } from '../constants'
-
-import SnackbarContext from '../contexts/SnackBarContext'
-
 import useRefetch from './useRefetch'
+
+import { refetchKeys } from '@constants'
+
+import SnackbarContext from '@contexts/SnackBarContext'
 
 // Has two responsibilities:
 // - Show a snackbar item when the mutation fails

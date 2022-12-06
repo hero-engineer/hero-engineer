@@ -1,6 +1,6 @@
 import { RefObject, useCallback, useContext, useEffect, useState } from 'react'
 
-import HotContext from '../contexts/HotContext'
+import HotContext from '@contexts/HotContext'
 
 function getHierarchyId(targetElement: HTMLElement, targetEcuId: string) {
   const hierarchyIdsRegistry: Record<string, number> = {}

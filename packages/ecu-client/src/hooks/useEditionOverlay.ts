@@ -1,6 +1,6 @@
 import { RefObject, useContext, useEffect } from 'react'
 
-import EditionOverlayContext from '../contexts/EditionOverlayContext'
+import EditionOverlayContext from '@contexts/EditionOverlayContext'
 
 function useEditionOverlay(elementRef: RefObject<HTMLElement>, hierarchyId: string) {
   const { setElementRegistry } = useContext(EditionOverlayContext)

@@ -1,14 +1,15 @@
 import { useMemo } from 'react'
 import { Div, H1, Spinner } from 'honorable'
 
-import { refetchKeys } from '../../constants'
-import { PackagesQuery, PackagesQueryDataType, PackagesUpdatesQuery, PackagesUpdatesQueryDataType } from '../../queries'
+import { refetchKeys } from '@constants'
 
-import useQuery from '../../hooks/useQuery'
-import useRefetch from '../../hooks/useRefetch'
+import { PackagesQuery, PackagesQueryDataType, PackagesUpdatesQuery, PackagesUpdatesQueryDataType } from '@queries'
 
-import AddPackageButton from '../core/AddPackageButton'
-import PackagesTable from '../core/PackagesTable'
+import useQuery from '@hooks/useQuery'
+import useRefetch from '@hooks/useRefetch'
+
+import AddPackageButton from '@core/overlay/AddPackageButton'
+import PackagesTable from '@core/packages/PackagesTable'
 
 // Packages scene
 function Packages() {

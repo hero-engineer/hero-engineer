@@ -1,4 +1,4 @@
-import { HierarchyItemType } from '../types'
+import { HierarchyItemType } from '@types'
 
 // Get the root hierarchyIds for a hierarchy
 function getComponentRootHierarchyIds(flattenedHierarchy: HierarchyItemType[]) {

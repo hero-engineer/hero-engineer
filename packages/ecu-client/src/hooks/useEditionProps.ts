@@ -2,16 +2,16 @@ import '../css/edition.css'
 
 import { useCallback, useContext, useEffect, useMemo, useRef } from 'react'
 
-import HierarchyContext from '../contexts/HierarchyContext'
-import EditionContext from '../contexts/EditionContext'
-import ContextualInformationContext from '../contexts/ContextualInformationContext'
-import CssClassesContext from '../contexts/CssClassesContext'
-import IsInteractiveModeContext from '../contexts/IsInteractiveModeContext'
-
-import getComponentRootHierarchyIds from '../utils/getComponentRootHierarchyIds'
-
 import useHierarchyId from './useHierarchyId'
 import useEditionOverlay from './useEditionOverlay'
+
+import HierarchyContext from '@contexts/HierarchyContext'
+import EditionContext from '@contexts/EditionContext'
+import ContextualInformationContext from '@contexts/ContextualInformationContext'
+import CssClassesContext from '@contexts/CssClassesContext'
+import IsInteractiveModeContext from '@contexts/IsInteractiveModeContext'
+
+import getComponentRootHierarchyIds from '@utils/getComponentRootHierarchyIds'
 
 // type DragObject = {
 //   hierarchyId: string

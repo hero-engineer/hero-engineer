@@ -1,6 +1,6 @@
-import { CssClassType } from '../types'
-
 import extractClassNamesFromSelector from './extractClassNamesFromSelector'
+
+import { CssClassType } from '@types'
 
 function filterClassesByClassNamesAndMedia(classes: CssClassType[], targetClassNames: string[], media: string) {
   return classes.filter(cssClass => {

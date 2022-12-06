@@ -1,4 +1,4 @@
-import { HierarchyItemType } from '../types'
+import { HierarchyItemType } from '@types'
 
 // Tell if the current hierarchy is on a given component
 function isHierarchyOnComponent(hierarchy: HierarchyItemType[], componentAddress: string) {

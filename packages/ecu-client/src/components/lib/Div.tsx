@@ -1,7 +1,7 @@
 import { HTMLProps, Ref, forwardRef } from 'react'
 
-import useEditionProps from '../../hooks/useEditionProps'
-import useForkedRef from '../../hooks/useForkedRef'
+import useEditionProps from '@hooks/useEditionProps'
+import useForkedRef from '@hooks/useForkedRef'
 
 type DivPropsType = HTMLProps<HTMLDivElement> & {
   'data-ecu': string

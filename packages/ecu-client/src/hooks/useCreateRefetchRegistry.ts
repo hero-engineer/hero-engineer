@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react'
 
-import { refetchKeys } from '../constants'
+import { refetchKeys } from '@constants'
 
 type RefetchType = (options?: any) => void
 

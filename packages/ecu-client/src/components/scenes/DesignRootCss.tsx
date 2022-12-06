@@ -1,16 +1,16 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Div, H1 } from 'honorable'
 
-import { refetchKeys } from '../../constants'
+import { refetchKeys } from '@constants'
 
-import CssFunctionEditor from '../core/CssFunctionEditor'
+import { RootCssQuery, RootCssQueryDataType, UpdateRootCssMutation, UpdateRootCssMutationDataType } from '@queries'
 
-import { RootCssQuery, RootCssQueryDataType, UpdateRootCssMutation, UpdateRootCssMutationDataType } from '../../queries'
+import useQuery from '@hooks/useQuery'
+import useRefetch from '@hooks/useRefetch'
+import useMutation from '@hooks/useMutation'
+import useThrottleAsynchronous from '@hooks/useThrottleAsynchronous'
 
-import useQuery from '../../hooks/useQuery'
-import useRefetch from '../../hooks/useRefetch'
-import useMutation from '../../hooks/useMutation'
-import useThrottleAsynchronous from '../../hooks/useThrottleAsynchronous'
+import CssFunctionEditor from '@core/css/CssFunctionEditor'
 
 // Design/root-css scene
 function DesignRootCss() {

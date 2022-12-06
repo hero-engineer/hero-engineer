@@ -1,4 +1,5 @@
 import { cacheExchange, createClient, dedupExchange } from 'urql'
+
 import { persistedFetchExchange } from '@urql/exchange-persisted-fetch'
 import { multipartFetchExchange } from '@urql/exchange-multipart-fetch'
 
