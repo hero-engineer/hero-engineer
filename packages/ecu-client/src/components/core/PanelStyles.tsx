@@ -34,19 +34,6 @@ import StylesSubSectionSize from './StylesSubSectionSize'
 import StylesSubSectionPosition from './StylesSubSectionPosition'
 import StylesSubSectionTypography from './StylesSubSectionTypography'
 
-type CommentsType = Record<string, string>
-
-function createAddCommentsMapper(comments: CommentsType) {
-  return (attribute: CssAttributeType) => {
-    if (!comments[attribute.name]) return attribute
-
-    return {
-      ...attribute,
-      comment: comments[attribute.name],
-    }
-  }
-}
-
 // The styles section
 // Displayed in the right panel
 function PanelStyles() {
@@ -69,7 +56,6 @@ function PanelStyles() {
   const classNames = useMemo(() => className.split(' ').map(c => c.trim()).filter(Boolean), [className])
 
   const [loading, setLoading] = useState(false)
-  const [comments, setComments] = useState<CommentsType>({})
 
   const lastComponentHierarchyItem = useMemo(() => getLastComponentHierarchyItem(hierarchy), [hierarchy])
   const componentRootHierarchyIds = useMemo(() => getComponentRootHierarchyIds(hierarchy), [hierarchy])
@@ -96,8 +82,8 @@ function PanelStyles() {
   const passedBreakpointCssValues = useMemo(() => removeCssDefaults(selectedClassName ? selectedBreakpointCssValues : finalBreakpointCssValues, cssAttributesMap), [selectedClassName, selectedBreakpointCssValues, finalBreakpointCssValues])
 
   // THe attributes to be updated
-  const attributes = useMemo(() => Object.entries(removeCssDefaults(selectedBreakpointCssValues, cssAttributesMap)).map(([name, value]) => ({ name, value })).map(createAddCommentsMapper(comments)), [selectedBreakpointCssValues, comments])
-  const attributesHash = useMemo(() => attributes.map(({ name, value, comment }) => `${name}:${value}:${comment}`).join(','), [attributes])
+  const attributes = useMemo(() => Object.entries(removeCssDefaults(selectedBreakpointCssValues, cssAttributesMap)).map(([name, value]) => ({ name, value })), [selectedBreakpointCssValues])
+  const attributesHash = useMemo(() => attributes.map(({ name, value }) => `${name}:${value}`).join(','), [attributes])
   const previousAttributesHash = usePrevious(attributesHash)
 
   const handleCssUpdate = useCallback(async () => {
@@ -142,18 +128,6 @@ function PanelStyles() {
       })
 
       return updatedStyle
-    })
-
-    setComments(x => {
-      const updatedComments: CommentsType = { ...x }
-
-      attributes.forEach(({ name, value, comment }) => {
-        if (!comment || (value === cssAttributesMap[name].defaultValue && breakpoint.media && typeof selectedCssValues[name] !== 'undefined')) return
-
-        updatedComments[convertCssAttributeNameToJs(name)] = comment
-      })
-
-      return updatedComments
     })
   }, [selectedClassName, breakpoint, selectedCssValues, setStyle])
 

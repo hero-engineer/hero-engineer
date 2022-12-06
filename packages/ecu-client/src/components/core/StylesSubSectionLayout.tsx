@@ -14,10 +14,11 @@ import {
   MdOutlineSwapHoriz,
 } from 'react-icons/md'
 
-import { CssAttributeType, CssValueType, CssValuesType } from '../../types'
+import { CssAttributeType, CssValuesType } from '../../types'
 import { cssAttributesMap } from '../../constants'
 
 import usePersistedState from '../../hooks/usePersistedState'
+import useStyleSubSectionHelpers from '../../hooks/useStyleSubSectionHelpers'
 
 import StylesSubSectionTitle from './StylesSubSectionTitle'
 import StylesSubSectionDisabledOverlay from './StylesSubSectionDisabledOverlay'
@@ -233,24 +234,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
   const [expanded, setExpanded] = usePersistedState('styles-sub-section-layout-expanded', true)
   const [isGridModalOpen, setIsGridModalOpen] = useState(false)
 
-  const getValue = useCallback((attributeName: string) => breakpointCssValues[attributeName] ?? cssValues[attributeName] ?? cssAttributesMap[attributeName].defaultValue, [breakpointCssValues, cssValues])
-
-  const getTextColor = useCallback((attributeNames: string[]) => (
-    attributeNames
-    .map(attributeName => (
-      typeof breakpointCssValues[attributeName] !== 'undefined'
-      && breakpointCssValues[attributeName] !== cssValues[attributeName]
-      && breakpointCssValues[attributeName] !== cssAttributesMap[attributeName].defaultValue
-        ? 'breakpoint'
-        : typeof cssValues[attributeName] !== 'undefined'
-        && cssValues[attributeName] !== cssAttributesMap[attributeName].defaultValue
-          ? 'primary'
-          : 'text-light'
-    ))
-      .reduce((acc, color) => color === 'breakpoint' ? color : color === 'primary' ? color : acc, 'text-light')
-  ), [breakpointCssValues, cssValues])
-
-  const isToggled = useCallback((attributeName: string, values: CssValueType[]) => values.includes(getValue(attributeName)), [getValue])
+  const { getTextColor, isToggled } = useStyleSubSectionHelpers(cssValues, breakpointCssValues)
 
   const renderDisplayEditor = useCallback(() => (
     <Div xflex="x4s">

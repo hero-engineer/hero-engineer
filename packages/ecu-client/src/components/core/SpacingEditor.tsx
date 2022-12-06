@@ -6,6 +6,7 @@ import { cssAttributesMap } from '../../constants'
 import { CssAttributeType, CssValuesType } from '../../types'
 
 import useRefresh from '../../hooks/useRefresh'
+import useStyleSubSectionHelpers from '../../hooks/useStyleSubSectionHelpers'
 
 import doesParentHaveId from '../../utils/doesParentHaveId'
 
@@ -49,18 +50,7 @@ function SpacingEditor({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const { width: svgWidth, height: svgHeight } = useMemo(() => rootRef.current?.getBoundingClientRect() ?? { width: 0, height: 0 }, [rootRef.current])
 
-  const getValue = useCallback((attributeName: string) => breakpointCssValues[attributeName] ?? cssValues[attributeName] ?? cssAttributesMap[attributeName].defaultValue, [breakpointCssValues, cssValues])
-
-  const getTextColor = useCallback((attributeName: string) => (
-    typeof breakpointCssValues[attributeName] !== 'undefined'
-    && breakpointCssValues[attributeName] !== cssValues[attributeName]
-    && breakpointCssValues[attributeName] !== cssAttributesMap[attributeName].defaultValue
-      ? 'breakpoint'
-      : typeof cssValues[attributeName] !== 'undefined'
-      && cssValues[attributeName] !== cssAttributesMap[attributeName].defaultValue
-        ? 'primary'
-        : 'inherit'
-  ), [breakpointCssValues, cssValues])
+  const { getValue, getTextColor } = useStyleSubSectionHelpers(cssValues, breakpointCssValues)
 
   const handleHover = useCallback((index: number) => {
     setHoveredIndex(index)
@@ -126,7 +116,7 @@ function SpacingEditor({
           <Div
             xflex="x5"
             position="absolute"
-            color={getTextColor(`${semanticName}top`)}
+            color={getTextColor([`${semanticName}top`])}
             top={-borderSize / 2}
             left={-borderSize / 2}
             right={-borderSize / 2}
@@ -149,7 +139,7 @@ function SpacingEditor({
           <Div
             xflex="x5"
             position="absolute"
-            color={getTextColor(`${semanticName}right`)}
+            color={getTextColor([`${semanticName}right`])}
             top={-borderSize / 2}
             left={-borderSize / 2}
             right={-borderSize / 2}
@@ -172,7 +162,7 @@ function SpacingEditor({
           <Div
             xflex="x5"
             position="absolute"
-            color={getTextColor(`${semanticName}bottom`)}
+            color={getTextColor([`${semanticName}bottom`])}
             top={-borderSize / 2}
             left={-borderSize / 2}
             right={-borderSize / 2}
@@ -195,7 +185,7 @@ function SpacingEditor({
           <Div
             xflex="x5"
             position="absolute"
-            color={getTextColor(`${semanticName}left`)}
+            color={getTextColor([`${semanticName}left`])}
             top={-borderSize / 2}
             left={-borderSize / 2}
             right={-borderSize / 2}

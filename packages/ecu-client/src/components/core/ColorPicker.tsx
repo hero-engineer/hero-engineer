@@ -9,7 +9,7 @@ import { zIndexes } from '../../constants'
 
 type ColorPickerPropsType = {
   value: string | null
-  onChange: (value: string, comment?: string) => void
+  onChange: (value: string) => void
   size?: number
   pickerLeftOffset?: number
   withOverlay?: boolean
@@ -25,7 +25,7 @@ function ColorPicker({ value, onChange, size = 16, pickerLeftOffset = 0, withOve
   const [currentValue, setCurrentValue] = useState(value === null ? '#ffffff' : selectedColor?.value ?? value)
 
   const handleSelectChange = useCallback((event: any) => {
-    onChange(prepareVariable(event.target.value), event.target.value.name)
+    onChange(prepareVariable(event.target.value))
     setCurrentValue(event.target.value.value)
   }, [onChange])
 

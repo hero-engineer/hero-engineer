@@ -2,9 +2,10 @@ import { useCallback } from 'react'
 import { Accordion, Button, Div, Tooltip } from 'honorable'
 import { AiOutlineColumnHeight, AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 
+import { CssAttributeType, CssValuesType } from '../../types'
+
 import usePersistedState from '../../hooks/usePersistedState'
-import { CssAttributeType, CssValueType, CssValuesType } from '../../types'
-import { cssAttributesMap } from '../../constants'
+import useStyleSubSectionHelpers from '../../hooks/useStyleSubSectionHelpers'
 
 import capitalize from '../../utils/capitalize'
 
@@ -51,20 +52,7 @@ const overflows = [
 function StylesSubSectionSize({ cssValues, breakpointCssValues, onChange, disabled }: StylesSubSectionSizePropsType) {
   const [expanded, setExpanded] = usePersistedState('styles-sub-section-size-expanded', true)
 
-  const getValue = useCallback((attributeName: string) => breakpointCssValues[attributeName] ?? cssValues[attributeName] ?? cssAttributesMap[attributeName].defaultValue, [breakpointCssValues, cssValues])
-
-  const getTextColor = useCallback((attributeName: string) => (
-    typeof breakpointCssValues[attributeName] !== 'undefined'
-    && breakpointCssValues[attributeName] !== cssValues[attributeName]
-    && breakpointCssValues[attributeName] !== cssAttributesMap[attributeName].defaultValue
-      ? 'breakpoint'
-      : typeof cssValues[attributeName] !== 'undefined'
-      && cssValues[attributeName] !== cssAttributesMap[attributeName].defaultValue
-        ? 'primary'
-        : 'inherit'
-  ), [breakpointCssValues, cssValues])
-
-  const isToggled = useCallback((attributeName: string, value: CssValueType) => value === getValue(attributeName), [getValue])
+  const { getValue, getTextColor, isToggled } = useStyleSubSectionHelpers(cssValues, breakpointCssValues)
 
   const renderSizeInput = useCallback((attributeName: string, label: string) => (
     <Div
@@ -74,7 +62,7 @@ function StylesSubSectionSize({ cssValues, breakpointCssValues, onChange, disabl
       <Div
         xflex="x4"
         minWidth={42}
-        color={getTextColor(attributeName)}
+        color={getTextColor([attributeName])}
       >
         {label}
       </Div>
@@ -104,7 +92,7 @@ function StylesSubSectionSize({ cssValues, breakpointCssValues, onChange, disabl
       <Div
         xflex="x4"
         minWidth={52}
-        color={getTextColor('overflow')}
+        color={getTextColor(['overflow'])}
       >
         Overflow
       </Div>
@@ -116,7 +104,7 @@ function StylesSubSectionSize({ cssValues, breakpointCssValues, onChange, disabl
         >
           <Button
             ghost
-            toggled={isToggled('overflow', name)}
+            toggled={isToggled('overflow', [name])}
             onClick={() => onChange([{ name: 'overflow', value: name }])}
           >
             <Icon />

@@ -1,15 +1,17 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import { Accordion, Button, Div, MenuItem, Select } from 'honorable'
 import { TfiAlignCenter, TfiAlignJustify, TfiAlignLeft, TfiAlignRight } from 'react-icons/tfi'
+import { BsTypeItalic } from 'react-icons/bs'
 
-import { CssAttributeType, CssValueType, CssValuesType } from '../../types'
-import { cssAttributesMap, refetchKeys } from '../../constants'
+import { CssAttributeType, CssValuesType } from '../../types'
+import { refetchKeys } from '../../constants'
 
 import { ColorsQuery, ColorsQueryDataType, FontsQuery, FontsQueryDataType } from '../../queries'
 
 import useQuery from '../../hooks/useQuery'
 import useRefetch from '../../hooks/useRefetch'
 import usePersistedState from '../../hooks/usePersistedState'
+import useStyleSubSectionHelpers from '../../hooks/useStyleSubSectionHelpers'
 
 import StylesSubSectionTitle from './StylesSubSectionTitle'
 import StylesSubSectionDisabledOverlay from './StylesSubSectionDisabledOverlay'
@@ -61,6 +63,21 @@ const textAligns = [
   },
 ]
 
+const fontStyles = [
+  {
+    name: 'normal',
+    Icon: () => <BsTypeItalic style={{ transform: 'skewX(10deg)' }} />,
+  },
+  {
+    name: 'italic',
+    Icon: BsTypeItalic,
+  },
+  {
+    name: 'inherit',
+    Icon: () => <>inherit</>,
+  },
+]
+
 const defaultWeights = [100, 200, 300, 400, 500, 600, 700, 800, 900]
 
 const prepareFontFamily = (fontName: string) => fontName.includes(' ') ? `"${fontName}", sans-serif` : `${fontName}, sans-serif`
@@ -86,20 +103,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
     }
   )
 
-  const getValue = useCallback((attributeName: string) => breakpointCssValues[attributeName] ?? cssValues[attributeName] ?? cssAttributesMap[attributeName].defaultValue, [breakpointCssValues, cssValues])
-
-  const getTextColor = useCallback((attributeName: string) => (
-    typeof breakpointCssValues[attributeName] !== 'undefined'
-    && breakpointCssValues[attributeName] !== cssValues[attributeName]
-    && breakpointCssValues[attributeName] !== cssAttributesMap[attributeName].defaultValue
-      ? 'breakpoint'
-      : typeof cssValues[attributeName] !== 'undefined'
-      && cssValues[attributeName] !== cssAttributesMap[attributeName].defaultValue
-        ? 'primary'
-        : 'inherit'
-  ), [breakpointCssValues, cssValues])
-
-  const isToggled = useCallback((attributeName: string, value: CssValueType) => value === getValue(attributeName), [getValue])
+  const { getValue, getTextColor, isToggled } = useStyleSubSectionHelpers(cssValues, breakpointCssValues)
 
   const fonts = useMemo(() => fontsQueryResult.data?.fonts ?? [], [fontsQueryResult.data])
   const colors = useMemo(() => colorsQueryResult.data?.colors ?? [], [colorsQueryResult.data])
@@ -120,7 +124,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
       <Div
         xflex="x4"
         minWidth={52}
-        color={getTextColor('font-family')}
+        color={getTextColor(['font-family'])}
       >
         Typeface
       </Div>
@@ -187,7 +191,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
       <Div
         xflex="x4"
         minWidth={52}
-        color={getTextColor('font-weight')}
+        color={getTextColor(['font-weight'])}
       >
         Weight
       </Div>
@@ -222,7 +226,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
         <Div
           xflex="x4"
           minWidth={52}
-          color={getTextColor('font-size')}
+          color={getTextColor(['font-size'])}
         >
           Size
         </Div>
@@ -239,7 +243,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
         <Div
           xflex="x4"
           minWidth={42}
-          color={getTextColor('line-height')}
+          color={getTextColor(['line-height'])}
         >
           Height
         </Div>
@@ -263,14 +267,14 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
         <Div
           xflex="x4"
           minWidth={52}
-          color={getTextColor('color')}
+          color={getTextColor(['color'])}
         >
           Color
         </Div>
         <ColorPicker
           withOverlay
           value={color === 'inherit' ? null : color}
-          onChange={(value, comment) => onChange([{ name: 'color', value, comment }])}
+          onChange={value => onChange([{ name: 'color', value }])}
           size={16}
           pickerLeftOffset={-29} // Adjusted from sight
           colors={colors}
@@ -295,7 +299,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
       <Div
         xflex="x4"
         minWidth={52}
-        color={getTextColor('text-align')}
+        color={getTextColor(['text-align'])}
       >
         Align
       </Div>
@@ -303,8 +307,33 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
         <Button
           key={name}
           ghost
-          toggled={isToggled('text-align', name)}
+          toggled={isToggled('text-align', [name])}
           onClick={() => onChange([{ name: 'text-align', value: name }])}
+        >
+          <Icon />
+        </Button>
+      ))}
+    </Div>
+  ), [getTextColor, isToggled, onChange])
+
+  const renderDecorationSection = useCallback(() => (
+    <Div
+      xflex="x4"
+      fontSize="0.75rem"
+    >
+      <Div
+        xflex="x4"
+        minWidth={52}
+        color={getTextColor(['font-style'])}
+      >
+        Italic
+      </Div>
+      {fontStyles.map(({ name, Icon }) => (
+        <Button
+          key={name}
+          ghost
+          toggled={isToggled('font-style', [name])}
+          onClick={() => onChange([{ name: 'font-style', value: name }])}
         >
           <Icon />
         </Button>
@@ -357,6 +386,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
         {renderSizeSection()}
         {renderColorSection()}
         {renderAlignSection()}
+        {renderDecorationSection()}
       </Div>
       {disabled && <StylesSubSectionDisabledOverlay />}
     </Accordion>

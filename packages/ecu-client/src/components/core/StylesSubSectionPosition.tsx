@@ -2,10 +2,10 @@ import { useCallback, useRef } from 'react'
 import { Accordion, Div, MenuItem, Select } from 'honorable'
 
 import { CssAttributeType, CssValuesType } from '../../types'
-import { cssAttributesMap } from '../../constants'
 
 import useRefresh from '../../hooks/useRefresh'
 import usePersistedState from '../../hooks/usePersistedState'
+import useStyleSubSectionHelpers from '../../hooks/useStyleSubSectionHelpers'
 
 import capitalize from '../../utils/capitalize'
 
@@ -47,20 +47,7 @@ function StylesSubSectionPosition({ cssValues, breakpointCssValues, onChange, di
 
   const [expanded, setExpanded] = usePersistedState('styles-sub-section-position-expanded', true)
 
-  const getValue = useCallback((attributeName: string) => breakpointCssValues[attributeName] ?? cssValues[attributeName] ?? cssAttributesMap[attributeName].defaultValue, [breakpointCssValues, cssValues])
-
-  const getTextColor = useCallback((attributeName: string) => (
-    typeof breakpointCssValues[attributeName] !== 'undefined'
-    && breakpointCssValues[attributeName] !== cssValues[attributeName]
-    && breakpointCssValues[attributeName] !== cssAttributesMap[attributeName].defaultValue
-      ? 'breakpoint'
-      : typeof cssValues[attributeName] !== 'undefined'
-      && cssValues[attributeName] !== cssAttributesMap[attributeName].defaultValue
-        ? 'primary'
-        : 'inherit'
-  ), [breakpointCssValues, cssValues])
-
-  // const isToggled = useCallback((attributeName: string, value: CssValueType) => value === getValue(attributeName), [getValue])
+  const { getValue, getTextColor } = useStyleSubSectionHelpers(cssValues, breakpointCssValues)
 
   const renderPositionSection = useCallback(() => (
     <Div
@@ -70,7 +57,7 @@ function StylesSubSectionPosition({ cssValues, breakpointCssValues, onChange, di
       <Div
         xflex="x4"
         minWidth={52}
-        color={getTextColor('position')}
+        color={getTextColor(['position'])}
       >
         Position
       </Div>
