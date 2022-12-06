@@ -1,6 +1,6 @@
 import { memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { Button, Div, usePrevious } from 'honorable'
+import { Button, Div } from 'honorable'
 
 import CssClassesSelector from './CssClassesSelector'
 import StylesSubSectionTypography from './StylesSubSectionTypography'
@@ -25,14 +25,14 @@ import useMutation from '@hooks/useMutation'
 import useRefetch from '@hooks/useRefetch'
 import useCssValues from '@hooks/useCssValues'
 import useJsCssValues from '@hooks/useJsCssValues'
+import usePrevious from '@hooks/usePrevious'
 import useThrottleAsynchronous from '@hooks/useThrottleAsynchronous'
 
 import getComponentRootHierarchyIds from '@utils/getComponentRootHierarchyIds'
+import getLastComponentHierarchyItem from '@utils/getLastComponentHierarchyItem'
 import convertCssAttributeNameToJs from '@utils/convertCssAttributeNameToJs'
 import filterClassesByClassNamesAndMedia from '@utils/filterClassesByClassNamesAndMedia'
 import areAttributesValid from '@utils/areAttributesValid'
-import getLastComponentHierarchyItem from '@utils/getLastComponentHierarchyItem'
-import removeCssDefaults from '@utils/removeCssDefaults'
 
 // The styles section
 // Displayed in the right panel
@@ -55,6 +55,7 @@ function PanelStyles() {
 
   const classNames = useMemo(() => className.split(' ').map(c => c.trim()).filter(Boolean), [className])
 
+  const [isStyleUpdated, setIsStyleUpdated] = useState(false)
   const [loading, setLoading] = useState(false)
 
   const lastComponentHierarchyItem = useMemo(() => getLastComponentHierarchyItem(hierarchy), [hierarchy])
@@ -69,7 +70,7 @@ function PanelStyles() {
   const breakpointClasses = useMemo(() => filterClassesByClassNamesAndMedia(allClasses, classNames, breakpoint.media), [allClasses, classNames, breakpoint])
   const currentBreakpointClasses = useMemo(() => filterClassesByClassNamesAndMedia(allClasses, [selectedClassName], breakpoint.media), [allClasses, selectedClassName, breakpoint])
 
-  // The css values forno selected class i.e. the complete styling
+  // The css values for the complete styling
   const finalCssValues = useCssValues(baseClasses, cssAttributesMap)
   const finalBreakpointCssValues = useCssValues(breakpointClasses, cssAttributesMap)
 
@@ -78,17 +79,18 @@ function PanelStyles() {
   const selectedBreakpointCssValues = useJsCssValues(useCssValues(currentBreakpointClasses, cssAttributesMap), style, cssAttributesMap)
 
   // The css values passed to sub sections
-  const passedCssValues = useMemo(() => removeCssDefaults(selectedClassName ? selectedCssValues : finalCssValues, cssAttributesMap), [selectedClassName, finalCssValues, selectedCssValues])
-  const passedBreakpointCssValues = useMemo(() => removeCssDefaults(selectedClassName ? selectedBreakpointCssValues : finalBreakpointCssValues, cssAttributesMap), [selectedClassName, selectedBreakpointCssValues, finalBreakpointCssValues])
+  const passedCssValues = selectedClassName ? selectedCssValues : finalCssValues
+  const passedBreakpointCssValues = selectedClassName ? selectedBreakpointCssValues : finalBreakpointCssValues
 
-  // THe attributes to be updated
-  const attributes = useMemo(() => Object.entries(removeCssDefaults(selectedBreakpointCssValues, cssAttributesMap)).map(([name, value]) => ({ name, value })), [selectedBreakpointCssValues])
-  const attributesHash = useMemo(() => attributes.map(({ name, value }) => `${name}:${value}`).join(','), [attributes])
+  // The attributes to be updated
+  const attributes = useMemo(() => Object.entries(selectedBreakpointCssValues).map(([name, value]) => ({ name, value })), [selectedBreakpointCssValues])
+  const attributesHash = useMemo(() => attributes.map(({ name, value }) => `${name}:${value}`).join('_'), [attributes])
   const previousAttributesHash = usePrevious(attributesHash)
 
   const handleCssUpdate = useCallback(async () => {
-    if (!(classNames.length && attributes.length) || previousAttributesHash === attributesHash) return
+    if (!classNames.length || previousAttributesHash === attributesHash) return
     if (!areAttributesValid(attributes, cssAttributesMap)) return
+    if (!isStyleUpdated) return
 
     await updateCssClass({
       classNames: selectedClassName,
@@ -104,6 +106,7 @@ function PanelStyles() {
     previousAttributesHash,
     selectedClassName,
     breakpoint,
+    isStyleUpdated,
     updateCssClass,
     refetch,
   ])
@@ -113,6 +116,7 @@ function PanelStyles() {
   const handleSetClassNames = useCallback((classes: string[]) => {
     setClassName(classes.join(' ') || ' ') // HACK to force useEditionProps to use an empty updated className
     setStyle({})
+    setIsStyleUpdated(false)
   }, [setClassName, setStyle])
 
   const handleStyleChange = useCallback((attributes: CssAttributeType[]) => {
@@ -122,14 +126,13 @@ function PanelStyles() {
       const updatedStyle: CssValuesType = { ...x }
 
       attributes.forEach(({ name, value }) => {
-        updatedStyle[convertCssAttributeNameToJs(name)] = value === cssAttributesMap[name].defaultValue && breakpoint.media && typeof selectedCssValues[name] !== 'undefined'
-          ? selectedCssValues[name]
-          : value
+        updatedStyle[convertCssAttributeNameToJs(name)] = value
       })
 
       return updatedStyle
     })
-  }, [selectedClassName, breakpoint, selectedCssValues, setStyle])
+    setIsStyleUpdated(true)
+  }, [selectedClassName, setStyle])
 
   const renderNoElement = useCallback(() => (
     <Div
@@ -270,15 +273,14 @@ function PanelStyles() {
   // Reset style state on new breakpoint or new selected className
   useEffect(() => {
     setStyle({})
+    setIsStyleUpdated(false)
   }, [breakpoint, selectedClassName, setStyle])
 
   useEffect(() => {
-    if (!Object.keys(style).length) return
-
     throttledHandleCssUpdate()
   // Adding throttledHandleCssUpdate as a dep seems to cause infinite useEffect trigger
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [style])
+  }, [attributesHash])
 
   return (
     <Div
