@@ -12,14 +12,14 @@ function useStyleSubSectionHelpers(cssValues: CssValuesType, breakpointCssValues
     .map(attributeName => (
       typeof breakpointCssValues[attributeName] !== 'undefined'
       && breakpointCssValues[attributeName] !== cssValues[attributeName]
-      && breakpointCssValues[attributeName] !== cssAttributesMap[attributeName].defaultValue
+      && (typeof cssValues[attributeName] !== 'undefined' || breakpointCssValues[attributeName] !== cssAttributesMap[attributeName].defaultValue)
         ? 'breakpoint'
         : typeof cssValues[attributeName] !== 'undefined'
         && cssValues[attributeName] !== cssAttributesMap[attributeName].defaultValue
           ? 'primary'
           : 'text-light'
     ))
-      .reduce((acc, color) => color === 'breakpoint' ? color : color === 'primary' ? color : acc, 'text-light')
+    .reduce((acc, color) => color === 'breakpoint' ? color : color === 'primary' ? color : acc, 'text-light')
   ), [breakpointCssValues, cssValues])
 
   const isToggled = useCallback((attributeName: string, values: CssValueType[]) => values.includes(getValue(attributeName)), [getValue])

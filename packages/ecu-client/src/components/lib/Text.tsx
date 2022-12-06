@@ -71,15 +71,6 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
     refetch,
   ])
 
-  // const handleKeyDown = useCallback((event: KeyboardEvent) => {
-  //   if (isSelected && event.key === 'Enter') {
-  //     setIsEdited(true)
-  //   }
-  // }, [
-  //   isSelected,
-  //   setIsEdited,
-  // ])
-
   const handleInputKeyDown = useCallback((event: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (((event.shiftKey || event.ctrlKey || event.metaKey) && event.key === 'Enter') || event.key === 'Tab') {
       event.preventDefault()
@@ -110,8 +101,6 @@ function TextRef({ 'data-ecu': ecuId, className, children }: TextPropsType, ref:
     <div
       ref={finalRef}
       {...editionProps}
-      // tabIndex={-1}
-      // onKeyDown={handleKeyDown}
     >
       {loading ? appendCarriageReturn(value) : isEdited ? (
         <WithOutsideClick

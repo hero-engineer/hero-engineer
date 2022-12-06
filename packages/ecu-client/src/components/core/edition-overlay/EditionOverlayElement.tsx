@@ -14,9 +14,10 @@ type EditionOverlayElementPropsType = {
   helperText: string
   isSelected: boolean
   isEdited: boolean
+  isAnotherEdited: boolean
   isComponentRoot: boolean
   isDisabled: boolean
-  isHoverDisabled: boolean
+  isDragging: boolean
   isDrop: boolean
   isDropVertical: boolean
   onSelect: (event: MouseEvent) => void
@@ -35,9 +36,10 @@ function EditionOverlayElement({
   helperText,
   isSelected,
   isEdited,
+  isAnotherEdited,
   isComponentRoot,
   isDisabled,
-  isHoverDisabled,
+  isDragging,
   isDrop,
   isDropVertical,
   onSelect,
@@ -86,15 +88,15 @@ function EditionOverlayElement({
         zIndex={depth}
         border={color ? `1px solid ${color}` : null}
         _hover={{
-          border: isHoverDisabled && !isSelected ? null : `1px solid ${isDrop ? 'drag-and-drop' : isEdited ? 'is-edited' : isComponentRoot ? 'is-component-root' : 'primary'}`,
+          border: isDragging && !isSelected ? null : `1px solid ${isDrop ? 'drag-and-drop' : isEdited ? 'is-edited' : isComponentRoot ? 'is-component-root' : 'primary'}`,
           '& + div': {
-            display: isHoverDisabled && !isSelected ? 'none' : 'flex',
+            display: isDragging && !isSelected ? 'none' : 'flex',
             '&:hover': {
               display: isSelected ? 'flex' : 'none',
             },
           },
         }}
-        pointerEvents={isDisabled ? 'none' : 'auto'}
+        pointerEvents={isEdited || isAnotherEdited ? 'none' : 'auto'}
         onClick={onSelect}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}

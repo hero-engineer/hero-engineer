@@ -210,8 +210,9 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
           height={rect.height}
           isSelected={isSelected}
           isEdited={isSelected && isEdited}
+          isAnotherEdited={isEdited}
           isComponentRoot={!!hierarchyItem.componentAddress}
-          isHoverDisabled={dragAndDropState.isDragging}
+          isDragging={dragAndDropState.isDragging}
           isDisabled={dragAndDropState.isDragging && !(hierarchyItem.isComponentAcceptingChildren && hierarchyItem.onComponentAddress === componentAddress)}
           isDrop={isDrop}
           isDropVertical={isDrop ? dragAndDropState.isVertical ?? false : false}
