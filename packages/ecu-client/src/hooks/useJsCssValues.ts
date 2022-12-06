@@ -2,7 +2,7 @@ import { CSSProperties, useMemo } from 'react'
 
 import { CssValuesType } from '@types'
 
-import { cssAttributesMap } from '@constants'
+import { cssAttributesMap, cssValueReset } from '@constants'
 
 import convertJsAttributeNameToCss from '@utils/convertJsAttributeNameToCss'
 
@@ -12,6 +12,12 @@ function useJsCssValues(cssValues: CssValuesType, style: CSSProperties) {
 
     Object.entries(style).forEach(([attributeName, value]) => {
       const cssAttributeName = convertJsAttributeNameToCss(attributeName)
+
+      if (value === cssValueReset) {
+        delete nextCssValues[cssAttributeName]
+
+        return
+      }
 
       const { converter } = cssAttributesMap[cssAttributeName]
 

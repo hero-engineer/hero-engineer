@@ -9,6 +9,7 @@ import CssValueInput from '../../css/CssValueInput'
 import ColorPicker from '../../css/ColorPicker'
 
 import StylesSubSectionTitle from './StylesSubSectionTitle'
+import StylesSubSectionAttributeTitle from './StylesSubSectionAttributeTitle'
 import StylesSubSectionDisabledOverlay from './StylesSubSectionDisabledOverlay'
 
 import { CssAttributeType, CssValuesType } from '@types'
@@ -150,18 +151,22 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
       xflex="x4"
       fontSize="0.75rem"
     >
-      <Div
-        xflex="x4"
-        minWidth={52}
-        color={getTextColor(['font-family'])}
+      <StylesSubSectionAttributeTitle
+        attributeNames={['font-family']}
+        cssValues={cssValues}
+        breakpointCssValues={breakpointCssValues}
+        onChange={onChange}
       >
         Typeface
-      </Div>
+      </StylesSubSectionAttributeTitle>
       <Select
         tiny
         menuOnTop
         value={getValue('font-family')}
         onChange={event => onChange([{ name: 'font-family', value: event.target.value }])}
+        SelectedProps={{
+          fontFamily: getValue('font-family'),
+        }}
       >
         <MenuItem
           value="inherit"
@@ -210,7 +215,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
         ))}
       </Select>
     </Div>
-  ), [fonts, getTextColor, getValue, onChange])
+  ), [cssValues, breakpointCssValues, fonts, getValue, onChange])
 
   const renderWeightsSection = useCallback(() => (
     <Div

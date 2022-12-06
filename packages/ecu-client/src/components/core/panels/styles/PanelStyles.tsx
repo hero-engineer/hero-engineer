@@ -119,6 +119,7 @@ function PanelStyles() {
   const previousAttributesHash = usePrevious(attributesHash)
 
   console.log('concernedMedias', concernedMedias)
+  console.log('style', style)
   console.log('v, bv', passedCssValues, passedBreakpointCssValues)
 
   const handleCssUpdate = useCallback(async () => {

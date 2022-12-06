@@ -66,6 +66,8 @@ export const ecuSpecials = [
 
 export const ecuSpecialPrefix = '__ecu_special__'
 
+export const cssValueReset = `__reset__${Math.random()}`
+
 export const cssValueUnits = [
   'function', // Special unit for calc and variables values
   'auto',

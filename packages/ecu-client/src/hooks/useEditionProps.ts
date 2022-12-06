@@ -1,9 +1,11 @@
 import '../css/edition.css'
 
-import { useCallback, useContext, useEffect, useMemo, useRef } from 'react'
+import { CSSProperties, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
 
 import useHierarchyId from './useHierarchyId'
 import useEditionOverlay from './useEditionOverlay'
+
+import { cssValueReset } from '@constants'
 
 import HierarchyContext from '@contexts/HierarchyContext'
 import EditionContext from '@contexts/EditionContext'
@@ -30,6 +32,17 @@ import getComponentRootHierarchyIds from '@utils/getComponentRootHierarchyIds'
 //   canDrop: boolean
 //   isOverCurrent: boolean
 // }
+
+function removeResetStyles(style: CSSProperties) {
+  const nextStyles = { ...style }
+
+  Object.keys(nextStyles).forEach(key => {
+    // @ts-expect-error
+    if (nextStyles[key] === cssValueReset) nextStyles[key] = 'unset'
+  })
+
+  return nextStyles
+}
 
 // Return common edition props for lib components
 function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', canBeEdited = false) {
@@ -151,7 +164,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
     setIsEdited,
     editionProps: {
       className: generateClassName(),
-      style: isSelected || className.includes(selectedClassName) ? updatedStyle : {},
+      style: isSelected || className.includes(selectedClassName) ? removeResetStyles(updatedStyle) : {},
       'data-ecu': ecuId,
       'data-ecu-hierarchy': hierarchyId,
     },
