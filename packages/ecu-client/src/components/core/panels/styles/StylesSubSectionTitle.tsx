@@ -3,7 +3,7 @@ import { Div } from 'honorable'
 
 import { CssValuesType } from '@types'
 
-import areCssValuesEqual from '@utils/areCssValuesEqual'
+import useStyleSubSectionHelpers from '@hooks/useStyleSubSectionHelpers'
 
 type StylesSubSectionTitlePropsType = {
   title: string
@@ -16,8 +16,11 @@ type StylesSubSectionTitlePropsType = {
 // Display the title of a styles sub section
 // With a chip if modified
 function StylesSubSectionTitle({ title, expanded, cssValues, breakpointCssValues, attributeNames }: StylesSubSectionTitlePropsType) {
-  const isModified = useMemo(() => attributeNames.some(attributeName => typeof cssValues[attributeName] !== 'undefined'), [cssValues, attributeNames])
-  const isBreakpointModified = useMemo(() => !areCssValuesEqual(cssValues, breakpointCssValues) && attributeNames.some(attributeName => typeof breakpointCssValues[attributeName] !== 'undefined'), [cssValues, breakpointCssValues, attributeNames])
+  const { getTextColor } = useStyleSubSectionHelpers(cssValues, breakpointCssValues)
+
+  const allColors = useMemo(() => attributeNames.map(attributeName => getTextColor([attributeName])), [attributeNames, getTextColor])
+  const isModified = useMemo(() => allColors.some(color => color === 'primary'), [allColors])
+  const isBreakpointModified = useMemo(() => allColors.some(color => color === 'breakpoint'), [allColors])
 
   return (
     <Div
