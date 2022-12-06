@@ -25,7 +25,7 @@ import { CssAttributeType, CssValuesType } from '@types'
 import { cssAttributesMap } from '@constants'
 
 import usePersistedState from '@hooks/usePersistedState'
-import useStyleSubSectionHelpers from '@hooks/useStyleSubSectionHelpers'
+import useStylesSubSectionHelpers from '@hooks/useStylesSubSectionHelpers'
 
 type StylesSubSectionLayoutPropsType = {
   cssValues: CssValuesType
@@ -236,7 +236,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
   const [expanded, setExpanded] = usePersistedState('styles-sub-section-layout-expanded', true)
   const [isGridModalOpen, setIsGridModalOpen] = useState(false)
 
-  const { getTextColor, isToggled } = useStyleSubSectionHelpers(cssValues, breakpointCssValues)
+  const { getTextColor, isToggled } = useStylesSubSectionHelpers(cssValues, breakpointCssValues)
 
   const renderDisplayEditor = useCallback(() => (
     <Div xflex="x4s">
@@ -252,7 +252,6 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
         <Tooltip
           key={name}
           label={label}
-          placement="bottom"
         >
           <Button
             ghost
@@ -297,7 +296,6 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
         </Button>
         <Tooltip
           label="Reverse"
-          placement="bottom"
         >
           <Button
             ghost
@@ -332,7 +330,6 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
             <Tooltip
               key={name}
               label={label}
-              placement="bottom"
             >
               <Button
                 ghost
@@ -370,7 +367,6 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
             <Tooltip
               key={name}
               label={label}
-              placement="bottom"
             >
               <Button
                 ghost
@@ -463,7 +459,6 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
         {['wrap', 'wrap-reverse'].includes((cssValues['flex-wrap'] ?? '').toString()) && (
           <Tooltip
             label="Reverse"
-            placement="bottom"
           >
             <Button
               ghost
@@ -499,7 +494,6 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
             <Tooltip
               key={name}
               label={label}
-              placement="bottom"
             >
               <Button
                 ghost
@@ -561,7 +555,6 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
             <Tooltip
               key={name}
               label={`Align items ${label}`}
-              placement="bottom"
             >
               <Button
                 ghost
@@ -580,7 +573,6 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
             <Tooltip
               key={name}
               label={`Justify items ${label}`}
-              placement="bottom"
             >
               <Button
                 ghost
@@ -617,7 +609,6 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
             <Tooltip
               key={name}
               label={`Align content ${label}`}
-              placement="bottom"
             >
               <Button
                 ghost
@@ -637,7 +628,6 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
             <Tooltip
               key={name}
               label={`Justify content ${label}`}
-              placement="bottom"
             >
               <Button
                 ghost

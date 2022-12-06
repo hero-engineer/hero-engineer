@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useMemo } from 'react'
-import { Accordion, Button, Div, MenuItem, Select } from 'honorable'
+import { Accordion, Button, Div, MenuItem, Select, Tooltip } from 'honorable'
 import { TfiAlignCenter, TfiAlignJustify, TfiAlignLeft, TfiAlignRight } from 'react-icons/tfi'
 import { BsTypeItalic } from 'react-icons/bs'
+import { RxOverline, RxStrikethrough, RxUnderline } from 'react-icons/rx'
+import { MdClose } from 'react-icons/md'
 
 import CssValueInput from '../../css/CssValueInput'
 import ColorPicker from '../../css/ColorPicker'
@@ -18,7 +20,9 @@ import { ColorsQuery, ColorsQueryDataType, FontsQuery, FontsQueryDataType } from
 import useQuery from '@hooks/useQuery'
 import useRefetch from '@hooks/useRefetch'
 import usePersistedState from '@hooks/usePersistedState'
-import useStyleSubSectionHelpers from '@hooks/useStyleSubSectionHelpers'
+import useStylesSubSectionHelpers from '@hooks/useStylesSubSectionHelpers'
+
+import capitalize from '@utils/capitalize'
 
 type StylesSubSectionTypographyPropsType = {
   cssValues: CssValuesType
@@ -80,6 +84,29 @@ const fontStyles = [
   },
 ]
 
+const textDecorations = [
+  {
+    name: 'none',
+    Icon: MdClose,
+  },
+  {
+    name: 'underline',
+    Icon: RxUnderline,
+  },
+  {
+    name: 'overline',
+    Icon: RxOverline,
+  },
+  {
+    name: 'line-through',
+    Icon: RxStrikethrough,
+  },
+  {
+    name: 'inherit',
+    Icon: () => <>inherit</>,
+  },
+]
+
 const defaultWeights = [100, 200, 300, 400, 500, 600, 700, 800, 900]
 
 const prepareFontFamily = (fontName: string) => fontName.includes(' ') ? `"${fontName}", sans-serif` : `${fontName}, sans-serif`
@@ -105,7 +132,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
     }
   )
 
-  const { getValue, getTextColor, isToggled } = useStyleSubSectionHelpers(cssValues, breakpointCssValues)
+  const { getValue, getTextColor, isToggled } = useStylesSubSectionHelpers(cssValues, breakpointCssValues)
 
   const fonts = useMemo(() => fontsQueryResult.data?.fonts ?? [], [fontsQueryResult.data])
   const colors = useMemo(() => colorsQueryResult.data?.colors ?? [], [colorsQueryResult.data])
@@ -306,19 +333,23 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
         Align
       </Div>
       {textAligns.map(({ name, Icon }) => (
-        <Button
+        <Tooltip
           key={name}
-          ghost
-          toggled={isToggled('text-align', [name])}
-          onClick={() => onChange([{ name: 'text-align', value: name }])}
+          label={capitalize(name)}
         >
-          <Icon />
-        </Button>
+          <Button
+            ghost
+            toggled={isToggled('text-align', [name])}
+            onClick={() => onChange([{ name: 'text-align', value: name }])}
+          >
+            <Icon />
+          </Button>
+        </Tooltip>
       ))}
     </Div>
   ), [getTextColor, isToggled, onChange])
 
-  const renderDecorationSection = useCallback(() => (
+  const renderItalicSection = useCallback(() => (
     <Div
       xflex="x4"
       fontSize="0.75rem"
@@ -331,14 +362,47 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
         Italic
       </Div>
       {fontStyles.map(({ name, Icon }) => (
-        <Button
+        <Tooltip
           key={name}
-          ghost
-          toggled={isToggled('font-style', [name])}
-          onClick={() => onChange([{ name: 'font-style', value: name }])}
+          label={capitalize(name)}
         >
-          <Icon />
-        </Button>
+          <Button
+            ghost
+            toggled={isToggled('font-style', [name])}
+            onClick={() => onChange([{ name: 'font-style', value: name }])}
+          >
+            <Icon />
+          </Button>
+        </Tooltip>
+      ))}
+    </Div>
+  ), [getTextColor, isToggled, onChange])
+
+  const renderDecorationSection = useCallback(() => (
+    <Div
+      xflex="x4"
+      fontSize="0.75rem"
+    >
+      <Div
+        xflex="x4"
+        minWidth={52}
+        color={getTextColor(['text-decoration'])}
+      >
+        Line
+      </Div>
+      {textDecorations.map(({ name, Icon }) => (
+        <Tooltip
+          key={name}
+          label={capitalize(name)}
+        >
+          <Button
+            ghost
+            toggled={isToggled('text-decoration', [name])}
+            onClick={() => onChange([{ name: 'text-decoration', value: name }])}
+          >
+            <Icon />
+          </Button>
+        </Tooltip>
       ))}
     </Div>
   ), [getTextColor, isToggled, onChange])
@@ -389,6 +453,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
         {renderSizeSection()}
         {renderColorSection()}
         {renderAlignSection()}
+        {renderItalicSection()}
         {renderDecorationSection()}
       </Div>
       {disabled && <StylesSubSectionDisabledOverlay />}

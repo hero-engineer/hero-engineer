@@ -95,17 +95,9 @@ function PanelStyles() {
   // Master breakpoint classes for the selected className
   const selectedMasterBreakpointClasses = useMemo(() => filterClassesByClassNamesAndMedias(masterBreakpointClasses, [selectedClassName], ['']), [masterBreakpointClasses, selectedClassName])
   // Current breakpoint classes for the full className
-  const currentBreakpointClasses = useMemo(() => (
-    breakpoint.media
-      ? filterClassesByClassNamesAndMedias(allClasses, classNames, concernedMedias)
-      : filterClassesByClassNamesAndMedias(allClasses, classNames, [breakpoint.media])
-  ), [allClasses, classNames, breakpoint, concernedMedias])
+  const currentBreakpointClasses = useMemo(() => filterClassesByClassNamesAndMedias(allClasses, classNames, concernedMedias), [allClasses, classNames, concernedMedias])
   // Current breakpoint classes for the selected className
-  const selectedCurrentBreakpointClasses = useMemo(() => (
-    breakpoint.media
-      ? filterClassesByClassNamesAndMedias(allClasses, [selectedClassName], concernedMedias)
-      : filterClassesByClassNamesAndMedias(allClasses, [selectedClassName], [breakpoint.media])
-  ), [allClasses, selectedClassName, breakpoint, concernedMedias])
+  const selectedCurrentBreakpointClasses = useMemo(() => filterClassesByClassNamesAndMedias(allClasses, [selectedClassName], concernedMedias), [allClasses, selectedClassName, concernedMedias])
 
   // The css values for the complete styling
   // Displayed when no class is selected
@@ -126,8 +118,8 @@ function PanelStyles() {
   const attributesHash = useMemo(() => attributes.map(({ name, value }) => `${name}:${value}`).join('_'), [attributes])
   const previousAttributesHash = usePrevious(attributesHash)
 
-  // console.log('concernedMedias', concernedMedias)
-  // console.log('v, bv', passedCssValues, passedBreakpointCssValues)
+  console.log('concernedMedias', concernedMedias)
+  console.log('v, bv', passedCssValues, passedBreakpointCssValues)
 
   const handleCssUpdate = useCallback(async () => {
     if (!classNames.length || previousAttributesHash === attributesHash) return

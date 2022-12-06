@@ -9,7 +9,7 @@ import { CssAttributeType, CssValuesType } from '@types'
 import { cssAttributesMap } from '@constants'
 
 import useRefresh from '@hooks/useRefresh'
-import useStyleSubSectionHelpers from '@hooks/useStyleSubSectionHelpers'
+import useStylesSubSectionHelpers from '@hooks/useStylesSubSectionHelpers'
 
 import doesParentHaveId from '@utils/doesParentHaveId'
 
@@ -51,7 +51,7 @@ function SpacingEditor({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const { width: svgWidth, height: svgHeight } = useMemo(() => rootRef.current?.getBoundingClientRect() ?? { width: 0, height: 0 }, [rootRef.current])
 
-  const { getValue, getTextColor } = useStyleSubSectionHelpers(cssValues, breakpointCssValues)
+  const { getValue, getTextColor } = useStylesSubSectionHelpers(cssValues, breakpointCssValues)
 
   const handleHover = useCallback((index: number) => {
     setHoveredIndex(index)

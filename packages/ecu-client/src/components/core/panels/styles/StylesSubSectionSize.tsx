@@ -10,7 +10,7 @@ import StylesSubSectionDisabledOverlay from './StylesSubSectionDisabledOverlay'
 import { CssAttributeType, CssValuesType } from '@types'
 
 import usePersistedState from '@hooks/usePersistedState'
-import useStyleSubSectionHelpers from '@hooks/useStyleSubSectionHelpers'
+import useStylesSubSectionHelpers from '@hooks/useStylesSubSectionHelpers'
 
 import capitalize from '@utils/capitalize'
 
@@ -53,7 +53,7 @@ const overflows = [
 function StylesSubSectionSize({ cssValues, breakpointCssValues, onChange, disabled }: StylesSubSectionSizePropsType) {
   const [expanded, setExpanded] = usePersistedState('styles-sub-section-size-expanded', true)
 
-  const { getValue, getTextColor, isToggled } = useStyleSubSectionHelpers(cssValues, breakpointCssValues)
+  const { getValue, getTextColor, isToggled } = useStylesSubSectionHelpers(cssValues, breakpointCssValues)
 
   const renderSizeInput = useCallback((attributeName: string, label: string) => (
     <Div
@@ -101,7 +101,6 @@ function StylesSubSectionSize({ cssValues, breakpointCssValues, onChange, disabl
         <Tooltip
           key={name}
           label={capitalize(name)}
-          placement="top"
         >
           <Button
             ghost

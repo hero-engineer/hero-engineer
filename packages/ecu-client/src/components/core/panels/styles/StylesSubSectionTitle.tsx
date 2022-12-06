@@ -3,7 +3,7 @@ import { Div } from 'honorable'
 
 import { CssValuesType } from '@types'
 
-import useStyleSubSectionHelpers from '@hooks/useStyleSubSectionHelpers'
+import useStylesSubSectionHelpers from '@hooks/useStylesSubSectionHelpers'
 
 type StylesSubSectionTitlePropsType = {
   title: string
@@ -16,7 +16,7 @@ type StylesSubSectionTitlePropsType = {
 // Display the title of a styles sub section
 // With a chip if modified
 function StylesSubSectionTitle({ title, expanded, cssValues, breakpointCssValues, attributeNames }: StylesSubSectionTitlePropsType) {
-  const { getTextColor } = useStyleSubSectionHelpers(cssValues, breakpointCssValues)
+  const { getTextColor } = useStylesSubSectionHelpers(cssValues, breakpointCssValues)
 
   const allColors = useMemo(() => attributeNames.map(attributeName => getTextColor([attributeName])), [attributeNames, getTextColor])
   const isModified = useMemo(() => allColors.some(color => color === 'primary'), [allColors])

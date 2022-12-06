@@ -4,7 +4,7 @@ import { CssValueType, CssValuesType } from '@types'
 
 import { cssAttributesMap } from '@constants'
 
-function useStyleSubSectionHelpers(cssValues: CssValuesType, breakpointCssValues: CssValuesType) {
+function useStylesSubSectionHelpers(cssValues: CssValuesType, breakpointCssValues: CssValuesType) {
   const getValue = useCallback((attributeName: string) => breakpointCssValues[attributeName] ?? cssValues[attributeName] ?? cssAttributesMap[attributeName].defaultValue, [breakpointCssValues, cssValues])
 
   const getTextColor = useCallback((attributeNames: string[]) => (
@@ -15,7 +15,7 @@ function useStyleSubSectionHelpers(cssValues: CssValuesType, breakpointCssValues
       && (typeof cssValues[attributeName] !== 'undefined' || breakpointCssValues[attributeName] !== cssAttributesMap[attributeName].defaultValue)
         ? 'breakpoint'
         : typeof cssValues[attributeName] !== 'undefined'
-        && (typeof breakpointCssValues[attributeName] !== 'undefined' || cssValues[attributeName] !== cssAttributesMap[attributeName].defaultValue)
+        && ((typeof breakpointCssValues[attributeName] !== 'undefined' && breakpointCssValues[attributeName] !== cssValues[attributeName]) || cssValues[attributeName] !== cssAttributesMap[attributeName].defaultValue)
           ? 'primary'
           : 'text-light'
     ))
@@ -31,4 +31,4 @@ function useStyleSubSectionHelpers(cssValues: CssValuesType, breakpointCssValues
   }
 }
 
-export default useStyleSubSectionHelpers
+export default useStylesSubSectionHelpers

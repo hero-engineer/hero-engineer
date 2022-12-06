@@ -9,7 +9,7 @@ import { CssAttributeType, CssValuesType } from '@types'
 
 import useRefresh from '@hooks/useRefresh'
 import usePersistedState from '@hooks/usePersistedState'
-import useStyleSubSectionHelpers from '@hooks/useStyleSubSectionHelpers'
+import useStylesSubSectionHelpers from '@hooks/useStylesSubSectionHelpers'
 
 import capitalize from '@utils/capitalize'
 
@@ -47,7 +47,7 @@ function StylesSubSectionPosition({ cssValues, breakpointCssValues, onChange, di
 
   const [expanded, setExpanded] = usePersistedState('styles-sub-section-position-expanded', true)
 
-  const { getValue, getTextColor } = useStyleSubSectionHelpers(cssValues, breakpointCssValues)
+  const { getValue, getTextColor } = useStylesSubSectionHelpers(cssValues, breakpointCssValues)
 
   const renderPositionSection = useCallback(() => (
     <Div
