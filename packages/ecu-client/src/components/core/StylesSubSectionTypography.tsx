@@ -80,6 +80,10 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
       key: refetchKeys.fonts,
       refetch: refetchFontsQuery,
     },
+    {
+      key: refetchKeys.colors,
+      refetch: refetchColorsQuery,
+    }
   )
 
   const getValue = useCallback((attributeName: string) => breakpointCssValues[attributeName] ?? cssValues[attributeName] ?? cssAttributesMap[attributeName].defaultValue, [breakpointCssValues, cssValues])
@@ -266,7 +270,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, onChange, 
         <ColorPicker
           withOverlay
           value={color === 'inherit' ? null : color}
-          onChange={value => onChange([{ name: 'color', value }])}
+          onChange={(value, comment) => onChange([{ name: 'color', value, comment }])}
           size={16}
           pickerLeftOffset={-29} // Adjusted from sight
           colors={colors}

@@ -1,0 +1,4 @@
+.ColorPicker-picker > .chrome-picker {
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}

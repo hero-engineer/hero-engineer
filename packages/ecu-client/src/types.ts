@@ -91,6 +91,7 @@ export type CssValuesType = Record<string, CssValueType>
 export type CssAttributeType = {
   name: string
   value: CssValueType
+  comment?: string
 }
 
 export type CssClassType= {
