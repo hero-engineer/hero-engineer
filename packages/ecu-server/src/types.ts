@@ -138,6 +138,7 @@ export type CssValueType = string | number
 export type CssAttributeType = {
   name: string
   value: CssValueType
+  comment?: string
 }
 
 export type CssClassType = {

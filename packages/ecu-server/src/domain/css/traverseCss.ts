@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 
-import postcss, { AtRule, Document, Root, Rule } from 'postcss'
+import postcss, { AtRule, ChildNode, Document, Root, Rule } from 'postcss'
 import posscssNested from 'postcss-nested'
 
 import { BreakpointType, CssAttributeType, CssClassType, FileNodeType } from '../../types.js'
@@ -20,11 +20,13 @@ async function traverseCss(fileNode: FileNodeType, targetSelector?: string, brea
     const attributes: CssAttributeType[] = []
     const media = rule.parent?.type === 'atrule' ? (rule.parent as AtRule).params : ''
 
-    rule.nodes.forEach((node: any) => {
-      attributes.push({
-        name: node.prop,
-        value: node.value,
-      })
+    rule.nodes.forEach((node: ChildNode) => {
+      if (node.type === 'decl') {
+        attributes.push({
+          name: node.prop,
+          value: node.value,
+        })
+      }
     })
 
     const cssClass: CssClassType = {
