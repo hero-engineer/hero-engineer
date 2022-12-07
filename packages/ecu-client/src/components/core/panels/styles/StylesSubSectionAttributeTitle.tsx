@@ -16,7 +16,16 @@ type StylesSubSectionAttributeTitlePropsType = DivProps & {
   onChange: (attributes: CssAttributeType[]) => void
 }
 
-function StylesSubSectionAttributeTitle({ cssValues, breakpointCssValues, currentBreakpointCssValues, attributeNames, minWidth = 52, children, onChange }: StylesSubSectionAttributeTitlePropsType) {
+function StylesSubSectionAttributeTitle({
+  cssValues,
+  breakpointCssValues,
+  currentBreakpointCssValues,
+  attributeNames,
+  minWidth = 52,
+  children,
+  onChange,
+  ...props
+}: StylesSubSectionAttributeTitlePropsType) {
   const { getTextColor } = useStylesSubSectionHelpers(cssValues, breakpointCssValues)
 
   const handleResetClick = useCallback(() => {
@@ -41,6 +50,7 @@ function StylesSubSectionAttributeTitle({ cssValues, breakpointCssValues, curren
           display: 'flex',
         },
       }}
+      {...props}
     >
       <Div
         flexGrow

@@ -325,7 +325,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
     >
       <StylesSubSectionAttributeTitle
         attributeNames={['align-items']}
-        pt={0.5}
+        pt={0.25 / 2}
         {...attributeTitleProps}
       >
         Align
@@ -364,7 +364,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
     >
       <StylesSubSectionAttributeTitle
         attributeNames={['justify-content']}
-        pt={0.5}
+        pt={0.25 / 2}
         {...attributeTitleProps}
       >
         Justify
@@ -490,14 +490,14 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
     >
       <StylesSubSectionAttributeTitle
         attributeNames={['align-content']}
-        pt={0.5}
+        pt={0.25 / 2}
         {...attributeTitleProps}
       >
         Align
       </StylesSubSectionAttributeTitle>
       <Div
         display="grid"
-        gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+        gridTemplateColumns="repeat(8, minmax(0, 1fr))"
       >
         {flexAligns.map(({ name, label, getIcon }) => {
           const Icon = getIcon(['row', 'row-reverse'].includes((breakpointCssValues['flex-direction'] ?? cssValues['flex-direction'] ?? cssAttributesMap['flex-direction'].defaultValue).toString()))
@@ -509,6 +509,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
             >
               <Button
                 ghost
+                tiny
                 toggled={isToggled('align-content', [name])}
                 onClick={() => onChange([{ name: 'align-content', value: name }])}
               >
