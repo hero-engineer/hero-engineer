@@ -1,5 +1,5 @@
-import { MouseEvent, memo, useCallback, useEffect, useRef } from 'react'
-import { Div } from 'honorable'
+import { Dispatch, MouseEvent, SetStateAction, memo, useCallback, useEffect, useRef } from 'react'
+import { Div, tooltipParts } from 'honorable'
 
 import { HierarchyItemType } from '@types'
 
@@ -25,6 +25,21 @@ type EditionOverlayElementPropsType = {
   onMouseMove: (event: MouseEvent) => void
 }
 
+function scrollElement(element: HTMLElement, deltaY: number, deltaX: number): boolean {
+  const beforeTop = element.scrollTop
+  const beforeLeft = element.scrollLeft
+
+  element.scrollTop += deltaY
+  element.scrollLeft += deltaX
+
+  if (beforeTop !== element.scrollTop || beforeLeft !== element.scrollLeft) return true
+  if (element.parentElement) {
+    return scrollElement(element.parentElement, deltaY, deltaX)
+  }
+
+  return false
+}
+
 function EditionOverlayElement({
   hierarchyItem,
   element,
@@ -47,19 +62,16 @@ function EditionOverlayElement({
   onMouseMove,
 }: EditionOverlayElementPropsType) {
   const rootRef = useRef<HTMLDivElement>(null)
+  const isOverlayDisabledTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
 
   // Scroll sub element
   // Prevent the page from scrolling if a sub element has scrolled
   const handleWheel = useCallback((event: WheelEvent) => {
     if (!element) return
 
-    const beforeTop = element.scrollTop
-    const beforeLeft = element.scrollLeft
+    clearTimeout(isOverlayDisabledTimeoutRef.current)
 
-    element.scrollTop += event.deltaY
-    element.scrollLeft += event.deltaX
-
-    if (beforeTop === element.scrollTop && beforeLeft === element.scrollLeft) return
+    scrollElement(element, event.deltaY, event.deltaX)
 
     event.preventDefault()
   }, [element])
@@ -88,10 +100,10 @@ function EditionOverlayElement({
         ref={rootRef}
         position="absolute"
         xflex={isDropVertical ? 'y2' : 'x4'}
-        top={top - 1}
-        left={left - 1}
-        width={width + 2}
-        height={height + 2}
+        top={top}
+        left={left}
+        width={width}
+        height={height}
         zIndex={depth}
         border={color ? `1px solid ${color}` : null}
         _hover={{
@@ -112,8 +124,8 @@ function EditionOverlayElement({
         xflex="x4"
         display={isSelected ? 'flex' : 'none'}
         position="absolute"
-        top={top - 16 - 1 < 0 ? 0 : top - 16 - 1}
-        left={left - 1}
+        top={top - 16 < 0 ? 0 : top - 16}
+        left={left}
         height={16}
         backgroundColor={color}
         color={isSelected || isEdited ? 'white' : isComponentRoot ? 'is-component-root' : 'primary'}

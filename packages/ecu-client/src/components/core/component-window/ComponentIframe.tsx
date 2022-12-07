@@ -42,15 +42,13 @@ function ComponentIframe({ children, ...props }: ComponentIframePropsType) {
     appendCss(editionStyles)
   }, [appendCss])
 
-  // To allow borders to be visible
-  // And the iframe to have the component height
+  // Allow the iframe to have the component height
   useEffect(() => {
     appendCss(`
       html {
         height: fit-content;
       }
       body {
-        padding: 1px;
         height: fit-content;
       }
     `)
@@ -64,7 +62,6 @@ function ComponentIframe({ children, ...props }: ComponentIframePropsType) {
       height={height}
       minHeight={0}
       border="none"
-      userSelect="none"
       position="relative" // For Tooltip to be over the iframe
       zIndex={0} // Idem
       top={0.5} // For the overlay top menu border to be visible

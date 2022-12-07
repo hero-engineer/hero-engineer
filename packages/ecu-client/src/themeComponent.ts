@@ -27,6 +27,11 @@ const themeComponent = mergeTheme(theme, {
         fontFamily: null,
       },
     ],
+    body: [
+      {
+        overflow: 'auto', // Allow scrolling on small viewports
+      },
+    ],
   },
   Input: {
     Root: [

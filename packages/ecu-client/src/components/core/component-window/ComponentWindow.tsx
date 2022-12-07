@@ -7,7 +7,7 @@ import themeComponent from '../../../themeComponent'
 import EditionOverlay from '../edition-overlay/EditionOverlay'
 import ProviderEmotion from '../providers/ProviderEmotion'
 
-import ComponentIframeWidthExpander from './ComponentIframeWidthExpander'
+import ComponentIframeExpander from './ComponentIframeExpander'
 import WithComponentIframeHeight from './WithComponentIframeHeight'
 import WithComponentScrenshot from './WithComponentScrenshot'
 import ComponentIframe from './ComponentIframe'
@@ -27,18 +27,18 @@ function ComponentWindow({ componentPath, decoratorPaths }: ComponentWindowProps
       backgroundColor="background-component"
       overflowY="auto"
     >
-      <ComponentIframeWidthExpander>
-        <EditionOverlay>
-          <ComponentIframe>
-            {({ window, head, setHeight }) => (
-              <ProviderEmotion head={head}>
-                <DndProvider
-                  backend={HTML5Backend}
-                  context={window}
-                >
-                  <ThemeProvider theme={themeComponent}>
-                    <CssBaseline />
-                    <WithComponentIframeHeight setHeight={setHeight}>
+      <ComponentIframeExpander>
+        <ComponentIframe>
+          {({ window, head, setHeight }) => (
+            <ProviderEmotion head={head}>
+              <DndProvider
+                backend={HTML5Backend}
+                context={window}
+              >
+                <ThemeProvider theme={themeComponent}>
+                  <CssBaseline />
+                  <WithComponentIframeHeight setHeight={setHeight}>
+                    <EditionOverlay>
                       <WithComponentScrenshot>
                         <ComponentLoader
                           head={head}
@@ -46,14 +46,14 @@ function ComponentWindow({ componentPath, decoratorPaths }: ComponentWindowProps
                           decoratorPaths={decoratorPaths}
                         />
                       </WithComponentScrenshot>
-                    </WithComponentIframeHeight>
-                  </ThemeProvider>
-                </DndProvider>
-              </ProviderEmotion>
-            )}
-          </ComponentIframe>
-        </EditionOverlay>
-      </ComponentIframeWidthExpander>
+                    </EditionOverlay>
+                  </WithComponentIframeHeight>
+                </ThemeProvider>
+              </DndProvider>
+            </ProviderEmotion>
+          )}
+        </ComponentIframe>
+      </ComponentIframeExpander>
     </Div>
   )
 }

@@ -11,7 +11,7 @@ type ComponentIframeWidthExanderPropsType = {
   children: ReactNode
 }
 
-function ComponentIframeWidthExpander({ children }: ComponentIframeWidthExanderPropsType) {
+function ComponentIframeExpander({ children }: ComponentIframeWidthExanderPropsType) {
   const rootRef = useRef<HTMLDivElement>(null)
   const leftRef = useRef<HTMLDivElement>(null)
   const rightRef = useRef<HTMLDivElement>(null)
@@ -21,7 +21,7 @@ function ComponentIframeWidthExpander({ children }: ComponentIframeWidthExanderP
   useClearHierarchyIdsAndComponentDeltaOnClick(rightRef)
   useClearHierarchyIdsAndComponentDeltaOnClick(contentRef)
 
-  const { width } = useContext(BreakpointContext)
+  const { width, height } = useContext(BreakpointContext)
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const maxWidth = useMemo(() => rootRef.current?.getBoundingClientRect().width ?? Infinity, [rootRef.current])
@@ -37,7 +37,7 @@ function ComponentIframeWidthExpander({ children }: ComponentIframeWidthExanderP
         ref={leftRef}
         flexGrow
       />
-      <ComponentIframeWidthExanderHandle
+      <ComponentIframeExanderHandle
         isLeft
         maxWidth={maxWidth}
       />
@@ -45,12 +45,13 @@ function ComponentIframeWidthExpander({ children }: ComponentIframeWidthExanderP
         ref={contentRef}
         xflex="y2s"
         width={width}
+        height={height === '-' ? null : height}
         overflowY="auto"
         flexShrink={0}
       >
         {children}
       </Div>
-      <ComponentIframeWidthExanderHandle
+      <ComponentIframeExanderHandle
         maxWidth={maxWidth}
       />
       <Div
@@ -66,7 +67,7 @@ type ComponentIframeWidthExanderHandlePropsType = {
   maxWidth: number
 }
 
-function ComponentIframeWidthExanderHandle({ isLeft, maxWidth }: ComponentIframeWidthExanderHandlePropsType) {
+function ComponentIframeExanderHandle({ isLeft, maxWidth }: ComponentIframeWidthExanderHandlePropsType) {
   const [isDraggingCurrent, setIsDraggingCurrent] = useState(false)
 
   const { breakpoint, setWidth, isDragging, setIsDragging } = useContext(BreakpointContext)
@@ -129,4 +130,4 @@ function ComponentIframeWidthExanderHandle({ isLeft, maxWidth }: ComponentIframe
   )
 }
 
-export default memo(ComponentIframeWidthExpander)
+export default memo(ComponentIframeExpander)

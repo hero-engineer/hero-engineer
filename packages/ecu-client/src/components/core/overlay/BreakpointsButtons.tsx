@@ -1,7 +1,9 @@
 import { useCallback, useContext, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { Button, Div, Tooltip } from 'honorable'
+import { Button, Div, Input, Tooltip } from 'honorable'
+import viewports from 'devices-viewport-size'
 import { AiOutlineDesktop, AiOutlineMobile, AiOutlineTablet } from 'react-icons/ai'
+import { MdClose } from 'react-icons/md'
 
 import { BreakpointType } from '@types'
 
@@ -26,7 +28,7 @@ const icons = [
 
 function BreakpointsButtons() {
   const { componentAddress = '' } = useParams()
-  const { breakpoint, setBreakpoint, breakpoints, setBreakpoints, width, setWidth } = useContext(BreakpointContext)
+  const { breakpoint, setBreakpoint, breakpoints, setBreakpoints, width, setWidth, height, setHeight } = useContext(BreakpointContext)
 
   const [breakpointsQueryResult, refetchBreakpointsQuery] = useQuery<BreakpointsQueryDataType>({
     query: BreakpointsQuery,
@@ -42,7 +44,43 @@ function BreakpointsButtons() {
   const handleBreakpointClick = useCallback((breakpoint: BreakpointType) => {
     setBreakpoint(breakpoint)
     setWidth(breakpoint.base)
-  }, [setBreakpoint, setWidth])
+    setHeight('-')
+  }, [setBreakpoint, setWidth, setHeight])
+
+  const renderViewport = useCallback(() => (
+    <Div
+      xflex="x4"
+      minWidth={42}
+      fontSize="0.75rem"
+      ml={0.5}
+      gap={0.5}
+    >
+      <Input
+        bare
+        noEndIconPadding
+        type="number"
+        width={38}
+        value={width}
+        onChange={event => setWidth(parseFloat(event.target.value))}
+        endIcon="px"
+      />
+      <MdClose />
+      <Input
+        bare
+        noEndIconPadding
+        type="number"
+        placeholder="-"
+        width={38}
+        value={height}
+        onChange={event => {
+          const x = parseFloat(event.target.value)
+
+          setHeight(x === x ? x : '-')
+        }}
+        endIcon={height === '-' ? null : 'px'}
+      />
+    </Div>
+  ), [width, height, setWidth, setHeight])
 
   useEffect(() => {
     if (!workingBreakpoints.length) return
@@ -110,16 +148,7 @@ function BreakpointsButtons() {
           </Button>
         </Tooltip>
       ))}
-      {!!breakpoint && (
-        <Div
-          minWidth={42}
-          fontSize="0.75rem"
-          ml={0.5}
-        >
-          {width}
-          px
-        </Div>
-      )}
+      {!!breakpoint && renderViewport()}
     </Div>
   )
 }

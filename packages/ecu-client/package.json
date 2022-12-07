@@ -15,11 +15,12 @@
   "scripts": {
     "build": "tsc && vite build",
     "build:watch": "vite build --watch",
+    "build:production": "PRODUCTION_BUILD=true npm run build",
     "preview": "vite preview",
     "dev": "nodemon --watch node_modules --ext js,json,css --exec \"npm run build:watch\"",
     "lint": "eslint --quiet src",
     "lint:fix": "eslint --quiet --fix src",
-    "prepublishOnly": "PRODUCTION_BUILD=true npm run build"
+    "prepublishOnly": "npm run build:production"
   },
   "dependencies": {
     "@emotion/cache": "^11.10.5",
@@ -30,7 +31,8 @@
     "@urql/exchange-multipart-fetch": "^1.0.1",
     "@urql/exchange-persisted-fetch": "^2.0.0",
     "css.gg": "^2.0.0",
-    "emoji-picker-react": "^4.4.6",
+    "devices-viewport-size": "^1.0.2",
+    "emoji-picker-react": "^4.4.7",
     "emoji-regex": "^10.2.1",
     "graphql": "^16.6.0",
     "honorable": "^1.0.0-beta.7",
@@ -44,7 +46,7 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-icons": "^4.7.1",
-    "react-router-dom": "^6.4.4",
+    "react-router-dom": "^6.4.5",
     "react-textarea-autosize": "^8.4.0",
     "shortid": "^2.2.16",
     "urql": "^3.0.3"
