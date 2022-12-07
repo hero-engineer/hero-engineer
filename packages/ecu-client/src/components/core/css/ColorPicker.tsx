@@ -9,6 +9,7 @@ import { ColorType } from '@types'
 import { zIndexes } from '@constants'
 
 type ColorPickerPropsType = {
+  noInput?: boolean
   value: string | null
   onChange: (value: string) => void
   size?: number
@@ -19,7 +20,15 @@ type ColorPickerPropsType = {
 
 const prepareVariable = (color: ColorType) => `var(${color.variableName})`
 
-function ColorPicker({ value, onChange, size = 16, pickerLeftOffset = 0, withOverlay = false, colors = [] }: ColorPickerPropsType) {
+function ColorPicker({
+  value,
+  onChange,
+  noInput = false,
+  size = 16,
+  pickerLeftOffset = 0,
+  withOverlay = false,
+  colors = [],
+}: ColorPickerPropsType) {
   const selectedColor = useMemo(() => colors.find(color => prepareVariable(color) === value), [colors, value])
 
   const [isOpen, setIsOpen] = useState(false)
@@ -61,9 +70,9 @@ function ColorPicker({ value, onChange, size = 16, pickerLeftOffset = 0, withOve
         height={size}
         backgroundColor={isNilValue ? 'white' : value}
         cursor="pointer"
-        borderRight="1px solid border"
+        borderRight={noInput ? null : '1px solid border'}
         onClick={() => setIsOpen(true)}
-        mr={0.25}
+        mr={noInput ? 0 : 0.25}
       >
         {isNilValue && (
           <>
@@ -91,7 +100,7 @@ function ColorPicker({ value, onChange, size = 16, pickerLeftOffset = 0, withOve
         )}
       </Div>
     )
-  }, [size, value])
+  }, [size, value, noInput])
 
   useEffect(() => {
     if (!selectedColor) return
@@ -116,19 +125,22 @@ function ColorPicker({ value, onChange, size = 16, pickerLeftOffset = 0, withOve
         position="relative"
         xflex="x4"
       >
-        <Input
-          slim
-          short
-          disabledNoBackground
-          noStartIconPadding
-          width={72}
-          backgroundColor="background"
-          borderTopLeftRadius={0}
-          borderBottomLeftRadius={0}
-          startIcon={renderInputAdornment()}
-          value={selectedColor?.name ?? value}
-          onChange={event => onChange(event.target.value)}
-        />
+        {!noInput && (
+          <Input
+            slim
+            short
+            disabledNoBackground
+            noStartIconPadding
+            width={72}
+            backgroundColor="background"
+            borderTopLeftRadius={0}
+            borderBottomLeftRadius={0}
+            startIcon={renderInputAdornment()}
+            value={selectedColor?.name ?? value}
+            onChange={event => onChange(event.target.value)}
+          />
+        )}
+        {noInput && renderInputAdornment()}
         {isOpen && wrapOutsideClick(
           <Div
             position="absolute"

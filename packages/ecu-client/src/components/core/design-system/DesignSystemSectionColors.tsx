@@ -142,6 +142,7 @@ function ColorItem({ color, onChange }: ColorItemPropsType) {
         elevation={1}
       >
         <ColorPicker
+          noInput
           size={128}
           value={color.value}
           onChange={value => onChange({ ...color, value })}
