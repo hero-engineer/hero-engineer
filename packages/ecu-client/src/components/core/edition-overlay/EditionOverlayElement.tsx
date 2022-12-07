@@ -1,3 +1,5 @@
+import '../../../css/EditionOverlayElement.css'
+
 import { MouseEvent, memo, useCallback, useEffect, useRef } from 'react'
 import { Div } from 'honorable'
 
@@ -115,6 +117,7 @@ function EditionOverlayElement({
           },
         }}
         pointerEvents={isEdited || isAnotherEdited ? 'none' : 'auto'}
+        className="EditionOverlayElement-box"
         onClick={onSelect}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
