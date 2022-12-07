@@ -38,7 +38,7 @@ function removeResetStyles(style: CSSProperties) {
 
   Object.keys(nextStyles).forEach(key => {
     // @ts-expect-error
-    if (nextStyles[key] === cssValueReset) nextStyles[key] = 'unset'
+    if (nextStyles[key] === cssValueReset) delete nextStyles[key] // ... This is not ok
   })
 
   return nextStyles

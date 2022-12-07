@@ -37,7 +37,7 @@ function StylesList({
     >
       <Div
         xflex="x5b"
-        py={0.5}
+        height={30} // To match a ghost button's height
       >
         <StylesAttributeTitle
           attributeNames={[attributeName]}
@@ -45,6 +45,7 @@ function StylesList({
           breakpointCssValues={breakpointCssValues}
           currentBreakpointCssValues={currentBreakpointCssValues}
           onChange={onChange}
+          width="auto"
         >
           {title}
         </StylesAttributeTitle>
@@ -52,10 +53,22 @@ function StylesList({
           xflex="x5"
           cursor="pointer"
           onClick={onAddItem}
+          mr={-0.25}
+          p={0.25}
         >
           <HiPlus />
         </Div>
       </Div>
+      {!!items.length && (
+        <Div
+          xflex="y2s"
+          backgroundColor="background"
+          borderRadius="medium"
+          gap={0.25}
+        >
+          {items}
+        </Div>
+      )}
     </Div>
   )
 }

@@ -66,10 +66,6 @@ const textAligns = [
     name: 'justify',
     Icon: TfiAlignJustify,
   },
-  {
-    name: 'inherit',
-    Icon: () => <>inherit</>,
-  },
 ]
 
 const fontStyles = [
@@ -80,10 +76,6 @@ const fontStyles = [
   {
     name: 'italic',
     Icon: BsTypeItalic,
-  },
-  {
-    name: 'inherit',
-    Icon: () => <>inherit</>,
   },
 ]
 
@@ -104,10 +96,6 @@ const textDecorations = [
     name: 'line-through',
     Icon: RxStrikethrough,
   },
-  {
-    name: 'inherit',
-    Icon: () => <>inherit</>,
-  },
 ]
 
 const textTransforms = [
@@ -127,10 +115,6 @@ const textTransforms = [
     name: 'lowercase',
     Icon: RxLetterCaseLowercase,
   },
-  {
-    name: 'inherit',
-    Icon: () => <>inherit</>,
-  },
 ]
 
 const directions = [
@@ -141,10 +125,6 @@ const directions = [
   {
     name: 'rtl',
     Icon: MdOutlineFormatTextdirectionRToL,
-  },
-  {
-    name: 'inherit',
-    Icon: () => <>inherit</>,
   },
 ]
 
@@ -201,6 +181,23 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
     currentBreakpointCssValues,
     onChange,
   }), [cssValues, breakpointCssValues, currentBreakpointCssValues, onChange])
+
+  const renderInheritButton = useCallback((attributeName: string) => (
+    <>
+      <Div flexGrow />
+      <Tooltip
+        label="Inherit from parent"
+      >
+        <Button
+          ghost
+          toggled={isToggled(attributeName, ['inherit'])}
+          onClick={() => onChange([{ name: attributeName, value: 'inherit' }])}
+        >
+          inherit
+        </Button>
+      </Tooltip>
+    </>
+  ), [isToggled, onChange])
 
   const renderFamilySection = useCallback(() => (
     <Div
@@ -363,17 +360,10 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
           pickerLeftOffset={-29} // Adjusted from sight
           colors={colors}
         />
-        <Button
-          ghost
-          toggled={color === 'inherit'}
-          onClick={() => onChange([{ name: 'color', value: 'inherit' }])}
-          ml={0.25}
-        >
-          inherit
-        </Button>
+        {renderInheritButton('color')}
       </Div>
     )
-  }, [attributeTitleProps, colors, getValue, onChange])
+  }, [attributeTitleProps, colors, renderInheritButton, getValue, onChange])
 
   const renderAlignSection = useCallback(() => (
     <Div
@@ -400,8 +390,9 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
           </Button>
         </Tooltip>
       ))}
+      {renderInheritButton('text-align')}
     </Div>
-  ), [attributeTitleProps, isToggled, onChange])
+  ), [attributeTitleProps, renderInheritButton, isToggled, onChange])
 
   const renderItalicSection = useCallback(() => (
     <Div
@@ -428,8 +419,9 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
           </Button>
         </Tooltip>
       ))}
+      {renderInheritButton('font-style')}
     </Div>
-  ), [attributeTitleProps, isToggled, onChange])
+  ), [attributeTitleProps, renderInheritButton, isToggled, onChange])
 
   const renderDecorationSection = useCallback(() => (
     <Div
@@ -456,8 +448,9 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
           </Button>
         </Tooltip>
       ))}
+      {renderInheritButton('text-decoration')}
     </Div>
-  ), [attributeTitleProps, isToggled, onChange])
+  ), [attributeTitleProps, renderInheritButton, isToggled, onChange])
 
   const renderSpacingSection = useCallback(() => (
     <Div
@@ -471,6 +464,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
         Spacing
       </StylesAttributeTitle>
       <CssValueInput
+        allowInherit
         value={getValue('letter-spacing').toString()}
         onChange={value => onChange([{ name: 'letter-spacing', value }])}
       />
@@ -502,8 +496,9 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
           </Button>
         </Tooltip>
       ))}
+      {renderInheritButton('text-transform')}
     </Div>
-  ), [attributeTitleProps, isToggled, onChange])
+  ), [attributeTitleProps, renderInheritButton, isToggled, onChange])
 
   const renderDirectionSection = useCallback(() => (
     <Div
@@ -530,8 +525,9 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
           </Button>
         </Tooltip>
       ))}
+      {renderInheritButton('direction')}
     </Div>
-  ), [attributeTitleProps, isToggled, onChange])
+  ), [attributeTitleProps, renderInheritButton, isToggled, onChange])
 
   const renderWhiteSpaceSection = useCallback(() => (
     <Div

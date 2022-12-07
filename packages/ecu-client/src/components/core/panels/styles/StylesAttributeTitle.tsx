@@ -21,7 +21,7 @@ function StylesAttributeTitle({
   breakpointCssValues,
   currentBreakpointCssValues,
   attributeNames,
-  minWidth = 52,
+  width = 52,
   children,
   onChange,
   ...props
@@ -39,7 +39,9 @@ function StylesAttributeTitle({
     <Div
       xflex="x4"
       position="relative"
-      minWidth={minWidth}
+      width={width}
+      minWidth={width}
+      maxWidth={width}
       color={color}
       textDecoration={isResetable ? 'underline' : 'none'}
       textDecorationThickness={0.5}

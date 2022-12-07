@@ -71,7 +71,7 @@ function StylesSubSectionSize({ cssValues, breakpointCssValues, currentBreakpoin
     >
       <StylesAttributeTitle
         attributeNames={[attributeName]}
-        minWidth={42}
+        width={42}
         {...attributeTitleProps}
       >
         {label}

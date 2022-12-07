@@ -14,12 +14,13 @@ type StylesSubSectionSpacingPropsType = {
   onChange: (attributes: CssAttributeType[]) => void,
   cssValues: CssValuesType
   breakpointCssValues: CssValuesType
+  // eslint-disable-next-line react/no-unused-prop-types
   currentBreakpointCssValues: CssValuesType
   disabled: boolean
 }
 
-const baseHeight = 128 + 32 + 8 + 2
-const borderSizeDivider = 3.58
+const baseHeight = 128
+const borderSizeDivider = 3.45
 const spacingEditorPadding = 8
 
 const attributeNames = [
@@ -33,7 +34,7 @@ const attributeNames = [
   'padding-left',
 ]
 
-function StylesSubSectionSpacing({ cssValues, breakpointCssValues, currentBreakpointCssValues, onChange, disabled }: StylesSubSectionSpacingPropsType) {
+function StylesSubSectionSpacing({ cssValues, breakpointCssValues, onChange, disabled }: StylesSubSectionSpacingPropsType) {
   const inputMountNodeRef = useRef<HTMLDivElement>(null)
 
   useRefresh()
