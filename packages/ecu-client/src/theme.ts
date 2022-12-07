@@ -309,7 +309,10 @@ export default mergeTheme(defaultTheme, {
         paddingRight: 0,
       },
       ({ noChildrenPadding }: any) => noChildrenPadding && {
+        paddingTop: 0,
         paddingBottom: 0,
+        paddingLeft: 0,
+        paddingRight: 0,
       },
       ({ smallChildrenPadding }: any) => smallChildrenPadding && {
         paddingTop: 8,

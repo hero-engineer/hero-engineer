@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo } from 'react'
 import { Accordion, Button, Div, MenuItem, Select, Tooltip } from 'honorable'
 import { TfiAlignCenter, TfiAlignJustify, TfiAlignLeft, TfiAlignRight } from 'react-icons/tfi'
 import { BsTypeItalic } from 'react-icons/bs'
@@ -22,8 +22,9 @@ import ColorPicker from '../../css/ColorPicker'
 import CssValueInput from '../../css/CssValueInput'
 
 import StylesDisabledOverlay from './StylesDisabledOverlay'
-import StylesAttributeTitle from './StylesAttributeTitle'
 import StylesSubSectionTitle from './StylesSubSectionTitle'
+import StylesAttributeTitle from './StylesAttributeTitle'
+import StylesList from './StylesList'
 
 type StylesSubSectionTypographyPropsType = {
   cssValues: CssValuesType
@@ -564,6 +565,20 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
     </Div>
   ), [attributeTitleProps, getValue, onChange])
 
+  const renderShadowSection = useCallback(() => {
+    const items: ReactNode[] = []
+
+    return (
+      <StylesList
+        title="Text shadow"
+        attributeName="text-shadow"
+        items={items}
+        onAddItem={() => {}}
+        {...attributeTitleProps}
+      />
+    )
+  }, [attributeTitleProps])
+
   // Find the closest weight when the font change
   useEffect(() => {
     const weight = getValue('font-weight').toString()
@@ -586,7 +601,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
       backgroundTitle
       smallTitle
       smallTitlePadding
-      smallChildrenPadding
+      noChildrenPadding
       childrenPositionRelative
       title={(
         <StylesSubSectionTitle
@@ -603,6 +618,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
       <Div
         xflex="y2s"
         gap={0.5}
+        p={0.5}
       >
         {renderFamilySection()}
         {renderWeightsSection()}
@@ -616,6 +632,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
         {renderDirectionSection()}
         {renderWhiteSpaceSection()}
       </Div>
+      {renderShadowSection()}
       {disabled && <StylesDisabledOverlay />}
     </Accordion>
   )
