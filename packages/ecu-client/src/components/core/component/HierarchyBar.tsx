@@ -116,7 +116,7 @@ function HierarchyBar() {
       fontSize="0.75rem"
       userSelect="none"
       backgroundColor="background-light"
-      borderTop="1px solid border"
+      borderBottom="1px solid border"
       gap={0.25}
       px={0.5}
     >

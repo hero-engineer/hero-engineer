@@ -48,7 +48,7 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
   const { componentAddress = '' } = useParams()
 
   const { totalHierarchy } = useContext(HierarchyContext)
-  const { hierarchyId, componentDelta, isEdited, setIsEdited } = useContext(EditionContext)
+  const { hierarchyId, componentDelta, isEdited } = useContext(EditionContext)
   const { elementRegistry } = useContext(EditionOverlayContext)
   const { isInteractiveMode } = useContext(IsInteractiveModeContext)
   const { isComponentRefreshing } = useContext(IsComponentRefreshingContext)
@@ -243,6 +243,8 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
   ])
 
   useEffect(() => {
+    if (isDragging) return
+
     const resizeObservers: ResizeObserver[] = []
     const mutationObservers: MutationObserver[] = []
 
@@ -274,35 +276,35 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
         observer.disconnect()
       }
     }
-  }, [elementRegistry])
+  }, [isDragging, elementRegistry])
 
-  useEffect(() => {
-    if (!isEdited) return
+  // useEffect(() => {
+  //   if (!isEdited) return
 
-    const editedElement = elementRegistry[hierarchyId]
+  //   const editedElement = elementRegistry[hierarchyId]
 
-    if (!editedElement) return
+  //   if (!editedElement) return
 
-    let firstTrigger = true
+  //   let firstTrigger = true
 
-    function handleMouseClick(event: MouseEvent) {
-      if (firstTrigger) {
-        firstTrigger = false
+  //   function handleMouseClick(event: MouseEvent) {
+  //     if (firstTrigger) {
+  //       firstTrigger = false
 
-        return
-      }
+  //       return
+  //     }
 
-      if (editedElement?.contains(event.target as Node)) return
+  //     if (editedElement?.contains(event.target as Node)) return
 
-      setIsEdited(false)
-    }
+  //     setIsEdited(false)
+  //   }
 
-    window.addEventListener('click', handleMouseClick)
+  //   window.addEventListener('click', handleMouseClick)
 
-    return () => {
-      window.removeEventListener('click', handleMouseClick)
-    }
-  }, [elementRegistry, hierarchyId, isEdited, setIsEdited])
+  //   return () => {
+  //     window.removeEventListener('click', handleMouseClick)
+  //   }
+  // }, [elementRegistry, hierarchyId, isEdited, setIsEdited])
 
   useEffect(() => {
     if (!helperText) return

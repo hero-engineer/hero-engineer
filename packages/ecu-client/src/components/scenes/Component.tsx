@@ -115,12 +115,12 @@ function Component() {
           maxHeight="100%"
           overflow="hidden"
         >
+          <HierarchyBar />
+          <WidthBar />
           <ComponentWindow
             componentPath={component.payload.path}
             decoratorPaths={decoratorPaths}
           />
-          <HierarchyBar />
-          <WidthBar />
         </Div>
         {!isInteractiveMode && (
           <RetractablePanel
