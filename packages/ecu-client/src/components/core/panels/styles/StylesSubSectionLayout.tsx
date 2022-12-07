@@ -14,19 +14,19 @@ import {
   MdOutlineSwapHoriz,
 } from 'react-icons/md'
 
-import CssValueInput from '../../css/CssValueInput'
-
-import GridModal from './GridModal'
-import StylesSubSectionTitle from './StylesSubSectionTitle'
-import StylesSubSectionAttributeTitle from './StylesSubSectionAttributeTitle'
-import StylesSubSectionDisabledOverlay from './StylesSubSectionDisabledOverlay'
-
 import { CssAttributeType, CssValuesType } from '@types'
 
 import { cssAttributesMap } from '@constants'
 
 import usePersistedState from '@hooks/usePersistedState'
 import useStylesSubSectionHelpers from '@hooks/useStylesSubSectionHelpers'
+
+import CssValueInput from '../../css/CssValueInput'
+
+import GridModal from './GridModal'
+import StylesSubSectionTitle from './StylesSubSectionTitle'
+import StylesAttributeTitle from './StylesAttributeTitle'
+import StylesDisabledOverlay from './StylesDisabledOverlay'
 
 type StylesSubSectionLayoutPropsType = {
   cssValues: CssValuesType
@@ -252,12 +252,12 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
       xflex="x4s"
       fontSize="0.75rem"
     >
-      <StylesSubSectionAttributeTitle
+      <StylesAttributeTitle
         attributeNames={['display']}
         {...attributeTitleProps}
       >
         Display
-      </StylesSubSectionAttributeTitle>
+      </StylesAttributeTitle>
       {displays.map(({ name, label, Icon }) => (
         <Tooltip
           key={name}
@@ -283,12 +283,12 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
         xflex="x4s"
         fontSize="0.75rem"
       >
-        <StylesSubSectionAttributeTitle
+        <StylesAttributeTitle
           attributeNames={['flex-direction']}
           {...attributeTitleProps}
         >
           Direction
-        </StylesSubSectionAttributeTitle>
+        </StylesAttributeTitle>
         <Button
           ghost
           toggled={isToggled('flex-direction', ['row', 'row-reverse'])}
@@ -323,13 +323,13 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
       xflex="x1"
       fontSize="0.75rem"
     >
-      <StylesSubSectionAttributeTitle
+      <StylesAttributeTitle
         attributeNames={['align-items']}
         pt={0.25 / 2}
         {...attributeTitleProps}
       >
         Align
-      </StylesSubSectionAttributeTitle>
+      </StylesAttributeTitle>
       <Div
         display="grid"
         gridTemplateColumns="repeat(8, minmax(0, 1fr))"
@@ -362,13 +362,13 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
       xflex="x1"
       fontSize="0.75rem"
     >
-      <StylesSubSectionAttributeTitle
+      <StylesAttributeTitle
         attributeNames={['justify-content']}
         pt={0.25 / 2}
         {...attributeTitleProps}
       >
         Justify
-      </StylesSubSectionAttributeTitle>
+      </StylesAttributeTitle>
       <Div
         display="grid"
         gridTemplateColumns="repeat(8, minmax(0, 1fr))"
@@ -402,13 +402,13 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
       fontSize="0.75rem"
       my={0.25}
     >
-      <StylesSubSectionAttributeTitle
+      <StylesAttributeTitle
         attributeNames={['column-gap', 'row-gap']}
         pt={0.25 / 2}
         {...attributeTitleProps}
       >
         Gap
-      </StylesSubSectionAttributeTitle>
+      </StylesAttributeTitle>
       <Div
         xflex="x4"
         gap={0.5}
@@ -450,12 +450,12 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
         minHeight={30} // For flex-wrap button not to change the layout
         fontSize="0.75rem"
       >
-        <StylesSubSectionAttributeTitle
+        <StylesAttributeTitle
           attributeNames={['flex-wrap']}
           {...attributeTitleProps}
         >
           Wrap
-        </StylesSubSectionAttributeTitle>
+        </StylesAttributeTitle>
         <Button
           ghost
           toggled={isToggled('flex-wrap', ['wrap', 'wrap-reverse'])}
@@ -488,13 +488,13 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
       xflex="x1"
       fontSize="0.75rem"
     >
-      <StylesSubSectionAttributeTitle
+      <StylesAttributeTitle
         attributeNames={['align-content']}
         pt={0.25 / 2}
         {...attributeTitleProps}
       >
         Align
-      </StylesSubSectionAttributeTitle>
+      </StylesAttributeTitle>
       <Div
         display="grid"
         gridTemplateColumns="repeat(8, minmax(0, 1fr))"
@@ -552,13 +552,13 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
       xflex="x1"
       fontSize="0.75rem"
     >
-      <StylesSubSectionAttributeTitle
+      <StylesAttributeTitle
         attributeNames={['align-items', 'justify-items']}
         pt={0.5}
         {...attributeTitleProps}
       >
         Align
-      </StylesSubSectionAttributeTitle>
+      </StylesAttributeTitle>
       <Div
         display="grid"
         gridTemplateColumns="repeat(5, minmax(0, 1fr))"
@@ -608,13 +608,13 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
       xflex="x1"
       fontSize="0.75rem"
     >
-      <StylesSubSectionAttributeTitle
+      <StylesAttributeTitle
         attributeNames={['align-content', 'justify-content']}
         pt={0.5}
         {...attributeTitleProps}
       >
         Distribute
-      </StylesSubSectionAttributeTitle>
+      </StylesAttributeTitle>
       <Div
         display="grid"
         gridTemplateColumns="repeat(8, minmax(0, 1fr))"
@@ -702,7 +702,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
         {isGrid && renderGridJustifyEditor()}
         {isGrid && renderGapEditor()}
       </Div>
-      {disabled && <StylesSubSectionDisabledOverlay />}
+      {disabled && <StylesDisabledOverlay />}
     </Accordion>
   )
 }

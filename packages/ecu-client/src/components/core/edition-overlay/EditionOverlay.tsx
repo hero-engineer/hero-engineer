@@ -2,8 +2,6 @@ import { Fragment, MouseEvent as ReactMouseEvent, ReactNode, memo, useCallback, 
 import { useParams } from 'react-router-dom'
 import { Div } from 'honorable'
 
-import EditionOverlayElement from './EditionOverlayElement'
-
 import { HierarchyItemType } from '@types'
 
 import { zIndexes } from '@constants'
@@ -19,6 +17,8 @@ import useHierarchySelection from '@hooks/useHierarchySelection'
 
 import getComponentRootHierarchyIds from '@utils/getComponentRootHierarchyIds'
 import findHierarchyIdAndComponentDelta from '@utils/findHierarchyIdAndComponentDelta'
+
+import EditionOverlayElement from './EditionOverlayElement'
 
 type LimitedDOMRect = Pick<DOMRect, 'top' | 'left' | 'width' | 'height'>
 

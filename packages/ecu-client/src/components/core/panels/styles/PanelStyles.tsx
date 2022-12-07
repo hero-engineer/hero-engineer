@@ -2,13 +2,6 @@ import { memo, useCallback, useContext, useEffect, useMemo, useState } from 'rea
 import { Link, useParams } from 'react-router-dom'
 import { Button, Div } from 'honorable'
 
-import CssClassesSelector from './CssClassesSelector'
-import StylesSubSectionTypography from './StylesSubSectionTypography'
-import StylesSubSectionSpacing from './StylesSubSectionSpacing'
-import StylesSubSectionLayout from './StylesSubSectionLayout'
-import StylesSubSectionSize from './StylesSubSectionSize'
-import StylesSubSectionPosition from './StylesSubSectionPosition'
-
 import { CssAttributeType, CssValuesType } from '@types'
 
 import { refetchKeys } from '@constants'
@@ -33,6 +26,13 @@ import getLastComponentHierarchyItem from '@utils/getLastComponentHierarchyItem'
 import convertCssAttributeNameToJs from '@utils/convertCssAttributeNameToJs'
 import filterClassesByClassNamesAndMedias from '@utils/filterClassesByClassNamesAndMedias'
 import areAttributesValid from '@utils/areAttributesValid'
+
+import StylesSubSectionPosition from './StylesSubSectionPosition'
+import StylesSubSectionSize from './StylesSubSectionSize'
+import StylesSubSectionLayout from './StylesSubSectionLayout'
+import StylesSubSectionSpacing from './StylesSubSectionSpacing'
+import StylesSubSectionTypography from './StylesSubSectionTypography'
+import CssClassesSelector from './CssClassesSelector'
 
 // The styles section
 // Displayed in the right panel

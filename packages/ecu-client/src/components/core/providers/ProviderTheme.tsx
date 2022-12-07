@@ -2,10 +2,10 @@ import { ReactNode, useContext } from 'react'
 import { useMatch } from 'react-router-dom'
 import { CssBaseline, ThemeProvider, mergeTheme } from 'honorable'
 
+import ThemeModeContext from '@contexts/ThemeModeContext'
+
 import theme from '../../../theme'
 import themeComponent from '../../../themeComponent'
-
-import ThemeModeContext from '@contexts/ThemeModeContext'
 
 type EcuThemeProviderPropsType = {
   children: ReactNode

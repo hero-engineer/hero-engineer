@@ -1,14 +1,14 @@
 import { useRef } from 'react'
 import { Accordion } from 'honorable'
 
-import StylesSubSectionTitle from './StylesSubSectionTitle'
-import SpacingEditor from './SpacingEditor'
-import StylesSubSectionDisabledOverlay from './StylesSubSectionDisabledOverlay'
-
 import { CssAttributeType, CssValuesType } from '@types'
 
 import useRefresh from '@hooks/useRefresh'
 import usePersistedState from '@hooks/usePersistedState'
+
+import StylesSubSectionTitle from './StylesSubSectionTitle'
+import SpacingEditor from './SpacingEditor'
+import StylesDisabledOverlay from './StylesDisabledOverlay'
 
 type StylesSubSectionSpacingPropsType = {
   onChange: (attributes: CssAttributeType[]) => void,
@@ -84,7 +84,7 @@ function StylesSubSectionSpacing({ cssValues, breakpointCssValues, currentBreakp
         />
       </SpacingEditor>
       <div ref={inputMountNodeRef} />
-      {disabled && <StylesSubSectionDisabledOverlay />}
+      {disabled && <StylesDisabledOverlay />}
     </Accordion>
   )
 }

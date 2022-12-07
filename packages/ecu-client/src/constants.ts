@@ -1,6 +1,6 @@
-import splitSpacingValue from './utils/splitSpacingValue'
-
 import { CSsAttributesMapType, CssValueType, HierarchyPosition } from '@types'
+
+import splitSpacingValue from './utils/splitSpacingValue'
 
 export const zIndexes = {
   tooltip: 99999999999, // 11 9
@@ -102,6 +102,7 @@ const cssFontStyleValues = ['normal', 'italic', 'oblique']
 const cssTextAlignValues = ['left', 'right', 'center', 'justify', 'justify-all', 'start', 'end', 'match-parent']
 const cssTextDecorationValues = ['none', 'underline', 'overline', 'line-through', 'blink']
 const cssTextTransformValues = ['none', 'capitalize', 'uppercase', 'lowercase', 'full-width', 'full-size-kana']
+const cssDirectionValues = ['ltr', 'rtl']
 
 function extractSpacing(value: CssValueType, index: number): CssValueType {
   if (typeof value === 'number') return value
@@ -429,6 +430,11 @@ export const cssAttributesMap: CSsAttributesMapType = {
     attributes: ['color'],
     defaultValue: 'inherit',
     isValueValid: value => typeof value === 'string',
+  },
+  direction: {
+    attributes: ['direction'],
+    defaultValue: 'inherit',
+    isValueValid: value => typeof value === 'string' && cssDirectionValues.includes(value) || value === 'inherit',
   },
 } as const
 

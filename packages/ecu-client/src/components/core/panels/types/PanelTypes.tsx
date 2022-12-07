@@ -1,9 +1,9 @@
 import { memo } from 'react'
 import { Accordion, Div } from 'honorable'
 
-import ComponentTypesEditor from './ComponentTypesEditor'
-
 import usePersistedState from '@hooks/usePersistedState'
+
+import ComponentTypesEditor from './ComponentTypesEditor'
 
 // The component types section
 // Displayed in the right panel

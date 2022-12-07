@@ -5,8 +5,6 @@ import createEmojiRegex from 'emoji-regex'
 import { MdOutlineClose } from 'react-icons/md'
 import { HiOutlineFaceSmile } from 'react-icons/hi2'
 
-import EmojiPickerBase from '../../emoji/EmojiPickerBase'
-
 import { CssClassType } from '@types'
 
 import { refetchKeys, zIndexes } from '@constants'
@@ -20,6 +18,8 @@ import useMutation from '@hooks/useMutation'
 import useRefetch from '@hooks/useRefetch'
 
 import extractClassNamesFromSelector from '@utils/extractClassNamesFromSelector'
+
+import EmojiPickerBase from '../../emoji/EmojiPickerBase'
 
 type CssClassesSelector = {
   allClasses: CssClassType[]

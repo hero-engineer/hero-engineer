@@ -16,7 +16,7 @@ type StylesSubSectionAttributeTitlePropsType = DivProps & {
   onChange: (attributes: CssAttributeType[]) => void
 }
 
-function StylesSubSectionAttributeTitle({
+function StylesAttributeTitle({
   cssValues,
   breakpointCssValues,
   currentBreakpointCssValues,
@@ -75,4 +75,4 @@ function StylesSubSectionAttributeTitle({
   )
 }
 
-export default StylesSubSectionAttributeTitle
+export default StylesAttributeTitle

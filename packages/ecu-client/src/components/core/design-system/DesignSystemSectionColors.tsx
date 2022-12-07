@@ -2,8 +2,6 @@ import { useCallback, useEffect, useState } from 'react'
 import { Button, Div, H2, Input } from 'honorable'
 import shortId from 'shortid'
 
-import ColorPicker from '../css/ColorPicker'
-
 import { ColorType } from '@types'
 
 import { refetchKeys } from '@constants'
@@ -13,6 +11,8 @@ import { ColorsQuery, ColorsQueryDataType, UpdateColorsMutation, UpdateColorsMut
 import useQuery from '@hooks/useQuery'
 import useRefetch from '@hooks/useRefetch'
 import useMutation from '@hooks/useMutation'
+
+import ColorPicker from '../css/ColorPicker'
 
 function DesignSystemSectionColors() {
   const [colors, setColors] = useState<ColorType[]>([])

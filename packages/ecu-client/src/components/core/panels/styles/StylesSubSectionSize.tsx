@@ -2,18 +2,18 @@ import { useCallback, useMemo } from 'react'
 import { Accordion, Button, Div, Tooltip } from 'honorable'
 import { AiOutlineColumnHeight, AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 
-import CssValueInput from '../../css/CssValueInput'
-
-import StylesSubSectionTitle from './StylesSubSectionTitle'
-import StylesSubSectionAttributeTitle from './StylesSubSectionAttributeTitle'
-import StylesSubSectionDisabledOverlay from './StylesSubSectionDisabledOverlay'
-
 import { CssAttributeType, CssValuesType } from '@types'
 
 import usePersistedState from '@hooks/usePersistedState'
 import useStylesSubSectionHelpers from '@hooks/useStylesSubSectionHelpers'
 
 import capitalize from '@utils/capitalize'
+
+import CssValueInput from '../../css/CssValueInput'
+
+import StylesSubSectionTitle from './StylesSubSectionTitle'
+import StylesAttributeTitle from './StylesAttributeTitle'
+import StylesDisabledOverlay from './StylesDisabledOverlay'
 
 type StylesSubSectionSizePropsType = {
   cssValues: CssValuesType
@@ -69,13 +69,13 @@ function StylesSubSectionSize({ cssValues, breakpointCssValues, currentBreakpoin
       xflex="x4"
       fontSize="0.75rem"
     >
-      <StylesSubSectionAttributeTitle
+      <StylesAttributeTitle
         attributeNames={[attributeName]}
         minWidth={42}
         {...attributeTitleProps}
       >
         {label}
-      </StylesSubSectionAttributeTitle>
+      </StylesAttributeTitle>
       <CssValueInput
         value={getValue(attributeName).toString()}
         onChange={value => onChange([{ name: attributeName, value }])}
@@ -99,12 +99,12 @@ function StylesSubSectionSize({ cssValues, breakpointCssValues, currentBreakpoin
       xflex="x4"
       fontSize="0.75rem"
     >
-      <StylesSubSectionAttributeTitle
+      <StylesAttributeTitle
         attributeNames={['overflow']}
         {...attributeTitleProps}
       >
         Overflow
-      </StylesSubSectionAttributeTitle>
+      </StylesAttributeTitle>
       {overflows.map(({ name, Icon }) => (
         <Tooltip
           key={name}
@@ -152,7 +152,7 @@ function StylesSubSectionSize({ cssValues, breakpointCssValues, currentBreakpoin
         </Div>
         {renderOverflowSection()}
       </Div>
-      {disabled && <StylesSubSectionDisabledOverlay />}
+      {disabled && <StylesDisabledOverlay />}
     </Accordion>
   )
 }

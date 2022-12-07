@@ -4,8 +4,6 @@ import { Provider as GraphqlProvider } from 'urql'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
-import client from '../../../client'
-
 import { BreakpointType, HierarchyItemType, SnackBarItemType } from '@types'
 
 import ModeContext from '@contexts/ModeContext'
@@ -19,6 +17,8 @@ import IsInteractiveModeContext, { IsInteractiveModeContextType } from '@context
 
 import useCreateRefetchRegistry from '@hooks/useCreateRefetchRegistry'
 import usePersistedState from '@hooks/usePersistedState'
+
+import client from '../../../client'
 
 type MasterProvidersPropsType = {
   mode: string

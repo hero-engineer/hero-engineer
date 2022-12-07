@@ -11,6 +11,12 @@
       "error",
       {
         "newlines-between": "always",
+        "groups": [
+          "external",
+          "internal",
+          "parent",
+          "sibling"
+        ],
         "pathGroupsExcludedImportTypes": [],
         "pathGroups": [
           {

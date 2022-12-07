@@ -2,15 +2,8 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { Accordion, Button, Div, MenuItem, Select, Tooltip } from 'honorable'
 import { TfiAlignCenter, TfiAlignJustify, TfiAlignLeft, TfiAlignRight } from 'react-icons/tfi'
 import { BsTypeItalic } from 'react-icons/bs'
-import { RxOverline, RxStrikethrough, RxUnderline } from 'react-icons/rx'
-import { MdClose } from 'react-icons/md'
-
-import CssValueInput from '../../css/CssValueInput'
-import ColorPicker from '../../css/ColorPicker'
-
-import StylesSubSectionTitle from './StylesSubSectionTitle'
-import StylesSubSectionAttributeTitle from './StylesSubSectionAttributeTitle'
-import StylesSubSectionDisabledOverlay from './StylesSubSectionDisabledOverlay'
+import { RxLetterCaseCapitalize, RxLetterCaseLowercase, RxLetterCaseUppercase, RxOverline, RxStrikethrough, RxUnderline } from 'react-icons/rx'
+import { MdClose, MdOutlineFormatTextdirectionLToR, MdOutlineFormatTextdirectionRToL } from 'react-icons/md'
 
 import { CssAttributeType, CssValuesType } from '@types'
 
@@ -24,6 +17,13 @@ import usePersistedState from '@hooks/usePersistedState'
 import useStylesSubSectionHelpers from '@hooks/useStylesSubSectionHelpers'
 
 import capitalize from '@utils/capitalize'
+
+import ColorPicker from '../../css/ColorPicker'
+import CssValueInput from '../../css/CssValueInput'
+
+import StylesDisabledOverlay from './StylesDisabledOverlay'
+import StylesAttributeTitle from './StylesAttributeTitle'
+import StylesSubSectionTitle from './StylesSubSectionTitle'
 
 type StylesSubSectionTypographyPropsType = {
   cssValues: CssValuesType
@@ -109,6 +109,53 @@ const textDecorations = [
   },
 ]
 
+const textTransforms = [
+  {
+    name: 'none',
+    Icon: MdClose,
+  },
+  {
+    name: 'uppercase',
+    Icon: RxLetterCaseUppercase,
+  },
+  {
+    name: 'capitalize',
+    Icon: RxLetterCaseCapitalize,
+  },
+  {
+    name: 'lowercase',
+    Icon: RxLetterCaseLowercase,
+  },
+  {
+    name: 'inherit',
+    Icon: () => <>inherit</>,
+  },
+]
+
+const directions = [
+  {
+    name: 'ltr',
+    Icon: MdOutlineFormatTextdirectionLToR,
+  },
+  {
+    name: 'rtl',
+    Icon: MdOutlineFormatTextdirectionRToL,
+  },
+  {
+    name: 'inherit',
+    Icon: () => <>inherit</>,
+  },
+]
+
+const whiteSpaces = [
+  'normal',
+  'nowrap',
+  'pre',
+  'pre-wrap',
+  'pre-line',
+  'break-spaces',
+]
+
 const defaultWeights = [100, 200, 300, 400, 500, 600, 700, 800, 900]
 
 const prepareFontFamily = (fontName: string) => fontName.includes(' ') ? `"${fontName}", sans-serif` : `${fontName}, sans-serif`
@@ -159,12 +206,12 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
       xflex="x4"
       fontSize="0.75rem"
     >
-      <StylesSubSectionAttributeTitle
+      <StylesAttributeTitle
         attributeNames={['font-family']}
         {...attributeTitleProps}
       >
         Typeface
-      </StylesSubSectionAttributeTitle>
+      </StylesAttributeTitle>
       <Select
         tiny
         menuOnTop
@@ -228,18 +275,17 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
       xflex="x4"
       fontSize="0.75rem"
     >
-      <StylesSubSectionAttributeTitle
+      <StylesAttributeTitle
         attributeNames={['font-weight']}
         {...attributeTitleProps}
       >
         Weight
-      </StylesSubSectionAttributeTitle>
+      </StylesAttributeTitle>
       <Select
         tiny
         menuOnTop
         value={getValue('font-weight')}
-        // @ts-expect-error
-        onChange={event => console.log(event.target.value) || onChange([{ name: 'font-weight', value: event.target.value }])}
+        onChange={event => onChange([{ name: 'font-weight', value: event.target.value }])}
       >
         <MenuItem value="inherit">
           inherit
@@ -262,12 +308,12 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
         xflex="x4"
         fontSize="0.75rem"
       >
-        <StylesSubSectionAttributeTitle
+        <StylesAttributeTitle
           attributeNames={['font-size']}
           {...attributeTitleProps}
         >
           Size
-        </StylesSubSectionAttributeTitle>
+        </StylesAttributeTitle>
         <CssValueInput
           allowInherit
           onChange={value => onChange([{ name: 'font-size', value }])}
@@ -278,13 +324,13 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
         xflex="x4"
         fontSize="0.75rem"
       >
-        <StylesSubSectionAttributeTitle
+        <StylesAttributeTitle
           attributeNames={['line-height']}
           minWidth={46}
           {...attributeTitleProps}
         >
           Height
-        </StylesSubSectionAttributeTitle>
+        </StylesAttributeTitle>
         <CssValueInput
           allowInherit
           onChange={value => onChange([{ name: 'line-height', value }])}
@@ -302,12 +348,12 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
         xflex="x4"
         fontSize="0.75rem"
       >
-        <StylesSubSectionAttributeTitle
+        <StylesAttributeTitle
           attributeNames={['color']}
           {...attributeTitleProps}
         >
           Color
-        </StylesSubSectionAttributeTitle>
+        </StylesAttributeTitle>
         <ColorPicker
           withOverlay
           value={color === 'inherit' ? null : color}
@@ -333,12 +379,12 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
       xflex="x4"
       fontSize="0.75rem"
     >
-      <StylesSubSectionAttributeTitle
+      <StylesAttributeTitle
         attributeNames={['text-align']}
         {...attributeTitleProps}
       >
         Align
-      </StylesSubSectionAttributeTitle>
+      </StylesAttributeTitle>
       {textAligns.map(({ name, Icon }) => (
         <Tooltip
           key={name}
@@ -361,12 +407,12 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
       xflex="x4"
       fontSize="0.75rem"
     >
-      <StylesSubSectionAttributeTitle
+      <StylesAttributeTitle
         attributeNames={['font-style']}
         {...attributeTitleProps}
       >
         Italic
-      </StylesSubSectionAttributeTitle>
+      </StylesAttributeTitle>
       {fontStyles.map(({ name, Icon }) => (
         <Tooltip
           key={name}
@@ -389,12 +435,12 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
       xflex="x4"
       fontSize="0.75rem"
     >
-      <StylesSubSectionAttributeTitle
+      <StylesAttributeTitle
         attributeNames={['text-decoration']}
         {...attributeTitleProps}
       >
         Line
-      </StylesSubSectionAttributeTitle>
+      </StylesAttributeTitle>
       {textDecorations.map(({ name, Icon }) => (
         <Tooltip
           key={name}
@@ -412,6 +458,112 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
     </Div>
   ), [attributeTitleProps, isToggled, onChange])
 
+  const renderSpacingSection = useCallback(() => (
+    <Div
+      xflex="x4"
+      fontSize="0.75rem"
+    >
+      <StylesAttributeTitle
+        attributeNames={['letter-spacing']}
+        {...attributeTitleProps}
+      >
+        Spacing
+      </StylesAttributeTitle>
+      <CssValueInput
+        value={getValue('letter-spacing').toString()}
+        onChange={value => onChange([{ name: 'letter-spacing', value }])}
+      />
+    </Div>
+  ), [attributeTitleProps, getValue, onChange])
+
+  const renderTransformSection = useCallback(() => (
+    <Div
+      xflex="x4"
+      fontSize="0.75rem"
+    >
+      <StylesAttributeTitle
+        attributeNames={['text-transform']}
+        {...attributeTitleProps}
+      >
+        Case
+      </StylesAttributeTitle>
+      {textTransforms.map(({ name, Icon }) => (
+        <Tooltip
+          key={name}
+          label={capitalize(name)}
+        >
+          <Button
+            ghost
+            toggled={isToggled('text-transform', [name])}
+            onClick={() => onChange([{ name: 'text-transform', value: name }])}
+          >
+            <Icon />
+          </Button>
+        </Tooltip>
+      ))}
+    </Div>
+  ), [attributeTitleProps, isToggled, onChange])
+
+  const renderDirectionSection = useCallback(() => (
+    <Div
+      xflex="x4"
+      fontSize="0.75rem"
+    >
+      <StylesAttributeTitle
+        attributeNames={['direction']}
+        {...attributeTitleProps}
+      >
+        Direction
+      </StylesAttributeTitle>
+      {directions.map(({ name, Icon }) => (
+        <Tooltip
+          key={name}
+          label={capitalize(name)}
+        >
+          <Button
+            ghost
+            toggled={isToggled('direction', [name])}
+            onClick={() => onChange([{ name: 'direction', value: name }])}
+          >
+            <Icon />
+          </Button>
+        </Tooltip>
+      ))}
+    </Div>
+  ), [attributeTitleProps, isToggled, onChange])
+
+  const renderWhiteSpaceSection = useCallback(() => (
+    <Div
+      xflex="x4"
+      fontSize="0.75rem"
+    >
+      <StylesAttributeTitle
+        attributeNames={['white-space']}
+        {...attributeTitleProps}
+      >
+        Breaking
+      </StylesAttributeTitle>
+      <Select
+        tiny
+        menuOnTop
+        value={getValue('white-space')}
+        onChange={event => onChange([{ name: 'white-space', value: event.target.value }])}
+      >
+        <MenuItem value="inherit">
+          inherit
+        </MenuItem>
+        {whiteSpaces.map(whiteSpace => (
+          <MenuItem
+            key={whiteSpace}
+            value={whiteSpace}
+          >
+            {whiteSpace}
+          </MenuItem>
+        ))}
+      </Select>
+    </Div>
+  ), [attributeTitleProps, getValue, onChange])
+
   // Find the closest weight when the font change
   useEffect(() => {
     const weight = getValue('font-weight').toString()
@@ -424,7 +576,6 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
 
     const closestWeight = weights.reduce((previous, current) => Math.abs(current - numericWeight) < Math.abs(previous - numericWeight) ? current : previous, Math.max(...weights))
 
-    // Infinity should never happen
     onChange([{ name: 'font-weight', value: closestWeight }])
   // Add fontFamily as the trigger
   }, [fontFamily, weights, getValue, onChange])
@@ -460,8 +611,12 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
         {renderAlignSection()}
         {renderItalicSection()}
         {renderDecorationSection()}
+        {renderSpacingSection()}
+        {renderTransformSection()}
+        {renderDirectionSection()}
+        {renderWhiteSpaceSection()}
       </Div>
-      {disabled && <StylesSubSectionDisabledOverlay />}
+      {disabled && <StylesDisabledOverlay />}
     </Accordion>
   )
 }

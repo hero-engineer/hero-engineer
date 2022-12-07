@@ -1,9 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 
-import Layout from '../layout/Layout'
-import ResponsiveLayout from '../layout/ResponsiveLayout'
-import ProviderTheme from '../providers/ProviderTheme'
-
 import Home from '@scenes/Home'
 import Component from '@scenes/Component'
 import Components from '@scenes/Components'
@@ -14,6 +10,10 @@ import DesignFavicon from '@scenes/DesignFavicon'
 import Packages from '@scenes/Packages'
 import Settings from '@scenes/Settings'
 import SettingsGeneral from '@scenes/SettingsGeneral'
+
+import ProviderTheme from '../providers/ProviderTheme'
+import ResponsiveLayout from '../layout/ResponsiveLayout'
+import Layout from '../layout/Layout'
 
 // The Ecu router
 function Router({ children }: any) {

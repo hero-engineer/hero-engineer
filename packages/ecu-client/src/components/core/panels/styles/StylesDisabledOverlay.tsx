@@ -1,7 +1,7 @@
 import { Div } from 'honorable'
 
 // An overlay to block editing whenno classNAme is selected
-function StylesSubSectionDisabledOverlay() {
+function StylesDisabledOverlay() {
   return (
     <Div
       position="absolute"
@@ -16,4 +16,4 @@ function StylesSubSectionDisabledOverlay() {
   )
 }
 
-export default StylesSubSectionDisabledOverlay
+export default StylesDisabledOverlay

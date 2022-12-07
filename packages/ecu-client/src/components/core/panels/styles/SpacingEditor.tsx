@@ -2,8 +2,6 @@ import { ReactNode, useCallback, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Div, Path, Svg, WithOutsideClick } from 'honorable'
 
-import SpacingEditorInput from './SpacingEditorInput'
-
 import { CssAttributeType, CssValuesType } from '@types'
 
 import { cssAttributesMap } from '@constants'
@@ -12,6 +10,8 @@ import useRefresh from '@hooks/useRefresh'
 import useStylesSubSectionHelpers from '@hooks/useStylesSubSectionHelpers'
 
 import doesParentHaveId from '@utils/doesParentHaveId'
+
+import SpacingEditorInput from './SpacingEditorInput'
 
 type SpacingEditorPropsType = {
   title: string

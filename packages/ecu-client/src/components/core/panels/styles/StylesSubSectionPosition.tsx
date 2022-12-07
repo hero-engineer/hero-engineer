@@ -1,11 +1,6 @@
 import { useCallback, useMemo, useRef } from 'react'
 import { Accordion, Div, MenuItem, Select } from 'honorable'
 
-import StylesSubSectionTitle from './StylesSubSectionTitle'
-import StylesSubSectionAttributeTitle from './StylesSubSectionAttributeTitle'
-import SpacingEditor from './SpacingEditor'
-import StylesSubSectionDisabledOverlay from './StylesSubSectionDisabledOverlay'
-
 import { CssAttributeType, CssValuesType } from '@types'
 
 import useRefresh from '@hooks/useRefresh'
@@ -13,6 +8,11 @@ import usePersistedState from '@hooks/usePersistedState'
 import useStylesSubSectionHelpers from '@hooks/useStylesSubSectionHelpers'
 
 import capitalize from '@utils/capitalize'
+
+import StylesDisabledOverlay from './StylesDisabledOverlay'
+import SpacingEditor from './SpacingEditor'
+import StylesAttributeTitle from './StylesAttributeTitle'
+import StylesSubSectionTitle from './StylesSubSectionTitle'
 
 type StylesSubSectionPositionPropsType = {
   cssValues: CssValuesType
@@ -63,12 +63,12 @@ function StylesSubSectionPosition({ cssValues, breakpointCssValues, currentBreak
       xflex="x4"
       fontSize="0.75rem"
     >
-      <StylesSubSectionAttributeTitle
+      <StylesAttributeTitle
         attributeNames={['position']}
         {...attributeTitleProps}
       >
         Position
-      </StylesSubSectionAttributeTitle>
+      </StylesAttributeTitle>
       <Select
         tiny
         menuOnTop
@@ -130,7 +130,7 @@ function StylesSubSectionPosition({ cssValues, breakpointCssValues, currentBreak
         {getValue('position') !== 'static' && renderPositionEditorSection()}
       </Div>
       <div ref={inputMountNodeRef} />
-      {disabled && <StylesSubSectionDisabledOverlay />}
+      {disabled && <StylesDisabledOverlay />}
     </Accordion>
   )
 }

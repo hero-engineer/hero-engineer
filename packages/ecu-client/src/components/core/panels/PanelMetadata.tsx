@@ -3,9 +3,6 @@ import { useParams } from 'react-router-dom'
 import { useMutation, useQuery } from 'urql'
 import { Div, H4, Input, P, Tooltip, WithOutsideClick, useOutsideClick } from 'honorable'
 
-import Emoji from '../emoji/Emoji'
-import EmojiPickerBase from '../emoji/EmojiPickerBase'
-
 import { refetchKeys, zIndexes } from '@constants'
 
 import {
@@ -17,6 +14,9 @@ import {
 
 import useRefetch from '@hooks/useRefetch'
 import useIsComponentRefreshingQuery from '@hooks/useIsComponentRefreshingQuery'
+
+import EmojiPickerBase from '../emoji/EmojiPickerBase'
+import Emoji from '../emoji/Emoji'
 
 function PanelMetadata() {
   const { fileAddress = '', componentAddress = '' } = useParams()

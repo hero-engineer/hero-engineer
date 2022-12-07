@@ -1,10 +1,10 @@
 import { useCallback, useState } from 'react'
 import { Div, Tooltip, WithOutsideClick } from 'honorable'
 
+import { zIndexes } from '@constants'
+
 import Emoji from './Emoji'
 import EmojiPickerBase from './EmojiPickerBase'
-
-import { zIndexes } from '@constants'
 
 type EmojiPickerPropsType= {
   emoji: string

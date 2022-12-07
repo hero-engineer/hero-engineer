@@ -2,8 +2,6 @@ import { useCallback, useEffect, useState } from 'react'
 import { A, Button, Div, H2, Input } from 'honorable'
 import shortId from 'shortid'
 
-import CssValueInput from '../css/CssValueInput'
-
 import { SpacingType } from '@types'
 
 import { refetchKeys } from '@constants'
@@ -14,6 +12,8 @@ import useQuery from '@hooks/useQuery'
 import useRefetch from '@hooks/useRefetch'
 import useMutation from '@hooks/useMutation'
 import useThrottleAsynchronous from '@hooks/useThrottleAsynchronous'
+
+import CssValueInput from '../css/CssValueInput'
 
 function DesignSystemSectionSpacings() {
   const [spacings, setSpacings] = useState<SpacingType[]>([])

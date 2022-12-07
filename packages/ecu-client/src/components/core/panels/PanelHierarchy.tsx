@@ -8,8 +8,6 @@ import { IoSquareSharp } from 'react-icons/io5'
 import { VscEdit } from 'react-icons/vsc'
 import { SlTrash } from 'react-icons/sl'
 
-import Emoji from '../emoji/Emoji'
-
 import { HierarchyItemType } from '@types'
 
 import { refetchKeys } from '@constants'
@@ -26,6 +24,8 @@ import useIsComponentRefreshingMutation from '@hooks/useIsComponentRefreshingMut
 import useHierarchySelection from '@hooks/useHierarchySelection'
 
 import findHierarchyIdAndComponentDelta from '@utils/findHierarchyIdAndComponentDelta'
+
+import Emoji from '../emoji/Emoji'
 
 // The hierarchy section
 // Displayed in the left panel

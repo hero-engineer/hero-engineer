@@ -1,9 +1,9 @@
 import { memo } from 'react'
 import { Accordion, Div } from 'honorable'
 
-import ComponentImportsEditor from './ComponentImportsEditor'
-
 import usePersistedState from '@hooks/usePersistedState'
+
+import ComponentImportsEditor from './ComponentImportsEditor'
 
 // Component imports section
 // Displayed in the right panel
