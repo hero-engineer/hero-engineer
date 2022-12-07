@@ -12,7 +12,7 @@ import capitalize from '@utils/capitalize'
 import StylesDisabledOverlay from './StylesDisabledOverlay'
 import SpacingEditor from './SpacingEditor'
 import StylesAttributeTitle from './StylesAttributeTitle'
-import StylesSubSectionTitle from './StylesSubSectionTitle'
+import StylesTitle from './StylesTitle'
 
 type StylesSubSectionPositionPropsType = {
   cssValues: CssValuesType
@@ -59,10 +59,7 @@ function StylesSubSectionPosition({ cssValues, breakpointCssValues, currentBreak
   }), [cssValues, breakpointCssValues, currentBreakpointCssValues, onChange])
 
   const renderPositionSection = useCallback(() => (
-    <Div
-      xflex="x4"
-      fontSize="0.75rem"
-    >
+    <Div xflex="x4">
       <StylesAttributeTitle
         attributeNames={['position']}
         {...attributeTitleProps}
@@ -111,7 +108,7 @@ function StylesSubSectionPosition({ cssValues, breakpointCssValues, currentBreak
       smallChildrenPadding
       childrenPositionRelative
       title={(
-        <StylesSubSectionTitle
+        <StylesTitle
           title="Position"
           expanded={expanded}
           cssValues={cssValues}
@@ -124,6 +121,7 @@ function StylesSubSectionPosition({ cssValues, breakpointCssValues, currentBreak
     >
       <Div
         xflex="y2s"
+        fontSize="0.75rem"
         gap={0.5}
       >
         {renderPositionSection()}

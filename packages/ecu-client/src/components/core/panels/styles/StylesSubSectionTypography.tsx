@@ -22,7 +22,7 @@ import ColorPicker from '../../css/ColorPicker'
 import CssValueInput from '../../css/CssValueInput'
 
 import StylesDisabledOverlay from './StylesDisabledOverlay'
-import StylesSubSectionTitle from './StylesSubSectionTitle'
+import StylesTitle from './StylesTitle'
 import StylesAttributeTitle from './StylesAttributeTitle'
 import StylesList from './StylesList'
 
@@ -200,10 +200,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
   ), [isToggled, onChange])
 
   const renderFamilySection = useCallback(() => (
-    <Div
-      xflex="x4"
-      fontSize="0.75rem"
-    >
+    <Div xflex="x4">
       <StylesAttributeTitle
         attributeNames={['font-family']}
         {...attributeTitleProps}
@@ -269,10 +266,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
   ), [attributeTitleProps, fonts, getValue, onChange])
 
   const renderWeightsSection = useCallback(() => (
-    <Div
-      xflex="x4"
-      fontSize="0.75rem"
-    >
+    <Div xflex="x4">
       <StylesAttributeTitle
         attributeNames={['font-weight']}
         {...attributeTitleProps}
@@ -366,10 +360,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
   }, [attributeTitleProps, colors, renderInheritButton, getValue, onChange])
 
   const renderAlignSection = useCallback(() => (
-    <Div
-      xflex="x4"
-      fontSize="0.75rem"
-    >
+    <Div xflex="x4">
       <StylesAttributeTitle
         attributeNames={['text-align']}
         {...attributeTitleProps}
@@ -395,10 +386,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
   ), [attributeTitleProps, renderInheritButton, isToggled, onChange])
 
   const renderItalicSection = useCallback(() => (
-    <Div
-      xflex="x4"
-      fontSize="0.75rem"
-    >
+    <Div xflex="x4">
       <StylesAttributeTitle
         attributeNames={['font-style']}
         {...attributeTitleProps}
@@ -424,10 +412,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
   ), [attributeTitleProps, renderInheritButton, isToggled, onChange])
 
   const renderDecorationSection = useCallback(() => (
-    <Div
-      xflex="x4"
-      fontSize="0.75rem"
-    >
+    <Div xflex="x4">
       <StylesAttributeTitle
         attributeNames={['text-decoration']}
         {...attributeTitleProps}
@@ -453,10 +438,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
   ), [attributeTitleProps, renderInheritButton, isToggled, onChange])
 
   const renderSpacingSection = useCallback(() => (
-    <Div
-      xflex="x4"
-      fontSize="0.75rem"
-    >
+    <Div xflex="x4">
       <StylesAttributeTitle
         attributeNames={['letter-spacing']}
         {...attributeTitleProps}
@@ -472,10 +454,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
   ), [attributeTitleProps, getValue, onChange])
 
   const renderTransformSection = useCallback(() => (
-    <Div
-      xflex="x4"
-      fontSize="0.75rem"
-    >
+    <Div xflex="x4">
       <StylesAttributeTitle
         attributeNames={['text-transform']}
         {...attributeTitleProps}
@@ -501,10 +480,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
   ), [attributeTitleProps, renderInheritButton, isToggled, onChange])
 
   const renderDirectionSection = useCallback(() => (
-    <Div
-      xflex="x4"
-      fontSize="0.75rem"
-    >
+    <Div xflex="x4">
       <StylesAttributeTitle
         attributeNames={['direction']}
         {...attributeTitleProps}
@@ -530,10 +506,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
   ), [attributeTitleProps, renderInheritButton, isToggled, onChange])
 
   const renderWhiteSpaceSection = useCallback(() => (
-    <Div
-      xflex="x4"
-      fontSize="0.75rem"
-    >
+    <Div xflex="x4">
       <StylesAttributeTitle
         attributeNames={['white-space']}
         {...attributeTitleProps}
@@ -600,7 +573,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
       noChildrenPadding
       childrenPositionRelative
       title={(
-        <StylesSubSectionTitle
+        <StylesTitle
           title="Typography"
           expanded={expanded}
           cssValues={cssValues}
@@ -613,6 +586,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
     >
       <Div
         xflex="y2s"
+        fontSize="0.75rem"
         gap={0.5}
         p={0.5}
       >

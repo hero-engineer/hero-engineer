@@ -24,7 +24,7 @@ import useStylesSubSectionHelpers from '@hooks/useStylesSubSectionHelpers'
 import CssValueInput from '../../css/CssValueInput'
 
 import GridModal from './GridModal'
-import StylesSubSectionTitle from './StylesSubSectionTitle'
+import StylesTitle from './StylesTitle'
 import StylesAttributeTitle from './StylesAttributeTitle'
 import StylesDisabledOverlay from './StylesDisabledOverlay'
 
@@ -248,10 +248,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
   }), [cssValues, breakpointCssValues, currentBreakpointCssValues, onChange])
 
   const renderDisplayEditor = useCallback(() => (
-    <Div
-      xflex="x4s"
-      fontSize="0.75rem"
-    >
+    <Div xflex="x4s">
       <StylesAttributeTitle
         attributeNames={['display']}
         {...attributeTitleProps}
@@ -319,10 +316,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
   }, [cssValues, breakpointCssValues, attributeTitleProps, isToggled, onChange])
 
   const renderFlexAlignEditor = useCallback(() => (
-    <Div
-      xflex="x1"
-      fontSize="0.75rem"
-    >
+    <Div xflex="x1">
       <StylesAttributeTitle
         attributeNames={['align-items']}
         pt={0.25 / 2}
@@ -358,10 +352,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
   ), [cssValues, breakpointCssValues, attributeTitleProps, isToggled, onChange])
 
   const renderFlexJustifyEditor = useCallback(() => (
-    <Div
-      xflex="x1"
-      fontSize="0.75rem"
-    >
+    <Div xflex="x1">
       <StylesAttributeTitle
         attributeNames={['justify-content']}
         pt={0.25 / 2}
@@ -397,11 +388,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
   ), [cssValues, breakpointCssValues, attributeTitleProps, isToggled, onChange])
 
   const renderGapEditor = useCallback(() => (
-    <Div
-      xflex="x1"
-      fontSize="0.75rem"
-      my={0.25}
-    >
+    <Div xflex="x1">
       <StylesAttributeTitle
         attributeNames={['column-gap', 'row-gap']}
         pt={0.25 / 2}
@@ -484,10 +471,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
   }, [cssValues, breakpointCssValues, attributeTitleProps, isToggled, onChange])
 
   const renderFlexContentEditor = useCallback(() => (
-    <Div
-      xflex="x1"
-      fontSize="0.75rem"
-    >
+    <Div xflex="x1">
       <StylesAttributeTitle
         attributeNames={['align-content']}
         pt={0.25 / 2}
@@ -548,10 +532,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
   ), [isGridModalOpen, cssValues, breakpointCssValues, onChange])
 
   const renderGridAlignEditor = useCallback(() => (
-    <Div
-      xflex="x1"
-      fontSize="0.75rem"
-    >
+    <Div xflex="x1">
       <StylesAttributeTitle
         attributeNames={['align-items', 'justify-items']}
         pt={0.5}
@@ -604,10 +585,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
   ), [attributeTitleProps, isToggled, onChange])
 
   const renderGridJustifyEditor = useCallback(() => (
-    <Div
-      xflex="x1"
-      fontSize="0.75rem"
-    >
+    <Div xflex="x1">
       <StylesAttributeTitle
         attributeNames={['align-content', 'justify-content']}
         pt={0.5}
@@ -674,7 +652,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
       smallChildrenPadding
       childrenPositionRelative
       title={(
-        <StylesSubSectionTitle
+        <StylesTitle
           title="Layout"
           expanded={expanded}
           cssValues={cssValues}
@@ -688,7 +666,8 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
     >
       <Div
         xflex="y2s"
-        gap={0.25}
+        fontSize="0.75rem"
+        gap={0.5}
       >
         {renderDisplayEditor()}
         {isFlex && renderFlexDirectionEditor()}

@@ -6,7 +6,7 @@ import { CssAttributeType, CssValuesType } from '@types'
 import useRefresh from '@hooks/useRefresh'
 import usePersistedState from '@hooks/usePersistedState'
 
-import StylesSubSectionTitle from './StylesSubSectionTitle'
+import StylesTitle from './StylesTitle'
 import SpacingEditor from './SpacingEditor'
 import StylesDisabledOverlay from './StylesDisabledOverlay'
 
@@ -50,7 +50,7 @@ function StylesSubSectionSpacing({ cssValues, breakpointCssValues, onChange, dis
       smallChildrenPadding
       childrenPositionRelative
       title={(
-        <StylesSubSectionTitle
+        <StylesTitle
           title="Spacing"
           expanded={expanded}
           cssValues={cssValues}

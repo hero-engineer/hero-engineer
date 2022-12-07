@@ -15,7 +15,7 @@ type StylesSubSectionTitlePropsType = {
 
 // Display the title of a styles sub section
 // With a chip if modified
-function StylesSubSectionTitle({ title, expanded, cssValues, breakpointCssValues, attributeNames }: StylesSubSectionTitlePropsType) {
+function StylesTitle({ title, expanded, cssValues, breakpointCssValues, attributeNames }: StylesSubSectionTitlePropsType) {
   const { getTextColor } = useStylesSubSectionHelpers(cssValues, breakpointCssValues)
 
   const allColors = useMemo(() => attributeNames.map(attributeName => getTextColor([attributeName])), [attributeNames, getTextColor])
@@ -48,4 +48,4 @@ function StylesSubSectionTitle({ title, expanded, cssValues, breakpointCssValues
   )
 }
 
-export default StylesSubSectionTitle
+export default StylesTitle

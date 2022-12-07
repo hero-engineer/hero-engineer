@@ -11,7 +11,7 @@ import capitalize from '@utils/capitalize'
 
 import CssValueInput from '../../css/CssValueInput'
 
-import StylesSubSectionTitle from './StylesSubSectionTitle'
+import StylesTitle from './StylesTitle'
 import StylesAttributeTitle from './StylesAttributeTitle'
 import StylesDisabledOverlay from './StylesDisabledOverlay'
 
@@ -65,10 +65,7 @@ function StylesSubSectionSize({ cssValues, breakpointCssValues, currentBreakpoin
   }), [cssValues, breakpointCssValues, currentBreakpointCssValues, onChange])
 
   const renderSizeInput = useCallback((attributeName: string, label: string) => (
-    <Div
-      xflex="x4"
-      fontSize="0.75rem"
-    >
+    <Div xflex="x4">
       <StylesAttributeTitle
         attributeNames={[attributeName]}
         width={42}
@@ -95,10 +92,7 @@ function StylesSubSectionSize({ cssValues, breakpointCssValues, currentBreakpoin
   ), [renderSizeInput])
 
   const renderOverflowSection = useCallback(() => (
-    <Div
-      xflex="x4"
-      fontSize="0.75rem"
-    >
+    <Div xflex="x4">
       <StylesAttributeTitle
         attributeNames={['overflow']}
         {...attributeTitleProps}
@@ -131,7 +125,7 @@ function StylesSubSectionSize({ cssValues, breakpointCssValues, currentBreakpoin
       smallChildrenPadding
       childrenPositionRelative
       title={(
-        <StylesSubSectionTitle
+        <StylesTitle
           title="Size"
           expanded={expanded}
           cssValues={cssValues}
@@ -144,7 +138,8 @@ function StylesSubSectionSize({ cssValues, breakpointCssValues, currentBreakpoin
     >
       <Div
         xflex="y2s"
-        gap={0.25}
+        fontSize="0.75rem"
+        gap={0.5}
       >
         <Div xflex="x2b">
           {renderSizeSection('width')}
