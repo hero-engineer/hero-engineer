@@ -1,5 +1,5 @@
-import { Dispatch, MouseEvent, SetStateAction, memo, useCallback, useEffect, useRef } from 'react'
-import { Div, tooltipParts } from 'honorable'
+import { MouseEvent, memo, useCallback, useEffect, useRef } from 'react'
+import { Div } from 'honorable'
 
 import { HierarchyItemType } from '@types'
 
@@ -62,18 +62,17 @@ function EditionOverlayElement({
   onMouseMove,
 }: EditionOverlayElementPropsType) {
   const rootRef = useRef<HTMLDivElement>(null)
-  const isOverlayDisabledTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
 
   // Scroll sub element
   // Prevent the page from scrolling if a sub element has scrolled
   const handleWheel = useCallback((event: WheelEvent) => {
     if (!element) return
 
-    clearTimeout(isOverlayDisabledTimeoutRef.current)
+    const hasScrolled = scrollElement(element, event.deltaY, event.deltaX)
 
-    scrollElement(element, event.deltaY, event.deltaX)
-
-    event.preventDefault()
+    if (hasScrolled) {
+      event.preventDefault()
+    }
   }, [element])
 
   useEffect(() => {

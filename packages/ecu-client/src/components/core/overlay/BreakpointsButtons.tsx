@@ -1,13 +1,14 @@
-import { useCallback, useContext, useEffect, useMemo } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Button, Div, Input, Tooltip } from 'honorable'
+import { Button, Div, Input, Menu, MenuItem, Tooltip, WithOutsideClick } from 'honorable'
 import viewports from 'devices-viewport-size'
 import { AiOutlineDesktop, AiOutlineMobile, AiOutlineTablet } from 'react-icons/ai'
 import { MdClose } from 'react-icons/md'
+import { RxCaretDown } from 'react-icons/rx'
 
 import { BreakpointType } from '@types'
 
-import { refetchKeys } from '@constants'
+import { refetchKeys, zIndexes } from '@constants'
 
 import { BreakpointsQuery, BreakpointsQueryDataType } from '@queries'
 
@@ -30,6 +31,8 @@ function BreakpointsButtons() {
   const { componentAddress = '' } = useParams()
   const { breakpoint, setBreakpoint, breakpoints, setBreakpoints, width, setWidth, height, setHeight } = useContext(BreakpointContext)
 
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
   const [breakpointsQueryResult, refetchBreakpointsQuery] = useQuery<BreakpointsQueryDataType>({
     query: BreakpointsQuery,
   })
@@ -47,6 +50,27 @@ function BreakpointsButtons() {
     setHeight('-')
   }, [setBreakpoint, setWidth, setHeight])
 
+  const handleViewportClick = useCallback(({ width, height }: { width: number, height: number }) => {
+    const breakpoint = workingBreakpoints.find(b => b.min <= width && b.max > width) ?? workingBreakpoints[0]
+
+    setBreakpoint(breakpoint)
+    setWidth(width)
+    setHeight(height)
+    setIsMenuOpen(false)
+  }, [workingBreakpoints, setBreakpoint, setWidth, setHeight])
+
+  const handleWidthChange = useCallback((event: any) => {
+    const width = parseFloat(event.target.value)
+    const breakpoint = workingBreakpoints.find(b => b.min <= width && b.max > width) ?? workingBreakpoints[0]
+
+    setWidth(width)
+    setBreakpoint(breakpoint)
+  }, [workingBreakpoints, setBreakpoint, setWidth])
+
+  const handleMenuClose = useCallback(() => {
+    setIsMenuOpen(false)
+  }, [])
+
   const renderViewport = useCallback(() => (
     <Div
       xflex="x4"
@@ -61,7 +85,7 @@ function BreakpointsButtons() {
         type="number"
         width={38}
         value={width}
-        onChange={event => setWidth(parseFloat(event.target.value))}
+        onChange={handleWidthChange}
         endIcon="px"
       />
       <MdClose />
@@ -79,25 +103,71 @@ function BreakpointsButtons() {
         }}
         endIcon={height === '-' ? null : 'px'}
       />
+      <Div
+        fontSize="1rem"
+        transform={isMenuOpen ? 'rotate(180deg)' : null}
+        transformOrigin="center 45%" // Adjusted by sight
+        transition="transform 200ms ease"
+        cursor="pointer"
+        onClick={() => setIsMenuOpen(x => !x)}
+        ml={-0.25}
+        p={0.25}
+      >
+        <RxCaretDown />
+      </Div>
     </Div>
-  ), [width, height, setWidth, setHeight])
+  ), [width, height, isMenuOpen, handleWidthChange, setHeight])
+
+  const renderMenu = useCallback(() => (
+    <WithOutsideClick
+      preventFirstFire
+      onOutsideClick={handleMenuClose}
+    >
+      <Menu
+        position="absolute"
+        top="calc(100% + 4px)"
+        right={0}
+        fontSize="0.75rem"
+        maxHeight={256}
+        overflowY="auto"
+        zIndex={zIndexes.breakpointsMenu}
+      >
+        {Object.entries(viewports).map(([name, value]) => (
+          <MenuItem
+            key={name}
+            slim
+            onClick={() => handleViewportClick(value)}
+          >
+            {name}
+            <Div
+              flexGrow
+              ml={1}
+            />
+            {value.width}
+            {' '}
+            <MdClose />
+            {' '}
+            {value.height}
+          </MenuItem>
+        ))}
+      </Menu>
+    </WithOutsideClick>
+  ), [handleMenuClose, handleViewportClick])
 
   useEffect(() => {
     if (!workingBreakpoints.length) return
 
     const existingBreakpoint = workingBreakpoints.find(b => b.id === breakpoint.id)
 
-    if (existingBreakpoint) {
-      setWidth(existingBreakpoint.base)
-
-      return
-    }
+    if (existingBreakpoint) return
 
     const nextBreakpoint = workingBreakpoints.find(b => !b.media) ?? workingBreakpoints[0]
 
     setWidth(nextBreakpoint.base)
     setBreakpoint(nextBreakpoint)
-  }, [workingBreakpoints, breakpoint, setBreakpoint, setWidth])
+  // Omitting breakpoint here to make it happen only on the first render
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [workingBreakpoints, setBreakpoint, setWidth])
 
   useEffect(() => {
     setBreakpoints(workingBreakpoints)
@@ -109,11 +179,12 @@ function BreakpointsButtons() {
   return (
     <Div
       xflex="x4"
+      position="relative"
       userSelect="none"
     >
       {!!breakpoint && (
         <Div
-          minWidth={42}
+          minWidth={120}
           mr={0.5}
         />
       )}
@@ -149,6 +220,7 @@ function BreakpointsButtons() {
         </Tooltip>
       ))}
       {!!breakpoint && renderViewport()}
+      {isMenuOpen && renderMenu()}
     </Div>
   )
 }

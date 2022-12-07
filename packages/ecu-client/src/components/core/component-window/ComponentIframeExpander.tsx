@@ -21,7 +21,7 @@ function ComponentIframeExpander({ children }: ComponentIframeWidthExanderPropsT
   useClearHierarchyIdsAndComponentDeltaOnClick(rightRef)
   useClearHierarchyIdsAndComponentDeltaOnClick(contentRef)
 
-  const { width, height } = useContext(BreakpointContext)
+  const { width } = useContext(BreakpointContext)
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const maxWidth = useMemo(() => rootRef.current?.getBoundingClientRect().width ?? Infinity, [rootRef.current])
@@ -30,8 +30,6 @@ function ComponentIframeExpander({ children }: ComponentIframeWidthExanderPropsT
     <Div
       ref={rootRef}
       xflex="x4s"
-      flexGrow
-      flexShrink={1}
     >
       <Div
         ref={leftRef}
@@ -45,8 +43,7 @@ function ComponentIframeExpander({ children }: ComponentIframeWidthExanderPropsT
         ref={contentRef}
         xflex="y2s"
         width={width}
-        height={height === '-' ? null : height}
-        overflowY="auto"
+        maxWidth="100%"
         flexShrink={0}
       >
         {children}

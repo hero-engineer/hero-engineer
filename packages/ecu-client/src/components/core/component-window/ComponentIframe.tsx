@@ -1,6 +1,8 @@
-import { Dispatch, ReactElement, SetStateAction, memo, useCallback, useEffect, useRef, useState } from 'react'
+import { Dispatch, ReactElement, SetStateAction, memo, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Iframe, IframeProps } from 'honorable'
+
+import BreakpointContext from '@contexts/BreakpointContext'
 
 import useRefresh from '@hooks/useRefresh'
 
@@ -21,7 +23,9 @@ function ComponentIframe({ children, ...props }: ComponentIframePropsType) {
 
   useRefresh()
 
-  const [height, setHeight] = useState(0)
+  const { width, height } = useContext(BreakpointContext)
+
+  const [baseHeight, setBaseHeight] = useState(0)
 
   const windowNode = rootRef.current?.contentWindow
   const documentNode = windowNode?.document
@@ -50,6 +54,7 @@ function ComponentIframe({ children, ...props }: ComponentIframePropsType) {
       }
       body {
         height: fit-content;
+        overflow: hidden;
       }
     `)
   }, [appendCss])
@@ -58,15 +63,15 @@ function ComponentIframe({ children, ...props }: ComponentIframePropsType) {
     <Iframe
       {...props}
       ref={rootRef}
-      width="100%"
-      height={height}
+      width={width}
+      height={height === '-' ? baseHeight : height}
       minHeight={0}
       border="none"
       position="relative" // For Tooltip to be over the iframe
       zIndex={0} // Idem
       top={0.5} // For the overlay top menu border to be visible
     >
-      {mountNode && createPortal(children({ window: windowNode, head: headNode, setHeight }), mountNode)}
+      {mountNode && createPortal(children({ window: windowNode, head: headNode, setHeight: setBaseHeight }), mountNode)}
     </Iframe>
   )
 }

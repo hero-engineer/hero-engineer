@@ -113,7 +113,7 @@ function Component() {
           xflex="y2s"
           flexGrow
           maxHeight="100%"
-          overflowY="auto"
+          overflow="hidden"
         >
           <ComponentWindow
             componentPath={component.payload.path}
