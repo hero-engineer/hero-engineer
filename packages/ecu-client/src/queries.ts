@@ -1,4 +1,4 @@
-import { BreakpointType, ColorType, CssClassType, FileNodeType, FontType, FunctionNodeType, ImportType, PackageType, SpacingType, TypeType } from '@types'
+import { BreakpointType, ColorType, CssClassType, FileNodeType, FileType, FontType, FunctionNodeType, ImportType, PackageType, SpacingType, TypeType } from '@types'
 
 type ComponentReturnType = {
   component: FunctionNodeType
@@ -553,3 +553,25 @@ export const PushMutation = `
 export type PushMutationDataType = {
   push: boolean
 }
+
+/* --
+  * full-ast QUERIES
+-- */
+
+export const FilesQuery = `
+  query {
+    files {
+      path
+      relativePath
+      content
+    }
+  }
+`
+
+export type FilesQueryDataType = {
+  files: FileType[]
+}
+
+/* --
+  * full-ast MUTATIONs
+-- */

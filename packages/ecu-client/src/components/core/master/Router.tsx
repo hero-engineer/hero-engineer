@@ -11,6 +11,8 @@ import Packages from '@scenes/Packages'
 import Settings from '@scenes/Settings'
 import SettingsGeneral from '@scenes/SettingsGeneral'
 
+import Component2 from '@core/full-ast/Component'
+
 import ProviderTheme from '../providers/ProviderTheme'
 import ResponsiveLayout from '../layout/ResponsiveLayout'
 import Layout from '../layout/Layout'
@@ -105,6 +107,10 @@ function Router({ children }: any) {
                 element={<SettingsGeneral />}
               />
             </Route>
+            <Route
+              path="~/*"
+              element={<Component2 />}
+            />
             <Route
               path="*"
               element={<div>Not found</div>}

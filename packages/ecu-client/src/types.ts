@@ -134,3 +134,11 @@ export type XYType = {
   x: number
   y: number
 }
+
+// full-ast
+
+export type FileType = {
+  path: string
+  relativePath: string
+  content: string
+}
