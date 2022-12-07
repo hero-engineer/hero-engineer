@@ -4,6 +4,7 @@ import { jsxText } from '@babel/types'
 
 import { AtomType, BreakpointType, ImportType } from './types.js'
 
+// TODO rename to appLocation
 export const appPath = path.join(process.cwd(), 'app')
 
 export const ecuPackageName = 'ecu'

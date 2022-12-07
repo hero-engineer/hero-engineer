@@ -24,6 +24,8 @@ import packagesQuery from './queries/packagesQuery.js'
 import packagesUpdatesQuery from './queries/packagesUpdatesQuery.js'
 import undoRedoMetadataQuery from './queries/undoRedoMetdataQuery.js'
 
+import filesQuery from './queries2/filesQuery.js'
+
 import createComponentMutation from './mutations/createComponentMutation.js'
 import addComponentMutation from './mutations/addComponentMutation.js'
 import deleteComponentMutation from './mutations/deleteComponentMutation.js'
@@ -199,6 +201,14 @@ export const typeDefs = gql`
     css: String!
   }
 
+  # full-ast types
+
+  type FileType {
+    path: String!
+    relativePath: String!
+    content: String!
+  }
+
   type Query {
     component(sourceComponentAddress: String!): ComponentReturnValue!
     components: [ComponentReturnValue]!
@@ -222,6 +232,8 @@ export const typeDefs = gql`
     packagesUpdates: [Package]!
 
     undoRedoMetadata: UndoRedoMetadataReturnValue!
+
+    files: [FileType]!
   }
 
   type Mutation {
@@ -286,6 +298,8 @@ export const resolvers = {
     packagesUpdates: withLog(packagesUpdatesQuery, 'packagesUpdates'),
 
     undoRedoMetadata: withLog(undoRedoMetadataQuery, 'undoRedoMetadata'),
+
+    files: withLog(filesQuery, 'files'),
   },
   Mutation: {
     createComponent: withLog(createComponentMutation, 'createComponent', true),
