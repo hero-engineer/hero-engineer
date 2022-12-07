@@ -94,33 +94,40 @@ function PanelStyles() {
   const masterBreakpointClasses = useMemo(() => filterClassesByClassNamesAndMedias(allClasses, classNames, ['']), [allClasses, classNames])
   // Master breakpoint classes for the selected className
   const selectedMasterBreakpointClasses = useMemo(() => filterClassesByClassNamesAndMedias(masterBreakpointClasses, [selectedClassName], ['']), [masterBreakpointClasses, selectedClassName])
+  // Current breakpoints classes for the full className
+  const breakpointClasses = useMemo(() => filterClassesByClassNamesAndMedias(allClasses, classNames, concernedMedias), [allClasses, classNames, concernedMedias])
+  // Current breakpoints classes for the selected className
+  const selectedBreakpointClasses = useMemo(() => filterClassesByClassNamesAndMedias(allClasses, [selectedClassName], concernedMedias), [allClasses, selectedClassName, concernedMedias])
   // Current breakpoint classes for the full className
-  const currentBreakpointClasses = useMemo(() => filterClassesByClassNamesAndMedias(allClasses, classNames, concernedMedias), [allClasses, classNames, concernedMedias])
+  const currentBreakpointClasses = useMemo(() => filterClassesByClassNamesAndMedias(allClasses, classNames, [breakpoint.media]), [allClasses, classNames, breakpoint.media])
   // Current breakpoint classes for the selected className
-  const selectedCurrentBreakpointClasses = useMemo(() => filterClassesByClassNamesAndMedias(allClasses, [selectedClassName], concernedMedias), [allClasses, selectedClassName, concernedMedias])
+  const selectedCurrentBreakpointClasses = useMemo(() => filterClassesByClassNamesAndMedias(allClasses, [selectedClassName], [breakpoint.media]), [allClasses, selectedClassName, breakpoint.media])
 
   // The css values for the complete styling
   // Displayed when no class is selected
   const fullCssValues = useCssValues(masterBreakpointClasses)
-  const fullBreakpointCssValues = useCssValues(currentBreakpointClasses)
+  const fullBreakpointCssValues = useCssValues(breakpointClasses)
+  const fullCurrentBreakpointCssValues = useCssValues(currentBreakpointClasses) // Might be unused
 
   // The css values for the selected class
   // Displayed when a class is selected
   const selectedCssValues = useJsCssValues(useCssValues(selectedMasterBreakpointClasses), breakpoint.media ? {} : style)
-  const selectedBreakpointCssValues = useJsCssValues(useCssValues(selectedCurrentBreakpointClasses), style)
+  const selectedBreakpointCssValues = useJsCssValues(useCssValues(selectedBreakpointClasses), style)
+  const selectedCurrentBreakpointCssValues = useJsCssValues(useCssValues(selectedCurrentBreakpointClasses), style)
 
   // The css values passed to sub sections
   const passedCssValues = selectedClassName ? selectedCssValues : fullCssValues
   const passedBreakpointCssValues = selectedClassName ? selectedBreakpointCssValues : fullBreakpointCssValues
+  const passedCurrentBreakpointCssValues = selectedClassName ? selectedCurrentBreakpointCssValues : fullCurrentBreakpointCssValues
 
   // The attributes to be updated
   const attributes = useMemo(() => Object.entries(selectedBreakpointCssValues).map(([name, value]) => ({ name, value })), [selectedBreakpointCssValues])
   const attributesHash = useMemo(() => attributes.map(({ name, value }) => `${name}:${value}`).join('_'), [attributes])
   const previousAttributesHash = usePrevious(attributesHash)
 
-  console.log('concernedMedias', concernedMedias)
-  console.log('style', style)
-  console.log('v, bv', passedCssValues, passedBreakpointCssValues)
+  // console.log('concernedMedias', concernedMedias)
+  // console.log('style', style)
+  // console.log('v, bv, cv', passedCssValues, passedBreakpointCssValues, passedCurrentBreakpointCssValues)
 
   const handleCssUpdate = useCallback(async () => {
     if (!classNames.length || previousAttributesHash === attributesHash) return
@@ -236,30 +243,35 @@ function PanelStyles() {
       <StylesSubSectionLayout
         cssValues={passedCssValues}
         breakpointCssValues={passedBreakpointCssValues}
+        currentBreakpointCssValues={passedCurrentBreakpointCssValues}
         onChange={handleStyleChange}
         disabled={!selectedClassName}
       />
       <StylesSubSectionSpacing
         cssValues={passedCssValues}
         breakpointCssValues={passedBreakpointCssValues}
+        currentBreakpointCssValues={passedCurrentBreakpointCssValues}
         onChange={handleStyleChange}
         disabled={!selectedClassName}
       />
       <StylesSubSectionSize
         cssValues={passedCssValues}
         breakpointCssValues={passedBreakpointCssValues}
+        currentBreakpointCssValues={passedCurrentBreakpointCssValues}
         onChange={handleStyleChange}
         disabled={!selectedClassName}
       />
       <StylesSubSectionPosition
         cssValues={passedCssValues}
         breakpointCssValues={passedBreakpointCssValues}
+        currentBreakpointCssValues={passedCurrentBreakpointCssValues}
         onChange={handleStyleChange}
         disabled={!selectedClassName}
       />
       <StylesSubSectionTypography
         cssValues={passedCssValues}
         breakpointCssValues={passedBreakpointCssValues}
+        currentBreakpointCssValues={passedCurrentBreakpointCssValues}
         onChange={handleStyleChange}
         disabled={!selectedClassName}
       />
@@ -277,6 +289,7 @@ function PanelStyles() {
   ), [
     passedCssValues,
     passedBreakpointCssValues,
+    passedCurrentBreakpointCssValues,
     selectedClassName,
     loading,
     handleStyleChange,

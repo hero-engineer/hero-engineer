@@ -1,7 +1,8 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import { Accordion, Div, MenuItem, Select } from 'honorable'
 
 import StylesSubSectionTitle from './StylesSubSectionTitle'
+import StylesSubSectionAttributeTitle from './StylesSubSectionAttributeTitle'
 import SpacingEditor from './SpacingEditor'
 import StylesSubSectionDisabledOverlay from './StylesSubSectionDisabledOverlay'
 
@@ -16,6 +17,7 @@ import capitalize from '@utils/capitalize'
 type StylesSubSectionPositionPropsType = {
   cssValues: CssValuesType
   breakpointCssValues: CssValuesType
+  currentBreakpointCssValues: CssValuesType
   onChange: (attributes: CssAttributeType[]) => void
   disabled: boolean
 }
@@ -40,27 +42,33 @@ const baseHeight = 128 + 32 + 8 + 2
 const borderSizeDivider = 3.58
 const spacingEditorPadding = 8
 
-function StylesSubSectionPosition({ cssValues, breakpointCssValues, onChange, disabled }: StylesSubSectionPositionPropsType) {
+function StylesSubSectionPosition({ cssValues, breakpointCssValues, currentBreakpointCssValues, onChange, disabled }: StylesSubSectionPositionPropsType) {
   const inputMountNodeRef = useRef<HTMLDivElement>(null)
 
   useRefresh()
 
   const [expanded, setExpanded] = usePersistedState('styles-sub-section-position-expanded', true)
 
-  const { getValue, getTextColor } = useStylesSubSectionHelpers(cssValues, breakpointCssValues)
+  const { getValue } = useStylesSubSectionHelpers(cssValues, breakpointCssValues)
+
+  const attributeTitleProps = useMemo(() => ({
+    cssValues,
+    breakpointCssValues,
+    currentBreakpointCssValues,
+    onChange,
+  }), [cssValues, breakpointCssValues, currentBreakpointCssValues, onChange])
 
   const renderPositionSection = useCallback(() => (
     <Div
       xflex="x4"
       fontSize="0.75rem"
     >
-      <Div
-        xflex="x4"
-        minWidth={52}
-        color={getTextColor(['position'])}
+      <StylesSubSectionAttributeTitle
+        attributeNames={['position']}
+        {...attributeTitleProps}
       >
         Position
-      </Div>
+      </StylesSubSectionAttributeTitle>
       <Select
         tiny
         menuOnTop
@@ -78,7 +86,7 @@ function StylesSubSectionPosition({ cssValues, breakpointCssValues, onChange, di
         ))}
       </Select>
     </Div>
-  ), [getTextColor, getValue, onChange])
+  ), [attributeTitleProps, getValue, onChange])
 
   const renderPositionEditorSection = useCallback(() => (
     <SpacingEditor

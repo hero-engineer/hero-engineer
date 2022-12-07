@@ -1,10 +1,11 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { Accordion, Button, Div, Tooltip } from 'honorable'
 import { AiOutlineColumnHeight, AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 
 import CssValueInput from '../../css/CssValueInput'
 
 import StylesSubSectionTitle from './StylesSubSectionTitle'
+import StylesSubSectionAttributeTitle from './StylesSubSectionAttributeTitle'
 import StylesSubSectionDisabledOverlay from './StylesSubSectionDisabledOverlay'
 
 import { CssAttributeType, CssValuesType } from '@types'
@@ -17,6 +18,7 @@ import capitalize from '@utils/capitalize'
 type StylesSubSectionSizePropsType = {
   cssValues: CssValuesType
   breakpointCssValues: CssValuesType
+  currentBreakpointCssValues: CssValuesType
   onChange: (attributes: CssAttributeType[]) => void
   disabled: boolean
 }
@@ -50,29 +52,36 @@ const overflows = [
   },
 ]
 
-function StylesSubSectionSize({ cssValues, breakpointCssValues, onChange, disabled }: StylesSubSectionSizePropsType) {
+function StylesSubSectionSize({ cssValues, breakpointCssValues, currentBreakpointCssValues, onChange, disabled }: StylesSubSectionSizePropsType) {
   const [expanded, setExpanded] = usePersistedState('styles-sub-section-size-expanded', true)
 
-  const { getValue, getTextColor, isToggled } = useStylesSubSectionHelpers(cssValues, breakpointCssValues)
+  const { getValue, isToggled } = useStylesSubSectionHelpers(cssValues, breakpointCssValues)
+
+  const attributeTitleProps = useMemo(() => ({
+    cssValues,
+    breakpointCssValues,
+    currentBreakpointCssValues,
+    onChange,
+  }), [cssValues, breakpointCssValues, currentBreakpointCssValues, onChange])
 
   const renderSizeInput = useCallback((attributeName: string, label: string) => (
     <Div
       xflex="x4"
       fontSize="0.75rem"
     >
-      <Div
-        xflex="x4"
+      <StylesSubSectionAttributeTitle
+        attributeNames={[attributeName]}
         minWidth={42}
-        color={getTextColor([attributeName])}
+        {...attributeTitleProps}
       >
         {label}
-      </Div>
+      </StylesSubSectionAttributeTitle>
       <CssValueInput
         value={getValue(attributeName).toString()}
         onChange={value => onChange([{ name: attributeName, value }])}
       />
     </Div>
-  ), [getTextColor, getValue, onChange])
+  ), [attributeTitleProps, getValue, onChange])
 
   const renderSizeSection = useCallback((attributeName: string) => (
     <Div
@@ -90,13 +99,12 @@ function StylesSubSectionSize({ cssValues, breakpointCssValues, onChange, disabl
       xflex="x4"
       fontSize="0.75rem"
     >
-      <Div
-        xflex="x4"
-        minWidth={52}
-        color={getTextColor(['overflow'])}
+      <StylesSubSectionAttributeTitle
+        attributeNames={['overflow']}
+        {...attributeTitleProps}
       >
         Overflow
-      </Div>
+      </StylesSubSectionAttributeTitle>
       {overflows.map(({ name, Icon }) => (
         <Tooltip
           key={name}
@@ -112,7 +120,7 @@ function StylesSubSectionSize({ cssValues, breakpointCssValues, onChange, disabl
         </Tooltip>
       ))}
     </Div>
-  ), [getTextColor, isToggled, onChange])
+  ), [attributeTitleProps, isToggled, onChange])
 
   return (
     <Accordion

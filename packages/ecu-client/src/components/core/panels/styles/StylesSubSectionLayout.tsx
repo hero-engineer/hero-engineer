@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Accordion, Button, Div, Tooltip } from 'honorable'
 import { CgArrowAlignH, CgArrowAlignV, CgDisplayFlex, CgDisplayFullwidth, CgDisplayGrid } from 'react-icons/cg'
 import { FaRegEyeSlash } from 'react-icons/fa'
@@ -18,6 +18,7 @@ import CssValueInput from '../../css/CssValueInput'
 
 import GridModal from './GridModal'
 import StylesSubSectionTitle from './StylesSubSectionTitle'
+import StylesSubSectionAttributeTitle from './StylesSubSectionAttributeTitle'
 import StylesSubSectionDisabledOverlay from './StylesSubSectionDisabledOverlay'
 
 import { CssAttributeType, CssValuesType } from '@types'
@@ -30,6 +31,7 @@ import useStylesSubSectionHelpers from '@hooks/useStylesSubSectionHelpers'
 type StylesSubSectionLayoutPropsType = {
   cssValues: CssValuesType
   breakpointCssValues: CssValuesType
+  currentBreakpointCssValues: CssValuesType
   onChange: (attributes: CssAttributeType[]) => void
   disabled: boolean
 }
@@ -232,22 +234,30 @@ const gridJustifys = [
   },
 ]
 
-function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disabled }: StylesSubSectionLayoutPropsType) {
+function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpointCssValues, onChange, disabled }: StylesSubSectionLayoutPropsType) {
   const [expanded, setExpanded] = usePersistedState('styles-sub-section-layout-expanded', true)
   const [isGridModalOpen, setIsGridModalOpen] = useState(false)
 
-  const { getTextColor, isToggled } = useStylesSubSectionHelpers(cssValues, breakpointCssValues)
+  const { isToggled } = useStylesSubSectionHelpers(cssValues, breakpointCssValues)
+
+  const attributeTitleProps = useMemo(() => ({
+    cssValues,
+    breakpointCssValues,
+    currentBreakpointCssValues,
+    onChange,
+  }), [cssValues, breakpointCssValues, currentBreakpointCssValues, onChange])
 
   const renderDisplayEditor = useCallback(() => (
-    <Div xflex="x4s">
-      <Div
-        xflex="x4"
-        minWidth={54}
-        fontSize="0.75rem"
-        color={getTextColor(['display'])}
+    <Div
+      xflex="x4s"
+      fontSize="0.75rem"
+    >
+      <StylesSubSectionAttributeTitle
+        attributeNames={['display']}
+        {...attributeTitleProps}
       >
         Display
-      </Div>
+      </StylesSubSectionAttributeTitle>
       {displays.map(({ name, label, Icon }) => (
         <Tooltip
           key={name}
@@ -263,24 +273,24 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
         </Tooltip>
       ))}
     </Div>
-  ), [onChange, isToggled, getTextColor])
+  ), [attributeTitleProps, isToggled, onChange])
 
   const renderFlexDirectionEditor = useCallback(() => {
     const isReverse = (breakpointCssValues['flex-direction'] ?? cssValues['flex-direction'] ?? '').toString().endsWith('-reverse')
 
     return (
-      <Div xflex="x4s">
-        <Div
-          xflex="x4"
-          minWidth={54}
-          fontSize="0.75rem"
-          color={getTextColor(['flex-direction'])}
+      <Div
+        xflex="x4s"
+        fontSize="0.75rem"
+      >
+        <StylesSubSectionAttributeTitle
+          attributeNames={['flex-direction']}
+          {...attributeTitleProps}
         >
           Direction
-        </Div>
+        </StylesSubSectionAttributeTitle>
         <Button
           ghost
-          smallText
           toggled={isToggled('flex-direction', ['row', 'row-reverse'])}
           onClick={() => onChange([{ name: 'flex-direction', value: `row${isReverse ? '-reverse' : ''}` }])}
         >
@@ -288,7 +298,6 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
         </Button>
         <Button
           ghost
-          smallText
           toggled={isToggled('flex-direction', ['column', 'column-reverse'])}
           onClick={() => onChange([{ name: 'flex-direction', value: `column${isReverse ? '-reverse' : ''}` }])}
         >
@@ -307,18 +316,20 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
         </Tooltip>
       </Div>
     )
-  }, [cssValues, breakpointCssValues, onChange, isToggled, getTextColor])
+  }, [cssValues, breakpointCssValues, attributeTitleProps, isToggled, onChange])
 
   const renderFlexAlignEditor = useCallback(() => (
-    <Div xflex="x1">
-      <Div
-        minWidth={54}
-        fontSize="0.75rem"
-        color={getTextColor(['align-items'])}
+    <Div
+      xflex="x1"
+      fontSize="0.75rem"
+    >
+      <StylesSubSectionAttributeTitle
+        attributeNames={['align-items']}
         pt={0.5}
+        {...attributeTitleProps}
       >
         Align
-      </Div>
+      </StylesSubSectionAttributeTitle>
       <Div
         display="grid"
         gridTemplateColumns="repeat(8, minmax(0, 1fr))"
@@ -344,18 +355,20 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
         })}
       </Div>
     </Div>
-  ), [cssValues, breakpointCssValues, onChange, isToggled, getTextColor])
+  ), [cssValues, breakpointCssValues, attributeTitleProps, isToggled, onChange])
 
   const renderFlexJustifyEditor = useCallback(() => (
-    <Div xflex="x1">
-      <Div
-        minWidth={54}
-        fontSize="0.75rem"
-        color={getTextColor(['justify-content'])}
+    <Div
+      xflex="x1"
+      fontSize="0.75rem"
+    >
+      <StylesSubSectionAttributeTitle
+        attributeNames={['justify-content']}
         pt={0.5}
+        {...attributeTitleProps}
       >
         Justify
-      </Div>
+      </StylesSubSectionAttributeTitle>
       <Div
         display="grid"
         gridTemplateColumns="repeat(8, minmax(0, 1fr))"
@@ -381,7 +394,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
         })}
       </Div>
     </Div>
-  ), [cssValues, breakpointCssValues, onChange, isToggled, getTextColor])
+  ), [cssValues, breakpointCssValues, attributeTitleProps, isToggled, onChange])
 
   const renderGapEditor = useCallback(() => (
     <Div
@@ -389,14 +402,13 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
       fontSize="0.75rem"
       my={0.25}
     >
-      <Div
-        xflex="x4"
-        minWidth={54}
-        color={getTextColor(['column-gap', 'row-gap'])}
+      <StylesSubSectionAttributeTitle
+        attributeNames={['column-gap', 'row-gap']}
         pt={0.25 / 2}
+        {...attributeTitleProps}
       >
         Gap
-      </Div>
+      </StylesSubSectionAttributeTitle>
       <Div
         xflex="x4"
         gap={0.5}
@@ -427,7 +439,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
         </Div>
       </Div>
     </Div>
-  ), [cssValues, onChange, getTextColor])
+  ), [cssValues, attributeTitleProps, onChange])
 
   const renderFlexWrapEditor = useCallback(() => {
     const isReverse = (breakpointCssValues['flex-wrap'] ?? cssValues['flex-wrap'] ?? '').toString() === 'wrap-reverse'
@@ -435,19 +447,17 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
     return (
       <Div
         xflex="x4s"
-        minHeight={30} // For flex-wrap button ont to change the layour
+        minHeight={30} // For flex-wrap button not to change the layout
+        fontSize="0.75rem"
       >
-        <Div
-          xflex="x4"
-          minWidth={54}
-          fontSize="0.75rem"
-          color={getTextColor(['flex-wrap'])}
+        <StylesSubSectionAttributeTitle
+          attributeNames={['flex-wrap']}
+          {...attributeTitleProps}
         >
           Wrap
-        </Div>
+        </StylesSubSectionAttributeTitle>
         <Button
           ghost
-          smallText
           toggled={isToggled('flex-wrap', ['wrap', 'wrap-reverse'])}
           onClick={() => onChange([
             { name: 'flex-wrap', value: ['wrap', 'wrap-reverse'].includes((cssValues['flex-wrap'] ?? '').toString()) ? 'nowrap' : `wrap${isReverse ? '-reverse' : ''}` },
@@ -471,18 +481,20 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
         )}
       </Div>
     )
-  }, [cssValues, breakpointCssValues, onChange, isToggled, getTextColor])
+  }, [cssValues, breakpointCssValues, attributeTitleProps, isToggled, onChange])
 
   const renderFlexContentEditor = useCallback(() => (
-    <Div xflex="x1">
-      <Div
-        minWidth={54}
-        fontSize="0.75rem"
-        color={getTextColor(['align-content'])}
+    <Div
+      xflex="x1"
+      fontSize="0.75rem"
+    >
+      <StylesSubSectionAttributeTitle
+        attributeNames={['align-content']}
         pt={0.5}
+        {...attributeTitleProps}
       >
         Align
-      </Div>
+      </StylesSubSectionAttributeTitle>
       <Div
         display="grid"
         gridTemplateColumns="repeat(4, minmax(0, 1fr))"
@@ -507,7 +519,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
         })}
       </Div>
     </Div>
-  ), [cssValues, breakpointCssValues, onChange, isToggled, getTextColor])
+  ), [cssValues, breakpointCssValues, attributeTitleProps, isToggled, onChange])
 
   const renderGridEditor = useCallback(() => (
     <>
@@ -535,15 +547,17 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
   ), [isGridModalOpen, cssValues, breakpointCssValues, onChange])
 
   const renderGridAlignEditor = useCallback(() => (
-    <Div xflex="x1">
-      <Div
-        minWidth={54}
-        fontSize="0.75rem"
-        color={getTextColor(['align-items', 'justify-items'])}
+    <Div
+      xflex="x1"
+      fontSize="0.75rem"
+    >
+      <StylesSubSectionAttributeTitle
+        attributeNames={['align-items', 'justify-items']}
         pt={0.5}
+        {...attributeTitleProps}
       >
         Align
-      </Div>
+      </StylesSubSectionAttributeTitle>
       <Div
         display="grid"
         gridTemplateColumns="repeat(5, minmax(0, 1fr))"
@@ -586,18 +600,20 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
         })}
       </Div>
     </Div>
-  ), [onChange, isToggled, getTextColor])
+  ), [attributeTitleProps, isToggled, onChange])
 
   const renderGridJustifyEditor = useCallback(() => (
-    <Div xflex="x1">
-      <Div
-        minWidth={54}
-        fontSize="0.75rem"
-        color={getTextColor(['align-content', 'justify-content'])}
+    <Div
+      xflex="x1"
+      fontSize="0.75rem"
+    >
+      <StylesSubSectionAttributeTitle
+        attributeNames={['align-content', 'justify-content']}
         pt={0.5}
+        {...attributeTitleProps}
       >
         Distribute
-      </Div>
+      </StylesSubSectionAttributeTitle>
       <Div
         display="grid"
         gridTemplateColumns="repeat(8, minmax(0, 1fr))"
@@ -642,7 +658,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, onChange, disa
         })}
       </Div>
     </Div>
-  ), [onChange, isToggled, getTextColor])
+  ), [attributeTitleProps, isToggled, onChange])
 
   const isFlex = isToggled('display', ['flex'])
   const isGrid = isToggled('display', ['grid'])

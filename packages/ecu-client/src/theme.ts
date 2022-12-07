@@ -380,6 +380,7 @@ export default mergeTheme(defaultTheme, {
         borderRadius: 0,
         color: 'text',
         backgroundColor: 'transparent',
+        lineHeight: '100%',
         ':hover': {
           backgroundColor: 'darken(background-light, 2)',
         },

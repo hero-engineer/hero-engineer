@@ -14,6 +14,7 @@ type StylesSubSectionSpacingPropsType = {
   onChange: (attributes: CssAttributeType[]) => void,
   cssValues: CssValuesType
   breakpointCssValues: CssValuesType
+  currentBreakpointCssValues: CssValuesType
   disabled: boolean
 }
 
@@ -32,7 +33,7 @@ const attributeNames = [
   'padding-left',
 ]
 
-function StylesSubSectionSpacing({ cssValues, breakpointCssValues, onChange, disabled }: StylesSubSectionSpacingPropsType) {
+function StylesSubSectionSpacing({ cssValues, breakpointCssValues, currentBreakpointCssValues, onChange, disabled }: StylesSubSectionSpacingPropsType) {
   const inputMountNodeRef = useRef<HTMLDivElement>(null)
 
   useRefresh()
