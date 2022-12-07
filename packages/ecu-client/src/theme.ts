@@ -482,8 +482,8 @@ export default mergeTheme(defaultTheme, {
       ({ short }: any) => short && {
         minHeight: 0,
         width: 64,
-        paddingLeft: 4,
-        paddingRight: 4,
+        paddingLeft: 0,
+        paddingRight: 0,
       },
     ],
     InputBase: [
@@ -502,6 +502,11 @@ export default mergeTheme(defaultTheme, {
         lineHeight: 'inherit',
         paddingTop: 0,
         paddingBottom: 0,
+      },
+    ],
+    StartIcon: [
+      ({ noStartIconPadding }: any) => noStartIconPadding && {
+        paddingRight: 0,
       },
     ],
     EndIcon: [

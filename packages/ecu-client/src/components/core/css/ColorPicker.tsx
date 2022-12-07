@@ -1,7 +1,7 @@
 import '../../../css/ColorPicker.css'
 
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
-import { Div, MenuItem, Select, WithOutsideClick } from 'honorable'
+import { Button, Div, Input, MenuItem, Select, WithOutsideClick } from 'honorable'
 import { ChromePicker } from 'react-color'
 
 import { ColorType } from '@types'
@@ -51,34 +51,21 @@ function ColorPicker({ value, onChange, size = 16, pickerLeftOffset = 0, withOve
     )
   }, [withOverlay, handleOutsideClick])
 
-  useEffect(() => {
-    if (!selectedColor) return
+  const renderInputAdornment = useCallback(() => {
+    const isNilValue = value === null || value === 'transparent'
 
-    setCurrentValue(selectedColor.value)
-  }, [selectedColor])
-
-  return (
-    <>
-      {withOverlay && isOpen && (
-        <Div
-          position="fixed"
-          top={0}
-          left={0}
-          right={0}
-          bottom={0}
-          zIndex={zIndexes.colorPicker}
-          onClick={handleOutsideClick}
-        />
-      )}
+    return (
       <Div
         position="relative"
         width={size}
         height={size}
-        backgroundColor={value === null ? 'white' : value}
+        backgroundColor={isNilValue ? 'white' : value}
         cursor="pointer"
+        borderRight="1px solid border"
         onClick={() => setIsOpen(true)}
+        mr={0.25}
       >
-        {value === null && (
+        {isNilValue && (
           <>
             <Div
               position="absolute"
@@ -102,6 +89,46 @@ function ColorPicker({ value, onChange, size = 16, pickerLeftOffset = 0, withOve
             />
           </>
         )}
+      </Div>
+    )
+  }, [size, value])
+
+  useEffect(() => {
+    if (!selectedColor) return
+
+    setCurrentValue(selectedColor.value)
+  }, [selectedColor])
+
+  return (
+    <>
+      {withOverlay && isOpen && (
+        <Div
+          position="fixed"
+          top={0}
+          left={0}
+          right={0}
+          bottom={0}
+          zIndex={zIndexes.colorPicker}
+          onClick={handleOutsideClick}
+        />
+      )}
+      <Div
+        position="relative"
+        xflex="x4"
+      >
+        <Input
+          slim
+          short
+          disabledNoBackground
+          noStartIconPadding
+          width={72}
+          backgroundColor="background"
+          borderTopLeftRadius={0}
+          borderBottomLeftRadius={0}
+          startIcon={renderInputAdornment()}
+          value={selectedColor?.name ?? value}
+          onChange={event => onChange(event.target.value)}
+        />
         {isOpen && wrapOutsideClick(
           <Div
             position="absolute"
@@ -116,46 +143,61 @@ function ColorPicker({ value, onChange, size = 16, pickerLeftOffset = 0, withOve
               color={currentValue}
               onChange={color => setCurrentValue(color.hex)}
             />
-            {!!colors.length && (
-              <Div
-                xflex="y2s"
-                gap={0.5}
-                p={0.5}
-              >
-                <Div
-                  fontSize="0.75rem"
-                >
+            <Div
+              xflex="y2s"
+              fontSize="0.75rem"
+              gap={0.5}
+              p={0.5}
+            >
+              {!!colors.length && (
+                <>
                   Design system colors:
-                </Div>
-                <Select
-                  tiny
-                  menuOnTop
-                  width="100%"
-                  value={selectedColor}
-                  onChange={handleSelectChange}
-                  placeholder="Select a color"
-                >
-                  {colors.map(color => (
-                    <MenuItem
-                      key={color.id}
-                      value={color}
-                    >
-                      <Div
-                        xflex="x4"
-                        gap={0.5}
+                  <Select
+                    tiny
+                    menuOnTop
+                    width="100%"
+                    value={selectedColor}
+                    onChange={handleSelectChange}
+                    placeholder="Select a color"
+                  >
+                    {colors.map(color => (
+                      <MenuItem
+                        key={color.id}
+                        value={color}
                       >
                         <Div
-                          width={12}
-                          height={12}
-                          backgroundColor={`var(${color.variableName})`}
-                        />
-                        {color.name}
-                      </Div>
-                    </MenuItem>
-                  ))}
-                </Select>
+                          xflex="x4"
+                          gap={0.5}
+                        >
+                          <Div
+                            width={12}
+                            height={12}
+                            backgroundColor={`var(${color.variableName})`}
+                          />
+                          {color.name}
+                        </Div>
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </>
+              )}
+              Other colors:
+              <Div
+                xflex="x11"
+                gap={0.25}
+              >
+                <Button
+                  ghost
+                  tiny
+                  onClick={() => {
+                    setCurrentValue('transparent')
+                    onChange('transparent')
+                  }}
+                >
+                  transparent
+                </Button>
               </Div>
-            )}
+            </Div>
           </Div>
         )}
       </Div>
