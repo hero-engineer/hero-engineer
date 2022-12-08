@@ -23,7 +23,21 @@ function WithAsts({ children }: WithAstsPropsType) {
 
   // TODO useRefetch
 
-  const updateAsts = useCallback(async () => {
+  const computeHierarchy = useCallback((ast: File | null | undefined) => {
+
+  }, [])
+
+  const computeHierarchies = useCallback((asts: AstsType) => {
+    const hierarchies: any = {}
+
+    Object.entries(asts).forEach(([path, { ast }]) => {
+      if (forbiddedBabelExtensions.some(extension => path.endsWith(extension)) || !allowedBabelExtensions.some(extension => path.endsWith(extension))) return
+
+      hierarchies[path] = computeHierarchy(ast as File | null | undefined)
+    })
+  }, [computeHierarchy])
+
+  const updateAstsContext = useCallback(async () => {
     if (!filesQueryResult.data?.files) return
 
     const astPromises = filesQueryResult.data.files
@@ -38,20 +52,21 @@ function WithAsts({ children }: WithAstsPropsType) {
 
     const astsArray = await Promise.all(astPromises)
 
-    setAsts(
-      filesQueryResult.data.files.reduce<AstsType>((asts, { path, code }, i) => ({
-        ...asts,
-        [path]: {
-          code,
-          ast: astsArray[i],
-        },
-      }), {})
-    )
-  }, [filesQueryResult.data, setAsts])
+    const asts = filesQueryResult.data.files.reduce<AstsType>((asts, { path, code }, i) => ({
+      ...asts,
+      [path]: {
+        code,
+        ast: astsArray[i],
+      },
+    }), {})
+
+    setAsts(asts)
+    computeHierarchies(asts)
+  }, [filesQueryResult.data, setAsts, computeHierarchies])
 
   useEffect(() => {
-    updateAsts()
-  }, [updateAsts])
+    updateAstsContext()
+  }, [updateAstsContext])
 
   return (
     <>

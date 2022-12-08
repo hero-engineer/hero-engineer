@@ -12,6 +12,7 @@ import Settings from '~scenes/Settings'
 import SettingsGeneral from '~scenes/SettingsGeneral'
 
 import Component2 from '~core/full-ast/Component'
+import ProviderComponent from '~core/full-ast/ProviderComponent'
 
 import ProviderTheme from '../providers/ProviderTheme'
 import ResponsiveLayout from '../layout/ResponsiveLayout'
@@ -109,7 +110,11 @@ function Router({ children }: any) {
             </Route>
             <Route
               path="~/*"
-              element={<Component2 />}
+              element={(
+                <ProviderComponent>
+                  <Component2 />
+                </ProviderComponent>
+              )}
             />
             <Route
               path="*"

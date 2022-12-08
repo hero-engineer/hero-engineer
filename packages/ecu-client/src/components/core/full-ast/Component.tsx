@@ -1,14 +1,15 @@
-import { useContext, useEffect, useMemo } from 'react'
+import { useContext, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Div } from 'honorable'
+import { RiNodeTree } from 'react-icons/ri'
 
 import { ComponentFileMetadataQuery, ComponentFileQueryDataType } from '~queries'
 
 import TabsContext from '~contexts/TabsContext'
+import IsInteractiveModeContext from '~contexts/IsInteractiveModeContext'
 
 import useQuery from '~hooks/useQuery'
-
-import { convertFromEcuComponentPath } from '~utils/convertComponentPath'
+import useCurrentComponentPath from '~hooks/useCurrentComponentPath'
 
 import BreakpointsButtons from '~core/component/BreakpointsButtons'
 import WidthBar from '~core/component/WidthBar'
@@ -16,15 +17,17 @@ import InteractiveModeButton from '~core/component/InteractiveModeButton'
 import RemountButton from '~core/component/RemountButton'
 // import EditCodeButton from '~core/component/EditCodeButton'
 import ComponentWindow from '~core/component-window/ComponentWindow'
-import ProviderComponent from '~core/full-ast/ProviderComponent'
 // import BottomTabsPanel from '~core/full-ast/BottomTabsPanel'
+import RetractablePanel from '~core/layout/RetractablePanel'
+import PanelHierarchy from '~core/full-ast/PanelHierarchy'
 
 function Component() {
   const { '*': ecuComponentPath = '' } = useParams()
+  const { isInteractiveMode } = useContext(IsInteractiveModeContext)
 
   const { tabs, setTabs } = useContext(TabsContext)
 
-  const path = useMemo(() => ecuComponentPath ? `/Users/sven/dev/ecu-app/app/src/${convertFromEcuComponentPath(ecuComponentPath)}` : '', [ecuComponentPath])
+  const path = useCurrentComponentPath()
 
   const [componentFileMetadataQueryResult] = useQuery<ComponentFileQueryDataType>({
     query: ComponentFileMetadataQuery,
@@ -54,18 +57,43 @@ function Component() {
   const { decoratorPaths } = componentFileMetadataQueryResult.data.componentFileMetadata
 
   return (
-    <ProviderComponent>
-      <Div xflex="x6">
-        <BreakpointsButtons />
-        <InteractiveModeButton />
-        <RemountButton />
-        {/* <EditCodeButton /> */}
+    <Div
+      xflex="x4s"
+      flexGrow
+      maxHeight="100%"
+    >
+      {!isInteractiveMode && (
+        <RetractablePanel
+          direction="left"
+          openPersistedStateKey="left-panel-open"
+          items={[
+            {
+              label: 'Hierarchy',
+              icon: <RiNodeTree />,
+              children: <PanelHierarchy />,
+            },
+          ]}
+        />
+      )}
+      <Div
+        xflex="y2s"
+        flexGrow
+        maxHeight="100%"
+        overflow="hidden"
+        backgroundColor="background-component"
+      >
+        <Div xflex="x6">
+          <BreakpointsButtons />
+          <InteractiveModeButton />
+          <RemountButton />
+          {/* <EditCodeButton /> */}
+        </Div>
+        <WidthBar />
+        <ComponentWindow
+          componentPath={path}
+          decoratorPaths={decoratorPaths}
+        />
       </Div>
-      <WidthBar />
-      <ComponentWindow
-        componentPath={path}
-        decoratorPaths={decoratorPaths}
-      />
       {/* <Div
         position="absolute"
         bottom={0}
@@ -74,7 +102,7 @@ function Component() {
       >
         <BottomTabsPanel />
       </Div> */}
-    </ProviderComponent>
+    </Div>
   )
 }
 

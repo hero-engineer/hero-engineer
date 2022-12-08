@@ -24,7 +24,6 @@ function ComponentWindow({ componentPath, decoratorPaths }: ComponentWindowProps
       xflex="y2s"
       flexGrow
       flexShrink={1}
-      backgroundColor="background-component"
       overflowY="auto"
     >
       <ComponentIframeExpander>
