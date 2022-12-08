@@ -8,8 +8,9 @@ import useQuery from '~hooks/useQuery'
 
 import { convertFromEcuComponentPath } from '~utils/convertComponentPath'
 
-import BreakpointsButtons from '~core/overlay/BreakpointsButtons'
-import InteractiveModeButton from '~core/overlay/InteractiveModeButton'
+import BreakpointsButtons from '~core/component/BreakpointsButtons'
+import WidthBar from '~core/component/WidthBar'
+import InteractiveModeButton from '~core/component/InteractiveModeButton'
 import ComponentWindow from '~core/component-window/ComponentWindow'
 import ProviderComponent from '~core/full-ast/ProviderComponent'
 
@@ -40,6 +41,7 @@ function Component() {
         <BreakpointsButtons />
         <InteractiveModeButton />
       </Div>
+      <WidthBar />
       <ComponentWindow
         componentPath={`/Users/sven/dev/ecu-app/app/src/${relativePath}`}
         decoratorPaths={decoratorPaths}

@@ -134,9 +134,13 @@ export default mergeTheme(defaultTheme, {
       light: '#fafcff',
       dark: '#22293b',
     },
-    'background-light-dark': {
+    'background-light-light': {
       light: 'darken(background-light, 8)',
       dark: 'lighten(background-light, 8)',
+    },
+    'background-light-dark': {
+      light: 'lighten(background-light, 8)',
+      dark: 'darken(background-light, 8)',
     },
     'background-component': {
       light: 'background-light',

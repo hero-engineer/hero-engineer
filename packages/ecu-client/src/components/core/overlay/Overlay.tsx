@@ -24,25 +24,34 @@ function Overlay({ children }: OverlayPropsType) {
         xflex="x4s"
         flexShrink={0}
         backgroundColor="background-light"
-        borderBottom="1px solid border"
       >
-        <EcuButton
-          borderLeft="1px solid transparent"
-          borderRight="1px solid border"
-        />
-        <ComponentsLinkButton borderRight="1px solid border" />
-        <CreateComponentButton borderRight="1px solid border" />
-        <DesignLinkButton borderRight="1px solid border" />
-        <PackagesLinkButton borderRight="1px solid border" />
+        <Div
+          xflex="x4s"
+          borderBottom="1px solid border"
+        >
+          <EcuButton
+            borderLeft="1px solid transparent"
+            borderRight="1px solid border"
+          />
+          <ComponentsLinkButton borderRight="1px solid border" />
+          <CreateComponentButton borderRight="1px solid border" />
+          <DesignLinkButton borderRight="1px solid border" />
+          <PackagesLinkButton borderRight="1px solid border" />
+        </Div>
         <Tabs />
-        <Div flexGrow />
-        <UndoRedoButtons />
-        <PushButton />
-        <SettingsLinkButton borderLeft="1px solid border" />
-        <ViewAppButton
-          borderLeft="1px solid border"
-          borderRight="1px solid transparent"
-        />
+        <Div
+          xflex="x6s"
+          flexGrow
+          borderBottom="1px solid border"
+        >
+          <UndoRedoButtons />
+          <PushButton />
+          <SettingsLinkButton borderLeft="1px solid border" />
+          <ViewAppButton
+            borderLeft="1px solid border"
+            borderRight="1px solid transparent"
+          />
+        </Div>
       </Div>
       <Div
         xflex="y2s"
