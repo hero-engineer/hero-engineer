@@ -3,7 +3,7 @@
     "import/parsers": {
 			"@typescript-eslint/parser": [".ts", ".tsx"]
 		},
-    "import/internal-regex": "^@(?!babel|esbuild)"
+    "import/internal-regex": "^~"
   },
   "rules": {
     "react/jsx-closing-bracket-location": "error",
@@ -22,52 +22,52 @@
         "pathGroupsExcludedImportTypes": [],
         "pathGroups": [
           {
-            "pattern": "@types",
+            "pattern": "~types",
             "group": "internal",
             "position": "before"
           },
           {
-            "pattern": "@constants",
+            "pattern": "~constants",
             "group": "internal",
             "position": "before"
           },
           {
-            "pattern": "@queries",
+            "pattern": "~queries",
             "group": "internal",
             "position": "before"
           },
           {
-            "pattern": "@processors",
+            "pattern": "~processors",
             "group": "internal",
             "position": "before"
           },
           {
-            "pattern": "@contexts/**",
+            "pattern": "~contexts/**",
             "group": "internal",
             "position": "before"
           },
           {
-            "pattern": "@hooks/**",
+            "pattern": "~hooks/**",
             "group": "internal",
             "position": "before"
           },
           {
-            "pattern": "@utils/**",
+            "pattern": "~utils/**",
             "group": "internal",
             "position": "before"
           },
           {
-            "pattern": "@scenes/**",
+            "pattern": "~scenes/**",
             "group": "internal",
             "position": "before"
           },
           {
-            "pattern": "@core/**",
+            "pattern": "~core/**",
             "group": "internal",
             "position": "before"
           },
           {
-            "pattern": "@lib/**",
+            "pattern": "~lib/**",
             "group": "internal",
             "position": "before"
           }

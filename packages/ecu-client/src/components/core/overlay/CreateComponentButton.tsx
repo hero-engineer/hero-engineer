@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { Button, Div, H2, Input, Modal, Tooltip } from 'honorable'
 import { AiOutlinePlus } from 'react-icons/ai'
 
-import { CreateComponentMutation, CreateComponentMutationDataType } from '@queries'
+import { CreateComponentMutation, CreateComponentMutationDataType } from '~queries'
 
 // A button that pops a modal for creating a new component
 function CreateComponentButton(props: any) {

@@ -7,23 +7,22 @@ import { BiCaretRight } from 'react-icons/bi'
 import { IoSquareSharp } from 'react-icons/io5'
 import { VscEdit } from 'react-icons/vsc'
 import { SlTrash } from 'react-icons/sl'
+import { HierarchyItemType } from '~types'
 
-import { HierarchyItemType } from '@types'
+import { refetchKeys } from '~constants'
 
-import { refetchKeys } from '@constants'
+import { DeleteComponentMutation, DeleteComponentMutationDataType, UpdateHierarchyDisplayNameMutation, UpdateHierarchyDisplayNameMutationDataType } from '~queries'
 
-import { DeleteComponentMutation, DeleteComponentMutationDataType, UpdateHierarchyDisplayNameMutation, UpdateHierarchyDisplayNameMutationDataType } from '@queries'
+import HierarchyContext from '~contexts/HierarchyContext'
+import EditionContext from '~contexts/EditionContext'
+import ContextualInformationContext from '~contexts/ContextualInformationContext'
 
-import HierarchyContext from '@contexts/HierarchyContext'
-import EditionContext from '@contexts/EditionContext'
-import ContextualInformationContext from '@contexts/ContextualInformationContext'
+import useMutation from '~hooks/useMutation'
+import useRefetch from '~hooks/useRefetch'
+import useIsComponentRefreshingMutation from '~hooks/useIsComponentRefreshingMutation'
+import useHierarchySelection from '~hooks/useHierarchySelection'
 
-import useMutation from '@hooks/useMutation'
-import useRefetch from '@hooks/useRefetch'
-import useIsComponentRefreshingMutation from '@hooks/useIsComponentRefreshingMutation'
-import useHierarchySelection from '@hooks/useHierarchySelection'
-
-import findHierarchyIdAndComponentDelta from '@utils/findHierarchyIdAndComponentDelta'
+import findHierarchyIdAndComponentDelta from '~utils/findHierarchyIdAndComponentDelta'
 
 import Emoji from '../emoji/Emoji'
 

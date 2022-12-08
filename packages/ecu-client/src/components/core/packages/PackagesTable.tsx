@@ -3,15 +3,14 @@ import { Button, Div, Form, Input } from 'honorable'
 import { CiEdit } from 'react-icons/ci'
 import { SlTrash } from 'react-icons/sl'
 import { VscRunAbove } from 'react-icons/vsc'
+import { PackageType } from '~types'
 
-import { PackageType } from '@types'
+import { refetchKeys } from '~constants'
 
-import { refetchKeys } from '@constants'
+import { InstallOrUpdatePackageMutation, InstallOrUpdatePackageMutationDataType } from '~queries'
 
-import { InstallOrUpdatePackageMutation, InstallOrUpdatePackageMutationDataType } from '@queries'
-
-import useMutation from '@hooks/useMutation'
-import useRefetch from '@hooks/useRefetch'
+import useMutation from '~hooks/useMutation'
+import useRefetch from '~hooks/useRefetch'
 
 type PackagesTablePropsType = {
   packages: PackageType[]

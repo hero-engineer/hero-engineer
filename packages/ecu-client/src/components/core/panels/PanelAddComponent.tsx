@@ -3,25 +3,24 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Accordion, Button, Div, H3, Menu, MenuItem, Modal, P, Select } from 'honorable'
 import { TbRowInsertBottom } from 'react-icons/tb'
 import { VscTypeHierarchySub } from 'react-icons/vsc'
+import { HierarchyPosition } from '~types'
 
-import { HierarchyPosition } from '@types'
+import { ecuAtomPrefix, ecuAtoms, ecuSpecialPrefix, ecuSpecials, hierarchyPositions, refetchKeys } from '~constants'
 
-import { ecuAtomPrefix, ecuAtoms, ecuSpecialPrefix, ecuSpecials, hierarchyPositions, refetchKeys } from '@constants'
+import { AddComponentMutation, AddComponentMutationDataType, ComponentsQuery, ComponentsQueryDataType } from '~queries'
 
-import { AddComponentMutation, AddComponentMutationDataType, ComponentsQuery, ComponentsQueryDataType } from '@queries'
+import HierarchyContext from '~contexts/HierarchyContext'
+import EditionContext from '~contexts/EditionContext'
 
-import HierarchyContext from '@contexts/HierarchyContext'
-import EditionContext from '@contexts/EditionContext'
+import useMutation from '~hooks/useMutation'
+import useQuery from '~hooks/useQuery'
+import useRefetch from '~hooks/useRefetch'
+import useIsComponentRefreshingMutation from '~hooks/useIsComponentRefreshingMutation'
+import usePersistedState from '~hooks/usePersistedState'
 
-import useMutation from '@hooks/useMutation'
-import useQuery from '@hooks/useQuery'
-import useRefetch from '@hooks/useRefetch'
-import useIsComponentRefreshingMutation from '@hooks/useIsComponentRefreshingMutation'
-import usePersistedState from '@hooks/usePersistedState'
-
-import isHierarchyOnComponent from '@utils/isHierarchyOnComponent'
-import getLastEditedHierarchyItem from '@utils/getLastEditedHierarchyItem'
-import capitalize from '@utils/capitalize'
+import isHierarchyOnComponent from '~utils/isHierarchyOnComponent'
+import getLastEditedHierarchyItem from '~utils/getLastEditedHierarchyItem'
+import capitalize from '~utils/capitalize'
 
 // Displayed in the left panel
 // Section to insert a component in the hierarchy

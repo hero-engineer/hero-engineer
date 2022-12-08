@@ -1,7 +1,7 @@
 import { useCallback, useContext } from 'react'
 import { Link } from 'react-router-dom'
 
-import TabsContext from '@contexts/TabsContext'
+import TabsContext from '~contexts/TabsContext'
 
 type TabLinkPropsType = {
   to: string

@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { Div } from 'honorable'
 
-import TabsContext from '@contexts/TabsContext'
+import TabsContext from '~contexts/TabsContext'
 
 function Tabs() {
   const { tabs } = useContext(TabsContext)

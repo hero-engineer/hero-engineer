@@ -1,8 +1,7 @@
 import { useCallback } from 'react'
+import { CssValueType, CssValuesType } from '~types'
 
-import { CssValueType, CssValuesType } from '@types'
-
-import { cssAttributesMap } from '@constants'
+import { cssAttributesMap } from '~constants'
 
 function useStylesSubSectionHelpers(cssValues: CssValuesType, breakpointCssValues: CssValuesType) {
   const getValue = useCallback((attributeName: string) => breakpointCssValues[attributeName] ?? cssValues[attributeName] ?? cssAttributesMap[attributeName].defaultValue, [breakpointCssValues, cssValues])

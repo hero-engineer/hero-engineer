@@ -1,4 +1,4 @@
-import { HierarchyPosition } from '@types'
+import { HierarchyPosition } from '~types'
 
 export const zIndexes = {
   tooltip: 99999999999, // 11 9

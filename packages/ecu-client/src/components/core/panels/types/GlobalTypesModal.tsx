@@ -1,12 +1,12 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { Button, Div, H3, Input, Modal } from 'honorable'
 
-import { GlobalTypesQuery, GlobalTypesQueryDataType, UpdateGlobalTypesMutation, UpdateGlobalTypesMutationDataType } from '@queries'
+import { GlobalTypesQuery, GlobalTypesQueryDataType, UpdateGlobalTypesMutation, UpdateGlobalTypesMutationDataType } from '~queries'
 
-import GlobalTypesContext from '@contexts/GlobalTypesContext'
+import GlobalTypesContext from '~contexts/GlobalTypesContext'
 
-import useQuery from '@hooks/useQuery'
-import useMutation from '@hooks/useMutation'
+import useQuery from '~hooks/useQuery'
+import useMutation from '~hooks/useMutation'
 
 type GlobalTypesModalPropsType = {
   open: boolean

@@ -1,13 +1,12 @@
 import { useCallback, useMemo, useRef } from 'react'
 import { Accordion, Div, MenuItem, Select } from 'honorable'
+import { CssAttributeType, CssValuesType } from '~types'
 
-import { CssAttributeType, CssValuesType } from '@types'
+import useRefresh from '~hooks/useRefresh'
+import usePersistedState from '~hooks/usePersistedState'
+import useStylesSubSectionHelpers from '~hooks/useStylesSubSectionHelpers'
 
-import useRefresh from '@hooks/useRefresh'
-import usePersistedState from '@hooks/usePersistedState'
-import useStylesSubSectionHelpers from '@hooks/useStylesSubSectionHelpers'
-
-import capitalize from '@utils/capitalize'
+import capitalize from '~utils/capitalize'
 
 import StylesDisabledOverlay from './StylesDisabledOverlay'
 import SpacingEditor from './SpacingEditor'

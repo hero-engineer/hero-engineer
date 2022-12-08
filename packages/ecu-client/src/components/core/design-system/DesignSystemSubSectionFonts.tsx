@@ -5,16 +5,15 @@ import { SlTrash } from 'react-icons/sl'
 import { BsCheck2, BsPlus } from 'react-icons/bs'
 import { IoCloseOutline } from 'react-icons/io5'
 import shortId from 'shortid'
+import { FontType } from '~types'
 
-import { FontType } from '@types'
+import { refetchKeys } from '~constants'
 
-import { refetchKeys } from '@constants'
+import { FontsQuery, FontsQueryDataType, UpdateFontsMutation, UpdateFontsMutationDataType } from '~queries'
 
-import { FontsQuery, FontsQueryDataType, UpdateFontsMutation, UpdateFontsMutationDataType } from '@queries'
-
-import useQuery from '@hooks/useQuery'
-import useMutation from '@hooks/useMutation'
-import useRefetch from '@hooks/useRefetch'
+import useQuery from '~hooks/useQuery'
+import useMutation from '~hooks/useMutation'
+import useRefetch from '~hooks/useRefetch'
 
 function DesignSystemSubSectionFonts() {
   const [fonts, setFonts] = useState<FontType[]>([])

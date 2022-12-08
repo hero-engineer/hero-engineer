@@ -1,10 +1,10 @@
 import { ReactNode, memo, useContext, useMemo, useRef } from 'react'
 import { Div } from 'honorable'
 
-import BreakpointContext from '@contexts/BreakpointContext'
-import ThemeModeContext from '@contexts/ThemeModeContext'
+import BreakpointContext from '~contexts/BreakpointContext'
+import ThemeModeContext from '~contexts/ThemeModeContext'
 
-import useRefresh from '@hooks/useRefresh'
+import useRefresh from '~hooks/useRefresh'
 
 const largeIncrement = 50
 const smallIncrement = 5

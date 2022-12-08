@@ -13,13 +13,12 @@ import {
   MdOutlineAlignHorizontalRight,
   MdOutlineSwapHoriz,
 } from 'react-icons/md'
+import { CssAttributeType, CssValuesType } from '~types'
 
-import { CssAttributeType, CssValuesType } from '@types'
+import { cssAttributesMap } from '~constants'
 
-import { cssAttributesMap } from '@constants'
-
-import usePersistedState from '@hooks/usePersistedState'
-import useStylesSubSectionHelpers from '@hooks/useStylesSubSectionHelpers'
+import usePersistedState from '~hooks/usePersistedState'
+import useStylesSubSectionHelpers from '~hooks/useStylesSubSectionHelpers'
 
 import CssValueInput from '../../css/CssValueInput'
 

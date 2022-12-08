@@ -1,6 +1,6 @@
-import { CSsAttributesMapType, CssValueType } from '@types'
+import { CSsAttributesMapType, CssValueType } from '~types'
 
-import { cssValueUnits } from '@constants'
+import { cssValueUnits } from '~constants'
 
 import splitSpacingValue from './utils/splitSpacingValue'
 

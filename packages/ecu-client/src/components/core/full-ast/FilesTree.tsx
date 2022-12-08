@@ -1,13 +1,13 @@
 import { useMemo } from 'react'
 import { Div } from 'honorable'
 
-import { FilePathsQuery, FilePathsQueryDataType } from '@queries'
+import { FilePathsQuery, FilePathsQueryDataType } from '~queries'
 
-import useQuery from '@hooks/useQuery'
+import useQuery from '~hooks/useQuery'
 
-import { convertToEcuComponentPath } from '@utils/convertComponentPath'
+import { convertToEcuComponentPath } from '~utils/convertComponentPath'
 
-import TabLink from '@core/full-ast/TabLink'
+import TabLink from '~core/full-ast/TabLink'
 
 const lookup = 'app/src/'
 

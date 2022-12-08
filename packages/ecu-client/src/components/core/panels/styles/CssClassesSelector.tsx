@@ -4,20 +4,19 @@ import { Autocomplete, Div, WithOutsideClick } from 'honorable'
 import createEmojiRegex from 'emoji-regex'
 import { MdOutlineClose } from 'react-icons/md'
 import { HiOutlineFaceSmile } from 'react-icons/hi2'
+import { CssClassType } from '~types'
 
-import { CssClassType } from '@types'
+import { refetchKeys, zIndexes } from '~constants'
 
-import { refetchKeys, zIndexes } from '@constants'
+import { CreateCssClassMutation, CreateCssClassMutationDataType } from '~queries'
 
-import { CreateCssClassMutation, CreateCssClassMutationDataType } from '@queries'
+import EditionContext from '~contexts/EditionContext'
+import CssClassesContext from '~contexts/CssClassesContext'
 
-import EditionContext from '@contexts/EditionContext'
-import CssClassesContext from '@contexts/CssClassesContext'
+import useMutation from '~hooks/useMutation'
+import useRefetch from '~hooks/useRefetch'
 
-import useMutation from '@hooks/useMutation'
-import useRefetch from '@hooks/useRefetch'
-
-import extractClassNamesFromSelector from '@utils/extractClassNamesFromSelector'
+import extractClassNamesFromSelector from '~utils/extractClassNamesFromSelector'
 
 import EmojiPickerBase from '../../emoji/EmojiPickerBase'
 

@@ -1,11 +1,10 @@
 import { MouseEvent, useCallback, useContext } from 'react'
+import { HierarchyItemType } from '~types'
 
-import { HierarchyItemType } from '@types'
-
-import HierarchyContext from '@contexts/HierarchyContext'
-import EditionContext from '@contexts/EditionContext'
-import EditionOverlayContext from '@contexts/EditionOverlayContext'
-import CssClassesContext from '@contexts/CssClassesContext'
+import HierarchyContext from '~contexts/HierarchyContext'
+import EditionContext from '~contexts/EditionContext'
+import EditionOverlayContext from '~contexts/EditionOverlayContext'
+import CssClassesContext from '~contexts/CssClassesContext'
 
 function useHierarchySelection() {
   const { totalHierarchy } = useContext(HierarchyContext)

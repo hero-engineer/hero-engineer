@@ -1,6 +1,5 @@
 import { Dispatch, SetStateAction, createContext } from 'react'
-
-import { TabType } from '@types'
+import { TabType } from '~types'
 
 export type TabsContextType = {
   tabs: TabType[]

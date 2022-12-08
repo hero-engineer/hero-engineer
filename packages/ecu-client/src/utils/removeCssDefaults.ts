@@ -1,4 +1,4 @@
-import { CSsAttributesMapType, CssValuesType } from '@types'
+import { CSsAttributesMapType, CssValuesType } from '~types'
 
 function removeCssDefaults(cssValues: CssValuesType, cssAttributeMap: CSsAttributesMapType) {
   const nextAttributes = { ...cssValues }

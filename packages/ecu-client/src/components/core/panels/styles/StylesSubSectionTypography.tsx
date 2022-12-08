@@ -4,19 +4,18 @@ import { TfiAlignCenter, TfiAlignJustify, TfiAlignLeft, TfiAlignRight } from 're
 import { BsTypeItalic } from 'react-icons/bs'
 import { RxLetterCaseCapitalize, RxLetterCaseLowercase, RxLetterCaseUppercase, RxOverline, RxStrikethrough, RxUnderline } from 'react-icons/rx'
 import { MdClose, MdOutlineFormatTextdirectionLToR, MdOutlineFormatTextdirectionRToL } from 'react-icons/md'
+import { CssAttributeType, CssValuesType } from '~types'
 
-import { CssAttributeType, CssValuesType } from '@types'
+import { refetchKeys } from '~constants'
 
-import { refetchKeys } from '@constants'
+import { ColorsQuery, ColorsQueryDataType, FontsQuery, FontsQueryDataType } from '~queries'
 
-import { ColorsQuery, ColorsQueryDataType, FontsQuery, FontsQueryDataType } from '@queries'
+import useQuery from '~hooks/useQuery'
+import useRefetch from '~hooks/useRefetch'
+import usePersistedState from '~hooks/usePersistedState'
+import useStylesSubSectionHelpers from '~hooks/useStylesSubSectionHelpers'
 
-import useQuery from '@hooks/useQuery'
-import useRefetch from '@hooks/useRefetch'
-import usePersistedState from '@hooks/usePersistedState'
-import useStylesSubSectionHelpers from '@hooks/useStylesSubSectionHelpers'
-
-import capitalize from '@utils/capitalize'
+import capitalize from '~utils/capitalize'
 
 import ColorPicker from '../../css/ColorPicker'
 import CssValueInput from '../../css/CssValueInput'

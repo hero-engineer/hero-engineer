@@ -2,9 +2,9 @@ import { DocumentNode } from 'graphql'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { AnyVariables, OperationContext, TypedDocumentNode, UseMutationResponse, useMutation as externalUseMutation } from 'urql'
 
-import { refetchKeys } from '@constants'
+import { refetchKeys } from '~constants'
 
-import SnackbarContext from '@contexts/SnackBarContext'
+import SnackbarContext from '~contexts/SnackBarContext'
 
 import useRefetch from './useRefetch'
 

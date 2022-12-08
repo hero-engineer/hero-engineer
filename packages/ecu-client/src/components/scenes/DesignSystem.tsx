@@ -1,8 +1,8 @@
 import { Div, H1 } from 'honorable'
 
-import DesignSystemSectionTypography from '@core/design-system/DesignSystemSectionTypography'
-import DesignSystemSectionColors from '@core/design-system/DesignSystemSectionColors'
-import DesignSystemSectionSpacings from '@core/design-system/DesignSystemSectionSpacings'
+import DesignSystemSectionTypography from '~core/design-system/DesignSystemSectionTypography'
+import DesignSystemSectionColors from '~core/design-system/DesignSystemSectionColors'
+import DesignSystemSectionSpacings from '~core/design-system/DesignSystemSectionSpacings'
 
 // Design/system scene
 function DesignSystem() {

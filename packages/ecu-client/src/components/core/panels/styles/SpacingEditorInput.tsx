@@ -1,12 +1,11 @@
 import { Ref, forwardRef, useCallback, useContext } from 'react'
 import { Button, Div, Slider } from 'honorable'
 import { CgUndo } from 'react-icons/cg'
+import { CssValueType } from '~types'
 
-import { CssValueType } from '@types'
+import BreakpointContext from '~contexts/BreakpointContext'
 
-import BreakpointContext from '@contexts/BreakpointContext'
-
-import splitSpacingValue from '@utils/splitSpacingValue'
+import splitSpacingValue from '~utils/splitSpacingValue'
 
 import CssValueInput from '../../css/CssValueInput'
 

@@ -1,4 +1,4 @@
-import { HierarchyItemType } from '@types'
+import { HierarchyItemType } from '~types'
 
 function getLastComponentHierarchyItem(hierarchy: HierarchyItemType[]) {
   return [...hierarchy].reverse().find(item => item.componentAddress)

@@ -2,13 +2,13 @@ import { Link } from 'react-router-dom'
 import { useQuery } from 'urql'
 import { Div, H1 } from 'honorable'
 
-import { refetchKeys } from '@constants'
+import { refetchKeys } from '~constants'
 
-import { ComponentsQuery, ComponentsQueryDataType } from '@queries'
+import { ComponentsQuery, ComponentsQueryDataType } from '~queries'
 
-import useRefetch from '@hooks/useRefetch'
+import useRefetch from '~hooks/useRefetch'
 
-import ComponentThumbnail from '@core/components/ComponentThumbnail'
+import ComponentThumbnail from '~core/components/ComponentThumbnail'
 
 // Components scene
 function Components() {

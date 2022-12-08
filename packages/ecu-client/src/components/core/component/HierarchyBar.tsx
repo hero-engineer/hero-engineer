@@ -2,22 +2,21 @@ import { Fragment, memo, useCallback, useContext, useEffect, useMemo } from 'rea
 import { useParams } from 'react-router-dom'
 import { useQuery } from 'urql'
 import { Div } from 'honorable'
+import { HierarchyItemType } from '~types'
 
-import { HierarchyItemType } from '@types'
+import { refetchKeys, zIndexes } from '~constants'
 
-import { refetchKeys, zIndexes } from '@constants'
+import { HierarchyQuery, HierarchyQueryDataType } from '~queries'
 
-import { HierarchyQuery, HierarchyQueryDataType } from '@queries'
+import HierarchyContext from '~contexts/HierarchyContext'
+import BreakpointContext from '~contexts/BreakpointContext'
+import EditionContext from '~contexts/EditionContext'
+import IsInteractiveModeContext from '~contexts/IsInteractiveModeContext'
 
-import HierarchyContext from '@contexts/HierarchyContext'
-import BreakpointContext from '@contexts/BreakpointContext'
-import EditionContext from '@contexts/EditionContext'
-import IsInteractiveModeContext from '@contexts/IsInteractiveModeContext'
+import useRefetch from '~hooks/useRefetch'
 
-import useRefetch from '@hooks/useRefetch'
-
-import findHierarchyIdAndComponentDelta from '@utils/findHierarchyIdAndComponentDelta'
-import getFlattenedHierarchy from '@utils/getFlattenedHierarchy'
+import findHierarchyIdAndComponentDelta from '~utils/findHierarchyIdAndComponentDelta'
+import getFlattenedHierarchy from '~utils/getFlattenedHierarchy'
 
 function isSelectedComponentParent(hierarchy: HierarchyItemType[], currentHierarchyItem: HierarchyItemType) {
   const selectedHierarchyItem = hierarchy[hierarchy.length - 1]

@@ -2,16 +2,16 @@ import { ReactNode, memo, useCallback, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import html2canvas from 'html2canvas'
 
-// import { refetchKeys } from '@constants'
+// import { refetchKeys } from '~constants'
 
 import {
   UpdateComponentScreenshotMutation,
   UpdateComponentScreenshotMutationDataType,
-} from '@queries'
+} from '~queries'
 
-import useMutation from '@hooks/useMutation'
+import useMutation from '~hooks/useMutation'
 
-// import useRefetch from '@hooks/useRefetch'
+// import useRefetch from '~hooks/useRefetch'
 
 function traverseElementToRemoveEcuClasses(element: HTMLElement) {
   const classes: string[] = []

@@ -3,10 +3,10 @@ import { Div, Input, Menu, MenuItem, WithOutsideClick } from 'honorable'
 import { AiOutlineFunction } from 'react-icons/ai'
 import { BiError } from 'react-icons/bi'
 
-import { cssValueUnits } from '@constants'
+import { cssValueUnits } from '~constants'
 
-import splitSpacingValue from '@utils/splitSpacingValue'
-import trimLeadingZeroes from '@utils/trimLeadingZeroes'
+import splitSpacingValue from '~utils/splitSpacingValue'
+import trimLeadingZeroes from '~utils/trimLeadingZeroes'
 
 type CssValueInputPropsType = {
   value: string

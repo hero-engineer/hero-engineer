@@ -1,9 +1,8 @@
 import { useMemo } from 'react'
 import { Div } from 'honorable'
+import { CssValuesType } from '~types'
 
-import { CssValuesType } from '@types'
-
-import useStylesSubSectionHelpers from '@hooks/useStylesSubSectionHelpers'
+import useStylesSubSectionHelpers from '~hooks/useStylesSubSectionHelpers'
 
 type StylesSubSectionTitlePropsType = {
   title: string

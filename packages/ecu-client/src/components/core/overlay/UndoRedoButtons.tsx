@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { Button, Div, Tooltip } from 'honorable'
 import { BiRedo, BiUndo } from 'react-icons/bi'
 
-import { refetchKeys } from '@constants'
+import { refetchKeys } from '~constants'
 
 import {
   RedoMutation,
@@ -11,11 +11,11 @@ import {
   UndoMutationDataType,
   UndoRedoMetadastaQueryDataType,
   UndoRedoMetadataQuery,
-} from '@queries'
+} from '~queries'
 
-import useQuery from '@hooks/useQuery'
-import useMutation from '@hooks/useMutation'
-import useRefetch from '@hooks/useRefetch'
+import useQuery from '~hooks/useQuery'
+import useMutation from '~hooks/useMutation'
+import useRefetch from '~hooks/useRefetch'
 
 // The undo/redo buttons
 function UndoRedoButtons() {

@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { Div, H1, Switch } from 'honorable'
 
-import ThemeModeContext from '@contexts/ThemeModeContext'
+import ThemeModeContext from '~contexts/ThemeModeContext'
 
 function SettingsGeneral() {
   const { themeMode, setThemeMode } = useContext(ThemeModeContext)

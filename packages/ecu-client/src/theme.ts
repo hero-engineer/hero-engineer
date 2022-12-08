@@ -5,7 +5,7 @@ import gapRecipe from 'honorable-recipe-gap'
 import mapperRecipe from 'honorable-recipe-mapper'
 import xflexRecipe from 'honorable-recipe-xflex'
 
-import { zIndexes } from '@constants'
+import { zIndexes } from '~constants'
 
 const borderRadiuses = {
   none: 0,

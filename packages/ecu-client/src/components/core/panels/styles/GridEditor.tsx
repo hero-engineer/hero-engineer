@@ -1,9 +1,8 @@
 import { useCallback } from 'react'
 import { Button, Div } from 'honorable'
+import { CssAttributeType, CssValueType, CssValuesType } from '~types'
 
-import { CssAttributeType, CssValueType, CssValuesType } from '@types'
-
-import { cssAttributesMap } from '@constants'
+import { cssAttributesMap } from '~constants'
 
 type GridEditorPropsType = {
   cssValues: CssValuesType

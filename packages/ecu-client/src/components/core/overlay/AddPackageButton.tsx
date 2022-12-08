@@ -1,12 +1,12 @@
 import { FormEvent, useCallback, useState } from 'react'
 import { Button, Div, Form, H3, Input, Label, Modal, Switch } from 'honorable'
 
-import { refetchKeys } from '@constants'
+import { refetchKeys } from '~constants'
 
-import { InstallOrUpdatePackageMutation, InstallOrUpdatePackageMutationDataType } from '@queries'
+import { InstallOrUpdatePackageMutation, InstallOrUpdatePackageMutationDataType } from '~queries'
 
-import useMutation from '@hooks/useMutation'
-import useRefetch from '@hooks/useRefetch'
+import useMutation from '~hooks/useMutation'
+import useRefetch from '~hooks/useRefetch'
 
 function AddPackageButton() {
   const [isModalOpen, setIsModalOpen] = useState(false)

@@ -1,6 +1,5 @@
 import { Dispatch, SetStateAction, createContext } from 'react'
-
-import { AstsType } from '@types'
+import { AstsType } from '~types'
 
 export type AstsContextType = {
   asts: AstsType

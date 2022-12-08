@@ -1,10 +1,10 @@
 import { Dispatch, ReactElement, SetStateAction, memo, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { Iframe, IframeProps } from 'honorable'
+import { Iframe } from 'honorable'
 
-import BreakpointContext from '@contexts/BreakpointContext'
+import BreakpointContext from '~contexts/BreakpointContext'
 
-import useRefresh from '@hooks/useRefresh'
+import useRefresh from '~hooks/useRefresh'
 
 import editionStyles from '../../../css/edition.css?inline'
 
@@ -14,11 +14,11 @@ type ComponentIframeChildrenArgsType = {
   setHeight: Dispatch<SetStateAction<number>>
 }
 
-type ComponentIframePropsType = Omit<IframeProps, 'children'> & {
+type ComponentIframePropsType = {
   children: (args: ComponentIframeChildrenArgsType) => ReactElement
 }
 
-function ComponentIframe({ children, ...props }: ComponentIframePropsType) {
+function ComponentIframe({ children }: ComponentIframePropsType) {
   const rootRef = useRef<HTMLIFrameElement>(null)
 
   useRefresh()
@@ -61,10 +61,9 @@ function ComponentIframe({ children, ...props }: ComponentIframePropsType) {
 
   return (
     <Iframe
-      {...props}
       ref={rootRef}
       width={width}
-      height={height === '-' ? baseHeight : height}
+      height={height ?? baseHeight}
       minHeight={0}
       border="none"
       position="relative" // For Tooltip to be over the iframe

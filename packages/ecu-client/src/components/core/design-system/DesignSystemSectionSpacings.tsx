@@ -1,17 +1,16 @@
 import { useCallback, useEffect, useState } from 'react'
 import { A, Button, Div, H2, Input } from 'honorable'
 import shortId from 'shortid'
+import { SpacingType } from '~types'
 
-import { SpacingType } from '@types'
+import { refetchKeys } from '~constants'
 
-import { refetchKeys } from '@constants'
+import { SpacingsQuery, SpacingsQueryDataType, UpdateSpacingsMutation, UpdateSpacingsMutationDataType } from '~queries'
 
-import { SpacingsQuery, SpacingsQueryDataType, UpdateSpacingsMutation, UpdateSpacingsMutationDataType } from '@queries'
-
-import useQuery from '@hooks/useQuery'
-import useRefetch from '@hooks/useRefetch'
-import useMutation from '@hooks/useMutation'
-import useThrottleAsynchronous from '@hooks/useThrottleAsynchronous'
+import useQuery from '~hooks/useQuery'
+import useRefetch from '~hooks/useRefetch'
+import useMutation from '~hooks/useMutation'
+import useThrottleAsynchronous from '~hooks/useThrottleAsynchronous'
 
 import CssValueInput from '../css/CssValueInput'
 

@@ -3,11 +3,11 @@ import { Button, Div, Tooltip } from 'honorable'
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md'
 import { CgDockLeft, CgDockRight } from 'react-icons/cg'
 
-import { zIndexes } from '@constants'
+import { zIndexes } from '~constants'
 
-import usePersistedState from '@hooks/usePersistedState'
+import usePersistedState from '~hooks/usePersistedState'
 
-import xor from '@utils/xor'
+import xor from '~utils/xor'
 
 type RetractablePanelItemType = {
   label: string

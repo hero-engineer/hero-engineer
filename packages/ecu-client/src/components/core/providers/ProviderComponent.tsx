@@ -1,15 +1,14 @@
 import { CSSProperties, ReactNode, useMemo, useState } from 'react'
+import { HierarchyItemType } from '~types'
 
-import { HierarchyItemType } from '@types'
+import IsComponentRefreshingContext, { IsComponentRefreshingContextType } from '~contexts/IsComponentRefreshingContext'
+import HierarchyContext, { HierarchyContextType } from '~contexts/HierarchyContext'
+import EditionContext, { EditionContextType } from '~contexts/EditionContext'
+import DragAndDropContext, { DragAndDropContextType, DragAndDropType } from '~contexts/DragAndDropContext'
+import CssClassesContext, { CssClassesContextType } from '~contexts/CssClassesContext'
+import EditionOverlayContext, { EditionOverlayContextType } from '~contexts/EditionOverlayContext'
 
-import IsComponentRefreshingContext, { IsComponentRefreshingContextType } from '@contexts/IsComponentRefreshingContext'
-import HierarchyContext, { HierarchyContextType } from '@contexts/HierarchyContext'
-import EditionContext, { EditionContextType } from '@contexts/EditionContext'
-import DragAndDropContext, { DragAndDropContextType, DragAndDropType } from '@contexts/DragAndDropContext'
-import CssClassesContext, { CssClassesContextType } from '@contexts/CssClassesContext'
-import EditionOverlayContext, { EditionOverlayContextType } from '@contexts/EditionOverlayContext'
-
-import usePersistedState from '@hooks/usePersistedState'
+import usePersistedState from '~hooks/usePersistedState'
 
 type ComponentProvidersPropsType = {
   children: ReactNode

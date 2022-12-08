@@ -1,13 +1,12 @@
 import { useCallback, useMemo } from 'react'
 import { Accordion, Button, Div, Tooltip } from 'honorable'
 import { AiOutlineColumnHeight, AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
+import { CssAttributeType, CssValuesType } from '~types'
 
-import { CssAttributeType, CssValuesType } from '@types'
+import usePersistedState from '~hooks/usePersistedState'
+import useStylesSubSectionHelpers from '~hooks/useStylesSubSectionHelpers'
 
-import usePersistedState from '@hooks/usePersistedState'
-import useStylesSubSectionHelpers from '@hooks/useStylesSubSectionHelpers'
-
-import capitalize from '@utils/capitalize'
+import capitalize from '~utils/capitalize'
 
 import CssValueInput from '../../css/CssValueInput'
 

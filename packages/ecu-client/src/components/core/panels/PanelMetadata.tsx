@@ -3,17 +3,17 @@ import { useParams } from 'react-router-dom'
 import { useMutation, useQuery } from 'urql'
 import { Div, H4, Input, P, Tooltip, WithOutsideClick, useOutsideClick } from 'honorable'
 
-import { refetchKeys, zIndexes } from '@constants'
+import { refetchKeys, zIndexes } from '~constants'
 
 import {
   ComponentQuery,
   ComponentQueryDataType,
   UpdateFileDescriptionMutation,
   UpdateFileDescriptionMutationDataType,
-} from '@queries'
+} from '~queries'
 
-import useRefetch from '@hooks/useRefetch'
-import useIsComponentRefreshingQuery from '@hooks/useIsComponentRefreshingQuery'
+import useRefetch from '~hooks/useRefetch'
+import useIsComponentRefreshingQuery from '~hooks/useIsComponentRefreshingQuery'
 
 import EmojiPickerBase from '../emoji/EmojiPickerBase'
 import Emoji from '../emoji/Emoji'

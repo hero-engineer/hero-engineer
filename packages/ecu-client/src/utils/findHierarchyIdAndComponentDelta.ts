@@ -1,4 +1,4 @@
-import { HierarchyItemType } from '@types'
+import { HierarchyItemType } from '~types'
 
 type HierarchyIdsAndComponentDeltaType = {
   hierarchyId: string

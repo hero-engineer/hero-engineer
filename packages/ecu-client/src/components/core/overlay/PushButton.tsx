@@ -6,7 +6,7 @@ import { GoRepoPush } from 'react-icons/go'
 import {
   PushMutation,
   PushMutationDataType,
-} from '@queries'
+} from '~queries'
 
 // The git push button
 function PushButton() {

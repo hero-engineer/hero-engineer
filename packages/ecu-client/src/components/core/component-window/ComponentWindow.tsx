@@ -8,9 +8,9 @@ import EditionOverlay from '../edition-overlay/EditionOverlay'
 import ProviderEmotion from '../providers/ProviderEmotion'
 
 import ComponentIframeExpander from './ComponentIframeExpander'
-import WithComponentIframeHeight from './WithComponentIframeHeight'
 import ComponentIframe from './ComponentIframe'
 import ComponentLoader from './ComponentLoader'
+import WithComponentIframeHeight from './WithComponentIframeHeight'
 
 type ComponentWindowPropsType = {
   componentPath: string

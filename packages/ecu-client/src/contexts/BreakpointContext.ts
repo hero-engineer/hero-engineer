@@ -1,6 +1,5 @@
 import { Dispatch, SetStateAction, createContext } from 'react'
-
-import { BreakpointType } from '@types'
+import { BreakpointType } from '~types'
 
 export type BreakpointContextType = {
   breakpoint: BreakpointType
@@ -9,8 +8,8 @@ export type BreakpointContextType = {
   setBreakpoints: Dispatch<SetStateAction<BreakpointType[]>>
   width: number
   setWidth: Dispatch<SetStateAction<number>>
-  height: number | '-'
-  setHeight: Dispatch<SetStateAction<number | '-'>>
+  height: number | null
+  setHeight: Dispatch<SetStateAction<number | null>>
   isDragging: boolean
   setIsDragging: Dispatch<SetStateAction<boolean>>
 }
@@ -30,7 +29,7 @@ export default createContext<BreakpointContextType>({
   setBreakpoints: () => {},
   width: 0,
   setWidth: () => {},
-  height: '-',
+  height: null,
   setHeight: () => {},
   isDragging: false,
   setIsDragging: () => {},

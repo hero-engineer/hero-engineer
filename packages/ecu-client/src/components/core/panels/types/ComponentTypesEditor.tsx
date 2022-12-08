@@ -2,13 +2,13 @@ import { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { A, Button, Div, Input } from 'honorable'
 
-import { refetchKeys } from '@constants'
+import { refetchKeys } from '~constants'
 
-import { FileTypesQuery, FileTypesQueryDataType, UpdateFileTypesMutation, UpdateFileTypesMutationDataType } from '@queries'
+import { FileTypesQuery, FileTypesQueryDataType, UpdateFileTypesMutation, UpdateFileTypesMutationDataType } from '~queries'
 
-import useQuery from '@hooks/useQuery'
-import useMutation from '@hooks/useMutation'
-import useRefetch from '@hooks/useRefetch'
+import useQuery from '~hooks/useQuery'
+import useMutation from '~hooks/useMutation'
+import useRefetch from '~hooks/useRefetch'
 
 import GlobalTypesModal from './GlobalTypesModal'
 

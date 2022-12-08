@@ -1,10 +1,9 @@
 import { CSSProperties, useMemo } from 'react'
+import { CssValuesType } from '~types'
 
-import { CssValuesType } from '@types'
+import { cssAttributesMap, cssValueReset } from '~constants'
 
-import { cssAttributesMap, cssValueReset } from '@constants'
-
-import convertJsAttributeNameToCss from '@utils/convertJsAttributeNameToCss'
+import convertJsAttributeNameToCss from '~utils/convertJsAttributeNameToCss'
 
 function useJsCssValues(cssValues: CssValuesType, style: CSSProperties) {
   return useMemo(() => {

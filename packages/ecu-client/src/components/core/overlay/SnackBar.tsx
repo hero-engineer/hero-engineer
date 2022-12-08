@@ -1,9 +1,9 @@
 import { Div } from 'honorable'
 import { useContext, useEffect, useState } from 'react'
 
-import { zIndexes } from '@constants'
+import { zIndexes } from '~constants'
 
-import SnackbarContext from '@contexts/SnackBarContext'
+import SnackbarContext from '~contexts/SnackBarContext'
 
 const duration = 5000
 const severityToBorderColor = {

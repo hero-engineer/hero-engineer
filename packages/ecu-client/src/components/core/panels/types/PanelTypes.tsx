@@ -1,7 +1,7 @@
 import { memo } from 'react'
 import { Accordion, Div } from 'honorable'
 
-import usePersistedState from '@hooks/usePersistedState'
+import usePersistedState from '~hooks/usePersistedState'
 
 import ComponentTypesEditor from './ComponentTypesEditor'
 

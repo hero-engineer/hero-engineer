@@ -1,10 +1,9 @@
 import { useMemo } from 'react'
+import { CssClassType, CssValuesType } from '~types'
 
-import { CssClassType, CssValuesType } from '@types'
+import { cssAttributesMap } from '~constants'
 
-import { cssAttributesMap } from '@constants'
-
-import extractValueFromClasses from '@utils/extractValueFromClasses'
+import extractValueFromClasses from '~utils/extractValueFromClasses'
 
 function useCssValues(classes: CssClassType[]) {
   return useMemo(() => {

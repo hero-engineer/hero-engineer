@@ -2,15 +2,15 @@ import '../css/edition.css'
 
 import { CSSProperties, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
 
-import { cssValueReset } from '@constants'
+import { cssValueReset } from '~constants'
 
-import HierarchyContext from '@contexts/HierarchyContext'
-import EditionContext from '@contexts/EditionContext'
-import ContextualInformationContext from '@contexts/ContextualInformationContext'
-import CssClassesContext from '@contexts/CssClassesContext'
-import IsInteractiveModeContext from '@contexts/IsInteractiveModeContext'
+import HierarchyContext from '~contexts/HierarchyContext'
+import EditionContext from '~contexts/EditionContext'
+import ContextualInformationContext from '~contexts/ContextualInformationContext'
+import CssClassesContext from '~contexts/CssClassesContext'
+import IsInteractiveModeContext from '~contexts/IsInteractiveModeContext'
 
-import getComponentRootHierarchyIds from '@utils/getComponentRootHierarchyIds'
+import getComponentRootHierarchyIds from '~utils/getComponentRootHierarchyIds'
 
 import useEditionOverlay from './useEditionOverlay'
 import useHierarchyId from './useHierarchyId'

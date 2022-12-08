@@ -1,4 +1,4 @@
-import { BreakpointType, ColorType, CssClassType, FileNodeType, FileType, FontType, FunctionNodeType, ImportType, PackageType, SpacingType, TypeType } from '@types'
+import { BreakpointType, ColorType, CssClassType, FileNodeType, FileType, FontType, FunctionNodeType, ImportType, PackageType, SpacingType, TypeType } from '~types'
 
 type ComponentReturnType = {
   component: FunctionNodeType

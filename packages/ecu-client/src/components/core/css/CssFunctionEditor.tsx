@@ -1,14 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Div } from 'honorable'
-
-import { refetchKeys } from '@constants'
-
-import { ColorsQuery, ColorsQueryDataType, IsCssValidQuery, IsCssValidQueryDataType, SpacingsQuery, SpacingsQueryDataType } from '@queries'
-
-import useQuery from '@hooks/useQuery'
-import useRefetch from '@hooks/useRefetch'
-
 import Editor, { useMonaco } from '@monaco-editor/react'
+
+import { refetchKeys } from '~constants'
+
+import { ColorsQuery, ColorsQueryDataType, IsCssValidQuery, IsCssValidQueryDataType, SpacingsQuery, SpacingsQueryDataType } from '~queries'
+
+import useQuery from '~hooks/useQuery'
+import useRefetch from '~hooks/useRefetch'
 
 type CssFunctionEditorPropsType = {
   value: string

@@ -1,22 +1,21 @@
 import { Fragment, MouseEvent as ReactMouseEvent, ReactNode, memo, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Div } from 'honorable'
+import { HierarchyItemType } from '~types'
 
-import { HierarchyItemType } from '@types'
+import { zIndexes } from '~constants'
 
-import { zIndexes } from '@constants'
+import HierarchyContext from '~contexts/HierarchyContext'
+import EditionContext from '~contexts/EditionContext'
+import EditionOverlayContext from '~contexts/EditionOverlayContext'
+import IsInteractiveModeContext from '~contexts/IsInteractiveModeContext'
+import IsComponentRefreshingContext from '~contexts/IsComponentRefreshingContext'
+import BreakpointContext from '~contexts/BreakpointContext'
 
-import HierarchyContext from '@contexts/HierarchyContext'
-import EditionContext from '@contexts/EditionContext'
-import EditionOverlayContext from '@contexts/EditionOverlayContext'
-import IsInteractiveModeContext from '@contexts/IsInteractiveModeContext'
-import IsComponentRefreshingContext from '@contexts/IsComponentRefreshingContext'
-import BreakpointContext from '@contexts/BreakpointContext'
+import useHierarchySelection from '~hooks/useHierarchySelection'
 
-import useHierarchySelection from '@hooks/useHierarchySelection'
-
-import getComponentRootHierarchyIds from '@utils/getComponentRootHierarchyIds'
-import findHierarchyIdAndComponentDelta from '@utils/findHierarchyIdAndComponentDelta'
+import getComponentRootHierarchyIds from '~utils/getComponentRootHierarchyIds'
+import findHierarchyIdAndComponentDelta from '~utils/findHierarchyIdAndComponentDelta'
 
 import EditionOverlayElement from './EditionOverlayElement'
 
@@ -329,11 +328,7 @@ function EditionOverlay({ children }: EditionOverlayPropsType) {
   }, [dragAndDropState.isDragging, handleMouseUp])
 
   return (
-    <Div
-      xflex="y2s"
-      position="relative"
-      overflow="hidden" // This is important for preventing an annoying scrollbar
-    >
+    <Div position="relative">
       {children}
       {!isInteractiveMode && (
         <Div

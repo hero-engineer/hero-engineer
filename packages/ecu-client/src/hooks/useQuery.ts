@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { OperationContext, UseQueryArgs, UseQueryState, useQuery as externalUseQuery } from 'urql'
 
-import SnackbarContext from '@contexts/SnackBarContext'
+import SnackbarContext from '~contexts/SnackBarContext'
 
 function useQuery<T>(args: UseQueryArgs): [UseQueryState<T>, (args: any) => void] {
   const { snackBarItems, appendSnackBarItem } = useContext(SnackbarContext)

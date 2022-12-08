@@ -1,15 +1,15 @@
 import { ReactNode, useCallback, useContext, useEffect } from 'react'
 import { File } from '@babel/types'
 import { Document, Root } from 'postcss'
-import { AstsType } from '@types'
+import { AstsType } from '~types'
 
-import { FilesQuery, FilesQueryDataType } from '@queries'
+import { FilesQuery, FilesQueryDataType } from '~queries'
 
-import { Babel, Postcss, allowedBabelExtensions, allowedPostcssExtensions, babelOptions } from '@processors'
+import { Babel, Postcss, allowedBabelExtensions, allowedPostcssExtensions, babelOptions } from '~processors'
 
-import AstsContext from '@contexts/AstsContext'
+import AstsContext from '~contexts/AstsContext'
 
-import useQuery from '@hooks/useQuery'
+import useQuery from '~hooks/useQuery'
 
 type WithAstsPropsType = {
   children: ReactNode

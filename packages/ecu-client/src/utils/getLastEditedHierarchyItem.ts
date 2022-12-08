@@ -1,4 +1,4 @@
-import { HierarchyItemType } from '@types'
+import { HierarchyItemType } from '~types'
 
 // Get the last hierarchyItem with a componentName
 function getLastEditedHierarchyItem(hierarchy: HierarchyItemType[]) {

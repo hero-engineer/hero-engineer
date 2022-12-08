@@ -1,11 +1,11 @@
 import { MouseEvent, ReactNode, memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { Div } from 'honorable'
 
-import { zIndexes } from '@constants'
+import { zIndexes } from '~constants'
 
-import BreakpointContext from '@contexts/BreakpointContext'
+import BreakpointContext from '~contexts/BreakpointContext'
 
-import useClearHierarchyIdsAndComponentDeltaOnClick from '@hooks/useClearHierarchyIdsAndComponentDeltaOnClick'
+import useClearHierarchyIdsAndComponentDeltaOnClick from '~hooks/useClearHierarchyIdsAndComponentDeltaOnClick'
 
 type ComponentIframeWidthExanderPropsType = {
   children: ReactNode
@@ -89,7 +89,7 @@ function ComponentIframeExanderHandle({ isLeft, isHeight, maxWidth, currentHeigh
     if (!(isDragging && isDraggingCurrent && breakpoint)) return
 
     if (isHeight) {
-      setHeight(height => Math.max(0, (height === '-' ? currentHeight! : height) + event.movementY))
+      setHeight(height => Math.max(0, (height ?? currentHeight!) + event.movementY))
     }
     else {
       setWidth(width => Math.max(breakpoint.min, Math.min(maxWidth!, breakpoint.max, width + (isLeft ? -2 : 2) * event.movementX)))

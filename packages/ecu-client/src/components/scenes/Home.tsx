@@ -1,6 +1,6 @@
 import { H1 } from 'honorable'
 
-import FilesTree from '@core/full-ast/FilesTree'
+import FilesTree from '~core/full-ast/FilesTree'
 
 // Home scene
 function Home() {

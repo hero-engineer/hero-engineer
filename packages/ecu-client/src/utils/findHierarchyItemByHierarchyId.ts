@@ -1,4 +1,4 @@
-import { HierarchyItemType } from '@types'
+import { HierarchyItemType } from '~types'
 
 function findHierarchyItemByHierarchyId(rootHierarchyItem: HierarchyItemType | null, targetHierarchyId: string): HierarchyItemType | null {
   if (!rootHierarchyItem) return null

@@ -1,4 +1,4 @@
-import { HierarchyItemType } from '@types'
+import { HierarchyItemType } from '~types'
 
 function bfs(hierarchy: HierarchyItemType, goalHierarchyId: string) {
   const queue = [[hierarchy]]

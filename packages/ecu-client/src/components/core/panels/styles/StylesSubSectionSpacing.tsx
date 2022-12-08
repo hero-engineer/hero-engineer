@@ -1,10 +1,9 @@
 import { useRef } from 'react'
 import { Accordion } from 'honorable'
+import { CssAttributeType, CssValuesType } from '~types'
 
-import { CssAttributeType, CssValuesType } from '@types'
-
-import useRefresh from '@hooks/useRefresh'
-import usePersistedState from '@hooks/usePersistedState'
+import useRefresh from '~hooks/useRefresh'
+import usePersistedState from '~hooks/usePersistedState'
 
 import StylesTitle from './StylesTitle'
 import SpacingEditor from './SpacingEditor'

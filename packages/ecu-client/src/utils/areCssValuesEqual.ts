@@ -1,4 +1,4 @@
-import { CssValuesType } from '@types'
+import { CssValuesType } from '~types'
 
 function areCssValuesEqual(a: CssValuesType, b: CssValuesType) {
   const aEntries = Object.entries(a)

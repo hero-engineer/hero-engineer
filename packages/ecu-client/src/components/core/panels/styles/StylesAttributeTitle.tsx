@@ -1,12 +1,11 @@
 import { useCallback, useMemo } from 'react'
 import { Div, DivProps } from 'honorable'
 import { BiUndo } from 'react-icons/bi'
+import { CssAttributeType, CssValuesType } from '~types'
 
-import { CssAttributeType, CssValuesType } from '@types'
+import { cssAttributesMap, cssValueReset } from '~constants'
 
-import { cssAttributesMap, cssValueReset } from '@constants'
-
-import useStylesSubSectionHelpers from '@hooks/useStylesSubSectionHelpers'
+import useStylesSubSectionHelpers from '~hooks/useStylesSubSectionHelpers'
 
 type StylesSubSectionAttributeTitlePropsType = DivProps & {
   cssValues: CssValuesType

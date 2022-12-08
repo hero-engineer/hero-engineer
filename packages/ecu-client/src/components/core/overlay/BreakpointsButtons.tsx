@@ -5,17 +5,16 @@ import viewports from 'devices-viewport-size'
 import { AiOutlineDesktop, AiOutlineMobile, AiOutlineTablet } from 'react-icons/ai'
 import { MdClose } from 'react-icons/md'
 import { RxCaretDown } from 'react-icons/rx'
+import { BreakpointType } from '~types'
 
-import { BreakpointType } from '@types'
+import { refetchKeys, zIndexes } from '~constants'
 
-import { refetchKeys, zIndexes } from '@constants'
+import { BreakpointsQuery, BreakpointsQueryDataType } from '~queries'
 
-import { BreakpointsQuery, BreakpointsQueryDataType } from '@queries'
+import BreakpointContext from '~contexts/BreakpointContext'
 
-import BreakpointContext from '@contexts/BreakpointContext'
-
-import useQuery from '@hooks/useQuery'
-import useRefetch from '@hooks/useRefetch'
+import useQuery from '~hooks/useQuery'
+import useRefetch from '~hooks/useRefetch'
 
 const infinityValue = 999999999
 
@@ -47,7 +46,7 @@ function BreakpointsButtons() {
   const handleBreakpointClick = useCallback((breakpoint: BreakpointType) => {
     setBreakpoint(breakpoint)
     setWidth(breakpoint.base)
-    setHeight('-')
+    setHeight(null)
   }, [setBreakpoint, setWidth, setHeight])
 
   const handleViewportClick = useCallback(({ width, height }: { width: number, height: number }) => {
@@ -99,9 +98,9 @@ function BreakpointsButtons() {
         onChange={event => {
           const x = parseFloat(event.target.value)
 
-          setHeight(x === x ? x : '-')
+          setHeight(x === x ? x : null)
         }}
-        endIcon={height === '-' ? null : 'px'}
+        endIcon={height === null ? null : 'px'}
       />
       <Div
         fontSize="1rem"

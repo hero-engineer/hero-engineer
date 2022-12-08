@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { Button, Tooltip } from 'honorable'
 import { VscGithubAction } from 'react-icons/vsc'
 
-import IsInteractiveModeContext from '@contexts/IsInteractiveModeContext'
+import IsInteractiveModeContext from '~contexts/IsInteractiveModeContext'
 
 // A button that links to the components scene
 function InteractiveModeButton(props: any) {

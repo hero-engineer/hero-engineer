@@ -1,14 +1,17 @@
 import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
+import { Div } from 'honorable'
 
-import { ComponentFileMetadataQuery, ComponentFileQueryDataType } from '@queries'
+import { ComponentFileMetadataQuery, ComponentFileQueryDataType } from '~queries'
 
-import useQuery from '@hooks/useQuery'
+import useQuery from '~hooks/useQuery'
 
-import { convertFromEcuComponentPath } from '@utils/convertComponentPath'
+import { convertFromEcuComponentPath } from '~utils/convertComponentPath'
 
-import ComponentWindow from '@core/component-window/ComponentWindow'
-import ProviderComponent from '@core/full-ast/ProviderComponent'
+import BreakpointsButtons from '~core/overlay/BreakpointsButtons'
+import InteractiveModeButton from '~core/overlay/InteractiveModeButton'
+import ComponentWindow from '~core/component-window/ComponentWindow'
+import ProviderComponent from '~core/full-ast/ProviderComponent'
 
 function Component() {
   const { '*': ecuRelativePath = '' } = useParams()
@@ -33,6 +36,10 @@ function Component() {
 
   return (
     <ProviderComponent>
+      <Div xflex="x6">
+        <BreakpointsButtons />
+        <InteractiveModeButton />
+      </Div>
       <ComponentWindow
         componentPath={`/Users/sven/dev/ecu-app/app/src/${relativePath}`}
         decoratorPaths={decoratorPaths}
