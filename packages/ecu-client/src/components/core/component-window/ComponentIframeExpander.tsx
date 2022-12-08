@@ -119,7 +119,7 @@ function ComponentIframeExanderHandle({ isLeft, isHeight, maxWidth, currentHeigh
       <Div
         position="relative"
         width={isHeight ? '100%' : 5}
-        height={isHeight ? 5 : '100%'}
+        height={isHeight ? 5 : isDragging ? '100%' : 'calc(100% - 5px)'}
         backgroundColor={isDragging ? 'primary' : undefined}
         userSelect="none"
         cursor={isHeight ? 'row-resize' : 'col-resize'}
