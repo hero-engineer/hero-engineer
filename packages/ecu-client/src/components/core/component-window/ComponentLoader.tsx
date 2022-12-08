@@ -5,7 +5,7 @@ import ComponentRemountContext from '~contexts/ComponentRemountContext'
 type ComponentLoaderPropsType = {
   componentPath: string
   decoratorPaths: string[]
-  head?: HTMLHeadElement
+  head: HTMLHeadElement | null
 }
 
 // A component fetcher that uses React.lazy

@@ -11,6 +11,7 @@ import ComponentIframeExpander from './ComponentIframeExpander'
 import ComponentIframe from './ComponentIframe'
 import ComponentLoader from './ComponentLoader'
 import WithComponentIframeHeight from './WithComponentIframeHeight'
+import WithComponentHierarchy from './WithComponentHierarchy'
 
 type ComponentWindowPropsType = {
   componentPath: string
@@ -38,11 +39,13 @@ function ComponentWindow({ componentPath, decoratorPaths }: ComponentWindowProps
                   <CssBaseline />
                   <WithComponentIframeHeight setHeight={setHeight}>
                     <EditionOverlay>
-                      <ComponentLoader
-                        head={head}
-                        componentPath={componentPath}
-                        decoratorPaths={decoratorPaths}
-                      />
+                      <WithComponentHierarchy window={window}>
+                        <ComponentLoader
+                          head={head}
+                          componentPath={componentPath}
+                          decoratorPaths={decoratorPaths}
+                        />
+                      </WithComponentHierarchy>
                     </EditionOverlay>
                   </WithComponentIframeHeight>
                 </ThemeProvider>

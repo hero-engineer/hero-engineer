@@ -6,11 +6,9 @@ import BreakpointContext from '~contexts/BreakpointContext'
 
 import useRefresh from '~hooks/useRefresh'
 
-import editionStyles from '../../../css/edition.css?inline'
-
 type ComponentIframeChildrenArgsType = {
-  window?: Window | null
-  head?: HTMLHeadElement
+  window: Window | null
+  head: HTMLHeadElement | null
   setHeight: Dispatch<SetStateAction<number>>
 }
 
@@ -42,10 +40,6 @@ function ComponentIframe({ children }: ComponentIframePropsType) {
     documentNode.head.appendChild(cssLink)
   }, [documentNode])
 
-  useEffect(() => {
-    appendCss(editionStyles)
-  }, [appendCss])
-
   // Allow the iframe to have the component height
   useEffect(() => {
     appendCss(`
@@ -70,7 +64,7 @@ function ComponentIframe({ children }: ComponentIframePropsType) {
       zIndex={0} // Idem
       top={0.5} // For the overlay top menu border to be visible
     >
-      {mountNode && createPortal(children({ window: windowNode, head: headNode, setHeight: setBaseHeight }), mountNode)}
+      {mountNode && createPortal(children({ window: windowNode ?? null, head: headNode ?? null, setHeight: setBaseHeight }), mountNode)}
     </Iframe>
   )
 }

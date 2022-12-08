@@ -5,7 +5,7 @@ import weakMemoize from '@emotion/weak-memoize'
 
 type ProviderEmotionPropsType = {
   children: ReactNode
-  head?: HTMLHeadElement
+  head: HTMLHeadElement | null
 }
 
 // https://codesandbox.io/embed/rendering-emotion-iframe-into-iframe-body-bq63w
