@@ -56,6 +56,8 @@ function CodeEditor({ path }: CodeEditorPropsType) {
     const editorService = editor._codeEditorService
     const openEditorBase = editorService.openCodeEditor.bind(editorService)
 
+    console.log('foo')
+
     editorService.openCodeEditor = async (input: any, source: any) => {
       console.log('input', input)
       const result = await openEditorBase(input, source)
@@ -66,6 +68,8 @@ function CodeEditor({ path }: CodeEditorPropsType) {
       // Always return the base result
       return result
     }
+
+    console.log('bar')
 
     setRefresh(x => !x)
   }, [handleResourceClick])
@@ -87,11 +91,7 @@ function CodeEditor({ path }: CodeEditorPropsType) {
       const uri = monaco.Uri.parse(`file://${entryPath}`)
       const model = monaco.editor.getModel(uri) || monaco.editor.createModel(code, getLanguage(entryPath), uri)
 
-      if (entryPath === path) {
-        console.log('path', path)
-
-        editor.setModel(model)
-      }
+      if (entryPath === path) editor.setModel(model)
     })
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh, editorRef.current, monacoRef.current, asts, path, getLanguage])
@@ -108,6 +108,7 @@ function CodeEditor({ path }: CodeEditorPropsType) {
         minimap: {
           enabled: false,
         },
+
       }}
     />
   )

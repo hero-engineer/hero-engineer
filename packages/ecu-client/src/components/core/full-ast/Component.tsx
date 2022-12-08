@@ -14,10 +14,10 @@ import BreakpointsButtons from '~core/component/BreakpointsButtons'
 import WidthBar from '~core/component/WidthBar'
 import InteractiveModeButton from '~core/component/InteractiveModeButton'
 import RemountButton from '~core/component/RemountButton'
-import EditCodeButton from '~core/component/EditCodeButton'
+// import EditCodeButton from '~core/component/EditCodeButton'
 import ComponentWindow from '~core/component-window/ComponentWindow'
 import ProviderComponent from '~core/full-ast/ProviderComponent'
-import BottomTabsPanel from '~core/full-ast/BottomTabsPanel'
+// import BottomTabsPanel from '~core/full-ast/BottomTabsPanel'
 
 function Component() {
   const { '*': ecuComponentPath = '' } = useParams()
@@ -59,21 +59,21 @@ function Component() {
         <BreakpointsButtons />
         <InteractiveModeButton />
         <RemountButton />
-        <EditCodeButton />
+        {/* <EditCodeButton /> */}
       </Div>
       <WidthBar />
       <ComponentWindow
         componentPath={path}
         decoratorPaths={decoratorPaths}
       />
-      <Div
+      {/* <Div
         position="absolute"
         bottom={0}
         left={0}
         right={0}
       >
         <BottomTabsPanel />
-      </Div>
+      </Div> */}
     </ProviderComponent>
   )
 }
