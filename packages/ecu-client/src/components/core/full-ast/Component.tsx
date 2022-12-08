@@ -55,7 +55,10 @@ function Component() {
 
   return (
     <ProviderComponent>
-      <Div xflex="x6">
+      <Div
+        xflex="x6"
+        flexShrink={1}
+      >
         <BreakpointsButtons />
         <InteractiveModeButton />
         <RemountButton />

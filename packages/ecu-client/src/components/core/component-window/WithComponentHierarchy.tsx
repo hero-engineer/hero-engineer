@@ -6,7 +6,7 @@ type WithComponentHierarchyPropsType = {
 }
 
 function WithComponentHierarchy({ window, children }: WithComponentHierarchyPropsType) {
-  console.log('window', window)
+  // console.log('window', window)
 
   return (
     <>

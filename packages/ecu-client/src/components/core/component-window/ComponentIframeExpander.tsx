@@ -107,12 +107,14 @@ function ComponentIframeExanderHandle({ isLeft, isHeight, maxWidth, currentHeigh
   ])
 
   useEffect(() => {
+    if (!isDraggingCurrent) return
+
     window.addEventListener('mouseup', handleMouseUp)
 
     return () => {
       window.removeEventListener('mouseup', handleMouseUp)
     }
-  }, [handleMouseUp])
+  }, [isDraggingCurrent, handleMouseUp])
 
   return (
     <>

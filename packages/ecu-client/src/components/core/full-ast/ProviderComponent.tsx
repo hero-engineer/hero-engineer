@@ -41,7 +41,8 @@ function ProviderComponent({ children }: ProviderComponentPropsType) {
   const isInteractiveModeContextValue = useMemo<IsInteractiveModeContextType>(() => ({ isInteractiveMode, setIsInteractiveMode }), [isInteractiveMode, setIsInteractiveMode])
 
   const [tabs, setTabs] = usePersistedState<TabType[]>('bottom-tabs', [])
-  const bottomTabsContext = useMemo<BottomTabsContextType>(() => ({ tabs, setTabs }), [tabs, setTabs])
+  const [currentTabIndex, setCurrentTabIndex] = usePersistedState('bottom-tabs-index', -1)
+  const bottomTabsContext = useMemo<BottomTabsContextType>(() => ({ tabs, setTabs, currentTabIndex, setCurrentTabIndex }), [tabs, setTabs, currentTabIndex, setCurrentTabIndex])
 
   return (
     <ComponentRemountContext.Provider value={componentRemountContextValue}>

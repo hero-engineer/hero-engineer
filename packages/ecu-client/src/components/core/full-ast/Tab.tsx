@@ -10,7 +10,7 @@ type TabPropsType = {
   label: string
   active: boolean
   icon?: ReactNode
-  onClick: () => void
+  onClick: (event: MouseEvent) => void
   onClose: (event: MouseEvent) => void
 }
 

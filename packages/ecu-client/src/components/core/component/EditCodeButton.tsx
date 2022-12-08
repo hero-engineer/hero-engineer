@@ -10,15 +10,17 @@ import { convertFromEcuComponentPath } from '~utils/convertComponentPath'
 function EditCodeButton(props: any) {
   const { '*': ecuComponentPath = '' } = useParams()
 
-  const { setTabs } = useContext(BottomTabsContext)
+  const { tabs, setTabs, setCurrentTabIndex } = useContext(BottomTabsContext)
 
   const handleClick = useCallback(() => {
     if (!ecuComponentPath) return
 
     const url = `/Users/sven/dev/ecu-app/app/src/${convertFromEcuComponentPath(ecuComponentPath)}`
+    const nextTabs = tabs.some(x => x.url === url) ? tabs : [...tabs, { url, label: url.split('/').pop() ?? '?' }]
 
-    setTabs(tabs => tabs.some(x => x.url === url) ? tabs : [...tabs, { url, label: url.split('/').pop() ?? '?' }])
-  }, [ecuComponentPath, setTabs])
+    setTabs(nextTabs)
+    setCurrentTabIndex(nextTabs.findIndex(x => x.url === url) ?? -1)
+  }, [ecuComponentPath, tabs, setTabs, setCurrentTabIndex])
 
   return (
     <Tooltip
