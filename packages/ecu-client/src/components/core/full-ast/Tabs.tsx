@@ -1,15 +1,9 @@
-import { useCallback, useContext } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { MouseEvent, useCallback, useContext } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Div } from 'honorable'
 import { MdClose } from 'react-icons/md'
 
 import TabsContext from '~contexts/TabsContext'
-
-const linkStyle = {
-  textDecoration: 'none',
-  color: 'inherit',
-  display: 'flex',
-}
 
 const iconStyle = {
   fontSize: '0.75rem',
@@ -20,13 +14,24 @@ function Tabs() {
   const { pathname } = useLocation()
   const navigate = useNavigate()
 
-  const handleTabClose = useCallback((url: string) => {
+  const handleTabClick = useCallback((url: string) => {
+    navigate(url)
+  }, [navigate])
+
+  const handleTabClose = useCallback((event: MouseEvent, url: string) => {
+    event.stopPropagation()
+
+    const nextTabs = [...tabs]
     const index = tabs.findIndex(x => x.url === url)
-    const nextTabs = tabs.splice(index, 1)
+
+    nextTabs.splice(index, 1)
 
     setTabs(nextTabs)
-    navigate(nextTabs[index]?.url ?? nextTabs[index - 1]?.url ?? '/_ecu_')
-  }, [tabs, setTabs, navigate])
+
+    if (pathname === url) {
+      navigate(nextTabs[index]?.url ?? nextTabs[index - 1]?.url ?? '/_ecu_')
+    }
+  }, [tabs, pathname, setTabs, navigate])
 
   return (
     <Div
@@ -35,34 +40,31 @@ function Tabs() {
       fontSize="0.85rem"
     >
       {tabs.map(({ url, label }) => (
-        <Link
+        <Div
           key={url}
-          to={url}
-          style={linkStyle}
+          xflex="x4s"
+          backgroundColor={pathname === url ? 'background' : null}
+          borderBottom={pathname === url ? null : '1px solid border'}
+          borderRight="1px solid border"
+          _hover={{ backgroundColor: pathname === url ? 'background' : 'background-light-dark' }}
+          onClick={() => handleTabClick(url)}
+          cursor="pointer"
+          pl={1}
+          pr={0.25}
         >
+          <Div xflex="x4">
+            {label}
+          </Div>
           <Div
-            xflex="x4s"
-            backgroundColor={pathname === url ? 'background' : null}
-            borderBottom={pathname === url ? null : '1px solid border'}
-            borderRight="1px solid border"
-            _hover={{ backgroundColor: pathname === url ? 'background' : 'background-light-dark' }}
-            pl={1}
+            xflex="x5"
+            fontSize="0.75rem"
+            onClick={event => handleTabClose(event, url)}
+            pl={0.5}
             pr={0.25}
           >
-            <Div xflex="x4">
-              {label}
-            </Div>
-            <Div
-              xflex="x5"
-              fontSize="0.75rem"
-              onClick={() => handleTabClose(url)}
-              pl={0.5}
-              pr={0.25}
-            >
-              <MdClose style={iconStyle} />
-            </Div>
+            <MdClose style={iconStyle} />
           </Div>
-        </Link>
+        </Div>
       ))}
     </Div>
   )
