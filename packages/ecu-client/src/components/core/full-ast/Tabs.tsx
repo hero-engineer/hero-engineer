@@ -1,6 +1,7 @@
-import { useContext } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { useCallback, useContext } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Div } from 'honorable'
+import { MdClose } from 'react-icons/md'
 
 import TabsContext from '~contexts/TabsContext'
 
@@ -10,9 +11,22 @@ const linkStyle = {
   display: 'flex',
 }
 
+const iconStyle = {
+  fontSize: '0.75rem',
+}
+
 function Tabs() {
-  const { tabs } = useContext(TabsContext)
+  const { tabs, setTabs } = useContext(TabsContext)
   const { pathname } = useLocation()
+  const navigate = useNavigate()
+
+  const handleTabClose = useCallback((url: string) => {
+    const index = tabs.findIndex(x => x.url === url)
+    const nextTabs = tabs.splice(index, 1)
+
+    setTabs(nextTabs)
+    navigate(nextTabs[index]?.url ?? nextTabs[index - 1]?.url ?? '/_ecu_')
+  }, [tabs, setTabs, navigate])
 
   return (
     <Div
@@ -27,14 +41,26 @@ function Tabs() {
           style={linkStyle}
         >
           <Div
-            xflex="x4"
-            px={1}
+            xflex="x4s"
             backgroundColor={pathname === url ? 'background' : null}
             borderBottom={pathname === url ? null : '1px solid border'}
             borderRight="1px solid border"
             _hover={{ backgroundColor: pathname === url ? 'background' : 'background-light-dark' }}
+            pl={1}
+            pr={0.25}
           >
-            {label}
+            <Div xflex="x4">
+              {label}
+            </Div>
+            <Div
+              xflex="x5"
+              fontSize="0.75rem"
+              onClick={() => handleTabClose(url)}
+              pl={0.5}
+              pr={0.25}
+            >
+              <MdClose style={iconStyle} />
+            </Div>
           </Div>
         </Link>
       ))}
