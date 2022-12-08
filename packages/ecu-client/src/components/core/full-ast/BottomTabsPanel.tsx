@@ -35,12 +35,17 @@ function BottomTabsPanel() {
           onClose={handleTabClose}
         />
       ))}
+      <Div
+        flexGrow
+        borderBottom="1px solid border"
+      />
     </Div>
   ), [tabs, handleTabClick, handleTabClose])
 
   return (
     <Accordion
       bottomTabs
+      invertExpandIcon
       expanded={isExpanded}
       onExpand={setIsExpanded}
       title={renderTabs()}

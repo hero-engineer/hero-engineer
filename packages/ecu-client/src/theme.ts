@@ -278,7 +278,6 @@ export default mergeTheme(defaultTheme, {
           borderTopRightRadius: 0,
         },
         '&:last-of-type': {
-          borderBottom: '1px solid border',
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0,
         },
@@ -299,12 +298,12 @@ export default mergeTheme(defaultTheme, {
         paddingBottom: 0,
         fontWeight: 500,
       },
-      ({ bottomTabs, expanded, isExpanding }: any) => bottomTabs && {
+      ({ bottomTabs }: any) => bottomTabs && {
         paddingTop: 0,
         paddingBottom: 0,
         paddingLeft: 0,
+        paddingRight: 0,
         backgroundColor: 'background-light',
-        borderBottom: expanded || isExpanding ? '1px solid border' : null,
       },
       ({ smallTitlePadding }: any) => smallTitlePadding && {
         paddingLeft: 8,
@@ -316,6 +315,14 @@ export default mergeTheme(defaultTheme, {
       ({ backgroundTitle, expanded, isExpanding }: any) => backgroundTitle && {
         backgroundColor: 'darken(background-light, 8)',
         borderBottom: expanded || isExpanding ? '1px solid border' : null,
+      },
+    ],
+    ExpandIconWrapper: [
+      ({ bottomTabs }: any) => bottomTabs && {
+        marginLeft: 0,
+        paddingLeft: 16,
+        paddingRight: 16,
+        borderBottom: '1px solid border',
       },
     ],
     Children: [
