@@ -47,6 +47,10 @@ function ComponentIframeExpander({ children }: ComponentIframeWidthExanderPropsT
         flexShrink={0}
       >
         {children}
+        <ComponentIframeExanderHandle
+          isHeight
+          currentHeight={contentRef.current?.offsetHeight}
+        />
       </Div>
       <ComponentIframeExanderHandle
         maxWidth={maxWidth}
@@ -61,13 +65,15 @@ function ComponentIframeExpander({ children }: ComponentIframeWidthExanderPropsT
 
 type ComponentIframeWidthExanderHandlePropsType = {
   isLeft?: boolean
-  maxWidth: number
+  isHeight?: boolean
+  currentHeight?: number
+  maxWidth?: number
 }
 
-function ComponentIframeExanderHandle({ isLeft, maxWidth }: ComponentIframeWidthExanderHandlePropsType) {
+function ComponentIframeExanderHandle({ isLeft, isHeight, maxWidth, currentHeight }: ComponentIframeWidthExanderHandlePropsType) {
   const [isDraggingCurrent, setIsDraggingCurrent] = useState(false)
 
-  const { breakpoint, setWidth, isDragging, setIsDragging } = useContext(BreakpointContext)
+  const { breakpoint, setWidth, setHeight, isDragging, setIsDragging } = useContext(BreakpointContext)
 
   const handleMouseDown = useCallback(() => {
     setIsDragging(true)
@@ -82,14 +88,22 @@ function ComponentIframeExanderHandle({ isLeft, maxWidth }: ComponentIframeWidth
   const handleMouseMove = useCallback((event: MouseEvent) => {
     if (!(isDragging && isDraggingCurrent && breakpoint)) return
 
-    setWidth(width => Math.max(breakpoint.min, Math.min(maxWidth, breakpoint.max, width + (isLeft ? -2 : 2) * event.movementX)))
+    if (isHeight) {
+      setHeight(height => Math.max(0, (height === '-' ? currentHeight! : height) + event.movementY))
+    }
+    else {
+      setWidth(width => Math.max(breakpoint.min, Math.min(maxWidth!, breakpoint.max, width + (isLeft ? -2 : 2) * event.movementX)))
+    }
   }, [
+    maxWidth,
+    currentHeight,
+    isLeft,
+    isHeight,
     isDragging,
     isDraggingCurrent,
     breakpoint,
+    setHeight,
     setWidth,
-    maxWidth,
-    isLeft,
   ])
 
   useEffect(() => {
@@ -104,10 +118,11 @@ function ComponentIframeExanderHandle({ isLeft, maxWidth }: ComponentIframeWidth
     <>
       <Div
         position="relative"
-        width={5}
+        width={isHeight ? '100%' : 5}
+        height={isHeight ? 5 : '100%'}
         backgroundColor={isDragging ? 'primary' : undefined}
         userSelect="none"
-        cursor="col-resize"
+        cursor={isHeight ? 'row-resize' : 'col-resize'}
         _hover={{ backgroundColor: 'primary' }}
         onMouseDown={handleMouseDown}
       />
