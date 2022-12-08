@@ -24,8 +24,9 @@ import packagesQuery from './queries/packagesQuery.js'
 import packagesUpdatesQuery from './queries/packagesUpdatesQuery.js'
 import undoRedoMetadataQuery from './queries/undoRedoMetdataQuery.js'
 
+import filesQuery from './queries2/filesQuery.js'
 import filePathsQuery from './queries2/filePathsQuery.js'
-import componentFileQuery from './queries2/componentFileQuery.js'
+import componentFileMetadataQuery from './queries2/componentFileMetadataQuery.js'
 
 import createComponentMutation from './mutations/createComponentMutation.js'
 import addComponentMutation from './mutations/addComponentMutation.js'
@@ -206,12 +207,10 @@ export const typeDefs = gql`
 
   type FileType {
     path: String!
-    relativePath: String!
-    content: String!
+    code: String!
   }
 
-  type ComponentFileReturnValue {
-    content: String!
+  type ComponentFileMetadataReturnValue {
     decoratorPaths: [String]!
   }
 
@@ -239,8 +238,9 @@ export const typeDefs = gql`
 
     undoRedoMetadata: UndoRedoMetadataReturnValue!
 
+    files: [FileType]!
     filePaths: [String!]!
-    componentFile(relativePath: String!): ComponentFileReturnValue!
+    componentFileMetadata(path: String!): ComponentFileMetadataReturnValue!
   }
 
   type Mutation {
@@ -306,8 +306,9 @@ export const resolvers = {
 
     undoRedoMetadata: withLog(undoRedoMetadataQuery, 'undoRedoMetadata'),
 
+    files: withLog(filesQuery, 'files'),
     filePaths: withLog(filePathsQuery, 'filePaths'),
-    componentFile: withLog(componentFileQuery, 'componentFile'),
+    componentFileMetadata: withLog(componentFileMetadataQuery, 'componentFileMetadata'),
   },
   Mutation: {
     createComponent: withLog(createComponentMutation, 'createComponent', true),

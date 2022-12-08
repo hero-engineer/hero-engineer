@@ -179,3 +179,10 @@ export type SpacingType ={
   name: string
   value: string
 }
+
+// full-ast
+
+export type FileType = {
+  path: string
+  code: string
+}

@@ -1,10 +1,11 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
+import { FileType } from '../../types.js'
 import { appPath } from '../../configuration.js'
 
-function filePathsQuery() {
-  const filePaths: string[] = []
+function filesQuery() {
+  const files: FileType[] = []
   const srcPath = path.join(appPath, 'src')
 
   function readDirectory(location: string) {
@@ -15,13 +16,16 @@ function filePathsQuery() {
         return readDirectory(filePath)
       }
 
-      filePaths.push(filePath)
+      files.push({
+        path: filePath,
+        code: fs.readFileSync(filePath, 'utf8'),
+      })
     })
   }
 
   readDirectory(srcPath)
 
-  return filePaths
+  return files
 }
 
-export default filePathsQuery
+export default filesQuery
