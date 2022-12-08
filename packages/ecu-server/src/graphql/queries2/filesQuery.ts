@@ -7,17 +7,14 @@ import { appPath } from '../../configuration.js'
 function filesQuery() {
   const files: FileType[] = []
   const srcPath = path.join(appPath, 'src')
-  const nodeModulesPath = path.join(appPath, 'node_modules')
 
-  function readDirectory(location: string, isNodeModules = false) {
+  function readDirectory(location: string,) {
     fs.readdirSync(location).forEach(fileName => {
       const filePath = path.join(location, fileName)
 
       if (fs.statSync(filePath).isDirectory()) {
-        return readDirectory(filePath, isNodeModules)
+        return readDirectory(filePath)
       }
-
-      if (isNodeModules && !filePath.endsWith('.d.ts')) return
 
       files.push({
         path: filePath,
@@ -27,7 +24,30 @@ function filesQuery() {
   }
 
   readDirectory(srcPath)
-  readDirectory(nodeModulesPath, true)
+
+  // const files: FileType[] = []
+  // const srcPath = path.join(appPath, 'src')
+  // const nodeModulesPath = path.join(appPath, 'node_modules')
+
+  // function readDirectory(location: string, isNodeModules = false) {
+  //   fs.readdirSync(location).forEach(fileName => {
+  //     const filePath = path.join(location, fileName)
+
+  //     if (fs.statSync(filePath).isDirectory()) {
+  //       return readDirectory(filePath, isNodeModules)
+  //     }
+
+  //     if (isNodeModules && !filePath.endsWith('.d.ts')) return
+
+  //     files.push({
+  //       path: filePath,
+  //       code: fs.readFileSync(filePath, 'utf8'),
+  //     })
+  //   })
+  // }
+
+  // readDirectory(srcPath)
+  // readDirectory(nodeModulesPath, true)
 
   return files
 }
