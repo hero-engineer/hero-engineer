@@ -12,7 +12,6 @@ import { HierarchyQuery, HierarchyQueryDataType } from '@queries'
 import HierarchyContext from '@contexts/HierarchyContext'
 import BreakpointContext from '@contexts/BreakpointContext'
 import EditionContext from '@contexts/EditionContext'
-import LastEditedComponentContext from '@contexts/LastEditedComponentContext'
 import IsInteractiveModeContext from '@contexts/IsInteractiveModeContext'
 
 import useRefetch from '@hooks/useRefetch'
@@ -43,7 +42,6 @@ function HierarchyBar() {
   const { hierarchyId, componentDelta, setHierarchyId, setComponentDelta } = useContext(EditionContext)
   const { setHierarchy, setTotalHierarchy } = useContext(HierarchyContext)
   const { isDragging } = useContext(BreakpointContext)
-  const { lastEditedComponent, setLastEditedComponent } = useContext(LastEditedComponentContext)
   const { isInteractiveMode } = useContext(IsInteractiveModeContext)
 
   const [hierarchyQueryResult, refetchHierarchyQuery] = useQuery<HierarchyQueryDataType>({
@@ -85,21 +83,6 @@ function HierarchyBar() {
 
     refetch(refetchKeys.componentScreenshot)
   }, [hierarchyQueryResult.fetching, hierarchyQueryResult.data?.hierarchy, refetch])
-
-  useEffect(() => {
-    if (!Object.keys(hierarchy).length) return
-
-    const nextLastEditedCompoment = { ...hierarchy }
-
-    if (nextLastEditedCompoment.componentAddress === lastEditedComponent?.componentAddress && nextLastEditedCompoment.hierarchyId === lastEditedComponent?.hierarchyId) return
-
-    // @ts-expect-error
-    delete nextLastEditedCompoment.children
-
-    setLastEditedComponent(nextLastEditedCompoment)
-    setHierarchyId('')
-    setComponentDelta(0)
-  }, [hierarchy, lastEditedComponent, setLastEditedComponent, setHierarchyId, setComponentDelta])
 
   if (!componentAddress) {
     return null

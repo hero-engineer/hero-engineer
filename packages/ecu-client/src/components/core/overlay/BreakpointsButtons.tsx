@@ -28,7 +28,7 @@ const icons = [
 ]
 
 function BreakpointsButtons() {
-  const { componentAddress = '' } = useParams()
+  const { '*': componentRelativePath = '' } = useParams()
   const { breakpoint, setBreakpoint, breakpoints, setBreakpoints, width, setWidth, height, setHeight } = useContext(BreakpointContext)
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -173,7 +173,7 @@ function BreakpointsButtons() {
     setBreakpoints(workingBreakpoints)
   }, [workingBreakpoints, setBreakpoints])
 
-  if (!componentAddress) return null
+  if (!componentRelativePath) return null
   if (!workingBreakpoints.length) return null
 
   return (

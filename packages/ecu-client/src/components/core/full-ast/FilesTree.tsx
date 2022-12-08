@@ -1,31 +1,47 @@
 import { useMemo } from 'react'
-import { Link } from 'react-router-dom'
 import { Div } from 'honorable'
 
-import { FilesQuery, FilesQueryDataType } from '@queries'
+import { FilePathsQuery, FilePathsQueryDataType } from '@queries'
 
 import useQuery from '@hooks/useQuery'
 
 import { convertToEcuComponentPath } from '@utils/convertComponentPath'
 
+import TabLink from '@core/full-ast/TabLink'
+
+const lookup = 'app/src/'
+
+function extractRelativePath(path: string) {
+  const index = path.indexOf(lookup)
+
+  return index === -1 ? path : path.slice(index + lookup.length)
+}
+
 function FilesTree() {
-  const [filesQueryResult] = useQuery<FilesQueryDataType>({
-    query: FilesQuery,
+  const [filePathsQueryResult] = useQuery<FilePathsQueryDataType>({
+    query: FilePathsQuery,
   })
 
   // TODO useRefetch
 
-  const files = useMemo(() => filesQueryResult.data?.files ?? [], [filesQueryResult.data])
+  const paths = useMemo(() => filePathsQueryResult.data?.filePaths ?? [], [filePathsQueryResult.data])
 
   return (
     <Div>
-      {files.map(file => (
-        <Div key={file.path}>
-          <Link to={`/_ecu_/~/${convertToEcuComponentPath(file.relativePath)}`}>
-            {file.relativePath}
-          </Link>
-        </Div>
-      ))}
+      {paths.map(path => {
+        const relativePath = extractRelativePath(path)
+
+        return (
+          <Div key={relativePath}>
+            <TabLink
+              to={`/_ecu_/~/${convertToEcuComponentPath(relativePath)}`}
+              label={relativePath.split('/').pop() ?? '?'}
+            >
+              {relativePath}
+            </TabLink>
+          </Div>
+        )
+      })}
     </Div>
   )
 }

@@ -7,10 +7,10 @@ import IsInteractiveModeContext from '@contexts/IsInteractiveModeContext'
 
 // A button that links to the components scene
 function InteractiveModeButton(props: any) {
-  const { componentAddress = '' } = useParams()
+  const { '*': componentRelativePath = '' } = useParams()
   const { isInteractiveMode, setIsInteractiveMode } = useContext(IsInteractiveModeContext)
 
-  if (!componentAddress) return null
+  if (!componentRelativePath) return null
 
   return (
     <Tooltip

@@ -1,14 +1,14 @@
 import { PropsWithChildren, memo } from 'react'
 import { Div } from 'honorable'
 
+import Tabs from '../full-ast/Tabs'
+
 import SnackBar from './SnackBar'
 import EcuButton from './EcuButton'
 import ComponentsLinkButton from './ComponentsLinkButton'
 import CreateComponentButton from './CreateComponentButton'
 import DesignLinkButton from './DesignLinkButton'
 import PackagesLinkButton from './PackagesLinkButton'
-import LastEditedComponentButton from './LastEditedComponentButton'
-import BreakpointsButtons from './BreakpointsButtons'
 import InteractiveModeButton from './InteractiveModeButton'
 import UndoRedoButtons from './UndoRedoButtons'
 import PushButton from './PushButton'
@@ -35,10 +35,7 @@ function Overlay({ children }: OverlayPropsType) {
         <CreateComponentButton borderRight="1px solid border" />
         <DesignLinkButton borderRight="1px solid border" />
         <PackagesLinkButton borderRight="1px solid border" />
-        <LastEditedComponentButton borderRight="1px solid border" />
-        <Div width={32} />
-        <Div flexGrow />
-        <BreakpointsButtons />
+        <Tabs />
         <Div flexGrow />
         <InteractiveModeButton borderLeft="1px solid border" />
         <UndoRedoButtons />

@@ -558,18 +558,30 @@ export type PushMutationDataType = {
   * full-ast QUERIES
 -- */
 
-export const FilesQuery = `
+export const FilePathsQuery = `
   query {
-    files {
-      path
-      relativePath
+    filePaths
+  }
+`
+
+export type FilePathsQueryDataType = {
+  filePaths: string[]
+}
+
+export const ComponentFileQuery = `
+  query ($relativePath: String!) {
+    componentFile(relativePath: $relativePath) {
       content
+      decoratorPaths
     }
   }
 `
 
-export type FilesQueryDataType = {
-  files: FileType[]
+export type ComponentFileQueryDataType = {
+  componentFile: {
+    content: string
+    decoratorPaths: string[]
+  }
 }
 
 /* --

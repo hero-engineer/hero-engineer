@@ -142,3 +142,8 @@ export type FileType = {
   relativePath: string
   content: string
 }
+
+export type TabType = {
+  url: string
+  label: string
+}

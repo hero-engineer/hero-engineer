@@ -4,14 +4,14 @@ import { Provider as GraphqlProvider } from 'urql'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
-import { BreakpointType, HierarchyItemType, SnackBarItemType } from '@types'
+import { BreakpointType, SnackBarItemType, TabType } from '@types'
 
 import ModeContext from '@contexts/ModeContext'
 import HotContext from '@contexts/HotContext'
 import RefetchContext, { RefetchContextType } from '@contexts/RefetchContext'
 import ThemeModeContext, { ThemeModeContextType } from '@contexts/ThemeModeContext'
 import SnackBarContext, { SnackBarContextType } from '@contexts/SnackBarContext'
-import LastEditedComponentContext, { LastEditedComponentContextType } from '@contexts/LastEditedComponentContext'
+import TabsContext, { TabsContextType } from '@contexts/TabsContext'
 import BreakpointContext, { BreakpointContextType } from '@contexts/BreakpointContext'
 import IsInteractiveModeContext, { IsInteractiveModeContextType } from '@contexts/IsInteractiveModeContext'
 
@@ -38,8 +38,8 @@ function ProviderMaster({ mode, hot, children }: MasterProvidersPropsType) {
   const appendSnackBarItem = useCallback((item: SnackBarItemType) => setSnackBarItems(x => [...x, item]), [])
   const snackBarContextValue = useMemo<SnackBarContextType>(() => ({ snackBarItems, setSnackBarItems, appendSnackBarItem }), [snackBarItems, appendSnackBarItem])
 
-  const [lastEditedComponent, setLastEditedComponent] = usePersistedState<HierarchyItemType | null>('last-edited-component', null)
-  const lastEditedComponentContextValue = useMemo<LastEditedComponentContextType>(() => ({ lastEditedComponent, setLastEditedComponent }), [lastEditedComponent, setLastEditedComponent])
+  const [tabs, setTabs] = usePersistedState<TabType[]>('tabs', [])
+  const tabsContextValue = useMemo<TabsContextType>(() => ({ tabs, setTabs }), [tabs, setTabs])
 
   const [breakpoint, setBreakpoint] = usePersistedState<BreakpointType>('breakpoint', {
     id: 'Default',
@@ -71,13 +71,13 @@ function ProviderMaster({ mode, hot, children }: MasterProvidersPropsType) {
             <RefetchContext.Provider value={refetchContextValue}>
               <ThemeModeContext.Provider value={themeModeContextValue}>
                 <SnackBarContext.Provider value={snackBarContextValue}>
-                  <LastEditedComponentContext.Provider value={lastEditedComponentContextValue}>
+                  <TabsContext.Provider value={tabsContextValue}>
                     <BreakpointContext.Provider value={breakpointContextValue}>
                       <IsInteractiveModeContext.Provider value={isInteractiveModeContextValue}>
                         {children}
                       </IsInteractiveModeContext.Provider>
                     </BreakpointContext.Provider>
-                  </LastEditedComponentContext.Provider>
+                  </TabsContext.Provider>
                 </SnackBarContext.Provider>
               </ThemeModeContext.Provider>
             </RefetchContext.Provider>
