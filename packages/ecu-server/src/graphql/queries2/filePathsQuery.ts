@@ -3,14 +3,8 @@ import path from 'node:path'
 
 import { appPath } from '../../configuration.js'
 
-type FileType = {
-  path: string
-  relativePath: string
-  content: string
-}
-
-function filesQuery() {
-  const files: FileType[] = []
+function filePathsQuery() {
+  const filePaths: string[] = []
   const srcLocation = path.join(appPath, 'src')
 
   function readDirectory(location: string) {
@@ -21,19 +15,13 @@ function filesQuery() {
         return readDirectory(fileLocation)
       }
 
-      files.push({
-        path: fileLocation,
-        relativePath: path.relative(srcLocation, fileLocation),
-        content: fs.readFileSync(fileLocation, 'utf8'),
-      })
+      filePaths.push(fileLocation)
     })
   }
 
   readDirectory(srcLocation)
 
-  return files
+  return filePaths
 }
 
-filesQuery()
-
-export default filesQuery
+export default filePathsQuery
