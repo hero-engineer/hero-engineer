@@ -134,7 +134,7 @@ function ComponentIframeExanderHandle({ isLeft, isHeight, maxWidth, currentHeigh
           top={0}
           bottom={0}
           onMouseMove={handleMouseMove}
-          zIndex={zIndexes.componentIframeWidthExpanderHandle}
+          zIndex={zIndexes.componentIframeExpanderHandle}
           cursor={isHeight ? 'row-resize' : 'col-resize'}
         />
       )}
