@@ -1,3 +1,6 @@
+import { File } from '@babel/types'
+import { Document, Root } from 'postcss'
+
 export type FunctionNodeType = {
   address: string
   payload: {
@@ -148,6 +151,6 @@ export type TabType = {
 }
 
 export type AstsType = Record<string, {
-  ast: any
+  ast: File | Root | Document | null | undefined
   code: string
 }>

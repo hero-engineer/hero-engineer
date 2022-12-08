@@ -37,6 +37,11 @@
             "position": "before"
           },
           {
+            "pattern": "@processors",
+            "group": "internal",
+            "position": "before"
+          },
+          {
             "pattern": "@contexts/**",
             "group": "internal",
             "position": "before"
