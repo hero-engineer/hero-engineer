@@ -9,7 +9,6 @@ import ProviderEmotion from '../providers/ProviderEmotion'
 
 import ComponentIframeExpander from './ComponentIframeExpander'
 import WithComponentIframeHeight from './WithComponentIframeHeight'
-import WithComponentScrenshot from './WithComponentScrenshot'
 import ComponentIframe from './ComponentIframe'
 import ComponentLoader from './ComponentLoader'
 
@@ -39,13 +38,11 @@ function ComponentWindow({ componentPath, decoratorPaths }: ComponentWindowProps
                   <CssBaseline />
                   <WithComponentIframeHeight setHeight={setHeight}>
                     <EditionOverlay>
-                      <WithComponentScrenshot>
-                        <ComponentLoader
-                          head={head}
-                          componentPath={componentPath}
-                          decoratorPaths={decoratorPaths}
-                        />
-                      </WithComponentScrenshot>
+                      <ComponentLoader
+                        head={head}
+                        componentPath={componentPath}
+                        decoratorPaths={decoratorPaths}
+                      />
                     </EditionOverlay>
                   </WithComponentIframeHeight>
                 </ThemeProvider>
