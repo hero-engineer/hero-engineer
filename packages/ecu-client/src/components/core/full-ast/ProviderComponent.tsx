@@ -1,10 +1,11 @@
 import { ReactNode, useMemo, useState } from 'react'
 
-import { BreakpointType } from '~types'
+import { BreakpointType, TabType } from '~types'
 
 import BreakpointContext, { BreakpointContextType } from '~contexts/BreakpointContext'
 import IsInteractiveModeContext, { IsInteractiveModeContextType } from '~contexts/IsInteractiveModeContext'
 import ComponentRemountContext, { ComponentRemountContextType } from '~contexts/ComponentRemountContext'
+import BottomTabsContext, { BottomTabsContextType } from '~contexts/BottomTabsContext'
 
 import usePersistedState from '~hooks/usePersistedState'
 
@@ -39,11 +40,16 @@ function ProviderComponent({ children }: ProviderComponentPropsType) {
   const [isInteractiveMode, setIsInteractiveMode] = usePersistedState('interactive-mode', false)
   const isInteractiveModeContextValue = useMemo<IsInteractiveModeContextType>(() => ({ isInteractiveMode, setIsInteractiveMode }), [isInteractiveMode, setIsInteractiveMode])
 
+  const [tabs, setTabs] = usePersistedState<TabType[]>('bottom-tabs', [])
+  const bottomTabsContext = useMemo<BottomTabsContextType>(() => ({ tabs, setTabs }), [tabs, setTabs])
+
   return (
     <ComponentRemountContext.Provider value={componentRemountContextValue}>
       <BreakpointContext.Provider value={breakpointContextValue}>
         <IsInteractiveModeContext.Provider value={isInteractiveModeContextValue}>
-          {children}
+          <BottomTabsContext.Provider value={bottomTabsContext}>
+            {children}
+          </BottomTabsContext.Provider>
         </IsInteractiveModeContext.Provider>
       </BreakpointContext.Provider>
     </ComponentRemountContext.Provider>

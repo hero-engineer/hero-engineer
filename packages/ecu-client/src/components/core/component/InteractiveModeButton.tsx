@@ -4,7 +4,6 @@ import { VscGithubAction } from 'react-icons/vsc'
 
 import IsInteractiveModeContext from '~contexts/IsInteractiveModeContext'
 
-// A button that links to the components scene
 function InteractiveModeButton(props: any) {
   const { isInteractiveMode, setIsInteractiveMode } = useContext(IsInteractiveModeContext)
 

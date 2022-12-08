@@ -4,7 +4,6 @@ import { AiOutlineReload } from 'react-icons/ai'
 
 import ComponentRemountContext from '~contexts/ComponentRemountContext'
 
-// A button that links to the components scene
 function RemountButton(props: any) {
   const { setKey } = useContext(ComponentRemountContext)
 

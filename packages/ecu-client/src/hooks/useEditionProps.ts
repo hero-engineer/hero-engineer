@@ -1,5 +1,3 @@
-import '../css/edition.css'
-
 import { CSSProperties, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
 
 import { cssValueReset } from '~constants'
@@ -45,7 +43,7 @@ function removeResetStyles(style: CSSProperties) {
 }
 
 // Return common edition props for lib components
-function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', canBeEdited = false) {
+function useEditionProps<T extends HTMLElement>(ecuId: string, className = '') {
   const rootRef = useRef<T>(null)
 
   const hierarchyId = useHierarchyId(ecuId, rootRef)
@@ -124,23 +122,15 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '', c
 
   // const ref = useForkedRef(rootRef, useForkedRef(drag, drop)) as Ref<T>
 
-  const generateClassName = useCallback(() => {
-    let klassName = `${isInteractiveMode ? '' : 'ecu-edition'} ${isSelected ? updatedClassName || className : className}`
-
-    klassName = klassName.trim()
-
-    if (canBeEdited) {
-      klassName += ' ecu-can-be-edited'
-    }
-
-    return klassName
-  }, [
-    canBeEdited,
-    className,
-    isInteractiveMode,
-    updatedClassName,
-    isSelected,
-  ])
+  const generateClassName = useCallback(
+    () => `${isInteractiveMode ? '' : 'ecu-edition'} ${isSelected ? updatedClassName || className : className}`.trim(),
+    [
+      className,
+      isInteractiveMode,
+      updatedClassName,
+      isSelected,
+    ]
+  )
 
   useEffect(() => {
     if (!rootRef.current) return

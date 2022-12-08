@@ -1,13 +1,10 @@
 import { MouseEvent, useCallback, useContext } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Div } from 'honorable'
-import { MdClose } from 'react-icons/md'
 
 import TabsContext from '~contexts/TabsContext'
 
-const iconStyle = {
-  fontSize: '0.75rem',
-}
+import Tab from '~core/full-ast/Tab'
 
 function Tabs() {
   const { tabs, setTabs } = useContext(TabsContext)
@@ -40,31 +37,13 @@ function Tabs() {
       fontSize="0.85rem"
     >
       {tabs.map(({ url, label }) => (
-        <Div
+        <Tab
           key={url}
-          xflex="x4s"
-          backgroundColor={pathname === url ? 'background' : null}
-          borderBottom={pathname === url ? null : '1px solid border'}
-          borderRight="1px solid border"
-          _hover={{ backgroundColor: pathname === url ? 'background' : 'background-light-dark' }}
+          active={pathname === url}
+          label={label}
           onClick={() => handleTabClick(url)}
-          cursor="pointer"
-          pl={1}
-          pr={0.25}
-        >
-          <Div xflex="x4">
-            {label}
-          </Div>
-          <Div
-            xflex="x5"
-            fontSize="0.75rem"
-            onClick={event => handleTabClose(event, url)}
-            pl={0.5}
-            pr={0.25}
-          >
-            <MdClose style={iconStyle} />
-          </Div>
-        </Div>
+          onClose={event => handleTabClose(event, url)}
+        />
       ))}
     </Div>
   )

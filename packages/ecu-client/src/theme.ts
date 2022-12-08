@@ -272,10 +272,6 @@ export default mergeTheme(defaultTheme, {
   --*/
   Accordion: {
     Root: [
-      ({ ghost }: any) => ghost && {
-        elevation: 0,
-        backgroundColor: 'transparent',
-      },
       {
         '&:first-of-type': {
           borderTopLeftRadius: 0,
@@ -287,13 +283,28 @@ export default mergeTheme(defaultTheme, {
           borderBottomRightRadius: 0,
         },
       },
+      ({ ghost }: any) => ghost && {
+        elevation: 0,
+        backgroundColor: 'transparent',
+      },
+      ({ bottomTabs }: any) => bottomTabs && {
+        elevation: 0,
+        borderBottom: null,
+      },
     ],
-    Title: [
+    Title: [ // TODO rework with per-component semantic names
       ({ ghost }: any) => ghost && {
         height: 32, // To match the height of any ghost button
         paddingTop: 0,
         paddingBottom: 0,
         fontWeight: 500,
+      },
+      ({ bottomTabs, expanded, isExpanding }: any) => bottomTabs && {
+        paddingTop: 0,
+        paddingBottom: 0,
+        paddingLeft: 0,
+        backgroundColor: 'background-light',
+        borderBottom: expanded || isExpanding ? '1px solid border' : null,
       },
       ({ smallTitlePadding }: any) => smallTitlePadding && {
         paddingLeft: 8,
@@ -312,7 +323,7 @@ export default mergeTheme(defaultTheme, {
         paddingLeft: 0,
         paddingRight: 0,
       },
-      ({ noChildrenPadding }: any) => noChildrenPadding && {
+      ({ noChildrenPadding, bottomTabs }: any) => (noChildrenPadding || bottomTabs) && {
         paddingTop: 0,
         paddingBottom: 0,
         paddingLeft: 0,
