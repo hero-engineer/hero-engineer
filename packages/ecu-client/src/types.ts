@@ -139,11 +139,15 @@ export type XYType = {
 
 export type FileType = {
   path: string
-  relativePath: string
-  content: string
+  code: string
 }
 
 export type TabType = {
   url: string
   label: string
 }
+
+export type AstsType = Record<string, {
+  ast: any
+  code: string
+}>

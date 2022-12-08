@@ -4,6 +4,7 @@ import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 import { typescriptPaths } from 'rollup-plugin-typescript-paths'
+import nodePolyfills from 'rollup-plugin-polyfill-node'
 
 import react from '@vitejs/plugin-react'
 
@@ -30,7 +31,10 @@ export default defineConfig({
       fileName: format => `ecu-client.${format}.js`,
     },
     rollupOptions: {
-      plugins: [typescriptPaths({ preserveExtensions: true })],
+      plugins: [
+        typescriptPaths({ preserveExtensions: true }),
+        nodePolyfills(),
+      ],
       external: ['react', 'react-dom'],
       output: {
         globals: {

@@ -4,7 +4,7 @@ import { Provider as GraphqlProvider } from 'urql'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
-import { BreakpointType, SnackBarItemType, TabType } from '@types'
+import { AstsType, BreakpointType, SnackBarItemType, TabType } from '@types'
 
 import ModeContext from '@contexts/ModeContext'
 import HotContext from '@contexts/HotContext'
@@ -12,6 +12,7 @@ import RefetchContext, { RefetchContextType } from '@contexts/RefetchContext'
 import ThemeModeContext, { ThemeModeContextType } from '@contexts/ThemeModeContext'
 import SnackBarContext, { SnackBarContextType } from '@contexts/SnackBarContext'
 import TabsContext, { TabsContextType } from '@contexts/TabsContext'
+import AstsContext, { AstsContextType } from '@contexts/AstsContext'
 import BreakpointContext, { BreakpointContextType } from '@contexts/BreakpointContext'
 import IsInteractiveModeContext, { IsInteractiveModeContextType } from '@contexts/IsInteractiveModeContext'
 
@@ -40,6 +41,9 @@ function ProviderMaster({ mode, hot, children }: MasterProvidersPropsType) {
 
   const [tabs, setTabs] = usePersistedState<TabType[]>('tabs', [])
   const tabsContextValue = useMemo<TabsContextType>(() => ({ tabs, setTabs }), [tabs, setTabs])
+
+  const [asts, setAsts] = useState<AstsType>({})
+  const astsContextValue = useMemo<AstsContextType>(() => ({ asts, setAsts }), [asts])
 
   const [breakpoint, setBreakpoint] = usePersistedState<BreakpointType>('breakpoint', {
     id: 'Default',
@@ -72,11 +76,13 @@ function ProviderMaster({ mode, hot, children }: MasterProvidersPropsType) {
               <ThemeModeContext.Provider value={themeModeContextValue}>
                 <SnackBarContext.Provider value={snackBarContextValue}>
                   <TabsContext.Provider value={tabsContextValue}>
-                    <BreakpointContext.Provider value={breakpointContextValue}>
-                      <IsInteractiveModeContext.Provider value={isInteractiveModeContextValue}>
-                        {children}
-                      </IsInteractiveModeContext.Provider>
-                    </BreakpointContext.Provider>
+                    <AstsContext.Provider value={astsContextValue}>
+                      <BreakpointContext.Provider value={breakpointContextValue}>
+                        <IsInteractiveModeContext.Provider value={isInteractiveModeContextValue}>
+                          {children}
+                        </IsInteractiveModeContext.Provider>
+                      </BreakpointContext.Provider>
+                    </AstsContext.Provider>
                   </TabsContext.Provider>
                 </SnackBarContext.Provider>
               </ThemeModeContext.Provider>

@@ -3,7 +3,7 @@
     "import/parsers": {
 			"@typescript-eslint/parser": [".ts", ".tsx"]
 		},
-    "import/internal-regex": "^@"
+    "import/internal-regex": "^@(?!babel|esbuild)"
   },
   "rules": {
     "react/jsx-closing-bracket-location": "error",
@@ -13,6 +13,7 @@
       {
         "newlines-between": "always",
         "groups": [
+          "builtin",
           "external",
           "internal",
           "parent",

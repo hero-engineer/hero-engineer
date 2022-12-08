@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { ComponentFileQuery, ComponentFileQueryDataType } from '@queries'
+import { ComponentFileMetadataQuery, ComponentFileQueryDataType } from '@queries'
 
 import useQuery from '@hooks/useQuery'
 
@@ -9,34 +9,34 @@ import { convertFromEcuComponentPath } from '@utils/convertComponentPath'
 
 import ComponentWindow from '@core/component-window/ComponentWindow'
 import ProviderComponent from '@core/full-ast/ProviderComponent'
-import WithComponentAst from '@core/full-ast/WithComponentAst'
 
 function Component() {
   const { '*': ecuRelativePath = '' } = useParams()
 
   const relativePath = useMemo(() => convertFromEcuComponentPath(ecuRelativePath), [ecuRelativePath])
+  const path = useMemo(() => `/Users/sven/dev/ecu-app/app/src/${relativePath}`, [relativePath])
 
-  const [componentFileQueryResult] = useQuery<ComponentFileQueryDataType>({
-    query: ComponentFileQuery,
+  const [componentFileMetadataQueryResult] = useQuery<ComponentFileQueryDataType>({
+    query: ComponentFileMetadataQuery,
     variables: {
-      relativePath,
+      path,
     },
     pause: !relativePath,
   })
 
-  if (!relativePath) return null
-  if (!componentFileQueryResult.data) return null
+  // TODO useRefetch
 
-  const { content, decoratorPaths } = componentFileQueryResult.data.componentFile
+  if (!relativePath) return null
+  if (!componentFileMetadataQueryResult.data) return null
+
+  const { decoratorPaths } = componentFileMetadataQueryResult.data.componentFileMetadata
 
   return (
     <ProviderComponent>
-      <WithComponentAst code={content}>
-        <ComponentWindow
-          componentPath={`/Users/sven/dev/ecu-app/app/src/${relativePath}`}
-          decoratorPaths={decoratorPaths}
-        />
-      </WithComponentAst>
+      <ComponentWindow
+        componentPath={`/Users/sven/dev/ecu-app/app/src/${relativePath}`}
+        decoratorPaths={decoratorPaths}
+      />
     </ProviderComponent>
   )
 }
