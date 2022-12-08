@@ -55,10 +55,7 @@ function Component() {
 
   return (
     <ProviderComponent>
-      <Div
-        xflex="x6"
-        flexShrink={1}
-      >
+      <Div xflex="x6">
         <BreakpointsButtons />
         <InteractiveModeButton />
         <RemountButton />
@@ -69,7 +66,14 @@ function Component() {
         componentPath={path}
         decoratorPaths={decoratorPaths}
       />
-      <BottomTabsPanel />
+      <Div
+        position="absolute"
+        bottom={0}
+        left={0}
+        right={0}
+      >
+        <BottomTabsPanel />
+      </Div>
     </ProviderComponent>
   )
 }

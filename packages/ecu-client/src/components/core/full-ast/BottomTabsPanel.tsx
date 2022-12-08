@@ -42,6 +42,7 @@ function BottomTabsPanel() {
       xflex="x4s"
       flexGrow
       height={32}
+      fontSize="0.85rem"
     >
       {tabs.map(({ url, label }, i) => (
         <Tab
@@ -69,12 +70,15 @@ function BottomTabsPanel() {
   if (!tabs.length) return null
 
   return (
-    <>
+    <Div
+      position="relative"
+      flexShrink={0}
+      width="100%"
+    >
       {isExpanded && <BottomTabsPanelHandle setHeight={setHeight} />}
       <Accordion
         bottomTabs
         invertExpandIcon
-        flexShrink={0}
         expanded={isExpanded}
         onExpand={setIsExpanded}
         title={renderTabs()}
@@ -89,7 +93,7 @@ function BottomTabsPanel() {
           Foo
         </Div>
       </Accordion>
-    </>
+    </Div>
   )
 }
 
@@ -125,9 +129,12 @@ function BottomTabsPanelHandle({ setHeight }: BottomTabsPanelHandlePropsType) {
   return (
     <>
       <Div
-        flexShrink={0}
-        width="100%"
+        position="absolute"
+        top={0}
+        left={0}
+        right={0}
         height={5}
+        flexShrink={0}
         backgroundColor={isDragging ? 'primary' : undefined}
         _hover={{ backgroundColor: 'primary' }}
         userSelect="none"

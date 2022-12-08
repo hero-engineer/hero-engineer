@@ -54,6 +54,7 @@ function Overlay({ children }: OverlayPropsType) {
         </Div>
       </Div>
       <Div
+        position="relative"
         xflex="y2s"
         flexGrow
         height="calc(100vh - 32px)"
