@@ -1,7 +1,4 @@
-import fs from 'node:fs'
-import path from 'node:path'
-
-import { appPath } from '../../configuration.js'
+import getComponentDecoratorPaths from '../../domain/components/getComponentDecoratorPaths2.js'
 
 type ComponentQueryArgsType = {
   path: string
@@ -9,7 +6,7 @@ type ComponentQueryArgsType = {
 
 function componentFileMetadataQuery(_: any, { path }: ComponentQueryArgsType) {
   return {
-    decoratorPaths: [],
+    decoratorPaths: getComponentDecoratorPaths(path),
   }
 }
 
