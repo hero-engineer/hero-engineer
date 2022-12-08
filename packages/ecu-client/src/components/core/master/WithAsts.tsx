@@ -6,7 +6,7 @@ import { AstsType } from '~types'
 
 import { FilesQuery, FilesQueryDataType } from '~queries'
 
-import { Babel, Postcss, allowedBabelExtensions, allowedPostcssExtensions, babelOptions } from '~processors'
+import { Babel, Postcss, allowedBabelExtensions, allowedPostcssExtensions, babelOptions, forbiddedBabelExtensions } from '~processors'
 
 import AstsContext from '~contexts/AstsContext'
 
@@ -26,9 +26,10 @@ function WithAsts({ children }: WithAstsPropsType) {
   const updateAsts = useCallback(async () => {
     if (!filesQueryResult.data?.files) return
 
-    const astPromises = filesQueryResult.data.files.reduce<Promise<File | Root | Document | null | undefined>[]>((promises, { path, code }) => [
+    const astPromises = filesQueryResult.data.files
+    .reduce<Promise<File | Root | Document | null | undefined>[]>((promises, { path, code }) => [
       ...promises,
-      allowedBabelExtensions.some(extension => path.endsWith(extension))
+      !forbiddedBabelExtensions.some(extension => path.endsWith(extension)) && allowedBabelExtensions.some(extension => path.endsWith(extension))
         ? Promise.resolve(Babel.transform(code, { ...babelOptions, filename: path }).ast)
         : allowedPostcssExtensions.some(extension => path.endsWith(extension))
           ? Postcss.process(code, { from: path }).then(x => x.root)

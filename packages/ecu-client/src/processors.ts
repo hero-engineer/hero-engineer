@@ -9,7 +9,6 @@ import posscssNested from 'postcss-nested'
 
 export { default as Babel } from '@babel/standalone'
 
-Babel.disableScriptTags()
 Babel.registerPresets({
   typescript: babelPresetTypescript,
   react: babelPresetReact,
@@ -32,6 +31,10 @@ export const allowedBabelExtensions = [
   'jsx',
   'ts',
   'tsx',
+]
+
+export const forbiddedBabelExtensions = [
+  'd.ts',
 ]
 
 export const allowedPostcssExtensions = [

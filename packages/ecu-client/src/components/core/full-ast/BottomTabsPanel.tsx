@@ -1,4 +1,4 @@
-import { Dispatch, MouseEvent, SetStateAction, useCallback, useContext, useEffect, useState } from 'react'
+import { Dispatch, MouseEvent, SetStateAction, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { Accordion, Div } from 'honorable'
 import { IoCodeSlashOutline } from 'react-icons/io5'
 
@@ -10,6 +10,7 @@ import usePersistedState from '~hooks/usePersistedState'
 import usePreviousWithDefault from '~hooks/usePreviousWithDefault'
 
 import Tab from '~core/full-ast/Tab'
+import CodeEditor from '~core/full-ast/CodeEditor'
 
 const minHeight = 64
 
@@ -88,9 +89,8 @@ function BottomTabsPanel() {
         <Div
           height={height}
           maxHeight={height}
-          overflow="auto"
         >
-          Foo
+          {!!tabs[currentTabIndex]?.url && <CodeEditor path={tabs[currentTabIndex]?.url} />}
         </Div>
       </Accordion>
     </Div>
