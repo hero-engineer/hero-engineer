@@ -1,7 +1,7 @@
 import { useCallback, useContext } from 'react'
 import { useParams } from 'react-router-dom'
 import { Button, Tooltip } from 'honorable'
-import { RxCode } from 'react-icons/rx'
+import { IoCodeSlashOutline } from 'react-icons/io5'
 
 import BottomTabsContext from '~contexts/BottomTabsContext'
 
@@ -17,7 +17,7 @@ function EditCodeButton(props: any) {
 
     const url = `/Users/sven/dev/ecu-app/app/src/${convertFromEcuComponentPath(ecuComponentPath)}`
 
-    setTabs(tabs => tabs.some(x => x.url === url) ? tabs : [...tabs, { url, label: `${url.split('/').pop() ?? '?'} (code)` }])
+    setTabs(tabs => tabs.some(x => x.url === url) ? tabs : [...tabs, { url, label: url.split('/').pop() ?? '?' }])
   }, [ecuComponentPath, setTabs])
 
   return (
@@ -30,7 +30,7 @@ function EditCodeButton(props: any) {
         onClick={handleClick}
         {...props}
       >
-        <RxCode />
+        <IoCodeSlashOutline />
       </Button>
     </Tooltip>
   )

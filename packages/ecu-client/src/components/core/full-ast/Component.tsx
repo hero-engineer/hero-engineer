@@ -1,8 +1,10 @@
-import { useMemo } from 'react'
+import { useContext, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { Div } from 'honorable'
 
 import { ComponentFileMetadataQuery, ComponentFileQueryDataType } from '~queries'
+
+import TabsContext from '~contexts/TabsContext'
 
 import useQuery from '~hooks/useQuery'
 
@@ -18,22 +20,35 @@ import ProviderComponent from '~core/full-ast/ProviderComponent'
 import BottomTabsPanel from '~core/full-ast/BottomTabsPanel'
 
 function Component() {
-  const { '*': ecuRelativePath = '' } = useParams()
+  const { '*': ecuComponentPath = '' } = useParams()
 
-  const relativePath = useMemo(() => convertFromEcuComponentPath(ecuRelativePath), [ecuRelativePath])
-  const path = useMemo(() => `/Users/sven/dev/ecu-app/app/src/${relativePath}`, [relativePath])
+  const { tabs, setTabs } = useContext(TabsContext)
+
+  const path = useMemo(() => ecuComponentPath ? `/Users/sven/dev/ecu-app/app/src/${convertFromEcuComponentPath(ecuComponentPath)}` : '', [ecuComponentPath])
 
   const [componentFileMetadataQueryResult] = useQuery<ComponentFileQueryDataType>({
     query: ComponentFileMetadataQuery,
     variables: {
       path,
     },
-    pause: !relativePath,
+    pause: !path,
   })
 
   // TODO useRefetch
 
-  if (!relativePath) return null
+  useEffect(() => {
+    if (!ecuComponentPath) return
+
+    const url = `/_ecu_/~/${ecuComponentPath}`
+
+    if (tabs.some(tab => tab.url === url)) return
+
+    setTabs(tabs => [...tabs, { url, label: path.split('/').pop() ?? '?' }])
+  // Omitting tabs to trigger on ecuComponentPath change only
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ecuComponentPath, path, setTabs])
+
+  if (!path) return null
   if (!componentFileMetadataQueryResult.data) return null
 
   const { decoratorPaths } = componentFileMetadataQueryResult.data.componentFileMetadata
@@ -48,7 +63,7 @@ function Component() {
       </Div>
       <WidthBar />
       <ComponentWindow
-        componentPath={`/Users/sven/dev/ecu-app/app/src/${relativePath}`}
+        componentPath={path}
         decoratorPaths={decoratorPaths}
       />
       <BottomTabsPanel />

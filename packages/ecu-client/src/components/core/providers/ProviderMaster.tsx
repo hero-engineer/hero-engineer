@@ -27,6 +27,7 @@ type ProviderMasterPropsType = {
 
 // The providers for the whole application
 function ProviderMaster({ mode, hot, children }: ProviderMasterPropsType) {
+
   const { refetch, register } = useCreateRefetchRegistry()
   const refetchContextValue = useMemo<RefetchContextType>(() => ({ refetch, register }), [refetch, register])
 

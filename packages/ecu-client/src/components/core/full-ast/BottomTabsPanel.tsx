@@ -1,5 +1,6 @@
 import { Accordion, Div } from 'honorable'
 import { MouseEvent, useCallback, useContext } from 'react'
+import { IoCodeSlashOutline } from 'react-icons/io5'
 
 import BottomTabsContext from '~contexts/BottomTabsContext'
 
@@ -31,6 +32,7 @@ function BottomTabsPanel() {
           key={url}
           active
           label={label}
+          icon={<IoCodeSlashOutline />}
           onClick={handleTabClick}
           onClose={handleTabClose}
         />
