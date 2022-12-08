@@ -18,6 +18,7 @@ function Tabs() {
     <Div
       xflex="x4s"
       flexShrink={1}
+      fontSize="0.85rem"
     >
       {tabs.map(({ url, label }) => (
         <Link
