@@ -4,6 +4,7 @@ import { TfiAlignCenter, TfiAlignJustify, TfiAlignLeft, TfiAlignRight } from 're
 import { BsTypeItalic } from 'react-icons/bs'
 import { RxLetterCaseCapitalize, RxLetterCaseLowercase, RxLetterCaseUppercase, RxOverline, RxStrikethrough, RxUnderline } from 'react-icons/rx'
 import { MdClose, MdOutlineFormatTextdirectionLToR, MdOutlineFormatTextdirectionRToL } from 'react-icons/md'
+
 import { CssAttributeType, CssValuesType } from '~types'
 
 import { refetchKeys } from '~constants'

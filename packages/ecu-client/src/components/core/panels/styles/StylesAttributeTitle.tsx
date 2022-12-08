@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { Div, DivProps } from 'honorable'
 import { BiUndo } from 'react-icons/bi'
+
 import { CssAttributeType, CssValuesType } from '~types'
 
 import { cssAttributesMap, cssValueReset } from '~constants'

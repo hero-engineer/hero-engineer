@@ -11,6 +11,7 @@ import { convertFromEcuComponentPath } from '~utils/convertComponentPath'
 import BreakpointsButtons from '~core/component/BreakpointsButtons'
 import WidthBar from '~core/component/WidthBar'
 import InteractiveModeButton from '~core/component/InteractiveModeButton'
+import RemountButton from '~core/component/RemountButton'
 import ComponentWindow from '~core/component-window/ComponentWindow'
 import ProviderComponent from '~core/full-ast/ProviderComponent'
 
@@ -40,6 +41,7 @@ function Component() {
       <Div xflex="x6">
         <BreakpointsButtons />
         <InteractiveModeButton />
+        <RemountButton />
       </Div>
       <WidthBar />
       <ComponentWindow

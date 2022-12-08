@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, createContext } from 'react'
+
 import { TypeType } from '~types'
 
 export type GlobalTypesContextType = {

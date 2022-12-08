@@ -1,8 +1,10 @@
 import { ReactNode, useMemo, useState } from 'react'
+
 import { BreakpointType } from '~types'
 
 import BreakpointContext, { BreakpointContextType } from '~contexts/BreakpointContext'
 import IsInteractiveModeContext, { IsInteractiveModeContextType } from '~contexts/IsInteractiveModeContext'
+import ComponentRemountContext, { ComponentRemountContextType } from '~contexts/ComponentRemountContext'
 
 import usePersistedState from '~hooks/usePersistedState'
 
@@ -12,6 +14,9 @@ type ProviderComponentPropsType = {
 
 // The providers for the component scene
 function ProviderComponent({ children }: ProviderComponentPropsType) {
+  const [key, setKey] = useState(0)
+  const componentRemountContextValue = useMemo<ComponentRemountContextType>(() => ({ key, setKey }), [key])
+
   const [breakpoint, setBreakpoint] = usePersistedState<BreakpointType>('breakpoint', {
     id: 'Default',
     name: 'Default',
@@ -35,11 +40,13 @@ function ProviderComponent({ children }: ProviderComponentPropsType) {
   const isInteractiveModeContextValue = useMemo<IsInteractiveModeContextType>(() => ({ isInteractiveMode, setIsInteractiveMode }), [isInteractiveMode, setIsInteractiveMode])
 
   return (
-    <BreakpointContext.Provider value={breakpointContextValue}>
-      <IsInteractiveModeContext.Provider value={isInteractiveModeContextValue}>
-        {children}
-      </IsInteractiveModeContext.Provider>
-    </BreakpointContext.Provider>
+    <ComponentRemountContext.Provider value={componentRemountContextValue}>
+      <BreakpointContext.Provider value={breakpointContextValue}>
+        <IsInteractiveModeContext.Provider value={isInteractiveModeContextValue}>
+          {children}
+        </IsInteractiveModeContext.Provider>
+      </BreakpointContext.Provider>
+    </ComponentRemountContext.Provider>
   )
 }
 

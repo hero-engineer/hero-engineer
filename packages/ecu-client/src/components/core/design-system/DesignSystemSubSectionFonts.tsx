@@ -5,6 +5,7 @@ import { SlTrash } from 'react-icons/sl'
 import { BsCheck2, BsPlus } from 'react-icons/bs'
 import { IoCloseOutline } from 'react-icons/io5'
 import shortId from 'shortid'
+
 import { FontType } from '~types'
 
 import { refetchKeys } from '~constants'

@@ -1,4 +1,5 @@
 import { MouseEvent, useCallback, useContext } from 'react'
+
 import { HierarchyItemType } from '~types'
 
 import HierarchyContext from '~contexts/HierarchyContext'

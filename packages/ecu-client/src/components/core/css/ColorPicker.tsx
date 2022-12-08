@@ -3,6 +3,7 @@ import '../../../css/ColorPicker.css'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { Button, Div, Input, MenuItem, Select, WithOutsideClick } from 'honorable'
 import { ChromePicker } from 'react-color'
+
 import { ColorType } from '~types'
 
 import { zIndexes } from '~constants'

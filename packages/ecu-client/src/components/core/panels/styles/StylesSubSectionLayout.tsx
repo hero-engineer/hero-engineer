@@ -13,6 +13,7 @@ import {
   MdOutlineAlignHorizontalRight,
   MdOutlineSwapHoriz,
 } from 'react-icons/md'
+
 import { CssAttributeType, CssValuesType } from '~types'
 
 import { cssAttributesMap } from '~constants'

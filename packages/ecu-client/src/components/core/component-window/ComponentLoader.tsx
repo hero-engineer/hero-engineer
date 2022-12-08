@@ -1,4 +1,6 @@
-import { Suspense, lazy, memo } from 'react'
+import { Suspense, lazy, memo, useContext } from 'react'
+
+import ComponentRemountContext from '~contexts/ComponentRemountContext'
 
 type ComponentLoaderPropsType = {
   componentPath: string
@@ -8,6 +10,8 @@ type ComponentLoaderPropsType = {
 
 // A component fetcher that uses React.lazy
 function ComponentLoader({ componentPath, decoratorPaths, head }: ComponentLoaderPropsType) {
+  const { key } = useContext(ComponentRemountContext)
+
   const decorators = decoratorPaths.map(decoratorPath => lazy(() => import(/* @vite-ignore */ /* webpackIgnore: true */ decoratorPath)))
   const Component = lazy(() => import(/* @vite-ignore */ /* webpackIgnore: true */ componentPath))
 
@@ -17,7 +21,7 @@ function ComponentLoader({ componentPath, decoratorPaths, head }: ComponentLoade
         <Decorator head={head}>
           {children}
         </Decorator>
-      ), <Component />)}
+      ), <Component key={key} />)}
     </Suspense>
   )
 }

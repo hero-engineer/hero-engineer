@@ -1,10 +1,10 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { useParams } from 'react-router-dom'
 import { Button, Div, Input, Menu, MenuItem, Tooltip, WithOutsideClick } from 'honorable'
 import viewports from 'devices-viewport-size'
 import { AiOutlineDesktop, AiOutlineMobile, AiOutlineTablet } from 'react-icons/ai'
 import { MdClose } from 'react-icons/md'
 import { RxCaretDown } from 'react-icons/rx'
+
 import { BreakpointType } from '~types'
 
 import { refetchKeys, zIndexes } from '~constants'
@@ -27,7 +27,6 @@ const icons = [
 ]
 
 function BreakpointsButtons() {
-  const { '*': componentRelativePath = '' } = useParams()
   const { breakpoint, setBreakpoint, breakpoints, setBreakpoints, width, setWidth, height, setHeight } = useContext(BreakpointContext)
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -172,7 +171,6 @@ function BreakpointsButtons() {
     setBreakpoints(workingBreakpoints)
   }, [workingBreakpoints, setBreakpoints])
 
-  if (!componentRelativePath) return null
   if (!workingBreakpoints.length) return null
 
   return (

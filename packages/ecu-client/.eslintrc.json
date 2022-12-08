@@ -24,52 +24,52 @@
           {
             "pattern": "~types",
             "group": "internal",
-            "position": "before"
+            "position": "after"
           },
           {
             "pattern": "~constants",
             "group": "internal",
-            "position": "before"
+            "position": "after"
           },
           {
             "pattern": "~queries",
             "group": "internal",
-            "position": "before"
+            "position": "after"
           },
           {
             "pattern": "~processors",
             "group": "internal",
-            "position": "before"
+            "position": "after"
           },
           {
             "pattern": "~contexts/**",
             "group": "internal",
-            "position": "before"
+            "position": "after"
           },
           {
             "pattern": "~hooks/**",
             "group": "internal",
-            "position": "before"
+            "position": "after"
           },
           {
             "pattern": "~utils/**",
             "group": "internal",
-            "position": "before"
+            "position": "after"
           },
           {
             "pattern": "~scenes/**",
             "group": "internal",
-            "position": "before"
+            "position": "after"
           },
           {
             "pattern": "~core/**",
             "group": "internal",
-            "position": "before"
+            "position": "after"
           },
           {
             "pattern": "~lib/**",
             "group": "internal",
-            "position": "before"
+            "position": "after"
           }
         ]
       }

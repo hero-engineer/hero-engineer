@@ -2,6 +2,7 @@ import '../../../css/EditionOverlayElement.css'
 
 import { MouseEvent, memo, useCallback, useEffect, useRef } from 'react'
 import { Div } from 'honorable'
+
 import { HierarchyItemType } from '~types'
 
 type EditionOverlayElementPropsType = {

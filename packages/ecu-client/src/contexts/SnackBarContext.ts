@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, createContext } from 'react'
+
 import { SnackBarItemType } from '~types'
 
 export type SnackBarContextType = {
