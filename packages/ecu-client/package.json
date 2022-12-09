@@ -14,7 +14,7 @@
   "homepage": "https://github.com/dherault/ecu#readme",
   "scripts": {
     "build": "tsc && vite build",
-    "build:watch": "vite build --watch",
+    "build:watch": "node --max_old_space_size=16384 ./node_modules/vite/bin/vite.js build --watch",
     "build:production": "PRODUCTION_BUILD=true npm run build",
     "preview": "vite preview",
     "dev": "nodemon --watch node_modules --ext js,json,css --exec \"npm run build:watch\"",

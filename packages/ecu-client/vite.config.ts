@@ -19,7 +19,7 @@ export default defineConfig({
   ],
   build: {
     minify: isProductionBuild,
-    sourcemap: true,
+    sourcemap: isProductionBuild,
     outDir: 'build',
     emptyOutDir: isProductionBuild,
     lib: {

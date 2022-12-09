@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useContext, useEffect, useRef } from 'react'
+import { ReactNode, useCallback, useEffect, useRef } from 'react'
 
 import { createHierarchy } from '~processors/typescript'
 
@@ -15,7 +15,7 @@ function WithComponentHierarchy({ children }: WithComponentHierarchyPropsType) {
   const path = useCurrentComponentPath()
   const previousPath = usePreviousWithDefault(path, path)
 
-  const computeHierarchy = useCallback((componentElement: HTMLElement | null) => {
+  const computeHierarchy = useCallback(async (componentElement: HTMLElement | null) => {
     if (!componentElement) return
 
     const componentElements: HTMLElement[] = []
@@ -24,19 +24,20 @@ function WithComponentHierarchy({ children }: WithComponentHierarchyPropsType) {
       componentElements.push(child as HTMLElement)
     }
 
-    const hierarchy = createHierarchy(path, componentElements)
+    const hierarchy = await createHierarchy(path, componentElements)
 
     console.log('hierarchy', hierarchy)
   }, [path])
 
-  const throttledComputeHierarchies = useThrottleAsynchronous(computeHierarchy, 500, true)
+  const throttledComputeHierarchy = useThrottleAsynchronous(computeHierarchy, 500, true)
 
   useEffect(() => {
     if (!rootRef.current) return
 
-    const observer = new MutationObserver(() => throttledComputeHierarchies(rootRef.current))
+    const observer = new MutationObserver(() => throttledComputeHierarchy(rootRef.current))
 
     observer.observe(rootRef.current, {
+      characterData: true,
       attributes: true,
       childList: true,
       subtree: true,
@@ -47,7 +48,7 @@ function WithComponentHierarchy({ children }: WithComponentHierarchyPropsType) {
     }
   // Will be triggered twice on mount but throttledComputeHierarchies will be called only once
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rootRef.current, throttledComputeHierarchies])
+  }, [rootRef.current, throttledComputeHierarchy])
 
   useEffect(() => {
     if (!rootRef.current || path === previousPath) return

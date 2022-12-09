@@ -1,6 +1,3 @@
-import { File } from '@babel/types'
-import { Document, Root } from 'postcss'
-
 export type FunctionNodeType = {
   address: string
   payload: {
@@ -57,11 +54,11 @@ export type TypeType = {
 
 export type ImportSpecifierType = 'ImportDefaultSpecifier' | 'ImportNamespaceSpecifier' | 'ImportSpecifier'
 
-export type ImportType = {
-  name: string
-  source: string
-  type: ImportSpecifierType
-}
+// export type ImportType = {
+//   name: string
+//   source: string
+//   type: ImportSpecifierType
+// }
 
 export type SnackBarItemType = {
   id: number
@@ -150,11 +147,6 @@ export type TabType = {
   label: string
 }
 
-export type AstsType = Record<string, {
-  ast: File | Root | Document | null | undefined
-  code: string
-}>
-
 export type HierarchyType = {
   id: string
   name: string
@@ -165,4 +157,13 @@ export type HierarchyType = {
   children: HierarchyType[]
 }
 
-export type HierarchiesType = Record<string, HierarchyType>
+export type ImportType = {
+  type: 'default' | 'named'
+  source: string
+  name: string
+}
+
+export type ExportType = {
+  type: 'default' | 'named'
+  name: string
+}
