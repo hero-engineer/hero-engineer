@@ -50,7 +50,6 @@ export const babelOptions: TransformOptions = {
 const hierarchyBabelOptions: TransformOptions = {
   ast: false,
   code: false,
-  plugins: ['ecu-hierarchy-1', 'ecu-hierarchy-2'],
 }
 
 const allowedFunctionComponentFirstCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -129,7 +128,7 @@ export function createHierarchies(asts: AstsType, path: string, componentElement
           })))
         },
         ExportDefaultDeclaration(path) {
-          console.log(' path.node.declaration', path.node.declaration)
+          console.log('ExportDefaultDeclaration', path.node.declaration)
           exports.push({
             type: path.node.type,
             // @ts-expect-error
@@ -157,11 +156,12 @@ export function createHierarchies(asts: AstsType, path: string, componentElement
   }
 
   Babel.registerPlugins({
-    'ecu-hierarchy-1': hierarchyImportsPlugin,
-    'ecu-hierarchy-2': hierarchyPlugin,
+    'ecu-hierarchy-imports': hierarchyImportsPlugin,
+    'ecu-hierarchy': hierarchyPlugin,
   })
 
-  Babel.transformFromAst(asts[path].ast as File, asts[path].code, { ...hierarchyBabelOptions, filename: path })
+  Babel.transformFromAst(asts[path].ast as File, asts[path].code, { ...hierarchyBabelOptions, filename: path, plugins: ['ecu-hierarchy-imports'] })
+  Babel.transformFromAst(asts[path].ast as File, asts[path].code, { ...hierarchyBabelOptions, filename: path, plugins: ['ecu-hierarchy'] })
 
   console.log('imports', imports)
   console.log('exports', exports)
