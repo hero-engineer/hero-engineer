@@ -23,20 +23,6 @@ function WithAsts({ children }: WithAstsPropsType) {
 
   // TODO useRefetch
 
-  const computeHierarchy = useCallback((ast: File | null | undefined) => {
-
-  }, [])
-
-  const computeHierarchies = useCallback((asts: AstsType) => {
-    const hierarchies: any = {}
-
-    Object.entries(asts).forEach(([path, { ast }]) => {
-      if (forbiddedBabelExtensions.some(extension => path.endsWith(extension)) || !allowedBabelExtensions.some(extension => path.endsWith(extension))) return
-
-      hierarchies[path] = computeHierarchy(ast as File | null | undefined)
-    })
-  }, [computeHierarchy])
-
   const updateAstsContext = useCallback(async () => {
     if (!filesQueryResult.data?.files) return
 
@@ -61,8 +47,7 @@ function WithAsts({ children }: WithAstsPropsType) {
     }), {})
 
     setAsts(asts)
-    computeHierarchies(asts)
-  }, [filesQueryResult.data, setAsts, computeHierarchies])
+  }, [filesQueryResult.data, setAsts])
 
   useEffect(() => {
     updateAstsContext()

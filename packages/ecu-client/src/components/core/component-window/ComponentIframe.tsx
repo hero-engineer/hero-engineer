@@ -48,7 +48,6 @@ function ComponentIframe({ children }: ComponentIframePropsType) {
       }
       body {
         height: fit-content;
-        overflow: hidden;
       }
     `)
   }, [appendCss])
