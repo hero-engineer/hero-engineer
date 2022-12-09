@@ -78,7 +78,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
 
   const imports: ImportType[] = []
   const exports: ExportType[] = []
-  const topJsxs: (JsxElement | JsxFragment)[] = []
+  const topJsxs: Record<string, JsxElement | JsxFragment> = {}
 
   /* --
     * IMPORTS/EXPORTS TRAVERSAL
@@ -137,18 +137,24 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
     * TOP JSX TRAVERSAL
   -- */
 
+  let topJsxIdCursor = 0
+
   function traverseTopJsx(sourceFile: SourceFile) {
-    topJsxs.push(...sourceFile.getDescendantsOfKind(SyntaxKind.JsxElement).filter(jsxElement => {
+    (sourceFile.getDescendantsOfKind(SyntaxKind.JsxElement).filter(jsxElement => {
       const parentKind = jsxElement.getParent().getKind()
 
       return parentKind !== SyntaxKind.JsxElement && parentKind !== SyntaxKind.JsxFragment
-    }) ?? [])
+    }) ?? []).forEach(topJsx => {
+      topJsxs[topJsxIdCursor++] = topJsx
+    })
 
-    topJsxs.push(...sourceFile.getDescendantsOfKind(SyntaxKind.JsxFragment).filter(jsxFragment => {
+    ;(sourceFile.getDescendantsOfKind(SyntaxKind.JsxFragment).filter(jsxFragment => {
       const parentKind = jsxFragment.getParent().getKind()
 
       return parentKind !== SyntaxKind.JsxElement && parentKind !== SyntaxKind.JsxFragment
-    }) ?? [])
+    }) ?? []).forEach(topJsx => {
+      topJsxs[topJsxIdCursor++] = topJsx
+    })
   }
 
   /* --
@@ -180,6 +186,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
             children: [],
             context: {
               id: `${id}#`,
+              previousTopJsxIds: [],
               children: parentContext?.children ?? [],
               imports: [...parentContext?.imports ?? [], ...imports],
             },
@@ -199,13 +206,22 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
     * INFER JSXS
   -- */
 
-  function inferJsxs(hierarchy: ExpandedHierarchyType) {
-    console.log('___INFER_START___, topJsxs:', topJsxs.length)
+  let inferIdCursor = 0
 
-    const result = topJsxs.map(jsx => {
-      console.log('_________________')
+  function inferJsxs(hierarchy: ExpandedHierarchyType) {
+    const inferId = ++inferIdCursor
+
+    const filteredTopJsxEntries = Object.entries(topJsxs).filter(([id]) => !hierarchy.context.previousTopJsxIds.includes(id))
+
+    console.log('___INFER_START___, id:', inferId, 'topJsxIds:', filteredTopJsxEntries.map(([id]) => id))
+
+    const result = filteredTopJsxEntries
+    .map(([id, jsx]) => {
+      console.log('_________________, inferId:', inferId, 'topJsxId:', id)
 
       const hierarchyClone = cloneHierarchy(hierarchy)
+
+      hierarchyClone.context.previousTopJsxIds.push(id)
 
       return {
         inferred: inferJsx(hierarchyClone, jsx),
@@ -219,8 +235,8 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
     }))
     .reduce<{ hierarchy: ExpandedHierarchyType | null, stackCount: number}>((a, b) => a.stackCount < b.stackCount ? a : b, { hierarchy: null, stackCount: Infinity })
 
-    if (result.hierarchy) console.log('___INFER_END___, stack count is', result.stackCount)
-    else console.log('___INFER_END___, ...')
+    if (result.hierarchy) console.log('___INFER_END___, id:', inferId, 'stack count:', result.stackCount)
+    else console.log('___INFER_END___, id:', inferId, '...')
 
     return result.hierarchy
   }
@@ -240,7 +256,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
       const jsxTagName = ((jsxElement as JsxElement).getOpeningElement?.() ?? jsxElement as JsxSelfClosingElement).getTagNameNode().getText()
       const element = hierarchy.childrenElementsStack[0]
 
-      console.log('--> JsxElement', jsxTagName, 'against', element)
+      console.log('--> JsxElement', jsxTagName, '~', element)
 
       /* --
         * JsxElement Component
@@ -266,9 +282,8 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
         console.log('----> found', foundImport.name)
 
         const subHierarchy = createHierarchySync(sourceFilePath, hierarchy.childrenElementsStack, {
-          id: hierarchy.context.id,
+          ...hierarchy.context,
           children: (jsxElement as JsxElement).getJsxChildren?.() ?? [],
-          imports: hierarchy.context.imports,
         })
 
         if (!subHierarchy) {
@@ -378,7 +393,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
 
       const element = hierarchy.childrenElementsStack[0]
 
-      console.log('--> JsxText', jsxTextValue, 'against', element)
+      console.log('--> JsxText', jsxTextValue, '~', element)
 
       if (!element || element.nodeType !== Node.TEXT_NODE || element.textContent?.trim() !== jsxTextValue) {
         console.log('<-- ... JsxText (no element or element is not text or text value mismatch)')
@@ -418,7 +433,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
 
       const element = hierarchy.childrenElementsStack[0]
 
-      console.log('--> JsxExpression', jsxExpression.getText(), 'against', element)
+      console.log('--> JsxExpression', jsxExpression.getText(), '~', element)
 
       if (!element) {
         console.log('<-- ... JsxExpression (no element)')
@@ -594,8 +609,15 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
 function cloneHierarchy(hierarchy: ExpandedHierarchyType): ExpandedHierarchyType {
   return {
     ...hierarchy,
+    // No need to clone childrenElements
     childrenElementsStack: [...hierarchy.childrenElementsStack],
     children: hierarchy.children.map(cloneHierarchy),
+    context: {
+      ...hierarchy.context,
+      previousTopJsxIds: [...hierarchy.context.previousTopJsxIds],
+      imports: [...hierarchy.context.imports],
+      children: [...hierarchy.context.children],
+    },
   }
 }
 
