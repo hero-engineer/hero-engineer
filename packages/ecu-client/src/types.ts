@@ -158,7 +158,9 @@ export type HierarchyType = {
 }
 
 export type ExpandedHierarchyContextType = {
+  id: string
   children: JsxChild[]
+  imports: ImportType[]
 }
 
 export type ExpandedHierarchyType = Omit<HierarchyType, 'children'> & {
