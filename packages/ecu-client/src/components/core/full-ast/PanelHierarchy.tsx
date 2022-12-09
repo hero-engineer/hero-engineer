@@ -1,7 +1,5 @@
-import { memo, useContext } from 'react'
+import { memo } from 'react'
 import { Div, P } from 'honorable'
-
-import AstsContext from '~contexts/AstsContext'
 
 import useCurrentComponentPath from '~hooks/useCurrentComponentPath'
 

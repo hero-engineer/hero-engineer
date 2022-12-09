@@ -12,7 +12,6 @@ import RefetchContext, { RefetchContextType } from '~contexts/RefetchContext'
 import ThemeModeContext, { ThemeModeContextType } from '~contexts/ThemeModeContext'
 import SnackBarContext, { SnackBarContextType } from '~contexts/SnackBarContext'
 import TabsContext, { TabsContextType } from '~contexts/TabsContext'
-import AstsContext, { AstsContextType } from '~contexts/AstsContext'
 
 import useCreateRefetchRegistry from '~hooks/useCreateRefetchRegistry'
 import usePersistedState from '~hooks/usePersistedState'
@@ -41,9 +40,6 @@ function ProviderMaster({ mode, hot, children }: ProviderMasterPropsType) {
   const [tabs, setTabs] = usePersistedState<TabType[]>('tabs', [])
   const tabsContextValue = useMemo<TabsContextType>(() => ({ tabs, setTabs }), [tabs, setTabs])
 
-  const [asts, setAsts] = useState<AstsType>({})
-  const astsContextValue = useMemo<AstsContextType>(() => ({ asts, setAsts }), [asts])
-
   return (
     <GraphqlProvider value={client}>
       <DndProvider backend={HTML5Backend}>
@@ -53,9 +49,7 @@ function ProviderMaster({ mode, hot, children }: ProviderMasterPropsType) {
               <ThemeModeContext.Provider value={themeModeContextValue}>
                 <SnackBarContext.Provider value={snackBarContextValue}>
                   <TabsContext.Provider value={tabsContextValue}>
-                    <AstsContext.Provider value={astsContextValue}>
-                      {children}
-                    </AstsContext.Provider>
+                    {children}
                   </TabsContext.Provider>
                 </SnackBarContext.Provider>
               </ThemeModeContext.Provider>

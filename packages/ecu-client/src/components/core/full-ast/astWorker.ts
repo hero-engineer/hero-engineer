@@ -4,7 +4,7 @@ import { Document, Root } from 'postcss'
 
 import { AstsType, FileType } from '~types'
 
-import { Babel, Postcss, allowedBabelExtensions, allowedPostcssExtensions, babelOptions, forbiddedBabelExtensions } from '~processors'
+import { Babel, postcss, allowedBabelExtensions, allowedCssExtensions, babelOptions, forbiddedBabelExtensions } from 'processors/typescript'
 
 self.onmessage = e => {
   const message = JSON.parse(e.data)
@@ -23,8 +23,8 @@ async function generateAsts(files: FileType[]) {
     ...promises,
     !forbiddedBabelExtensions.some(extension => path.endsWith(extension)) && allowedBabelExtensions.some(extension => path.endsWith(extension))
       ? Promise.resolve(Babel.transform(code, { ...babelOptions, filename: path }).ast)
-      : allowedPostcssExtensions.some(extension => path.endsWith(extension))
-        ? Postcss.process(code, { from: path }).then(x => x.root)
+      : allowedCssExtensions.some(extension => path.endsWith(extension))
+        ? postcss.process(code, { from: path }).then(x => x.root)
         : Promise.resolve(null),
   ], [])
 

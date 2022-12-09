@@ -1,8 +1,6 @@
 import { ReactNode, useCallback, useContext, useEffect, useRef } from 'react'
 
-import { createHierarchies } from '~processors'
-
-import AstsContext from '~contexts/AstsContext'
+import { createHierarchy } from '~processors/typescript'
 
 import useCurrentComponentPath from '~hooks/useCurrentComponentPath'
 import useThrottleAsynchronous from '~hooks/useThrottleAsynchronous'
@@ -14,25 +12,24 @@ type WithComponentHierarchyPropsType = {
 
 function WithComponentHierarchy({ children }: WithComponentHierarchyPropsType) {
   const rootRef = useRef<HTMLDivElement>(null)
-  const { asts } = useContext(AstsContext)
   const path = useCurrentComponentPath()
   const previousPath = usePreviousWithDefault(path, path)
 
-  const computeHierarchies = useCallback((componentElement: HTMLElement | null) => {
+  const computeHierarchy = useCallback((componentElement: HTMLElement | null) => {
     if (!componentElement) return
 
     const componentElements: HTMLElement[] = []
 
-    for (const child of componentElement.children) {
+    for (const child of componentElement.childNodes) {
       componentElements.push(child as HTMLElement)
     }
 
-    const hierarchies = createHierarchies(asts, path, componentElements)
+    const hierarchy = createHierarchy(path, componentElements)
 
-    console.log('hierarchies', hierarchies)
-  }, [asts, path])
+    console.log('hierarchy', hierarchy)
+  }, [path])
 
-  const throttledComputeHierarchies = useThrottleAsynchronous(computeHierarchies, 500, true)
+  const throttledComputeHierarchies = useThrottleAsynchronous(computeHierarchy, 500, true)
 
   useEffect(() => {
     if (!rootRef.current) return
@@ -55,8 +52,8 @@ function WithComponentHierarchy({ children }: WithComponentHierarchyPropsType) {
   useEffect(() => {
     if (!rootRef.current || path === previousPath) return
 
-    computeHierarchies(rootRef.current)
-  }, [path, previousPath, computeHierarchies])
+    computeHierarchy(rootRef.current)
+  }, [path, previousPath, computeHierarchy])
 
   return (
     <div ref={rootRef}>

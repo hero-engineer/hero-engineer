@@ -40,7 +40,7 @@
             "position": "after"
           },
           {
-            "pattern": "~processors",
+            "pattern": "~processors/**",
             "group": "internal",
             "position": "after"
           },

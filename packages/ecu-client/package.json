@@ -23,8 +23,6 @@
     "prepublishOnly": "npm run build:production"
   },
   "dependencies": {
-    "@babel/preset-typescript": "^7.18.6",
-    "@babel/standalone": "^7.20.6",
     "@emotion/cache": "^11.10.5",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
@@ -32,8 +30,6 @@
     "@monaco-editor/react": "^4.4.6",
     "@urql/exchange-multipart-fetch": "^1.0.1",
     "@urql/exchange-persisted-fetch": "^2.0.0",
-    "buffer": "^6.0.3",
-    "css.gg": "^2.0.0",
     "devices-viewport-size": "^1.0.2",
     "emoji-picker-react": "^4.4.7",
     "emoji-regex": "^10.2.1",
@@ -54,15 +50,13 @@
     "react-dnd-html5-backend": "^16.0.1",
     "react-icons": "^4.7.1",
     "react-router-dom": "^6.4.5",
-    "react-textarea-autosize": "^8.4.0",
     "shortid": "^2.2.16",
     "stylelint": "^14.16.0",
+    "ts-morph": "^17.0.1",
     "urql": "^3.0.3"
   },
   "devDependencies": {
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
-    "@types/babel__core": "^7.1.20",
-    "@types/babel__standalone": "^7.1.4",
     "@types/path-browserify": "^1.0.0",
     "@types/postcss-import": "^14.0.0",
     "@types/react": "^18.0.26",

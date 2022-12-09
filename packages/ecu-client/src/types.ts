@@ -155,6 +155,14 @@ export type AstsType = Record<string, {
   code: string
 }>
 
-export type HierarchyType = any
+export type HierarchyType = {
+  id: string
+  name: string
+  start: number
+  element: HTMLElement | null
+  childrenElements: HTMLElement[]
+  childrenElementsStack: HTMLElement[]
+  children: HierarchyType[]
+}
 
-export type HierarchiesType = Record<string, any>
+export type HierarchiesType = Record<string, HierarchyType>

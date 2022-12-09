@@ -1,11 +1,11 @@
 import path from 'node:path'
 
 import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 import dts from 'vite-plugin-dts'
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 import { typescriptPaths } from 'rollup-plugin-typescript-paths'
 import nodePolyfills from 'rollup-plugin-polyfill-node'
-import react from '@vitejs/plugin-react'
 
 const isProductionBuild = process.env.PRODUCTION_BUILD === 'true'
 

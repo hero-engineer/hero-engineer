@@ -3,7 +3,7 @@ import '../../../css/common.css'
 import { ViteHotContext } from 'vite/types/hot'
 import { ReactNode } from 'react'
 
-import WithAsts from '~core/full-ast/WithAsts'
+import WithProcessors from '~core/full-ast/WithProcessors'
 
 import ProviderMaster from '../providers/ProviderMaster'
 
@@ -23,13 +23,13 @@ function EcuMaster({ mode = 'production', hot = null, children }: EcuMasterProps
       mode={mode}
       hot={hot}
     >
-      <WithAsts>
+      <WithProcessors>
         <Router>
           <WithEcuHomeButton>
             {children}
           </WithEcuHomeButton>
         </Router>
-      </WithAsts>
+      </WithProcessors>
     </ProviderMaster>
   )
 }
