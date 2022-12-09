@@ -73,8 +73,6 @@ export function createHierarchies(asts: AstsType, path: string, componentElement
   const exports: ExportType[] = []
 
   function hierarchyImportsPlugin(): PluginObj {
-    console.log('hierarchyImportsPlugin')
-
     return {
       visitor: {
         ImportDeclaration(path) {
@@ -83,28 +81,28 @@ export function createHierarchies(asts: AstsType, path: string, componentElement
             type: specifier.type,
             name: specifier.local.name,
           })))
+          path.skip()
         },
         ExportNamedDeclaration(path) {
           exports.push(...path.node.specifiers.map(specifier => ({
             type: path.node.type,
             name: specifier.exported.type === 'Identifier' ? specifier.exported.name : specifier.exported.value,
           })))
+          path.skip()
         },
         ExportDefaultDeclaration(path) {
-          console.log('ExportDefaultDeclaration', path.node.declaration)
           exports.push({
             type: path.node.type,
             // @ts-expect-error
             name: path.node.declaration?.id ?? path.node.declaration?.name?.name ?? path.node.declaration?.name ?? '',
           })
+          path.skip()
         },
       },
     }
   }
 
   function hierarchyPlugin(): PluginObj {
-    console.log('hierarchyPlugin')
-
     return {
       visitor: {
         FunctionDeclaration(path) {
@@ -128,13 +126,13 @@ export function createHierarchies(asts: AstsType, path: string, componentElement
         // If we're on the return statement of the function
         if (path.parent.start !== functionBodyStart) return path.skip()
 
-        path.traverse(visitJsx(functionName, path.node.start!))
+        path.traverse(visitJsx(functionName, path.node.start!, isDefaultExport))
         path.skip()
       },
     }
   }
 
-  function visitJsx(functionName: string, parentStart: number): Visitor {
+  function visitJsx(functionName: string, parentStart: number, shouldInferHierarchy = false): Visitor {
     return {
       JSXFragment(path) {
         if (path.parent.start !== parentStart) return path.skip()
@@ -162,10 +160,6 @@ export function createHierarchies(asts: AstsType, path: string, componentElement
 
   Babel.transformFromAst(asts[path].ast as File, asts[path].code, { ...hierarchyBabelOptions, filename: path, plugins: ['ecu-hierarchy-imports'] })
   Babel.transformFromAst(asts[path].ast as File, asts[path].code, { ...hierarchyBabelOptions, filename: path, plugins: ['ecu-hierarchy'] })
-
-  console.log('imports', imports)
-  console.log('exports', exports)
-  console.log('end')
 
   return hierarchies
 }

@@ -23,7 +23,6 @@
     "prepublishOnly": "npm run build:production"
   },
   "dependencies": {
-    "@babel/plugin-syntax-jsx": "^7.18.6",
     "@babel/preset-typescript": "^7.18.6",
     "@babel/standalone": "^7.20.6",
     "@emotion/cache": "^11.10.5",
