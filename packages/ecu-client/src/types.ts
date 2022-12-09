@@ -154,3 +154,7 @@ export type AstsType = Record<string, {
   ast: File | Root | Document | null | undefined
   code: string
 }>
+
+export type HierarchyType = any
+
+export type HierarchiesType = Record<string, any>

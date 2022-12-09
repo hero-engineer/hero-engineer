@@ -88,11 +88,11 @@ function Component() {
           <RemountButton />
           {/* <EditCodeButton /> */}
         </Div>
-        <WidthBar />
         <ComponentWindow
           componentPath={path}
           decoratorPaths={decoratorPaths}
         />
+        <WidthBar />
       </Div>
       {/* <Div
         position="absolute"
