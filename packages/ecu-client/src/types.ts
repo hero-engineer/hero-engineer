@@ -1,4 +1,4 @@
-import { SourceFile } from 'ts-morph'
+import { JsxChild, SourceFile } from 'ts-morph'
 
 export type FunctionNodeType = {
   address: string
@@ -154,15 +154,18 @@ export type HierarchyType = {
   name: string
   start: number
   element: HTMLElement | null
-  children: ExpandedHierarchyType[]
+  children: HierarchyType[]
 }
 
-export type ExpandedHierarchyType = HierarchyType & {
+export type ExpandedHierarchyContextType = {
+  children: JsxChild[]
+}
+
+export type ExpandedHierarchyType = Omit<HierarchyType, 'children'> & {
+  children: ExpandedHierarchyType[]
   childrenElements: HTMLElement[]
   childrenElementsStack: HTMLElement[]
-  context: {
-    sourceFile: SourceFile // Unused
-  }
+  context: ExpandedHierarchyContextType
 }
 
 export type ImportType = {
