@@ -1,3 +1,5 @@
+import { SourceFile } from 'ts-morph'
+
 export type FunctionNodeType = {
   address: string
   payload: {
@@ -152,15 +154,22 @@ export type HierarchyType = {
   name: string
   start: number
   element: HTMLElement | null
+  children: ExpandedHierarchyType[]
+}
+
+export type ExpandedHierarchyType = HierarchyType & {
   childrenElements: HTMLElement[]
   childrenElementsStack: HTMLElement[]
-  children: HierarchyType[]
+  context: {
+    sourceFile: SourceFile // Unused
+  }
 }
 
 export type ImportType = {
   type: 'default' | 'named'
   source: string
   name: string
+  sourceFilePath: string
 }
 
 export type ExportType = {
