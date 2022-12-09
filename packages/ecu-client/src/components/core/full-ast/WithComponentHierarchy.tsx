@@ -1,14 +1,12 @@
 import { ReactNode, useCallback, useContext, useEffect, useRef } from 'react'
-import { File } from '@babel/types'
 
-import { HierarchiesType } from '~types'
-
-import { createHierarchy } from '~processors'
+import { createHierarchies } from '~processors'
 
 import AstsContext from '~contexts/AstsContext'
 
 import useCurrentComponentPath from '~hooks/useCurrentComponentPath'
 import useThrottleAsynchronous from '~hooks/useThrottleAsynchronous'
+import usePreviousWithDefault from '~hooks/usePreviousWithDefault'
 
 type WithComponentHierarchyPropsType = {
   children: ReactNode
@@ -18,27 +16,21 @@ function WithComponentHierarchy({ children }: WithComponentHierarchyPropsType) {
   const rootRef = useRef<HTMLDivElement>(null)
   const { asts } = useContext(AstsContext)
   const path = useCurrentComponentPath()
-
-  const computeHierarchy = useCallback(async (ast: File, path: string, componentElements: HTMLElement[], hierarchies: HierarchiesType) => {
-    console.log('computeHierarchy', path)
-
-    const hierarchy = await createHierarchy(ast, path, componentElements, asts, hierarchies)
-
-    console.log('hierarchy', hierarchy)
-  }, [asts])
+  const previousPath = usePreviousWithDefault(path, path)
 
   const computeHierarchies = useCallback((componentElement: HTMLElement | null) => {
-    if (!(componentElement && asts[path]?.ast)) return
+    if (!componentElement) return
 
-    const hierarchies: HierarchiesType = {}
     const componentElements: HTMLElement[] = []
 
     for (const child of componentElement.children) {
       componentElements.push(child as HTMLElement)
     }
 
-    hierarchies[path] = computeHierarchy(asts[path].ast as File, path, componentElements, hierarchies)
-  }, [asts, path, computeHierarchy])
+    const hierarchies = createHierarchies(asts, path, componentElements)
+
+    console.log('hierarchies', hierarchies)
+  }, [asts, path])
 
   const throttledComputeHierarchies = useThrottleAsynchronous(computeHierarchies, 500, true)
 
@@ -59,6 +51,12 @@ function WithComponentHierarchy({ children }: WithComponentHierarchyPropsType) {
   // Will be triggered twice on mount but throttledComputeHierarchies will be called only once
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rootRef.current, throttledComputeHierarchies])
+
+  useEffect(() => {
+    if (!rootRef.current || path === previousPath) return
+
+    computeHierarchies(rootRef.current)
+  }, [path, previousPath, computeHierarchies])
 
   return (
     <div ref={rootRef}>
