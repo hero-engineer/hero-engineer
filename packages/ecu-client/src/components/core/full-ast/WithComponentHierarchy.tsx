@@ -17,16 +17,21 @@ function WithComponentHierarchy({ children }: WithComponentHierarchyPropsType) {
   const { asts } = useContext(AstsContext)
   const path = useCurrentComponentPath()
 
-  const computeHierarchy = useCallback((componentElement: HTMLElement, ast: File | null | undefined, path: string, hierarchies: any) => {
-    console.log('computeHierarchy', path, componentElement)
+  const computeHierarchy = useCallback((componentElements: HTMLElement[], ast: File | null | undefined, path: string, hierarchies: any) => {
+    console.log('computeHierarchy', path, componentElements)
   }, [])
 
   const computeHierarchies = useCallback((componentElement: HTMLElement | null) => {
     if (!(componentElement && asts[path])) return
 
     const hierarchies: any = {}
+    const componentElements: HTMLElement[] = []
 
-    hierarchies[path] = computeHierarchy(componentElement, asts[path].ast as File | null | undefined, path, hierarchies)
+    for (const child of componentElement.children) {
+      componentElements.push(child as HTMLElement)
+    }
+
+    hierarchies[path] = computeHierarchy(componentElements, asts[path].ast as File | null | undefined, path, hierarchies)
   }, [asts, path, computeHierarchy])
 
   const throttledComputeHierarchies = useThrottleAsynchronous(computeHierarchies, 500, true)

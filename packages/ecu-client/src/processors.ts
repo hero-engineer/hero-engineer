@@ -9,6 +9,8 @@ import posscssNested from 'postcss-nested'
 
 export { default as Babel } from '@babel/standalone'
 
+// TODO move processors js files to the server and load then async
+// What about types?
 Babel.registerPresets({
   typescript: babelPresetTypescript,
   react: babelPresetReact,
