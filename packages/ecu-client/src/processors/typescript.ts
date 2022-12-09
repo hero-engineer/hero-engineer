@@ -223,8 +223,13 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
 
       hierarchyClone.context.previousTopJsxIds.push(id)
 
+      const inferred = inferJsx(hierarchyClone, jsx)
+      const indexOfId = hierarchyClone.context.previousTopJsxIds.indexOf(id)
+
+      if (indexOfId !== -1) hierarchyClone.context.previousTopJsxIds.splice(indexOfId, 1)
+
       return {
-        inferred: inferJsx(hierarchyClone, jsx),
+        inferred,
         hierarchy: hierarchyClone,
       }
     })
