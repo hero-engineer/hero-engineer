@@ -72,43 +72,6 @@ export function createHierarchies(asts: AstsType, path: string, componentElement
   const imports: ImportType[] = []
   const exports: ExportType[] = []
 
-  function visitFunctionComponent(functionName: string, functionBodyStart: number): Visitor {
-    const isDefaultExport = exports.find(e => e.name === functionName)?.type === 'ExportDefaultDeclaration'
-
-    console.log('visitFunctionComponent', functionName, isDefaultExport)
-
-    return {
-      ReturnStatement(path) {
-        // If we're on the return statement of the function
-        if (path.parent.start !== functionBodyStart) return path.skip()
-
-        path.traverse(visitJsx(functionName, path.node.start!))
-        path.skip()
-      },
-    }
-  }
-
-  function visitJsx(functionName: string, parentStart: number): Visitor {
-    return {
-      JSXFragment(path) {
-        if (path.parent.start !== parentStart) return path.skip()
-
-        path.traverse(visitJsx(functionName, path.node.start!))
-        path.skip()
-      },
-      JSXElement(path) {
-        if (path.parent.start !== parentStart) return path.skip()
-
-        if (path.node.openingElement.name.type === 'JSXIdentifier') {
-          console.log('jsx', functionName, path.node.openingElement.name.name)
-        }
-        if (path.node.openingElement.name.type === 'JSXMemberExpression') {
-          console.log('jsx member', functionName, path.node.openingElement.name.object.name)
-        }
-      },
-    }
-  }
-
   function hierarchyImportsPlugin(): PluginObj {
     console.log('hierarchyImportsPlugin')
 
@@ -151,6 +114,43 @@ export function createHierarchies(asts: AstsType, path: string, componentElement
           path.traverse(visitFunctionComponent(path.node.id.name, path.node.body.start!))
           path.skip()
         },
+      },
+    }
+  }
+
+  function visitFunctionComponent(functionName: string, functionBodyStart: number): Visitor {
+    const isDefaultExport = exports.find(e => e.name === functionName)?.type === 'ExportDefaultDeclaration'
+
+    console.log('visitFunctionComponent', functionName, isDefaultExport)
+
+    return {
+      ReturnStatement(path) {
+        // If we're on the return statement of the function
+        if (path.parent.start !== functionBodyStart) return path.skip()
+
+        path.traverse(visitJsx(functionName, path.node.start!))
+        path.skip()
+      },
+    }
+  }
+
+  function visitJsx(functionName: string, parentStart: number): Visitor {
+    return {
+      JSXFragment(path) {
+        if (path.parent.start !== parentStart) return path.skip()
+
+        path.traverse(visitJsx(functionName, path.node.start!))
+        path.skip()
+      },
+      JSXElement(path) {
+        if (path.parent.start !== parentStart) return path.skip()
+
+        if (path.node.openingElement.name.type === 'JSXIdentifier') {
+          console.log('jsx', functionName, path.node.openingElement.name.name)
+        }
+        if (path.node.openingElement.name.type === 'JSXMemberExpression') {
+          console.log('jsx member', functionName, path.node.openingElement.name.object.name)
+        }
       },
     }
   }
