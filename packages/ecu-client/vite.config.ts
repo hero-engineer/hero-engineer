@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 import dts from 'vite-plugin-dts'
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 import { typescriptPaths } from 'rollup-plugin-typescript-paths'
-import nodePolyfills from 'rollup-plugin-polyfill-node'
+// import nodePolyfills from 'rollup-plugin-polyfill-node'
 
 const isProductionBuild = process.env.PRODUCTION_BUILD === 'true'
 
@@ -32,7 +32,7 @@ export default defineConfig({
     rollupOptions: {
       plugins: [
         typescriptPaths({ preserveExtensions: true }),
-        nodePolyfills(),
+        // nodePolyfills(),
       ],
       external: ['react', 'react-dom'],
       output: {
