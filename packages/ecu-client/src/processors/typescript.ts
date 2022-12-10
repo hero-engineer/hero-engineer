@@ -3,19 +3,19 @@ import {
   ExportAssignment,
   Expression,
   FunctionDeclaration,
-  Identifier,
   ImportDeclaration,
-  JsxChild,
   JsxElement,
   JsxExpression,
   JsxFragment,
   JsxSelfClosingElement,
   JsxText,
+  NumericLiteral,
   ParenthesizedExpression,
   Project,
   SourceFile,
   StringLiteral,
   SyntaxKind,
+  TemplateExpression,
   Node as TsNode,
   ts,
 } from 'ts-morph'
@@ -402,7 +402,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
       console.log('--> JsxText', jsxTextValue, '~', element)
 
       if (!element || element.nodeType !== Node.TEXT_NODE || element.textContent?.trim() !== jsxTextValue) {
-        console.log('<-- ... JsxText (no element or element is not text or text value mismatch)')
+        console.log('<-- ... JsxText (no element or element is not text or text mismatch)')
 
         return false
       }
@@ -456,52 +456,14 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
     }
 
     /* --
-      * StringLiteral
+      * Identifier/PropertyAccessExpression
     -- */
-    if (nodeKind === SyntaxKind.StringLiteral) {
-      const stringLiteral = node as StringLiteral
-      const stringLiteralTextValue = stringLiteral.getLiteralText()
-      const element = hierarchy.childrenElementsStack[0]
-
-      console.log('--> StringLiteral', stringLiteralTextValue, '~', element)
-
-      if (element.nodeType !== Node.TEXT_NODE || element.textContent !== stringLiteralTextValue) {
-        console.log('<-- ... StringLiteral (element is not text or text value mismatch)')
-
-        return false
-      }
-
-      console.log('<-- !!! StringLiteral')
-
-      const stackElement = hierarchy.childrenElementsStack.shift()!
-      const indexOfStackElement = hierarchy.childrenElements.indexOf(stackElement)
-
-      const subHierarchy: ExpandedHierarchyType = {
-        id: `${hierarchy.id}#text[${indexOfStackElement}]`,
-        name: 'text',
-        start: stringLiteral.getStart(),
-        element: stackElement,
-        childrenElements: [],
-        childrenElementsStack: [],
-        children: [],
-        context: hierarchy.context,
-      }
-
-      hierarchy.children.push(subHierarchy)
-
-      return true
-    }
-
-    /* --
-      * Identifier
-    -- */
-    if (nodeKind === SyntaxKind.Identifier) {
-      const identifier = node as Identifier
+    if (nodeKind === SyntaxKind.Identifier || nodeKind === SyntaxKind.PropertyAccessExpression) {
 
       /* --
-        * Identifier children
+        * children
       -- */
-      if (identifier.getText() === 'children') {
+      if (node.getText() === 'children') {
         if (parentContext) {
           console.log('___CHILDREN___, parent children:', parentContext.children.length)
 
@@ -516,55 +478,55 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
 
           const inferred = inferredCount > 0
 
-          if (inferred) console.log('<-- !!! Identifier children')
-          else console.log('<-- ... Identifier children (children inference)')
+          if (inferred) console.log('<-- !!! children')
+          else console.log('<-- ... children (children inference)')
 
           return inferred
         }
 
-        console.log('--> NO PARENT CONTEXT FOR CHILDREN IDENTIFIER')
+        console.log('--> NO PARENT CONTEXT FOR CHILDREN')
 
         return false
       }
 
-      const identifierType = identifier.getType()
+      const nodeType = node.getType()
 
       /* --
-        * Identifier JSX.Element
+        * JSX.Element
       -- */
-      if (identifierType.getText() === 'JSX.Element') {
+      if (nodeType.getText() === 'JSX.Element') {
         console.log('___JSX.ELEMENT___, will infer from all JSX found')
 
         const inferredHierarchy = inferJsxs(hierarchy)
 
         if (inferredHierarchy) {
-          console.log('<-- !!! Identifier JSX.Element')
+          console.log('<-- !!! JSX.Element')
 
           Object.assign(hierarchy, inferredHierarchy)
 
           return true
         }
 
-        console.log('<-- ... Identifier JSX.Element (jsxs inference)')
+        console.log('<-- ... JSX.Element (jsxs inference)')
 
         return false
       }
 
       /* --
-        * Identifier string/number
+        * string/number
       -- */
-      if (identifierType.isString() || identifierType.isNumber()) {
+      if (nodeType.isString() || nodeType.isNumber()) {
         const element = hierarchy.childrenElementsStack[0]
 
-        console.log('--> Identifier string/number ~', element)
+        console.log('--> string/number ~', element)
 
         if (element.nodeType !== Node.TEXT_NODE) {
-          console.log('<-- ... Identifier string/number (element is not text)')
+          console.log('<-- ... string/number (element is not text)')
 
           return false
         }
 
-        console.log('<-- !!! Identifier string/number')
+        console.log('<-- !!! string/number')
 
         const stackElement = hierarchy.childrenElementsStack.shift()!
         const indexOfStackElement = hierarchy.childrenElements.indexOf(stackElement)
@@ -572,7 +534,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
         const subHierarchy: ExpandedHierarchyType = {
           id: `${hierarchy.id}#text[${indexOfStackElement}]`,
           name: 'text',
-          start: identifier.getStart(),
+          start: node.getStart(),
           element: stackElement,
           childrenElements: [],
           childrenElementsStack: [],
@@ -585,7 +547,14 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
         return true
       }
 
-      console.log('--> NON INFERRED Identifier:', identifierType.getText())
+      /* --
+        * boolean/null
+      -- */
+      if (nodeType.isBoolean() || nodeType.isNull()) {
+        return true
+      }
+
+      console.log('--> NON INFERRED common node:', nodeType.getText())
 
       return false
     }
@@ -597,6 +566,8 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
       const callExpression = node as CallExpression
       const functionName = callExpression.getExpression().getText()
       const functionDeclaration = findFunctionDeclarationInParents(node, functionName)
+
+      console.log('--> CallExpression', functionName)
 
       if (!functionDeclaration) {
         console.log('<-- ... CallExpression (function declaration not found)')
@@ -621,6 +592,79 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
       console.log('<-- ... CallExpression (jsxs inference)')
 
       return false
+    }
+
+    /* --
+      * StringLiteral/NumericLiteral
+    -- */
+    if (nodeKind === SyntaxKind.StringLiteral || nodeKind === SyntaxKind.NumericLiteral) {
+      const literal = node as (StringLiteral | NumericLiteral)
+      const literalValue = literal.getLiteralValue().toString()
+      const element = hierarchy.childrenElementsStack[0]
+
+      console.log('--> StringLiteral/NumericLiteral', literalValue, '~', element)
+
+      if (element.nodeType !== Node.TEXT_NODE || element.textContent !== literalValue) {
+        console.log('<-- ... StringLiteral/NumericLiteral (element is not text or text mismatch)')
+
+        return false
+      }
+
+      console.log('<-- !!! StringLiteral/NumericLiteral')
+
+      const stackElement = hierarchy.childrenElementsStack.shift()!
+      const indexOfStackElement = hierarchy.childrenElements.indexOf(stackElement)
+
+      const subHierarchy: ExpandedHierarchyType = {
+        id: `${hierarchy.id}#text[${indexOfStackElement}]`,
+        name: 'text',
+        start: literal.getStart(),
+        element: stackElement,
+        childrenElements: [],
+        childrenElementsStack: [],
+        children: [],
+        context: hierarchy.context,
+      }
+
+      hierarchy.children.push(subHierarchy)
+
+      return true
+    }
+
+    /* --
+      * TemplateExpression
+    -- */
+    if (nodeKind === SyntaxKind.TemplateExpression) {
+      const templateExpression = node as TemplateExpression
+      const element = hierarchy.childrenElementsStack[0]
+
+      console.log('--> TemplateExpression', templateExpression, '~', element)
+
+      if (element.nodeType !== Node.TEXT_NODE) {
+        console.log('<-- ... TemplateExpression (element is not text)')
+
+        return false
+      }
+
+      console.log('<-- !!! TemplateExpression')
+
+      const stackElement = hierarchy.childrenElementsStack.shift()!
+      const indexOfStackElement = hierarchy.childrenElements.indexOf(stackElement)
+
+      const subHierarchy: ExpandedHierarchyType = {
+        id: `${hierarchy.id}#text[${indexOfStackElement}]`,
+        name: 'text',
+        start: templateExpression.getStart(),
+        element: stackElement,
+        childrenElements: [],
+        childrenElementsStack: [],
+        children: [],
+        context: hierarchy.context,
+      }
+
+      hierarchy.children.push(subHierarchy)
+
+      return true
     }
 
     /* --
