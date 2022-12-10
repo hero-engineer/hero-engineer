@@ -169,44 +169,38 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
   -- */
 
   function traverseHierarchy(sourceFile: SourceFile) {
-    return sourceFile.forEachChild(node => {
-      switch (node.getKind()) {
-        case SyntaxKind.FunctionDeclaration: {
-          const functionNode = node as FunctionDeclaration
+    for (const functionDeclaration of sourceFile.getChildrenOfKind(SyntaxKind.FunctionDeclaration)) {
+      const functionName = functionDeclaration.getName() ?? ''
 
-          const functionName = functionNode.getName() ?? ''
+      if (!(functionName && allowedFunctionComponentFirstCharacters.includes(functionName[0]))) continue
 
-          if (!(functionName && allowedFunctionComponentFirstCharacters.includes(functionName[0]))) break
+      const isDefaultExport = exports.find(e => e.name === functionName)?.type === 'default'
 
-          const isDefaultExport = exports.find(e => e.name === functionName)?.type === 'default'
+      if (!isDefaultExport) continue // For now
 
-          if (!isDefaultExport) break // For now
-
-          const id = `${parentContext?.id ?? ''}${filePath}${hierarchyIdSeparator}${functionName}`
-          const hierarchy: ExpandedHierarchyType = {
-            id,
-            name: functionName,
-            start: node.getFullStart(),
-            element: null,
-            childrenElements: [...componentElements],
-            childrenElementsStack: [...componentElements],
-            children: [],
-            context: {
-              id: `${id}${hierarchyIdSeparator}`,
-              previousTopJsxIds: [],
-              children: parentContext?.children ?? [],
-              imports: [...parentContext?.imports ?? [], ...imports],
-            },
-          }
-
-          const inferredHierarchy = inferJsxs(hierarchy)
-
-          if (inferredHierarchy) Object.assign(hierarchy, inferredHierarchy)
-
-          return hierarchy
-        }
+      const id = `${parentContext?.id ?? ''}${filePath}${hierarchyIdSeparator}${functionName}`
+      const hierarchy: ExpandedHierarchyType = {
+        id,
+        name: functionName,
+        start: functionDeclaration.getFullStart(),
+        element: null,
+        childrenElements: [...componentElements],
+        childrenElementsStack: [...componentElements],
+        children: [],
+        context: {
+          id: `${id}${hierarchyIdSeparator}`,
+          previousTopJsxIds: [],
+          children: parentContext?.children ?? [],
+          imports: [...parentContext?.imports ?? [], ...imports],
+        },
       }
-    })
+
+      const inferredHierarchy = inferJsxs(hierarchy)
+
+      if (inferredHierarchy) Object.assign(hierarchy, inferredHierarchy)
+
+      return hierarchy
+    }
   }
 
   /* --
