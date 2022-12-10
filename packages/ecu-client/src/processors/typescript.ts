@@ -1,5 +1,7 @@
 import {
+  CallExpression,
   ExportAssignment,
+  Expression,
   FunctionDeclaration,
   Identifier,
   ImportDeclaration,
@@ -9,10 +11,12 @@ import {
   JsxFragment,
   JsxSelfClosingElement,
   JsxText,
+  ParenthesizedExpression,
   Project,
   SourceFile,
   StringLiteral,
   SyntaxKind,
+  Node as TsNode,
   ts,
 } from 'ts-morph'
 
@@ -79,6 +83,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
   const imports: ImportType[] = []
   const exports: ExportType[] = []
   const topJsxs: Record<string, JsxElement | JsxFragment> = {}
+  const createId = createIdFactory()
 
   /* --
     * IMPORTS/EXPORTS TRAVERSAL
@@ -137,15 +142,13 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
     * TOP JSX TRAVERSAL
   -- */
 
-  let topJsxIdCursor = 0
-
   function traverseTopJsx(sourceFile: SourceFile) {
     (sourceFile.getDescendantsOfKind(SyntaxKind.JsxElement).filter(jsxElement => {
       const parentKind = jsxElement.getParent().getKind()
 
       return parentKind !== SyntaxKind.JsxElement && parentKind !== SyntaxKind.JsxFragment
     }) ?? []).forEach(topJsx => {
-      topJsxs[topJsxIdCursor++] = topJsx
+      topJsxs[createId()] = topJsx
     })
 
     ;(sourceFile.getDescendantsOfKind(SyntaxKind.JsxFragment).filter(jsxFragment => {
@@ -153,7 +156,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
 
       return parentKind !== SyntaxKind.JsxElement && parentKind !== SyntaxKind.JsxFragment
     }) ?? []).forEach(topJsx => {
-      topJsxs[topJsxIdCursor++] = topJsx
+      topJsxs[createId()] = topJsx
     })
   }
 
@@ -206,18 +209,16 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
     * INFER JSXS
   -- */
 
-  let inferIdCursor = 0
+  function inferJsxs(hierarchy: ExpandedHierarchyType, jsx: Record<string, TsNode> = topJsxs) {
+    const inferId = createId()
 
-  function inferJsxs(hierarchy: ExpandedHierarchyType) {
-    const inferId = ++inferIdCursor
+    const filteredJsxEntries = Object.entries(jsx).filter(([id]) => !hierarchy.context.previousTopJsxIds.includes(id))
 
-    const filteredTopJsxEntries = Object.entries(topJsxs).filter(([id]) => !hierarchy.context.previousTopJsxIds.includes(id))
+    console.log('___INFER_START___, id:', inferId, 'jsxIds:', filteredJsxEntries.map(([id]) => id))
 
-    console.log('___INFER_START___, id:', inferId, 'topJsxIds:', filteredTopJsxEntries.map(([id]) => id))
-
-    const result = filteredTopJsxEntries
+    const result = filteredJsxEntries
     .map(([id, jsx]) => {
-      console.log('_________________, inferId:', inferId, 'topJsxId:', id)
+      console.log('_________________, inferId:', inferId, 'jsxId:', id)
 
       const hierarchyClone = cloneHierarchy(hierarchy)
 
@@ -250,14 +251,14 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
     * INFER JSX
   -- */
 
-  function inferJsx(hierarchy: ExpandedHierarchyType, jsx: JsxChild): boolean {
-    const jsxKind = jsx.getKind()
+  function inferJsx(hierarchy: ExpandedHierarchyType, node: TsNode): boolean {
+    const nodeKind = node.getKind()
 
     /* --
       * JsxElement
     -- */
-    if (jsxKind === SyntaxKind.JsxElement || jsxKind === SyntaxKind.JsxSelfClosingElement) {
-      const jsxElement = jsx as JsxElement | JsxSelfClosingElement
+    if (nodeKind === SyntaxKind.JsxElement || nodeKind === SyntaxKind.JsxSelfClosingElement) {
+      const jsxElement = node as JsxElement | JsxSelfClosingElement
       const jsxTagName = ((jsxElement as JsxElement).getOpeningElement?.() ?? jsxElement as JsxSelfClosingElement).getTagNameNode().getText()
       const element = hierarchy.childrenElementsStack[0]
 
@@ -349,7 +350,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
         context: hierarchy.context,
       }
 
-      if (jsxKind === SyntaxKind.JsxSelfClosingElement) {
+      if (nodeKind === SyntaxKind.JsxSelfClosingElement) {
         console.log('<-- !!! JsxElement tag', jsxTagName)
 
         hierarchy.children.push(subHierarchy)
@@ -375,10 +376,10 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
     /* --
       * JsxFragment
     -- */
-    if (jsxKind === SyntaxKind.JsxFragment) {
+    if (nodeKind === SyntaxKind.JsxFragment) {
       console.log('--> JsxFragment')
 
-      const jsxFragment = jsx as JsxFragment
+      const jsxFragment = node as JsxFragment
       const inferred = jsxFragment.getJsxChildren().map(jsxChild => inferJsx(hierarchy, jsxChild)).every(x => x)
 
       if (inferred) console.log('<-- !!! JsxFragment')
@@ -390,8 +391,8 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
     /* --
       * JsxText
     -- */
-    if (jsxKind === SyntaxKind.JsxText) {
-      const jsxText = jsx as JsxText
+    if (nodeKind === SyntaxKind.JsxText) {
+      const jsxText = node as JsxText
       const jsxTextValue = jsxText.getLiteralText().trim()
 
       if (!jsxTextValue) return true
@@ -430,8 +431,8 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
     /* --
       * JsxExpression
     -- */
-    if (jsxKind === SyntaxKind.JsxExpression) {
-      const jsxExpression = jsx as JsxExpression
+    if (nodeKind === SyntaxKind.JsxExpression) {
+      const jsxExpression = node as JsxExpression
       const expression = jsxExpression.getExpression()
 
       if (!expression) return true
@@ -446,22 +447,120 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
         return false
       }
 
-      const expressionKind = expression.getKind()
+      const inferred = inferJsx(hierarchy, expression)
+
+      if (inferred) console.log('<-- !!! JsxExpression')
+      else console.log('<-- ... JsxExpression (expression inference)')
+
+      return inferred
+    }
+
+    /* --
+      * StringLiteral
+    -- */
+    if (nodeKind === SyntaxKind.StringLiteral) {
+      const stringLiteral = node as StringLiteral
+      const stringLiteralTextValue = stringLiteral.getLiteralText()
+      const element = hierarchy.childrenElementsStack[0]
+
+      if (element.nodeType !== Node.TEXT_NODE || element.textContent !== stringLiteralTextValue) {
+        console.log('<-- ... JsxExpression StringLiteral (element is not text or text value mismatch)')
+
+        return false
+      }
+
+      console.log('<-- !!! JsxExpression StringLiteral')
+
+      const stackElement = hierarchy.childrenElementsStack.shift()!
+      const indexOfStackElement = hierarchy.childrenElements.indexOf(stackElement)
+
+      const subHierarchy: ExpandedHierarchyType = {
+        id: `${hierarchy.id}#text[${indexOfStackElement}]`,
+        name: 'text',
+        start: stringLiteral.getStart(),
+        element: stackElement,
+        childrenElements: [],
+        childrenElementsStack: [],
+        children: [],
+        context: hierarchy.context,
+      }
+
+      hierarchy.children.push(subHierarchy)
+
+      return true
+    }
+
+    /* --
+      * Identifier
+    -- */
+    if (nodeKind === SyntaxKind.Identifier) {
+      const identifier = node as Identifier
 
       /* --
-        * JsxExpression StringLiteral
+        * Identifier children
       -- */
-      if (expressionKind === SyntaxKind.StringLiteral) {
-        const stringLiteral = expression as StringLiteral
-        const stringLiteralTextValue = stringLiteral.getLiteralText()
+      if (identifier.getText() === 'children') {
+        if (parentContext) {
+          console.log('___FOUND_CHILDREN___, parent children:', parentContext.children.length)
 
-        if (element.nodeType !== Node.TEXT_NODE || element.textContent !== stringLiteralTextValue) {
-          console.log('<-- ... JsxExpression StringLiteral (element is not text or text value mismatch)')
+          const inferreds = parentContext.children.map(jsxChild => inferJsx(hierarchy, jsxChild))
+
+          let inferredCount = 0
+
+          for (const inferred of inferreds) {
+            if (inferred) inferredCount++
+            else break
+          }
+
+          const inferred = inferredCount > 0
+
+          if (inferred) console.log('<-- !!! JsxExpression Identifier children')
+          else console.log('<-- ... JsxExpression Identifier children (children inference)')
+
+          return inferred
+        }
+
+        console.log('--> NO PARENT CONTEXT FOR CHILDREN IDENTIFIER')
+
+        return false
+      }
+
+      const identifierType = identifier.getType()
+
+      /* --
+        * Identifier JSX.Element
+      -- */
+      if (identifierType.getText() === 'JSX.Element') {
+        console.log('___FOUND_JSX.ELEMENT___, will infer from all JSX found')
+
+        const inferredHierarchy = inferJsxs(hierarchy)
+
+        if (inferredHierarchy) {
+          console.log('<-- !!! JsxExpression Identifier JSX.Element')
+
+          Object.assign(hierarchy, inferredHierarchy)
+
+          return true
+        }
+
+        console.log('<-- ... JsxExpression Identifier JSX.Element (jsxs inference)')
+
+        return false
+      }
+
+      /* --
+        * Identifier string/number
+      -- */
+      if (identifierType.isString() || identifierType.isNumber()) {
+        const element = hierarchy.childrenElementsStack[0]
+
+        if (element.nodeType !== Node.TEXT_NODE) {
+          console.log('<-- ... JsxExpression Identifier string/number (element is not text)')
 
           return false
         }
 
-        console.log('<-- !!! JsxExpression StringLiteral')
+        console.log('<-- !!! JsxExpression Identifier string/number')
 
         const stackElement = hierarchy.childrenElementsStack.shift()!
         const indexOfStackElement = hierarchy.childrenElements.indexOf(stackElement)
@@ -469,7 +568,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
         const subHierarchy: ExpandedHierarchyType = {
           id: `${hierarchy.id}#text[${indexOfStackElement}]`,
           name: 'text',
-          start: stringLiteral.getStart(),
+          start: identifier.getStart(),
           element: stackElement,
           childrenElements: [],
           childrenElementsStack: [],
@@ -482,107 +581,52 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
         return true
       }
 
-      /* --
-        * JsxExpression Identifier
-      -- */
-      if (expressionKind === SyntaxKind.Identifier) {
-        const identifier = expression as Identifier
-
-        /* --
-          * JsxExpression Identifier children
-        -- */
-        if (identifier.getText() === 'children') {
-          if (parentContext) {
-            console.log('___FOUND_CHILDREN___, parent children:', parentContext.children.length)
-
-            const inferreds = parentContext.children.map(jsxChild => inferJsx(hierarchy, jsxChild))
-
-            let inferredCount = 0
-
-            for (const inferred of inferreds) {
-              if (inferred) inferredCount++
-              else break
-            }
-
-            const inferred = inferredCount > 0
-
-            if (inferred) console.log('<-- !!! JsxExpression Identifier children')
-            else console.log('<-- ... JsxExpression Identifier children (children inference)')
-
-            return inferred
-          }
-
-          console.log('--> NO PARENT CONTEXT FOR CHILDREN IDENTIFIER')
-
-          return false
-        }
-
-        const identifierType = identifier.getType()
-
-        /* --
-          * JsxExpression Identifier JSX.Element
-        -- */
-
-        if (identifierType.getText() === 'JSX.Element') {
-          console.log('___FOUND_JSX.ELEMENT___, will infer from all JSX found')
-
-          const inferredHierarchy = inferJsxs(hierarchy)
-
-          if (inferredHierarchy) {
-            console.log('<-- !!! JsxExpression Identifier JSX.Element')
-
-            Object.assign(hierarchy, inferredHierarchy)
-
-            return true
-          }
-
-          console.log('<-- ... JsxExpression Identifier JSX.Element (topJsxs inference)')
-
-          return false
-        }
-
-        /* --
-          * JsxExpression Identifier string/number
-        -- */
-        if (identifierType.isString() || identifierType.isNumber()) {
-          if (element.nodeType !== Node.TEXT_NODE) {
-            console.log('<-- ... JsxExpression Identifier string/number (element is not text)')
-
-            return false
-          }
-
-          console.log('<-- !!! JsxExpression Identifier string/number')
-
-          const stackElement = hierarchy.childrenElementsStack.shift()!
-          const indexOfStackElement = hierarchy.childrenElements.indexOf(stackElement)
-
-          const subHierarchy: ExpandedHierarchyType = {
-            id: `${hierarchy.id}#text[${indexOfStackElement}]`,
-            name: 'text',
-            start: identifier.getStart(),
-            element: stackElement,
-            childrenElements: [],
-            childrenElementsStack: [],
-            children: [],
-            context: hierarchy.context,
-          }
-
-          hierarchy.children.push(subHierarchy)
-
-          return true
-        }
-
-        console.log('--> NON INFERRED jsxExpression identifier:', identifierType.getText())
-
-        return false
-      }
-
-      console.log('--> NON INFERRED jsxExpression:', expression.getKindName())
+      console.log('--> NON INFERRED jsxExpression identifier:', identifierType.getText())
 
       return false
     }
 
-    console.log('--> NON INFERRED:', jsx.getKindName())
+    /* --
+      * CallExpression
+    -- */
+    if (nodeKind === SyntaxKind.CallExpression) {
+      const callExpression = node as CallExpression
+      const functionName = callExpression.getExpression().getText()
+      const functionDeclaration = findFunctionDeclarationInParents(node, functionName)
+
+      if (!functionDeclaration) {
+        console.log('<-- ... JsxExpression CallExpression (function declaration not found)')
+
+        return false
+      }
+
+      const returnExpressions = visitFunctionDeclaration(functionDeclaration)
+
+      const jsxs = returnExpressions.reduce((jsxs, returnExpression) => ({ ...jsxs, [createId()]: returnExpression }), {})
+
+      const inferredHierarchy = inferJsxs(hierarchy, jsxs)
+
+      if (inferredHierarchy) {
+        console.log('<-- !!! JsxExpression CallExpression')
+
+        Object.assign(hierarchy, inferredHierarchy)
+
+        return true
+      }
+
+      console.log('<-- ... JsxExpression CallExpression (jsxs inference)')
+
+      return false
+    }
+
+    /* --
+      * TrueKeyword/FalseKeyword/NullKeyword
+    -- */
+    if (nodeKind === SyntaxKind.TrueKeyword || nodeKind === SyntaxKind.FalseKeyword || nodeKind === SyntaxKind.NullKeyword) {
+      return true
+    }
+
+    console.log('--> NON INFERRED:', node.getKindName())
 
     return false
   }
@@ -605,6 +649,43 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
   // Clearing the stack to needed after a full traversal to infer the stack count of the parent component correctly
   // The remaining stack elements come from the parent's stack
   return hierarchy ? clearHierarchyStack(hierarchy) : null
+}
+
+/* --
+    * VISIT FUNCTION DECLARATION
+  -- */
+
+function visitFunctionDeclaration(functionDeclaration: FunctionDeclaration) {
+  return functionDeclaration.getDescendantsOfKind(SyntaxKind.ReturnStatement)
+    .map(returnStatement => returnStatement.getExpression())
+    .filter(expression => expression)
+    .map(expression => extractExpression(expression!))
+}
+
+/* --
+  * TRAVERSAL HELPERS
+-- */
+
+function findFunctionDeclarationInParents(node: TsNode, functionName: string): FunctionDeclaration | null {
+  const functionDeclarations = node.getChildrenOfKind(SyntaxKind.FunctionDeclaration)
+
+  const foundFunctionDeclaration = functionDeclarations.find(functionDeclaration => functionDeclaration.getName() === functionName)
+
+  if (foundFunctionDeclaration) return foundFunctionDeclaration
+
+  const parent = node.getParent()
+
+  if (!parent) return null
+
+  return findFunctionDeclarationInParents(parent, functionName)
+}
+
+function extractExpression(expression: Expression): Expression {
+  if (expression.getKind() === SyntaxKind.ParenthesizedExpression) {
+    return extractExpression((expression as ParenthesizedExpression).getExpression())
+  }
+
+  return expression
 }
 
 /* --
@@ -653,4 +734,14 @@ function cleanHierarchy(hierarchy: ExpandedHierarchyType): HierarchyType {
     ...nextHierarchy,
     children: nextHierarchy.children?.map(cleanHierarchy) ?? [],
   } as HierarchyType
+}
+
+/* --
+  * COMMON HELPERS
+-- */
+
+function createIdFactory() {
+  let cursor = 0
+
+  return () => cursor++
 }
