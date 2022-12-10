@@ -214,11 +214,11 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
 
     const filteredJsxEntries = Object.entries(jsx).filter(([id]) => !hierarchy.context.previousTopJsxIds.includes(id))
 
-    console.log('___INFER_START___, id:', inferId, 'jsxIds:', filteredJsxEntries.map(([id]) => id))
+    console.log(`___INFER_START___ id: ${inferId}, jsxIds: ${filteredJsxEntries.map(([id]) => id)}`)
 
     const result = filteredJsxEntries
     .map(([id, jsx]) => {
-      console.log('_________________, inferId:', inferId, 'jsxId:', id)
+      console.log(`_________________ inferId: ${inferId}, jsxId: ${id}`)
 
       const hierarchyClone = cloneHierarchy(hierarchy)
 
@@ -241,8 +241,8 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
     }))
     .reduce<{ hierarchy: ExpandedHierarchyType | null, stackCount: number}>((a, b) => a.stackCount < b.stackCount ? a : b, { hierarchy: null, stackCount: Infinity })
 
-    if (result.hierarchy) console.log('___INFER_END___, id:', inferId, 'stack count:', result.stackCount)
-    else console.log('___INFER_END___, id:', inferId, '...')
+    if (result.hierarchy) console.log(`___INFER_END___ id: ${inferId}, stack count: ${result.stackCount}`)
+    else console.log(`___INFER_END___ id: ${inferId} ...`)
 
     return result.hierarchy
   }
@@ -638,7 +638,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
       const templateExpression = node as TemplateExpression
       const element = hierarchy.childrenElementsStack[0]
 
-      console.log('--> TemplateExpression', templateExpression, '~', element)
+      console.log('--> TemplateExpression', templateExpression.getText(), '~', element)
 
       if (element.nodeType !== Node.TEXT_NODE) {
         console.log('<-- ... TemplateExpression (element is not text)')
