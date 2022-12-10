@@ -463,13 +463,15 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
       const stringLiteralTextValue = stringLiteral.getLiteralText()
       const element = hierarchy.childrenElementsStack[0]
 
+      console.log('--> StringLiteral', stringLiteralTextValue, '~', element)
+
       if (element.nodeType !== Node.TEXT_NODE || element.textContent !== stringLiteralTextValue) {
-        console.log('<-- ... JsxExpression StringLiteral (element is not text or text value mismatch)')
+        console.log('<-- ... StringLiteral (element is not text or text value mismatch)')
 
         return false
       }
 
-      console.log('<-- !!! JsxExpression StringLiteral')
+      console.log('<-- !!! StringLiteral')
 
       const stackElement = hierarchy.childrenElementsStack.shift()!
       const indexOfStackElement = hierarchy.childrenElements.indexOf(stackElement)
@@ -501,7 +503,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
       -- */
       if (identifier.getText() === 'children') {
         if (parentContext) {
-          console.log('___FOUND_CHILDREN___, parent children:', parentContext.children.length)
+          console.log('___CHILDREN___, parent children:', parentContext.children.length)
 
           const inferreds = parentContext.children.map(jsxChild => inferJsx(hierarchy, jsxChild))
 
@@ -514,8 +516,8 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
 
           const inferred = inferredCount > 0
 
-          if (inferred) console.log('<-- !!! JsxExpression Identifier children')
-          else console.log('<-- ... JsxExpression Identifier children (children inference)')
+          if (inferred) console.log('<-- !!! Identifier children')
+          else console.log('<-- ... Identifier children (children inference)')
 
           return inferred
         }
@@ -531,19 +533,19 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
         * Identifier JSX.Element
       -- */
       if (identifierType.getText() === 'JSX.Element') {
-        console.log('___FOUND_JSX.ELEMENT___, will infer from all JSX found')
+        console.log('___JSX.ELEMENT___, will infer from all JSX found')
 
         const inferredHierarchy = inferJsxs(hierarchy)
 
         if (inferredHierarchy) {
-          console.log('<-- !!! JsxExpression Identifier JSX.Element')
+          console.log('<-- !!! Identifier JSX.Element')
 
           Object.assign(hierarchy, inferredHierarchy)
 
           return true
         }
 
-        console.log('<-- ... JsxExpression Identifier JSX.Element (jsxs inference)')
+        console.log('<-- ... Identifier JSX.Element (jsxs inference)')
 
         return false
       }
@@ -554,13 +556,15 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
       if (identifierType.isString() || identifierType.isNumber()) {
         const element = hierarchy.childrenElementsStack[0]
 
+        console.log('--> Identifier string/number ~', element)
+
         if (element.nodeType !== Node.TEXT_NODE) {
-          console.log('<-- ... JsxExpression Identifier string/number (element is not text)')
+          console.log('<-- ... Identifier string/number (element is not text)')
 
           return false
         }
 
-        console.log('<-- !!! JsxExpression Identifier string/number')
+        console.log('<-- !!! Identifier string/number')
 
         const stackElement = hierarchy.childrenElementsStack.shift()!
         const indexOfStackElement = hierarchy.childrenElements.indexOf(stackElement)
@@ -581,7 +585,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
         return true
       }
 
-      console.log('--> NON INFERRED jsxExpression identifier:', identifierType.getText())
+      console.log('--> NON INFERRED Identifier:', identifierType.getText())
 
       return false
     }
@@ -595,7 +599,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
       const functionDeclaration = findFunctionDeclarationInParents(node, functionName)
 
       if (!functionDeclaration) {
-        console.log('<-- ... JsxExpression CallExpression (function declaration not found)')
+        console.log('<-- ... CallExpression (function declaration not found)')
 
         return false
       }
@@ -607,14 +611,14 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
       const inferredHierarchy = inferJsxs(hierarchy, jsxs)
 
       if (inferredHierarchy) {
-        console.log('<-- !!! JsxExpression CallExpression')
+        console.log('<-- !!! CallExpression')
 
         Object.assign(hierarchy, inferredHierarchy)
 
         return true
       }
 
-      console.log('<-- ... JsxExpression CallExpression (jsxs inference)')
+      console.log('<-- ... CallExpression (jsxs inference)')
 
       return false
     }
