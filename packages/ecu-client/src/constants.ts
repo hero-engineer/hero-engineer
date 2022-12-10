@@ -13,6 +13,7 @@ export const zIndexes = {
   retractablePanel: 9999999, // 7 9
   contextualInformationVignette: 999999 + 1, // 6 9 + 1
   editionOverlay: 999999, // 6 9
+  tabDropGhost: 99999, // 5 9
   hierarchyBarItem: 9, // 1 9
 }
 

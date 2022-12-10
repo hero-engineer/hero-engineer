@@ -82,8 +82,15 @@ function Component() {
         overflow="hidden"
         backgroundColor="background-component"
       >
-        <Div xflex="x6">
+        <Div
+          xflex="x4"
+          backgroundColor="background-light"
+          borderBottom="1px solid border"
+        >
+          <Div width={32 * 2} />
+          <Div flexGrow />
           <BreakpointsButtons />
+          <Div flexGrow />
           <InteractiveModeButton />
           <RemountButton />
           {/* <EditCodeButton /> */}

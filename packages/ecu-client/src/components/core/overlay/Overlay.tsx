@@ -24,11 +24,9 @@ function Overlay({ children }: OverlayPropsType) {
         xflex="x4s"
         flexShrink={0}
         backgroundColor="background-light"
+        borderBottom="1px solid border"
       >
-        <Div
-          xflex="x4s"
-          borderBottom="1px solid border"
-        >
+        <Div xflex="x4s">
           <EcuButton
             borderLeft="1px solid transparent"
             borderRight="1px solid border"
@@ -39,11 +37,8 @@ function Overlay({ children }: OverlayPropsType) {
           <PackagesLinkButton borderRight="1px solid border" />
         </Div>
         <Tabs />
-        <Div
-          xflex="x6s"
-          flexGrow
-          borderBottom="1px solid border"
-        >
+        <Div flexGrow />
+        <Div xflex="x6s">
           <UndoRedoButtons />
           <PushButton />
           <SettingsLinkButton borderLeft="1px solid border" />

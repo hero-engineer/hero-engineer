@@ -1,9 +1,13 @@
-import { MouseEvent, ReactNode, useCallback, useRef } from 'react'
+import { MouseEvent, ReactNode, useCallback, useContext, useRef, useState } from 'react'
 import { Div, useForkedRef } from 'honorable'
 import { MdClose } from 'react-icons/md'
 import { XYCoord, useDrag, useDrop } from 'react-dnd'
 
 import { TabType } from '~types'
+
+import { zIndexes } from '~constants'
+
+import TabsContext from '~contexts/TabsContext'
 
 type DragObject = {
   url: string
@@ -11,13 +15,17 @@ type DragObject = {
 
 type DropResult = {
   url: string
+  isLeftDropZone: boolean
 }
 
 type DragCollectedProp = {
   offset: XYCoord | null
 }
 
-type DropCollectedProps = unknown
+type DropCollectedProps = {
+  canDrop: boolean
+  isOver: boolean
+}
 
 type TabPropsType = {
   tab: TabType
@@ -29,10 +37,19 @@ type TabPropsType = {
 
 function Tab({ tab, active, icon, onClick, onClose }: TabPropsType) {
   const rootRef = useRef<HTMLDivElement>(null)
+  const { setTabs } = useContext(TabsContext)
+  const [isLeftDropZone, setIsLeftDropZone] = useState(false)
 
-  const handleTabDrop = useCallback((dropUrl: string) => {
-    console.log('url', dropUrl)
-  }, [])
+  const handleTabDrop = useCallback((dropUrl: string, isLeftDropZone: boolean) => {
+    setTabs(tabs => {
+      const nextTabs = [...tabs]
+
+      nextTabs.splice(nextTabs.indexOf(tab), 1)
+      nextTabs.splice(nextTabs.findIndex(t => t.url === dropUrl) + (isLeftDropZone ? 0 : 1), 0, tab)
+
+      return nextTabs
+    })
+  }, [tab, setTabs])
 
   const [, drag] = useDrag<DragObject, DropResult, DragCollectedProp>(() => ({
     type: 'Tab',
@@ -41,12 +58,12 @@ function Tab({ tab, active, icon, onClick, onClose }: TabPropsType) {
       const dropResult = monitor.getDropResult<DropResult>()
 
       if (item && dropResult && dropResult.url !== tab.url) {
-        handleTabDrop(dropResult.url)
+        handleTabDrop(dropResult.url, dropResult.isLeftDropZone)
       }
     },
   }), [tab.url, handleTabDrop])
 
-  const [, drop] = useDrop<DragObject, DropResult, DropCollectedProps>(() => ({
+  const [{ canDrop, isOver }, drop] = useDrop<DragObject, DropResult, DropCollectedProps>(() => ({
     accept: 'Tab',
     hover: (_item, monitor) => {
       const offset = monitor.getClientOffset()
@@ -55,10 +72,7 @@ function Tab({ tab, active, icon, onClick, onClose }: TabPropsType) {
         const rect = rootRef.current.getBoundingClientRect()
         const x = offset.x - rect.left
 
-        console.log(x)
-      }
-      else {
-        console.log('---')
+        setIsLeftDropZone(x < rect.width / 2)
       }
     },
     drop: (_item, monitor) => {
@@ -66,10 +80,14 @@ function Tab({ tab, active, icon, onClick, onClose }: TabPropsType) {
 
       return {
         url: tab.url,
+        isLeftDropZone,
       }
     },
-    collect: () => ({}),
-  }), [tab.url])
+    collect: monitor => ({
+      canDrop: monitor.canDrop(),
+      isOver: monitor.isOver(),
+    }),
+  }), [tab.url, isLeftDropZone])
 
   const forkedRef = useForkedRef(rootRef, useForkedRef(drag, drop))
 
@@ -77,13 +95,13 @@ function Tab({ tab, active, icon, onClick, onClose }: TabPropsType) {
     <Div
       ref={forkedRef}
       xflex="x4s"
+      position="relative"
       width={128}
       maxWidth={128}
-      backgroundColor={active ? 'background' : null}
-      borderBottom={`1px solid ${active ? 'transparent' : 'border'}`}
+      backgroundColor={active ? 'background-light' : 'background-light-dark'}
       borderRight="1px solid border"
       _hover={{
-        backgroundColor: active ? 'background' : 'background-light-dark',
+        backgroundColor: 'background-light',
         '> #Tab-close': {
           display: 'flex',
         },
@@ -127,6 +145,18 @@ function Tab({ tab, active, icon, onClick, onClose }: TabPropsType) {
       >
         <MdClose />
       </Div>
+      {canDrop && isOver && (
+        <Div
+          position="absolute"
+          top={0}
+          bottom={0}
+          left={isLeftDropZone ? -3 : null}
+          right={isLeftDropZone ? null : -2}
+          width={4}
+          backgroundColor="primary"
+          zndex={zIndexes.tabDropGhost}
+        />
+      )}
     </Div>
   )
 }
