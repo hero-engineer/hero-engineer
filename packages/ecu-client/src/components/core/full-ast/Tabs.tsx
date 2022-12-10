@@ -36,13 +36,13 @@ function Tabs() {
       flexShrink={1}
       fontSize="0.85rem"
     >
-      {tabs.map(({ url, label }) => (
+      {tabs.map(tab => (
         <Tab
-          key={url}
-          active={pathname === url}
-          label={label}
-          onClick={() => handleTabClick(url)}
-          onClose={event => handleTabClose(event, url)}
+          key={tab.url}
+          tab={tab}
+          active={pathname === tab.url}
+          onClick={() => handleTabClick(tab.url)}
+          onClose={event => handleTabClose(event, tab.url)}
         />
       ))}
     </Div>

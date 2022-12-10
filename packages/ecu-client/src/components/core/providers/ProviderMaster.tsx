@@ -4,7 +4,7 @@ import { Provider as GraphqlProvider } from 'urql'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
-import { AstsType, SnackBarItemType, TabType } from '~types'
+import { SnackBarItemType, TabType } from '~types'
 
 import ModeContext from '~contexts/ModeContext'
 import HotContext from '~contexts/HotContext'

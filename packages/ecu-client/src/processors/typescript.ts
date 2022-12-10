@@ -700,8 +700,8 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
 }
 
 /* --
-    * VISIT FUNCTION DECLARATION
-  -- */
+  * VISIT FUNCTION DECLARATION
+-- */
 
 function visitFunctionDeclaration(functionDeclaration: FunctionDeclaration) {
   return functionDeclaration.getDescendantsOfKind(SyntaxKind.ReturnStatement)

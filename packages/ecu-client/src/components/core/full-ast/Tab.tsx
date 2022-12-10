@@ -1,22 +1,81 @@
-import { MouseEvent, ReactNode } from 'react'
-import { Div } from 'honorable'
+import { MouseEvent, ReactNode, useCallback, useRef } from 'react'
+import { Div, useForkedRef } from 'honorable'
 import { MdClose } from 'react-icons/md'
+import { XYCoord, useDrag, useDrop } from 'react-dnd'
 
-const iconStyle = {
-  fontSize: '0.75rem',
+import { TabType } from '~types'
+
+type DragObject = {
+  url: string
 }
 
+type DropResult = {
+  url: string
+}
+
+type DragCollectedProp = {
+  offset: XYCoord | null
+}
+
+type DropCollectedProps = unknown
+
 type TabPropsType = {
-  label: string
+  tab: TabType
   active: boolean
   icon?: ReactNode
   onClick: (event: MouseEvent) => void
   onClose: (event: MouseEvent) => void
 }
 
-function Tab({ label, active, icon, onClick, onClose }: TabPropsType) {
+function Tab({ tab, active, icon, onClick, onClose }: TabPropsType) {
+  const rootRef = useRef<HTMLDivElement>(null)
+
+  const handleTabDrop = useCallback((dropUrl: string) => {
+    console.log('url', dropUrl)
+  }, [])
+
+  const [, drag] = useDrag<DragObject, DropResult, DragCollectedProp>(() => ({
+    type: 'Tab',
+    item: () => ({ url: tab.url }),
+    end: (item, monitor) => {
+      const dropResult = monitor.getDropResult<DropResult>()
+
+      if (item && dropResult && dropResult.url !== tab.url) {
+        handleTabDrop(dropResult.url)
+      }
+    },
+  }), [tab.url, handleTabDrop])
+
+  const [, drop] = useDrop<DragObject, DropResult, DropCollectedProps>(() => ({
+    accept: 'Tab',
+    hover: (_item, monitor) => {
+      const offset = monitor.getClientOffset()
+
+      if (offset && rootRef.current) {
+        const rect = rootRef.current.getBoundingClientRect()
+        const x = offset.x - rect.left
+
+        console.log(x)
+      }
+      else {
+        console.log('---')
+      }
+    },
+    drop: (_item, monitor) => {
+      if (monitor.didDrop()) return
+
+      return {
+        url: tab.url,
+      }
+    },
+    collect: () => ({}),
+  }), [tab.url])
+
+  const forkedRef = useForkedRef(rootRef, useForkedRef(drag, drop))
+
   return (
     <Div
+      ref={forkedRef}
       xflex="x4s"
       width={128}
       maxWidth={128}
@@ -31,6 +90,7 @@ function Tab({ label, active, icon, onClick, onClose }: TabPropsType) {
       }}
       onClick={onClick}
       cursor="pointer"
+      userSelect="none"
       pl={1}
       pr={0.25}
     >
@@ -52,7 +112,7 @@ function Tab({ label, active, icon, onClick, onClose }: TabPropsType) {
         minWidth={0} // For ellipsis to work
       >
         <Div ellipsis>
-          {label}
+          {tab.label}
         </Div>
       </Div>
       <Div
@@ -65,7 +125,7 @@ function Tab({ label, active, icon, onClick, onClose }: TabPropsType) {
         pl={0.5}
         pr={0.25}
       >
-        <MdClose style={iconStyle} />
+        <MdClose />
       </Div>
     </Div>
   )
