@@ -1,5 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import { execSync } from 'node:child_process'
 
 import { FileType } from '../../types.js'
 import { appPath } from '../../configuration.js'
@@ -46,10 +47,31 @@ function filesQuery() {
     })
   }
 
+  function traverseDependencies(dependencies: string[]) {
+    dependencies.forEach(packageName => {
+      try {
+        readDirectory(path.join(nodeModulesPath, packageName), true)
+      }
+      catch {
+        console.log(packageName)
+      }
+    })
+  }
+
   readDirectory(srcPath)
-  readDirectory(nodeModulesPath, true)
+
+  traverseDependencies([
+    '@types/react',
+    '@types/react-dom',
+  ])
 
   return files
 }
+
+// function listDependencies() {
+//   const result = execSync('npm ls --all --json --omit dev', { cwd: appPath })
+
+//   return JSON.parse(result.toString())
+// }
 
 export default filesQuery
