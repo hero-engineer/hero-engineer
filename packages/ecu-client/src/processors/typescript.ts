@@ -69,6 +69,8 @@ export const hierarchyIdSeparator = `__id_${Math.random()}__`
 
 export const hierarchyIndexSeparator = `__index_${Math.random()}__`
 
+export const hierarchyComponentSeparator = `__component_${Math.random()}__`
+
 const allowedFunctionComponentFirstCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 export async function createHierarchy(filePath: string, componentElements: HTMLElement[]) {
@@ -188,7 +190,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
         childrenElementsStack: [...componentElements],
         children: [],
         context: {
-          id: `${id}${hierarchyIdSeparator}`,
+          id: `${id}${hierarchyComponentSeparator}`,
           previousTopJsxIds: [],
           children: parentContext?.children ?? [],
           imports: [...parentContext?.imports ?? [], ...imports],
@@ -216,7 +218,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
 
     const result = filteredJsxEntries
     .map(([id, jsx]) => {
-      console.log(`_________________ inferId: ${inferId}, jsxId: ${id}`)
+      console.log(`___INFER_________ id: ${inferId}, jsxId: ${id}`)
 
       const hierarchyClone = cloneHierarchy(hierarchy)
 
@@ -516,7 +518,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
       if (nodeType.isString() || nodeType.isNumber()) {
         const element = hierarchy.childrenElementsStack[0]
 
-        console.log('--> string/number ${hierarchyIdSeparator}', element)
+        console.log('--> string/number ~', element)
 
         if (element.nodeType !== Node.TEXT_NODE) {
           console.log('<-- ... string/number (element is not text)')
