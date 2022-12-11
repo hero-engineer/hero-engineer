@@ -1,6 +1,7 @@
 import {
   ArrowFunction,
   CallExpression,
+  ConditionalExpression,
   ExportAssignment,
   Expression,
   FunctionDeclaration,
@@ -12,6 +13,7 @@ import {
   JsxSelfClosingElement,
   JsxText,
   NumericLiteral,
+  ParenthesizedExpression,
   ParenthesizedExpression,
   Project,
   SourceFile,
@@ -489,6 +491,27 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
     }
 
     /* --
+      * ParenthesizedExpression
+    -- */
+    if (nodeKind === SyntaxKind.ParenthesizedExpression) {
+      const parenthesizedExpression = node as ParenthesizedExpression
+
+      console.log('--> ParenthesizedExpression', parenthesizedExpression.getText())
+
+      const inferred = inferJsx(hierarchy, extractExpression(parenthesizedExpression))
+
+      if (!inferred) {
+        console.log('<-- ... ParenthesizedExpression (chil inference)')
+
+        return false
+      }
+
+      console.log('<-- !!! ParenthesizedExpression')
+
+      return true
+    }
+
+    /* --
       * Identifier/PropertyAccessExpression
     -- */
     if (nodeKind === SyntaxKind.Identifier || nodeKind === SyntaxKind.PropertyAccessExpression) {
@@ -813,6 +836,33 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
       console.log('<-- ... CallExpression (jsxs inference)')
 
       return false
+    }
+
+    /* --
+      * ConditionalExpression
+    -- */
+    if (nodeKind === SyntaxKind.ConditionalExpression) {
+      const conditionalExpression = node as ConditionalExpression
+
+      console.log('--> ConditionalExpression', conditionalExpression.getText())
+
+      const hierarchyLeft = cloneHierarchy(hierarchy)
+      const hierarchyRight = cloneHierarchy(hierarchy)
+      const inferLeft = inferJsx(hierarchyLeft, conditionalExpression.getWhenTrue(), nextNodes)
+      const inferRight = inferJsx(hierarchyRight, conditionalExpression.getWhenFalse(), nextNodes)
+
+      if (!(inferLeft || inferRight)) {
+        console.log('<-- ... ConditionalExpression (left/right inference)')
+
+        return false
+      }
+
+      console.log('<-- !!! ConditionalExpression')
+
+      if (inferLeft) Object.assign(hierarchy, hierarchyLeft)
+      else Object.assign(hierarchy, hierarchyRight)
+
+      return true
     }
 
     /* --
