@@ -76,7 +76,7 @@ export const hierarchyIndexSeparator = `_index_${Math.random()}_`
 export const hierarchyComponentSeparator = `_component_${Math.random()}_`
 
 const allowedFunctionComponentFirstCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-const createHierarchyCache: Record<string, ExtendedHierarchyType | null> = {}
+const hierarchyCache: Record<string, ExtendedHierarchyType | null> = {}
 
 export async function createHierarchy(filePath: string, componentElements: HTMLElement[]) {
   await projectReady.promise
@@ -91,13 +91,12 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
 
   if (!sourceFile) return null
 
-  const hashElement = hashElementFactory()
   const hash = filePath + componentElements.map(hashElement)
 
-  if (createHierarchyCache[hash]) {
+  if (hierarchyCache[hash]) {
     console.log('FROM CACHE')
 
-    return createHierarchyCache[hash]
+    return hierarchyCache[hash]
   }
 
   let childrenCount = 0
@@ -577,6 +576,8 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
 
           if (inferred) console.log('<-- !!! children')
           else console.log('<-- ... children (no children inference)')
+
+          removeStackFrom(hierarchy, subHierarchy)
 
           return inferred
         }
@@ -1113,7 +1114,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
   // The remaining stack elements come from the parent's stack
   // If a hierarchy has no children then return null
   // To prevent MAP_NEXT_NEXT to infer from following component elements
-  return createHierarchyCache[hash] = hierarchy && hierarchy.children.length ? clearHierarchyStack(hierarchy) : null
+  return hierarchyCache[hash] = hierarchy && hierarchy.children.length ? clearHierarchyStack(hierarchy) : null
 }
 
 /* --
@@ -1306,18 +1307,24 @@ function countCommonItemsAtStart(a: any[], b: any[]) {
   return count
 }
 
-function hashElementFactory() {
-  const createId = createIdFactory()
+function hashElement(element: HTMLElement): string {
+  if (element.nodeType === Node.TEXT_NODE) return element.textContent ?? ''
 
-  return function hashElement(element: HTMLElement): string {
-    if (element.nodeType === Node.TEXT_NODE) return element.textContent ?? ''
+  const childElementHashes: string[] = []
 
-    const childElementHashes: string[] = []
-
-    for (const child of element.childNodes) {
-      childElementHashes.push(hashElement(child as HTMLElement))
-    }
-
-    return createId() + childElementHashes.join('~')
+  for (const child of element.childNodes) {
+    childElementHashes.push(hashElement(child as HTMLElement))
   }
+
+  return `${element.tagName}~${hashElementAttributes(element)}~${childElementHashes.join('~~')}`
+}
+
+function hashElementAttributes(element: HTMLElement) {
+  const hashes: string[] = []
+
+  for (const attribute of element.attributes) {
+    hashes.push(`${attribute.name}~${attribute.value}`)
+  }
+
+  return hashes.join('~~')
 }
