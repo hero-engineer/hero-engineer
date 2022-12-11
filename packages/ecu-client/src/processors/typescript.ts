@@ -856,10 +856,16 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
         return false
       }
 
-      console.log('<-- !!! ConditionalExpression')
+      if (inferLeft) {
+        console.log('<-- !!! ConditionalExpression left')
 
-      if (inferLeft) Object.assign(hierarchy, hierarchyLeft)
-      else Object.assign(hierarchy, hierarchyRight)
+        Object.assign(hierarchy, hierarchyLeft)
+      }
+      else {
+        console.log('<-- !!! ConditionalExpression right')
+
+        Object.assign(hierarchy, hierarchyRight)
+      }
 
       return true
     }
