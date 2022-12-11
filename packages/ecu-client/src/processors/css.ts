@@ -10,7 +10,7 @@ const allowedCssExtensions = ['css']
 const filePathToCode: Record<string, string> = {}
 
 export function addCssSourceFiles(files: FileType[], shouldLog = false) {
-  const consoleLog = shouldLog ? console.debug : () => {}
+  const consoleLog = shouldLog ? console.log : () => {}
 
   files.forEach(({ path, code }) => {
     if (!allowedCssExtensions.some(extension => path.endsWith(extension))) return

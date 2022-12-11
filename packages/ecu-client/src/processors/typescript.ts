@@ -52,7 +52,7 @@ const projectReady = createDeferedPromise<void>()
 const allowedTypescriptExtensions = ['js', 'jsx', 'ts', 'tsx']
 
 export function addTypescriptSourceFiles(files: FileType[], shouldLog = false) {
-  const consoleLog = shouldLog ? console.debug : () => {}
+  const consoleLog = shouldLog ? console.log : () => {}
 
   files.forEach(({ path, code }) => {
     if (!allowedTypescriptExtensions.some(extension => path.endsWith(extension))) return
@@ -77,32 +77,34 @@ export const hierarchyIndexSeparator = `_index_${Math.random()}_`
 
 export const hierarchyComponentSeparator = `_component_${Math.random()}_`
 
-const hierarchyCache: Record<string, ExtendedHierarchyType | null> = {}
 const allowedFunctionComponentFirstCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+type HierarchyCacheType = Record<string, ExtendedHierarchyType | null>
 
 export async function createHierarchy(filePath: string, componentElements: HTMLElement[], shouldLog = false) {
   await projectReady.promise
 
-  const hierarchy = createHierarchySync(filePath, componentElements, undefined, shouldLog)
+  const hierarchyCache: HierarchyCacheType = {}
+  const hierarchy = createHierarchySync(hierarchyCache, filePath, componentElements, undefined, shouldLog)
 
   return hierarchy ? cleanHierarchy(hierarchy) : null
 }
 
-function createHierarchySync(filePath: string, componentElements: HTMLElement[], parentContext?: ExtendedHierarchyContextType, shouldLog = false) {
+function createHierarchySync(cache: HierarchyCacheType, filePath: string, componentElements: HTMLElement[], parentContext?: ExtendedHierarchyContextType, shouldLog = false) {
   const sourceFile = project.getSourceFile(filePath)
 
   if (!sourceFile) return null
 
-  const consoleLog = shouldLog ? console.debug : () => {}
+  const consoleLog = shouldLog ? console.log : () => {}
   const consoleGroup = shouldLog ? console.group : () => {}
   const consoleGroupEnd = shouldLog ? console.groupEnd : () => {}
 
   const hash = filePath + componentElements.map(hashElement)
 
-  if (hierarchyCache[hash]) {
+  if (cache[hash]) {
     consoleLog('FROM CACHE')
 
-    return hierarchyCache[hash]
+    return cache[hash]
   }
 
   let childrenCount = 0
@@ -343,10 +345,10 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
 
         consoleLog('----> found', foundImport.name)
 
-        const subHierarchy = createHierarchySync(sourceFilePath, hierarchy.childrenElementsStack, {
+        const subHierarchy = createHierarchySync(cache, sourceFilePath, hierarchy.childrenElementsStack, {
           ...hierarchy.context,
           children: (jsxElement as JsxElement).getJsxChildren?.() ?? [],
-        })
+        }, shouldLog)
 
         if (!subHierarchy) {
           consoleLog('<----- ... JsxElement', jsxTagName, '(no hierarchy was created)')
@@ -1120,7 +1122,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
   // The remaining stack elements come from the parent's stack
   // If a hierarchy has no children then return null
   // To prevent MAP_NEXT_NEXT to infer from following component elements
-  return hierarchyCache[hash] = hierarchy && hierarchy.children.length ? clearHierarchyStack(hierarchy) : null
+  return cache[hash] = hierarchy && hierarchy.children.length ? clearHierarchyStack(hierarchy) : null
 }
 
 /* --
