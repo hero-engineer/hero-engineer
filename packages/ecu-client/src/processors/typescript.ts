@@ -14,7 +14,6 @@ import {
   JsxText,
   NumericLiteral,
   ParenthesizedExpression,
-  ParenthesizedExpression,
   Project,
   SourceFile,
   StringLiteral,
@@ -498,7 +497,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
 
       console.log('--> ParenthesizedExpression', parenthesizedExpression.getText())
 
-      const inferred = inferJsx(hierarchy, extractExpression(parenthesizedExpression))
+      const inferred = inferJsx(hierarchy, extractExpression(parenthesizedExpression), nextNodes)
 
       if (!inferred) {
         console.log('<-- ... ParenthesizedExpression (chil inference)')
