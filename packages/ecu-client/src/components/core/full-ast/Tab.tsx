@@ -98,10 +98,10 @@ function Tab({ tab, active, icon, onClick, onClose }: TabPropsType) {
       position="relative"
       width={128}
       maxWidth={128}
-      backgroundColor={active ? 'background-light' : 'background-light-dark'}
+      backgroundColor={active ? 'background' : 'background-light'}
       borderRight="1px solid border"
       _hover={{
-        backgroundColor: 'background-light',
+        backgroundColor: 'background',
         '> #Tab-close': {
           display: 'flex',
         },

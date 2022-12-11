@@ -72,7 +72,7 @@ function BreakpointsButtons() {
   const renderViewport = useCallback(() => (
     <Div
       xflex="x4"
-      minWidth={42}
+      width={128}
       fontSize="0.75rem"
       ml={0.5}
       gap={0.5}
@@ -181,7 +181,7 @@ function BreakpointsButtons() {
     >
       {!!breakpoint && (
         <Div
-          minWidth={120}
+          minWidth={128}
           mr={0.5}
         />
       )}

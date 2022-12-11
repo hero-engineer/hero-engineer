@@ -84,6 +84,7 @@ function Component() {
       >
         <Div
           xflex="x4"
+          height={32}
           backgroundColor="background-light"
           borderBottom="1px solid border"
         >
@@ -91,8 +92,8 @@ function Component() {
           <Div flexGrow />
           <BreakpointsButtons />
           <Div flexGrow />
-          <InteractiveModeButton />
-          <RemountButton />
+          <InteractiveModeButton borderLeft="1px solid border" />
+          <RemountButton borderLeft="1px solid border" />
           {/* <EditCodeButton /> */}
         </Div>
         <ComponentWindow
