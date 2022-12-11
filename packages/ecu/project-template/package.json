@@ -9,6 +9,6 @@
   "devDependencies": {
     "ecu": "1.0.28",
     "eslint": "^8.27.0",
-    "eslint-config-ecu": "^1.1.0"
+    "eslint-config-ecu": "^1.3.0"
   }
 }
