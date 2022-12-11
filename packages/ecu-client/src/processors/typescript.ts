@@ -583,6 +583,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
       -- */
 
       if (nodeType.isArray()) {
+        console.log('--> Array', node.getText())
         console.log('___ARRAY_START___')
 
         const mapId = createId()
@@ -705,6 +706,49 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
       -- */
 
       if (nodeType.isBoolean() || nodeType.isNull()) {
+        console.log('--> boolean/null')
+        console.log('<-- !!! boolean/null')
+
+        return true
+      }
+
+      /* --
+        * any
+      -- */
+
+      if (nodeType.isAny()) {
+        console.log('--> any', node.getText())
+        console.log('___ANY_START___')
+
+        const mapId = createId()
+        const hierarchyClone = cloneHierarchy(hierarchy)
+
+        let inferCount = 0
+
+        while (true) {
+          console.log(`___ANY_NEXT__ id: ${mapId}, inferCount: ${inferCount}`)
+
+          const inferredNext = inferNextJsx(hierarchyClone, nextNodes)
+
+          if (inferredNext) break
+          else {
+            hierarchyClone.childrenElementsStack.shift()
+            inferCount++
+          }
+        }
+
+        console.log(`___ANY_END__ id: ${mapId}, inferCount: ${inferCount}`)
+
+        if (inferCount) {
+          console.log('<-- !!! any')
+
+          removeStackFrom(hierarchy, hierarchyClone)
+
+          return true
+        }
+
+        console.log('<-- !!! any (but no jsxs inference)')
+
         return true
       }
 
@@ -971,13 +1015,16 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
 
   function inferNextJsx(hierarchy: ExtendedHierarchyType, nextNodes: TsNode[]) {
     let inferred = true
+    let i = 0
 
-    for (let i = 0; i < 3; i++) {
+    while (true) {
       if (!nextNodes[i]) break
 
       inferred = inferJsx(cloneHierarchy(hierarchy), nextNodes[i], nextNodes.slice(i + 1))
 
       if (!inferred) break
+
+      i++
     }
 
     return inferred
