@@ -500,7 +500,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
       const inferred = inferJsx(hierarchy, extractExpression(parenthesizedExpression), nextNodes)
 
       if (!inferred) {
-        console.log('<-- ... ParenthesizedExpression (chil inference)')
+        console.log('<-- ... ParenthesizedExpression (child inference)')
 
         return false
       }
