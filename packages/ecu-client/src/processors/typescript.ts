@@ -587,8 +587,12 @@ function createHierarchySync(cache: HierarchyCacheType, filePath: string, compon
 
           removeStackFrom(hierarchy, subHierarchy)
 
+          subHierarchy.childrenElementsStack.length = 0
+
           return inferred
         }
+
+        subHierarchy.childrenElementsStack.length = 0
 
         consoleLog('<-- !!! children (no parent context)')
 
@@ -913,6 +917,8 @@ function createHierarchySync(cache: HierarchyCacheType, filePath: string, compon
             consoleLog('<-- !!! CallExpression map')
 
             removeStackFrom(hierarchy, subHierarchy)
+
+            subHierarchy.childrenElementsStack.length = 0
 
             return true
           }
