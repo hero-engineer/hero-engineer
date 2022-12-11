@@ -1,10 +1,13 @@
-import { memo } from 'react'
+import { memo, useContext } from 'react'
 // import { DndProvider } from 'react-dnd'
 // import { HTML5Backend } from 'react-dnd-html5-backend'
 // import { CssBaseline, Div, ThemeProvider } from 'honorable'
 import { Div } from 'honorable'
 
+import ComponentRemountContext from '~contexts/ComponentRemountContext'
+
 import WithComponentHierarchy from '~core/full-ast/WithComponentHierarchy'
+import WithComponentError from '~core/component-window/WithComponentError'
 
 // import theme from '../../../theme'
 // import EditionOverlay from '../edition-overlay/EditionOverlay'
@@ -21,6 +24,8 @@ type ComponentWindowPropsType = {
 }
 
 function ComponentWindow({ componentPath, decoratorPaths }: ComponentWindowPropsType) {
+  const { key } = useContext(ComponentRemountContext)
+
   return (
     <Div
       xflex="y2s"
@@ -41,13 +46,15 @@ function ComponentWindow({ componentPath, decoratorPaths }: ComponentWindowProps
             <WithComponentIframeHeight setHeight={setHeight}>
               {/* TODO investigate why EditionOverlay should be inside of the iframe, and if removable remove also ThemeProvider */}
               {/* <EditionOverlay> */}
-              <WithComponentHierarchy>
-                <ComponentLoader
-                  head={head}
-                  componentPath={componentPath}
-                  decoratorPaths={decoratorPaths}
-                />
-              </WithComponentHierarchy>
+              <WithComponentError key={key}>
+                <WithComponentHierarchy>
+                  <ComponentLoader
+                    head={head}
+                    componentPath={componentPath}
+                    decoratorPaths={decoratorPaths}
+                  />
+                </WithComponentHierarchy>
+              </WithComponentError>
               {/* </EditionOverlay> */}
             </WithComponentIframeHeight>
               // {/* </ThemeProvider> */}

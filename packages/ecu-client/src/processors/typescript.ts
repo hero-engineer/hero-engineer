@@ -222,6 +222,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
           previousTopJsxIds: [],
           children: parentContext?.children ?? [],
           imports: [...parentContext?.imports ?? [], ...imports],
+          identifiers: [...parentContext?.identifiers ?? [], ...identifiers],
         },
       }
 
@@ -291,6 +292,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
     /* --
       * JsxElement
     -- */
+
     if (nodeKind === SyntaxKind.JsxElement || nodeKind === SyntaxKind.JsxSelfClosingElement) {
       const jsxElement = node as JsxElement | JsxSelfClosingElement
       const jsxTagName = ((jsxElement as JsxElement).getOpeningElement?.() ?? jsxElement as JsxSelfClosingElement).getTagNameNode().getText()
@@ -301,6 +303,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
       /* --
         * JsxElement Component
       -- */
+
       if (jsxTagName[0] === jsxTagName[0].toUpperCase()) {
         console.log('hierarchy.context.imports', hierarchy.context.imports)
         const foundImport = hierarchy.context.imports.find(x => x.name === jsxTagName)
@@ -365,6 +368,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
       /* --
         * JsxElement tag
       -- */
+
       const stackElement = hierarchy.childrenElementsStack.shift()!
       const indexOfStackElement = hierarchy.childrenElements.indexOf(stackElement)
       const childrenElements: HTMLElement[] = []
@@ -410,6 +414,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
     /* --
       * JsxFragment
     -- */
+
     if (nodeKind === SyntaxKind.JsxFragment) {
       console.log('--> JsxFragment')
 
@@ -425,6 +430,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
     /* --
       * JsxText
     -- */
+
     if (nodeKind === SyntaxKind.JsxText) {
       const jsxText = node as JsxText
       const jsxTextValue = jsxText.getLiteralText().trim()
@@ -465,6 +471,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
     /* --
       * JsxExpression
     -- */
+
     if (nodeKind === SyntaxKind.JsxExpression) {
       const jsxExpression = node as JsxExpression
       const expression = jsxExpression.getExpression()
@@ -492,6 +499,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
     /* --
       * ParenthesizedExpression
     -- */
+
     if (nodeKind === SyntaxKind.ParenthesizedExpression) {
       const parenthesizedExpression = node as ParenthesizedExpression
 
@@ -513,11 +521,13 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
     /* --
       * Identifier/PropertyAccessExpression
     -- */
+
     if (nodeKind === SyntaxKind.Identifier || nodeKind === SyntaxKind.PropertyAccessExpression) {
 
       /* --
         * children
       -- */
+
       if (node.getText() === 'children') {
         if (parentContext) {
           console.log('___CHILDREN___, parent children:', parentContext.children.length)
@@ -549,6 +559,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
       /* --
         * JSX.Element
       -- */
+
       if (nodeType.getText() === 'JSX.Element') {
         console.log('___JSX.ELEMENT___, will infer from all JSX found')
 
@@ -570,6 +581,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
       /* --
         * Array
       -- */
+
       if (nodeType.isArray()) {
         console.log('___ARRAY_START___')
 
@@ -590,17 +602,9 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
         let inferCount = 0
 
         while (true) {
-          let inferredNext = true
-
           console.log(`___ARRAY_NEXT__ id: ${mapId}, inferCount: ${inferCount}`)
 
-          for (let i = 0; i < 3; i++) {
-            if (!nextNodes[i]) break
-
-            inferredNext = inferJsx(cloneHierarchy(subHierarchy), nextNodes[i], nextNodes.slice(i + 1))
-
-            if (!inferredNext) break
-          }
+          const inferredNext = inferNextJsx(subHierarchy, nextNodes)
 
           if (inferredNext) break
           else {
@@ -627,6 +631,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
       /* --
         * string
       -- */
+
       if (nodeType.isString()) {
         const element = hierarchy.childrenElementsStack[0]
 
@@ -662,6 +667,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
       /* --
         * number
       -- */
+
       if (nodeType.isNumber()) {
         const element = hierarchy.childrenElementsStack[0]
 
@@ -697,6 +703,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
       /* --
         * boolean/null
       -- */
+
       if (nodeType.isBoolean() || nodeType.isNull()) {
         return true
       }
@@ -709,11 +716,16 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
     /* --
       * CallExpression
     -- */
+
     if (nodeKind === SyntaxKind.CallExpression) {
       const callExpression = node as CallExpression
       const functionName = callExpression.getExpression().getText()
 
       console.log('--> CallExpression', functionName)
+
+      /* --
+        * CallExpression .map
+      -- */
 
       // HACK for now
       // TODO check for Array
@@ -730,7 +742,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
 
         if (predicateKind === SyntaxKind.Identifier) {
           const predicateName = predicate.getText()
-          const foundIdentifer = findClosestScopedIdentifier(identifiers.filter(x => x.name === predicateName), callExpression)
+          const foundIdentifer = findClosestScopedIdentifier(hierarchy.context.identifiers.filter(x => x.name === predicateName), callExpression)
 
           if (!foundIdentifer) {
             console.log('<-- ... CallExpression map (identifer not found)', predicateName)
@@ -775,17 +787,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
 
             Object.assign(subHierarchy, inferredHierarchy)
 
-            let inferredNext = true
-
-            console.log(`___MAP_NEXT__ id: ${mapId}, inferCount: ${inferCount}`)
-
-            for (let i = 0; i < 3; i++) {
-              if (!nextNodes[i]) break
-
-              inferredNext = inferJsx(cloneHierarchy(subHierarchy), nextNodes[i], nextNodes.slice(i + 1))
-
-              if (!inferredNext) break
-            }
+            const inferredNext = inferNextJsx(subHierarchy, nextNodes)
 
             if (inferredNext) break
           }
@@ -809,6 +811,10 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
 
         return false
       }
+
+      /* --
+        * CallExpression function
+      -- */
 
       const functionDeclaration = findFunctionDeclarationInParents(node, functionName)
 
@@ -840,6 +846,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
     /* --
       * ConditionalExpression
     -- */
+
     if (nodeKind === SyntaxKind.ConditionalExpression) {
       const conditionalExpression = node as ConditionalExpression
 
@@ -873,6 +880,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
     /* --
       * StringLiteral/NumericLiteral
     -- */
+
     if (nodeKind === SyntaxKind.StringLiteral || nodeKind === SyntaxKind.NumericLiteral) {
       const literal = node as (StringLiteral | NumericLiteral)
       const literalValue = literal.getLiteralValue().toString()
@@ -910,6 +918,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
     /* --
       * TemplateExpression
     -- */
+
     if (nodeKind === SyntaxKind.TemplateExpression) {
       const templateExpression = node as TemplateExpression
       const element = hierarchy.childrenElementsStack[0]
@@ -946,6 +955,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
     /* --
       * TrueKeyword/FalseKeyword/NullKeyword
     -- */
+
     if (nodeKind === SyntaxKind.TrueKeyword || nodeKind === SyntaxKind.FalseKeyword || nodeKind === SyntaxKind.NullKeyword) {
       return true
     }
@@ -953,6 +963,24 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
     console.log('--> NON INFERRED:', node.getKindName())
 
     return false
+  }
+
+  /* --
+    * INFER NEXT JSX
+  -- */
+
+  function inferNextJsx(hierarchy: ExtendedHierarchyType, nextNodes: TsNode[]) {
+    let inferred = true
+
+    for (let i = 0; i < 3; i++) {
+      if (!nextNodes[i]) break
+
+      inferred = inferJsx(cloneHierarchy(hierarchy), nextNodes[i], nextNodes.slice(i + 1))
+
+      if (!inferred) break
+    }
+
+    return inferred
   }
 
   /* --
@@ -1067,6 +1095,7 @@ function cloneHierarchy(hierarchy: ExtendedHierarchyType): ExtendedHierarchyType
       ...hierarchy.context,
       previousTopJsxIds: [...hierarchy.context.previousTopJsxIds],
       imports: [...hierarchy.context.imports],
+      identifiers: [...hierarchy.context.identifiers],
       children: [...hierarchy.context.children],
     },
   }

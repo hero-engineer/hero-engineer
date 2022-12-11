@@ -45,9 +45,11 @@ function ComponentIframe({ children }: ComponentIframePropsType) {
     appendCss(`
       html {
         height: fit-content;
+        background-color: white;
       }
       body {
         height: fit-content;
+        margin: 0;
       }
     `)
   }, [appendCss])

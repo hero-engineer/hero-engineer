@@ -162,7 +162,7 @@ export type ExtendedHierarchyContextType = {
   previousTopJsxIds: string[]
   children: JsxChild[]
   imports: ImportType[]
-  // sourceFile: SourceFile
+  identifiers: IdentifierType[]
 }
 
 export type ExtendedHierarchyType = Omit<HierarchyType, 'children'> & {
