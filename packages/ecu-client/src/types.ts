@@ -157,7 +157,7 @@ export type HierarchyType = {
   children: HierarchyType[]
 }
 
-export type ExpandedHierarchyContextType = {
+export type ExtendedHierarchyContextType = {
   id: string
   previousTopJsxIds: string[]
   children: JsxChild[]
@@ -165,11 +165,11 @@ export type ExpandedHierarchyContextType = {
   // sourceFile: SourceFile
 }
 
-export type ExpandedHierarchyType = Omit<HierarchyType, 'children'> & {
-  children: ExpandedHierarchyType[]
+export type ExtendedHierarchyType = Omit<HierarchyType, 'children'> & {
+  children: ExtendedHierarchyType[]
   childrenElements: HTMLElement[]
   childrenElementsStack: HTMLElement[]
-  context: ExpandedHierarchyContextType
+  context: ExtendedHierarchyContextType
 }
 
 export type ImportType = {
