@@ -4,10 +4,11 @@ import { Provider as GraphqlProvider } from 'urql'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
-import { SnackBarItemType, TabType } from '~types'
+import { LogsType, SnackBarItemType, TabType } from '~types'
 
 import ModeContext from '~contexts/ModeContext'
 import HotContext from '~contexts/HotContext'
+import LogsContext, { LogsContextType } from '~contexts/LogsContext'
 import RefetchContext, { RefetchContextType } from '~contexts/RefetchContext'
 import ThemeModeContext, { ThemeModeContextType } from '~contexts/ThemeModeContext'
 import SnackBarContext, { SnackBarContextType } from '~contexts/SnackBarContext'
@@ -26,6 +27,8 @@ type ProviderMasterPropsType = {
 
 // The providers for the whole application
 function ProviderMaster({ mode, hot, children }: ProviderMasterPropsType) {
+  const [logs, setLogs] = usePersistedState<LogsType>('logs', { hierarchy: false })
+  const logsContextValue = useMemo<LogsContextType>(() => ({ logs, setLogs }), [logs, setLogs])
 
   const { refetch, register } = useCreateRefetchRegistry()
   const refetchContextValue = useMemo<RefetchContextType>(() => ({ refetch, register }), [refetch, register])
@@ -45,15 +48,17 @@ function ProviderMaster({ mode, hot, children }: ProviderMasterPropsType) {
       <DndProvider backend={HTML5Backend}>
         <ModeContext.Provider value={mode}>
           <HotContext.Provider value={hot}>
-            <RefetchContext.Provider value={refetchContextValue}>
-              <ThemeModeContext.Provider value={themeModeContextValue}>
-                <SnackBarContext.Provider value={snackBarContextValue}>
-                  <TabsContext.Provider value={tabsContextValue}>
-                    {children}
-                  </TabsContext.Provider>
-                </SnackBarContext.Provider>
-              </ThemeModeContext.Provider>
-            </RefetchContext.Provider>
+            <LogsContext.Provider value={logsContextValue}>
+              <RefetchContext.Provider value={refetchContextValue}>
+                <ThemeModeContext.Provider value={themeModeContextValue}>
+                  <SnackBarContext.Provider value={snackBarContextValue}>
+                    <TabsContext.Provider value={tabsContextValue}>
+                      {children}
+                    </TabsContext.Provider>
+                  </SnackBarContext.Provider>
+                </ThemeModeContext.Provider>
+              </RefetchContext.Provider>
+            </LogsContext.Provider>
           </HotContext.Provider>
         </ModeContext.Provider>
       </DndProvider>

@@ -10,6 +10,7 @@ import DesignFavicon from '~scenes/DesignFavicon'
 import Packages from '~scenes/Packages'
 import Settings from '~scenes/Settings'
 import SettingsGeneral from '~scenes/SettingsGeneral'
+import SettingsLogs from '~scenes/SettingsLogs'
 
 import Component2 from '~core/full-ast/Component'
 import ProviderComponent from '~core/full-ast/ProviderComponent'
@@ -106,6 +107,10 @@ function Router({ children }: any) {
               <Route
                 path="general"
                 element={<SettingsGeneral />}
+              />
+              <Route
+                path="logs"
+                element={<SettingsLogs />}
               />
             </Route>
             <Route

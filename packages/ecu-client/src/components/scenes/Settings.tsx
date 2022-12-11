@@ -41,6 +41,14 @@ function Settings() {
             General
           </Div>
         </Link>
+        <Link
+          to="/_ecu_/settings/logs"
+          style={linkStyle}
+        >
+          <Div {...tabProps}>
+            Logs
+          </Div>
+        </Link>
       </Div>
       <Div
         xflex="y2s"

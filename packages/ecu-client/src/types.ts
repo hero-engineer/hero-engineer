@@ -188,3 +188,7 @@ export type IdentifierType = {
   name: string
   value: TsNode,
 }
+
+export type LogsType = {
+  hierarchy: boolean
+}
