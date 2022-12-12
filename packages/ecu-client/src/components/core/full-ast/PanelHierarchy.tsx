@@ -49,7 +49,6 @@ function PanelHierarchy() {
         userSelect="none"
         px={1}
         mt={0.5}
-        mb={0.5}
       >
         Hierarchy
       </P>
@@ -64,7 +63,10 @@ function PanelHierarchy() {
         </Div>
       )}
       {!hierarchy && (
-        <Div pl={1}>
+        <Div
+          pl={1}
+          mt={0.5}
+        >
           ...
         </Div>
       )}
