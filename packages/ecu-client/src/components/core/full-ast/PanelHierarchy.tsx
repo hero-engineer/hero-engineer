@@ -5,23 +5,37 @@ import { HierarchyType } from '~types'
 
 import HierarchyContext from '~contexts/HierarchyContext2'
 
+const typeToColor = {
+  component: 'type-component',
+  element: 'type-element',
+  children: 'type-children',
+  array: 'type-array',
+}
+
 // The hierarchy section
 // Displayed in the left panel
 function PanelHierarchy() {
   const { hierarchy } = useContext(HierarchyContext)
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
 
-  const renderHierarchy = useCallback((hierarchy: HierarchyType) => (
-    <TreeView
-      key={hierarchy.id}
-      width="100%"
-      defaultExpanded
-      label={hierarchy.name}
-      expanded={!collapsed[hierarchy.id]}
-    >
-      {hierarchy.children.map(renderHierarchy)}
-    </TreeView>
-  ), [collapsed])
+  const renderHierarchy = useCallback((hierarchy: HierarchyType) => {
+    if (hierarchy.element?.nodeType === Node.TEXT_NODE) return null
+
+    return (
+      <TreeView
+        key={hierarchy.id}
+        expanded={!collapsed[hierarchy.id]}
+        onExpand={expanded => setCollapsed(x => ({ ...x, [hierarchy.id]: !expanded }))}
+        label={(
+          <PanelHierarchyLabel hierarchy={hierarchy} />
+        )}
+        barColor={typeToColor[hierarchy.type] ?? 'text'}
+        width="100%"
+      >
+        {hierarchy.children.map(renderHierarchy)}
+      </TreeView>
+    )
+  }, [collapsed, setCollapsed])
 
   return (
     <Div
@@ -51,9 +65,21 @@ function PanelHierarchy() {
       )}
       {!hierarchy && (
         <Div pl={1}>
-          No hierarchy
+          ...
         </Div>
       )}
+    </Div>
+  )
+}
+
+type PanelHierarchyLabelPropsType = {
+  hierarchy: HierarchyType
+}
+
+function PanelHierarchyLabel({ hierarchy }: PanelHierarchyLabelPropsType) {
+  return (
+    <Div color={typeToColor[hierarchy.type] ?? 'text'}>
+      {hierarchy.name}
     </Div>
   )
 }

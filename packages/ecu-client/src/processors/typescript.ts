@@ -229,6 +229,7 @@ function createHierarchySync(cache: HierarchyCacheType, filePath: string, compon
       const hierarchy: ExtendedHierarchyType = {
         id,
         name: functionName,
+        type: 'component',
         start: functionDeclaration.getFullStart(),
         element: null,
         childrenElements: [...componentElements],
@@ -408,6 +409,7 @@ function createHierarchySync(cache: HierarchyCacheType, filePath: string, compon
       const subHierarchy: ExtendedHierarchyType = {
         id: `${hierarchy.id}${hierarchyIdSeparator}${jsxTagName}${hierarchyIndexSeparator}${indexOfStackElement}`,
         name: jsxTagName,
+        type: 'element',
         start: jsxElement.getFullStart(),
         element: stackElement,
         childrenElements,
@@ -483,6 +485,7 @@ function createHierarchySync(cache: HierarchyCacheType, filePath: string, compon
       const subHierarchy: ExtendedHierarchyType = {
         id: `${hierarchy.id}${hierarchyIdSeparator}text${hierarchyIndexSeparator}${indexOfStackElement}`,
         name: 'text',
+        type: 'element',
         start: jsxText.getFullStart(),
         element: stackElement,
         childrenElements: [],
@@ -562,6 +565,7 @@ function createHierarchySync(cache: HierarchyCacheType, filePath: string, compon
         const subHierarchy: ExtendedHierarchyType = {
           id: `${hierarchy.id}${hierarchyIdSeparator}children${hierarchyIndexSeparator}${++childrenCount}`,
           name: 'children',
+          type: 'children',
           start: node.getFullStart(),
           element: null,
           childrenElements: hierarchy.childrenElements,
@@ -640,6 +644,7 @@ function createHierarchySync(cache: HierarchyCacheType, filePath: string, compon
         const subHierarchy: ExtendedHierarchyType = {
           id: `${hierarchy.id}${hierarchyIdSeparator}array${hierarchyIndexSeparator}${mapId}`,
           name: 'array',
+          type: 'array',
           start: node.getFullStart(),
           element: null,
           childrenElements: hierarchy.childrenElements,
@@ -715,6 +720,7 @@ function createHierarchySync(cache: HierarchyCacheType, filePath: string, compon
         const subHierarchy: ExtendedHierarchyType = {
           id: `${hierarchy.id}${hierarchyIdSeparator}text${hierarchyIndexSeparator}${indexOfStackElement}`,
           name: 'text',
+          type: 'element',
           start: node.getFullStart(),
           element: stackElement,
           childrenElements: [],
@@ -751,6 +757,7 @@ function createHierarchySync(cache: HierarchyCacheType, filePath: string, compon
         const subHierarchy: ExtendedHierarchyType = {
           id: `${hierarchy.id}${hierarchyIdSeparator}text${hierarchyIndexSeparator}${indexOfStackElement}`,
           name: 'text',
+          type: 'element',
           start: node.getFullStart(),
           element: stackElement,
           childrenElements: [],
@@ -883,6 +890,7 @@ function createHierarchySync(cache: HierarchyCacheType, filePath: string, compon
           const subHierarchy: ExtendedHierarchyType = {
             id: `${hierarchy.id}${hierarchyIdSeparator}map${hierarchyIndexSeparator}${mapId}`,
             name: 'map',
+            type: 'array',
             start: callExpression.getFullStart(),
             element: null,
             childrenElements: hierarchy.childrenElements,
@@ -1030,6 +1038,7 @@ function createHierarchySync(cache: HierarchyCacheType, filePath: string, compon
       const subHierarchy: ExtendedHierarchyType = {
         id: `${hierarchy.id}${hierarchyIdSeparator}text${hierarchyIndexSeparator}${indexOfStackElement}`,
         name: 'text',
+        type: 'element',
         start: literal.getFullStart(),
         element: stackElement,
         childrenElements: [],
@@ -1067,6 +1076,7 @@ function createHierarchySync(cache: HierarchyCacheType, filePath: string, compon
       const subHierarchy: ExtendedHierarchyType = {
         id: `${hierarchy.id}${hierarchyIdSeparator}text${hierarchyIndexSeparator}${indexOfStackElement}`,
         name: 'text',
+        type: 'element',
         start: templateExpression.getFullStart(),
         element: stackElement,
         childrenElements: [],
@@ -1273,6 +1283,7 @@ function createHierarchyFromElement(hierarchy: ExtendedHierarchyType, element: H
     return {
       id: `${hierarchy.id}${hierarchyIdSeparator}text${hierarchyIndexSeparator}${hierarchy.childrenElements.indexOf(element)}`,
       name: 'text',
+      type: 'element',
       element,
       start: -1,
       children: [],
@@ -1292,6 +1303,7 @@ function createHierarchyFromElement(hierarchy: ExtendedHierarchyType, element: H
   const subHierarchy: ExtendedHierarchyType = {
     id: `${hierarchy.id}${hierarchyIdSeparator}${tagName}${hierarchyIndexSeparator}${hierarchy.childrenElements.indexOf(element)}`,
     name: tagName,
+    type: 'element',
     element,
     start: -1,
     children: [],

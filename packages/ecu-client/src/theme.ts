@@ -163,8 +163,10 @@ export default mergeTheme(defaultTheme, {
     danger: 'red.500',
     'drag-and-drop': 'green.500',
     'drag-and-drop-knob': 'green.500',
-    'is-edited': 'darkorchid',
-    'is-component-root': 'pink.500',
+    'type-component': 'pink.500',
+    'type-element': 'primary',
+    'type-children': 'pink.500',
+    'type-array': 'green.500',
     breakpoint: {
       light: 'yellow.600',
       dark: 'yellow.300',
@@ -597,6 +599,13 @@ export default mergeTheme(defaultTheme, {
         color: 'text',
         border: '1px solid border',
         zIndex: zIndexes.tooltip,
+      },
+    ],
+  },
+  TreeView: {
+    Label: [
+      {
+        marginBottom: 8,
       },
     ],
   },
