@@ -19,7 +19,7 @@ function PanelHierarchy() {
   const { hierarchy, currentHierarchyId, setCurrentHierarchyId } = useContext(HierarchyContext)
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
 
-  const renderHierarchy = useCallback((hierarchy: HierarchyType) => {
+  const renderHierarchy = useCallback((hierarchy: HierarchyType, isRoot = false) => {
     if (hierarchy.element?.nodeType === Node.TEXT_NODE) return null
 
     return (
@@ -37,8 +37,9 @@ function PanelHierarchy() {
         )}
         barColor={typeToColor[hierarchy.type] ?? 'text'}
         width="100%"
+        mt={isRoot ? -0.5 : 0}
       >
-        {hierarchy.children.map(renderHierarchy)}
+        {hierarchy.children.map(child => renderHierarchy(child))}
       </TreeView>
     )
   }, [collapsed, currentHierarchyId, setCurrentHierarchyId])
@@ -54,7 +55,7 @@ function PanelHierarchy() {
         fontWeight="bold"
         userSelect="none"
         px={1}
-        mt={0.5}
+        my={0.5}
       >
         Hierarchy
       </P>
@@ -65,14 +66,11 @@ function PanelHierarchy() {
           pb={2}
           pl={1}
         >
-          {renderHierarchy(hierarchy)}
+          {renderHierarchy(hierarchy, true)}
         </Div>
       )}
       {!hierarchy && (
-        <Div
-          pl={1}
-          mt={0.5}
-        >
+        <Div pl={1}>
           ...
         </Div>
       )}

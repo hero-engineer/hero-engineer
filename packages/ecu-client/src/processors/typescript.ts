@@ -333,7 +333,7 @@ function createHierarchySync(cache: HierarchyCacheType, filePath: string, compon
         const foundImport = hierarchy.context.imports.find(x => x.name === jsxTagName)
 
         if (!foundImport) {
-          consoleLog('<-- ... JsxElement', jsxTagName, '(no corresponding import was found)')
+          consoleLog('<-- ... JsxElement', jsxTagName, '(no corresponding import)')
 
           return false
         }
@@ -359,7 +359,7 @@ function createHierarchySync(cache: HierarchyCacheType, filePath: string, compon
         }, shouldLog)
 
         if (!subHierarchy) {
-          consoleLog('<----- ... JsxElement', jsxTagName, '(no hierarchy was created)')
+          consoleLog('<----- ... JsxElement', jsxTagName, '(no hierarchy)')
 
           return false
         }
@@ -1107,6 +1107,8 @@ function createHierarchySync(cache: HierarchyCacheType, filePath: string, compon
     * INFER NEXT JSX
   -- */
 
+  const inferNextJsxMax = 4
+
   function inferNextJsx(hierarchy: ExtendedHierarchyType, nextNodes: TsNode[]) {
     let inferred = true
     let i = 0
@@ -1119,6 +1121,8 @@ function createHierarchySync(cache: HierarchyCacheType, filePath: string, compon
       if (!inferred) break
 
       i++
+
+      if (i === inferNextJsxMax) break
     }
 
     return inferred
@@ -1128,7 +1132,7 @@ function createHierarchySync(cache: HierarchyCacheType, filePath: string, compon
     * EXECUTION
   -- */
 
-  consoleGroup('TRAVERSAL_START', filePath)
+  consoleGroup('HIERARCHY_TRAVERSAL_START', filePath)
 
   const startTime = Date.now()
 
@@ -1139,7 +1143,7 @@ function createHierarchySync(cache: HierarchyCacheType, filePath: string, compon
   const hierarchy = traverseHierarchy(sourceFile)
 
   consoleGroupEnd()
-  consoleLog('TRAVERSAL_END', filePath, Date.now() - startTime)
+  consoleLog('HIERARCHY_TRAVERSAL_END', filePath, Date.now() - startTime)
 
   // Clearing the stack to needed after a full traversal to infer the stack count of the parent component correctly
   // The remaining stack elements come from the parent's stack
