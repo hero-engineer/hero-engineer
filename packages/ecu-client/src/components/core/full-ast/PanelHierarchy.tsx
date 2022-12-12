@@ -1,5 +1,6 @@
-import { memo, useCallback, useContext, useState } from 'react'
+import { MouseEvent, memo, useCallback, useContext, useState } from 'react'
 import { Div, P, TreeView } from 'honorable'
+import { BiCaretRight } from 'react-icons/bi'
 
 import { HierarchyType } from '~types'
 
@@ -15,7 +16,7 @@ const typeToColor = {
 // The hierarchy section
 // Displayed in the left panel
 function PanelHierarchy() {
-  const { hierarchy } = useContext(HierarchyContext)
+  const { hierarchy, currentHierarchyId, setCurrentHierarchyId } = useContext(HierarchyContext)
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
 
   const renderHierarchy = useCallback((hierarchy: HierarchyType) => {
@@ -25,9 +26,14 @@ function PanelHierarchy() {
       <TreeView
         key={hierarchy.id}
         expanded={!collapsed[hierarchy.id]}
-        onExpand={expanded => setCollapsed(x => ({ ...x, [hierarchy.id]: !expanded }))}
         label={(
-          <PanelHierarchyLabel hierarchy={hierarchy} />
+          <PanelHierarchyLabel
+            hierarchy={hierarchy}
+            active={currentHierarchyId === hierarchy.id}
+            expanded={!collapsed[hierarchy.id]}
+            onSelect={() => setCurrentHierarchyId(hierarchy.id)}
+            onExpand={() => setCollapsed(x => ({ ...x, [hierarchy.id]: !collapsed[hierarchy.id] }))}
+          />
         )}
         barColor={typeToColor[hierarchy.type] ?? 'text'}
         width="100%"
@@ -35,7 +41,7 @@ function PanelHierarchy() {
         {hierarchy.children.map(renderHierarchy)}
       </TreeView>
     )
-  }, [collapsed, setCollapsed])
+  }, [collapsed, currentHierarchyId, setCurrentHierarchyId])
 
   return (
     <Div
@@ -76,14 +82,45 @@ function PanelHierarchy() {
 
 type PanelHierarchyLabelPropsType = {
   hierarchy: HierarchyType
+  active: boolean
+  expanded: boolean
+  onSelect: () => void
+  onExpand: () => void
 }
 
-function PanelHierarchyLabel({ hierarchy }: PanelHierarchyLabelPropsType) {
+function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand }: PanelHierarchyLabelPropsType) {
+
+  const handleClick = useCallback((event: MouseEvent) => {
+    event.stopPropagation()
+
+    onSelect()
+  }, [onSelect])
+
+  const handleExpand = useCallback((event: MouseEvent) => {
+    event.stopPropagation()
+
+    onExpand()
+  }, [onExpand])
+
   return (
     <Div
+      xflex="x4"
       color={typeToColor[hierarchy.type] ?? 'text'}
+      fontWeight={active ? 'bold' : undefined}
       userSelect="none"
+      onClick={handleClick}
     >
+      {!!hierarchy.children.filter(h => h.element?.nodeType !== Node.TEXT_NODE).length && (
+        <Div
+          xflex="x5"
+          transform={expanded ? 'rotate(90deg)' : undefined}
+          onClick={handleExpand}
+          mr={0.25}
+          ml="-6px"
+        >
+          <BiCaretRight />
+        </Div>
+      )}
       {hierarchy.name}
     </Div>
   )

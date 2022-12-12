@@ -33,12 +33,12 @@ function WithComponentHierarchy({ children }: WithComponentHierarchyPropsType) {
 
     const hierarchy = await createHierarchy(path, componentElements, logs.hierarchy)
 
-    console.log('hierarchy', hierarchy)
+    if (logs.hierarchy) console.log('hierarchy', hierarchy)
 
     setHierarchy(hierarchy)
   }, [path, logs.hierarchy, setHierarchy])
 
-  const throttledComputeHierarchy = useThrottleAsynchronous(computeHierarchy, 500, true)
+  const throttledComputeHierarchy = useThrottleAsynchronous(computeHierarchy, 250, true)
 
   useEffect(() => {
     if (!rootRef.current) return
