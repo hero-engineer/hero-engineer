@@ -78,7 +78,10 @@ type PanelHierarchyLabelPropsType = {
 
 function PanelHierarchyLabel({ hierarchy }: PanelHierarchyLabelPropsType) {
   return (
-    <Div color={typeToColor[hierarchy.type] ?? 'text'}>
+    <Div
+      color={typeToColor[hierarchy.type] ?? 'text'}
+      userSelect="none"
+    >
       {hierarchy.name}
     </Div>
   )

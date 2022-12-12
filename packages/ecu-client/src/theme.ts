@@ -605,7 +605,7 @@ export default mergeTheme(defaultTheme, {
   TreeView: {
     Label: [
       {
-        marginBottom: 8,
+        marginTop: 8,
       },
     ],
   },
