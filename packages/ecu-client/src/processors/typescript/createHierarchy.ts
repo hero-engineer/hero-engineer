@@ -13,73 +13,36 @@ import {
   JsxSelfClosingElement,
   JsxText,
   NumericLiteral,
-  ParenthesizedExpression,
-  Project,
-  SourceFile,
+  ParenthesizedExpression, SourceFile,
   StringLiteral,
   SyntaxKind,
   TemplateExpression,
   Node as TsNode,
-  ts,
 } from 'ts-morph'
 
 import {
   ExportType,
   ExtendedHierarchyContextType,
-  ExtendedHierarchyType,
-  FileType,
-  HierarchyType,
+  ExtendedHierarchyType, HierarchyType,
   IdentifierType,
   ImportType,
 } from '~types'
 
-import createDeferedPromise from '~utils/createDeferredPromise'
-
-/* --
-  * PROJECT
--- */
-
-const project = new Project({
-  useInMemoryFileSystem: true,
-  skipAddingFilesFromTsConfig: true,
-  compilerOptions: {
-    target: ts.ScriptTarget.ESNext,
-  },
-})
-
-const start = Date.now()
-const projectReady = createDeferedPromise<void>()
-const allowedTypescriptExtensions = ['js', 'jsx', 'ts', 'tsx']
-
-export function addTypescriptSourceFiles(files: FileType[], shouldLog = false) {
-  const consoleLog = shouldLog ? console.log : () => {}
-
-  files.forEach(({ path, code }) => {
-    if (!allowedTypescriptExtensions.some(extension => path.endsWith(extension))) return
-
-    project.createSourceFile(path, code, { overwrite: true })
-  })
-
-  project.resolveSourceFileDependencies()
-
-  consoleLog('typescript', project.getSourceFiles().length, Date.now() - start)
-
-  projectReady.resolve()
-}
+import project, { projectReady } from '~processors/typescript'
 
 /* --
   * HIERARCHY
 -- */
 
-export const hierarchyIdSeparator = `_id_${Math.random()}_`
+export const hierarchyIdSeparator = '__@#id#@__'
 
-export const hierarchyIndexSeparator = `_index_${Math.random()}_`
+export const hierarchyIndexSeparator = '__@#index#@__'
 
-export const hierarchyComponentSeparator = `_component_${Math.random()}_`
+export const hierarchyComponentSeparator = '__@#component#@__'
 
 const allowedFunctionComponentFirstCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
-export async function createHierarchy(filePath: string, componentElements: HTMLElement[], shouldLog = false) {
+async function createHierarchy(filePath: string, componentElements: HTMLElement[], shouldLog = false) {
   await projectReady.promise
 
   const hierarchy = createHierarchySync(filePath, componentElements, undefined, shouldLog)
@@ -224,6 +187,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
         childrenElements: [...componentElements],
         childrenElementsStack: [...componentElements],
         children: [],
+        onFilePath: filePath,
         context: {
           id: `${id}${hierarchyComponentSeparator}`,
           previousTopJsxIds: [],
@@ -231,6 +195,8 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
           children: parentContext?.children ?? [],
           imports: [...parentContext?.imports ?? [], ...imports],
           identifiers: [...parentContext?.identifiers ?? [], ...identifiers],
+          onFilePath: filePath,
+          childrenOnFilePath: filePath,
         },
       }
 
@@ -404,6 +370,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
         childrenElements,
         childrenElementsStack: [...childrenElements],
         children: [],
+        onFilePath: parentContext?.onFilePath ?? hierarchy.context.onFilePath,
         context: hierarchy.context,
       }
 
@@ -480,6 +447,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
         childrenElements: [],
         childrenElementsStack: [],
         children: [],
+        onFilePath: parentContext?.onFilePath ?? hierarchy.context.onFilePath,
         context: hierarchy.context,
       }
 
@@ -560,7 +528,11 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
           childrenElements: hierarchy.childrenElements,
           childrenElementsStack: [...hierarchy.childrenElementsStack],
           children: [],
-          context: hierarchy.context,
+          onFilePath: parentContext?.onFilePath ?? hierarchy.context.onFilePath,
+          context: {
+            ...hierarchy.context,
+            onFilePath: hierarchy.context.childrenOnFilePath,
+          },
         }
 
         hierarchy.children.push(subHierarchy)
@@ -639,6 +611,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
           childrenElements: hierarchy.childrenElements,
           childrenElementsStack: [...hierarchy.childrenElementsStack],
           children: [],
+          onFilePath: parentContext?.onFilePath ?? hierarchy.context.onFilePath,
           context: hierarchy.context,
         }
 
@@ -715,6 +688,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
           childrenElements: [],
           childrenElementsStack: [],
           children: [],
+          onFilePath: parentContext?.onFilePath ?? hierarchy.context.onFilePath,
           context: hierarchy.context,
         }
 
@@ -752,6 +726,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
           childrenElements: [],
           childrenElementsStack: [],
           children: [],
+          onFilePath: parentContext?.onFilePath ?? hierarchy.context.onFilePath,
           context: hierarchy.context,
         }
 
@@ -885,6 +860,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
             childrenElements: hierarchy.childrenElements,
             childrenElementsStack: [...hierarchy.childrenElementsStack],
             children: [],
+            onFilePath: parentContext?.onFilePath ?? hierarchy.context.onFilePath,
             context: hierarchy.context,
           }
 
@@ -902,12 +878,10 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
 
             Object.assign(subHierarchy, inferredHierarchy)
 
+            // Historic:
             // consoleGroup(`MAP_NEXT_NEXT id: ${mapId}, inferCount: ${inferCount}`)
-
             // const inferredNext = inferNextJsx(subHierarchy, nextNodes)
-
             // consoleGroupEnd()
-
             // if (inferredNext) break
 
             consoleGroupEnd()
@@ -1033,6 +1007,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
         childrenElements: [],
         childrenElementsStack: [],
         children: [],
+        onFilePath: parentContext?.onFilePath ?? hierarchy.context.onFilePath,
         context: hierarchy.context,
       }
 
@@ -1071,6 +1046,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
         childrenElements: [],
         childrenElementsStack: [],
         children: [],
+        onFilePath: parentContext?.onFilePath ?? hierarchy.context.onFilePath,
         context: hierarchy.context,
       }
 
@@ -1282,6 +1258,7 @@ function createHierarchyFromElement(hierarchy: ExtendedHierarchyType, element: H
       children: [],
       childrenElements: [],
       childrenElementsStack: [],
+      onFilePath: hierarchy.context.onFilePath,
       context: hierarchy.context,
     }
   }
@@ -1302,6 +1279,7 @@ function createHierarchyFromElement(hierarchy: ExtendedHierarchyType, element: H
     children: [],
     childrenElements: childElements,
     childrenElementsStack: [],
+    onFilePath: hierarchy.context.onFilePath,
     context: hierarchy.context,
   }
 
@@ -1354,3 +1332,5 @@ function countCommonItemsAtStart(a: any[], b: any[]) {
 
 //   return hashes.join('~~')
 // }
+
+export default createHierarchy

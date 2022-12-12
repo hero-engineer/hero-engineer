@@ -1,10 +1,16 @@
-import { MouseEvent, memo, useCallback, useContext, useState } from 'react'
+import { MouseEvent, memo, useCallback, useContext } from 'react'
 import { Div, P, TreeView } from 'honorable'
 import { BiCaretRight } from 'react-icons/bi'
+import { SlTrash } from 'react-icons/sl'
 
 import { HierarchyType } from '~types'
 
+import deleteNode from '~processors/typescript/deleteNode'
+
 import HierarchyContext from '~contexts/HierarchyContext2'
+import LogsContext from '~contexts/LogsContext'
+
+import usePersistedState from '~hooks/usePersistedState'
 
 const typeToColor = {
   component: 'type-component',
@@ -16,8 +22,13 @@ const typeToColor = {
 // The hierarchy section
 // Displayed in the left panel
 function PanelHierarchy() {
+  const { logs } = useContext(LogsContext)
   const { hierarchy, currentHierarchyId, setCurrentHierarchyId } = useContext(HierarchyContext)
-  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
+  const [collapsed, setCollapsed] = usePersistedState<Record<string, boolean>>('panel-hierarchy-collapsed', {})
+
+  const handleDelete = useCallback(async (hierarchy: HierarchyType) => {
+    await deleteNode(hierarchy, logs.hierarchy)
+  }, [logs.hierarchy])
 
   const renderHierarchy = useCallback((hierarchy: HierarchyType, isRoot = false) => {
     if (hierarchy.element?.nodeType === Node.TEXT_NODE) return null
@@ -33,6 +44,7 @@ function PanelHierarchy() {
             expanded={!collapsed[hierarchy.id]}
             onSelect={() => setCurrentHierarchyId(hierarchy.id)}
             onExpand={() => setCollapsed(x => ({ ...x, [hierarchy.id]: !collapsed[hierarchy.id] }))}
+            onDelete={() => handleDelete(hierarchy)}
           />
         )}
         barColor={typeToColor[hierarchy.type] ?? 'text'}
@@ -42,7 +54,7 @@ function PanelHierarchy() {
         {hierarchy.children.map(child => renderHierarchy(child))}
       </TreeView>
     )
-  }, [collapsed, currentHierarchyId, setCurrentHierarchyId])
+  }, [collapsed, currentHierarchyId, setCollapsed, setCurrentHierarchyId, handleDelete])
 
   return (
     <Div
@@ -84,9 +96,10 @@ type PanelHierarchyLabelPropsType = {
   expanded: boolean
   onSelect: () => void
   onExpand: () => void
+  onDelete: () => void
 }
 
-function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand }: PanelHierarchyLabelPropsType) {
+function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand, onDelete }: PanelHierarchyLabelPropsType) {
 
   const handleClick = useCallback((event: MouseEvent) => {
     event.stopPropagation()
@@ -100,26 +113,58 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand }
     onExpand()
   }, [onExpand])
 
+  const handleDelete = useCallback((event: MouseEvent) => {
+    event.stopPropagation()
+
+    onDelete()
+  }, [onDelete])
+
   return (
     <Div
       xflex="x4"
+      minWidth={0} // For ellipsis to work
       color={typeToColor[hierarchy.type] ?? 'text'}
       fontWeight={active ? 'bold' : undefined}
       userSelect="none"
       onClick={handleClick}
+      _hover={{
+        '> #PanelHierarchyLabel-delete': {
+          display: 'flex',
+        },
+      }}
     >
       {!!hierarchy.children.filter(h => h.element?.nodeType !== Node.TEXT_NODE).length && (
         <Div
           xflex="x5"
+          flexShrink={0}
           transform={expanded ? 'rotate(90deg)' : undefined}
           onClick={handleExpand}
-          mr={0.25}
+          pr={0.25}
           ml="-6px"
         >
           <BiCaretRight />
         </Div>
       )}
-      {hierarchy.name}
+      <Div
+        flexGrow
+        ellipsis
+      >
+        {hierarchy.name}
+      </Div>
+      {hierarchy.start !== -1 && (
+        <Div
+          id="PanelHierarchyLabel-delete"
+          xflex="x5"
+          flexShrink={0}
+          display="none"
+          fontSize="0.75rem"
+          color="danger"
+          onClick={handleDelete}
+          px={0.5}
+        >
+          <SlTrash />
+        </Div>
+      )}
     </Div>
   )
 }

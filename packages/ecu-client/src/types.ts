@@ -156,6 +156,7 @@ export type HierarchyType = {
   start: number
   element: HTMLElement | null
   children: HierarchyType[]
+  onFilePath: string
 }
 
 export type ExtendedHierarchyContextType = {
@@ -165,6 +166,8 @@ export type ExtendedHierarchyContextType = {
   children: JsxChild[]
   imports: ImportType[]
   identifiers: IdentifierType[]
+  onFilePath: string
+  childrenOnFilePath: string
 }
 
 export type ExtendedHierarchyType = Omit<HierarchyType, 'children'> & {

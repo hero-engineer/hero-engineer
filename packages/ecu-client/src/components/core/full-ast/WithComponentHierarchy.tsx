@@ -1,6 +1,6 @@
 import { ReactNode, useCallback, useContext, useEffect, useRef } from 'react'
 
-import { createHierarchy } from '~processors/typescript'
+import createHierarchy from '~processors/typescript/createHierarchy'
 
 import LogsContext from '~contexts/LogsContext'
 import HierarchyContext from '~contexts/HierarchyContext2'

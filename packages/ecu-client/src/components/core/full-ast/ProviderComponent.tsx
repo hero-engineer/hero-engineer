@@ -19,8 +19,8 @@ function ProviderComponent({ children }: ProviderComponentPropsType) {
   const componentRemountContextValue = useMemo<ComponentRemountContextType>(() => ({ key, setKey }), [key])
 
   const [hierarchy, setHierarchy] = useState<HierarchyType | null>(null)
-  const [currentHierarchyId, setCurrentHierarchyId] = useState<string>('')
-  const hierarchyContextValue = useMemo<HierarchyContextType>(() => ({ hierarchy, setHierarchy, currentHierarchyId, setCurrentHierarchyId }), [hierarchy, currentHierarchyId])
+  const [currentHierarchyId, setCurrentHierarchyId] = usePersistedState('current-hierarchy-id', '')
+  const hierarchyContextValue = useMemo<HierarchyContextType>(() => ({ hierarchy, setHierarchy, currentHierarchyId, setCurrentHierarchyId }), [hierarchy, currentHierarchyId, setCurrentHierarchyId])
 
   const [breakpoint, setBreakpoint] = usePersistedState<BreakpointType>('breakpoint', {
     id: 'Default',

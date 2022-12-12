@@ -1,13 +1,31 @@
-import { ReactNode } from 'react'
+import { ReactNode, useContext, useEffect } from 'react'
 
-import useProcessors from '~hooks/useProcessors'
+import { FilesQuery, FilesQueryDataType } from '~queries'
+
+import { addTypescriptSourceFiles } from '~processors/typescript'
+import { addCssSourceFiles } from '~processors/css'
+
+import LogsContext from '~contexts/LogsContext'
+
+import useQuery from '~hooks/useQuery'
 
 type WithProcessorsPropsType = {
   children: ReactNode
 }
 
 function WithProcessors({ children }: WithProcessorsPropsType) {
-  useProcessors()
+  const { logs } = useContext(LogsContext)
+
+  const [filesQueryResult] = useQuery<FilesQueryDataType>({ query: FilesQuery })
+
+  // TODO useRefetch
+
+  useEffect(() => {
+    if (!filesQueryResult.data?.files) return
+
+    addTypescriptSourceFiles(filesQueryResult.data.files, logs.hierarchy)
+    addCssSourceFiles(filesQueryResult.data.files, logs.hierarchy)
+  }, [filesQueryResult.data, logs.hierarchy])
 
   return (
     <>
