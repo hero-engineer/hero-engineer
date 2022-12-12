@@ -938,9 +938,9 @@ function createHierarchySync(cache: HierarchyCacheType, filePath: string, compon
             return true
           }
 
-          consoleLog('<-- ... CallExpression map (jsxs inference)')
+          consoleLog('<-- !!! CallExpression map (no jsx inference)')
 
-          return false
+          return true
         }
 
         consoleLog('<-- ... CallExpression map (predicate kind not supported)', predicate.getKindName())
