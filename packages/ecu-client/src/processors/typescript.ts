@@ -79,18 +79,15 @@ export const hierarchyComponentSeparator = `_component_${Math.random()}_`
 
 const allowedFunctionComponentFirstCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
-type HierarchyCacheType = Record<string, ExtendedHierarchyType | null>
-
 export async function createHierarchy(filePath: string, componentElements: HTMLElement[], shouldLog = false) {
   await projectReady.promise
 
-  const hierarchyCache: HierarchyCacheType = {}
-  const hierarchy = createHierarchySync(hierarchyCache, filePath, componentElements, undefined, shouldLog)
+  const hierarchy = createHierarchySync(filePath, componentElements, undefined, shouldLog)
 
   return hierarchy ? cleanHierarchy(hierarchy) : null
 }
 
-function createHierarchySync(cache: HierarchyCacheType, filePath: string, componentElements: HTMLElement[], parentContext?: ExtendedHierarchyContextType, shouldLog = false) {
+function createHierarchySync(filePath: string, componentElements: HTMLElement[], parentContext?: ExtendedHierarchyContextType, shouldLog = false) {
   const sourceFile = project.getSourceFile(filePath)
 
   if (!sourceFile) return null
@@ -98,14 +95,6 @@ function createHierarchySync(cache: HierarchyCacheType, filePath: string, compon
   const consoleLog = shouldLog ? console.log : () => {}
   const consoleGroup = shouldLog ? console.group : () => {}
   const consoleGroupEnd = shouldLog ? console.groupEnd : () => {}
-
-  const hash = filePath + componentElements.map(hashElement)
-
-  if (cache[hash]) {
-    consoleLog('FROM CACHE')
-
-    return cache[hash]
-  }
 
   let childrenCount = 0
   const sourceFilePathToChildIndex: Record<string, number> = {}
@@ -352,7 +341,7 @@ function createHierarchySync(cache: HierarchyCacheType, filePath: string, compon
           sourceFilePathToChildIndex[sourceFilePath] = 0
         }
 
-        const subHierarchy = createHierarchySync(cache, sourceFilePath, hierarchy.childrenElementsStack, {
+        const subHierarchy = createHierarchySync(sourceFilePath, hierarchy.childrenElementsStack, {
           ...hierarchy.context,
           childIndex: sourceFilePathToChildIndex[sourceFilePath]++,
           children: (jsxElement as JsxElement).getJsxChildren?.() ?? [],
@@ -913,13 +902,13 @@ function createHierarchySync(cache: HierarchyCacheType, filePath: string, compon
 
             Object.assign(subHierarchy, inferredHierarchy)
 
-            consoleGroup(`MAP_NEXT_NEXT id: ${mapId}, inferCount: ${inferCount}`)
+            // consoleGroup(`MAP_NEXT_NEXT id: ${mapId}, inferCount: ${inferCount}`)
 
-            const inferredNext = inferNextJsx(subHierarchy, nextNodes)
+            // const inferredNext = inferNextJsx(subHierarchy, nextNodes)
 
-            consoleGroupEnd()
+            // consoleGroupEnd()
 
-            if (inferredNext) break
+            // if (inferredNext) break
 
             consoleGroupEnd()
           }
@@ -1149,7 +1138,7 @@ function createHierarchySync(cache: HierarchyCacheType, filePath: string, compon
   // The remaining stack elements come from the parent's stack
   // If a hierarchy has no children then return null
   // To prevent MAP_NEXT_NEXT to infer from following component elements
-  return cache[hash] = hierarchy && hierarchy.children.length ? clearHierarchyStack(hierarchy) : null
+  return hierarchy && hierarchy.children.length ? clearHierarchyStack(hierarchy) : null
 }
 
 /* --
@@ -1344,24 +1333,24 @@ function countCommonItemsAtStart(a: any[], b: any[]) {
   return count
 }
 
-function hashElement(element: HTMLElement): string {
-  if (element.nodeType === Node.TEXT_NODE) return element.textContent ?? ''
+// function hashElement(element: HTMLElement): string {
+//   if (element.nodeType === Node.TEXT_NODE) return element.textContent ?? ''
 
-  const childElementHashes: string[] = []
+//   const childElementHashes: string[] = []
 
-  for (const child of element.childNodes) {
-    childElementHashes.push(hashElement(child as HTMLElement))
-  }
+//   for (const child of element.childNodes) {
+//     childElementHashes.push(hashElement(child as HTMLElement))
+//   }
 
-  return `${element.tagName}~${hashElementAttributes(element)}~${childElementHashes.join('~~')}`
-}
+//   return `${element.tagName}~${hashElementAttributes(element)}~${childElementHashes.join('~~')}`
+// }
 
-function hashElementAttributes(element: HTMLElement) {
-  const hashes: string[] = []
+// function hashElementAttributes(element: HTMLElement) {
+//   const hashes: string[] = []
 
-  for (const attribute of element.attributes) {
-    hashes.push(`${attribute.name}~${attribute.value}`)
-  }
+//   for (const attribute of element.attributes) {
+//     hashes.push(`${attribute.name}~${attribute.value}`)
+//   }
 
-  return hashes.join('~~')
-}
+//   return hashes.join('~~')
+// }
