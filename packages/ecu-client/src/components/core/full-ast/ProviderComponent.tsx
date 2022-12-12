@@ -1,12 +1,11 @@
 import { ReactNode, useMemo, useState } from 'react'
 
-import { BreakpointType } from '~types'
-// import { BreakpointType, TabType } from '~types'
+import { BreakpointType, HierarchyType } from '~types'
 
+import HierarchyContext, { HierarchyContextType } from '~contexts/HierarchyContext2'
 import BreakpointContext, { BreakpointContextType } from '~contexts/BreakpointContext'
 import IsInteractiveModeContext, { IsInteractiveModeContextType } from '~contexts/IsInteractiveModeContext'
 import ComponentRemountContext, { ComponentRemountContextType } from '~contexts/ComponentRemountContext'
-// import BottomTabsContext, { BottomTabsContextType } from '~contexts/BottomTabsContext'
 
 import usePersistedState from '~hooks/usePersistedState'
 
@@ -18,6 +17,9 @@ type ProviderComponentPropsType = {
 function ProviderComponent({ children }: ProviderComponentPropsType) {
   const [key, setKey] = useState(0)
   const componentRemountContextValue = useMemo<ComponentRemountContextType>(() => ({ key, setKey }), [key])
+
+  const [hierarchy, setHierarchy] = useState<HierarchyType | null>(null)
+  const hierarchyContextValue = useMemo<HierarchyContextType>(() => ({ hierarchy, setHierarchy }), [hierarchy])
 
   const [breakpoint, setBreakpoint] = usePersistedState<BreakpointType>('breakpoint', {
     id: 'Default',
@@ -41,19 +43,15 @@ function ProviderComponent({ children }: ProviderComponentPropsType) {
   const [isInteractiveMode, setIsInteractiveMode] = usePersistedState('interactive-mode', false)
   const isInteractiveModeContextValue = useMemo<IsInteractiveModeContextType>(() => ({ isInteractiveMode, setIsInteractiveMode }), [isInteractiveMode, setIsInteractiveMode])
 
-  // const [tabs, setTabs] = usePersistedState<TabType[]>('bottom-tabs', [])
-  // const [currentTabIndex, setCurrentTabIndex] = usePersistedState('bottom-tabs-index', -1)
-  // const bottomTabsContext = useMemo<BottomTabsContextType>(() => ({ tabs, setTabs, currentTabIndex, setCurrentTabIndex }), [tabs, setTabs, currentTabIndex, setCurrentTabIndex])
-
   return (
     <ComponentRemountContext.Provider value={componentRemountContextValue}>
-      <BreakpointContext.Provider value={breakpointContextValue}>
-        <IsInteractiveModeContext.Provider value={isInteractiveModeContextValue}>
-          {/* <BottomTabsContext.Provider value={bottomTabsContext}> */}
-          {children}
-          {/* </BottomTabsContext.Provider> */}
-        </IsInteractiveModeContext.Provider>
-      </BreakpointContext.Provider>
+      <HierarchyContext.Provider value={hierarchyContextValue}>
+        <BreakpointContext.Provider value={breakpointContextValue}>
+          <IsInteractiveModeContext.Provider value={isInteractiveModeContextValue}>
+            {children}
+          </IsInteractiveModeContext.Provider>
+        </BreakpointContext.Provider>
+      </HierarchyContext.Provider>
     </ComponentRemountContext.Provider>
   )
 }

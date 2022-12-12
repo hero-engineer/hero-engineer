@@ -1,13 +1,27 @@
-import { memo } from 'react'
-import { Div, P } from 'honorable'
+import { memo, useCallback, useContext, useState } from 'react'
+import { Div, P, TreeView } from 'honorable'
 
-import useCurrentComponentPath from '~hooks/useCurrentComponentPath'
+import { HierarchyType } from '~types'
+
+import HierarchyContext from '~contexts/HierarchyContext2'
 
 // The hierarchy section
 // Displayed in the left panel
 function PanelHierarchy() {
-  // const { asts} = useContext(AstsContext)
-  const path = useCurrentComponentPath()
+  const { hierarchy } = useContext(HierarchyContext)
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
+
+  const renderHierarchy = useCallback((hierarchy: HierarchyType) => (
+    <TreeView
+      key={hierarchy.id}
+      width="100%"
+      defaultExpanded
+      label={hierarchy.name}
+      expanded={!collapsed[hierarchy.id]}
+    >
+      {hierarchy.children.map(renderHierarchy)}
+    </TreeView>
+  ), [collapsed])
 
   return (
     <Div
@@ -25,14 +39,21 @@ function PanelHierarchy() {
       >
         Hierarchy
       </P>
-      <Div
-        flexGrow
-        overflowY="auto"
-        pb={2}
-        pl={1}
-      >
-        PanelHierarchy
-      </Div>
+      {hierarchy && (
+        <Div
+          flexGrow
+          overflowY="auto"
+          pb={2}
+          pl={1}
+        >
+          {renderHierarchy(hierarchy)}
+        </Div>
+      )}
+      {!hierarchy && (
+        <Div pl={1}>
+          No hierarchy
+        </Div>
+      )}
     </Div>
   )
 }

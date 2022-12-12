@@ -160,6 +160,7 @@ export type HierarchyType = {
 export type ExtendedHierarchyContextType = {
   id: string
   previousTopJsxIds: string[]
+  childIndex: number,
   children: JsxChild[]
   imports: ImportType[]
   identifiers: IdentifierType[]

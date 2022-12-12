@@ -108,6 +108,7 @@ function createHierarchySync(cache: HierarchyCacheType, filePath: string, compon
   }
 
   let childrenCount = 0
+  const sourceFilePathToChildIndex: Record<string, number> = {}
   const imports: ImportType[] = []
   const exports: ExportType[] = []
   const identifiers: IdentifierType[] = []
@@ -224,7 +225,7 @@ function createHierarchySync(cache: HierarchyCacheType, filePath: string, compon
 
       if (!isDefaultExport) continue // For now
 
-      const id = `${parentContext?.id ?? ''}${filePath}${hierarchyIdSeparator}${functionName}`
+      const id = `${parentContext?.id ?? ''}${filePath}${hierarchyIdSeparator}${functionName}${hierarchyIndexSeparator}${parentContext?.childIndex ?? 0}`
       const hierarchy: ExtendedHierarchyType = {
         id,
         name: functionName,
@@ -236,6 +237,7 @@ function createHierarchySync(cache: HierarchyCacheType, filePath: string, compon
         context: {
           id: `${id}${hierarchyComponentSeparator}`,
           previousTopJsxIds: [],
+          childIndex: 0,
           children: parentContext?.children ?? [],
           imports: [...parentContext?.imports ?? [], ...imports],
           identifiers: [...parentContext?.identifiers ?? [], ...identifiers],
@@ -345,8 +347,13 @@ function createHierarchySync(cache: HierarchyCacheType, filePath: string, compon
 
         consoleLog('----> found', foundImport.name)
 
+        if (typeof sourceFilePathToChildIndex[sourceFilePath] === 'undefined') {
+          sourceFilePathToChildIndex[sourceFilePath] = 0
+        }
+
         const subHierarchy = createHierarchySync(cache, sourceFilePath, hierarchy.childrenElementsStack, {
           ...hierarchy.context,
+          childIndex: sourceFilePathToChildIndex[sourceFilePath]++,
           children: (jsxElement as JsxElement).getJsxChildren?.() ?? [],
         }, shouldLog)
 
@@ -592,9 +599,9 @@ function createHierarchySync(cache: HierarchyCacheType, filePath: string, compon
           return inferred
         }
 
-        subHierarchy.childrenElementsStack.length = 0
-
         consoleLog('<-- !!! children (no parent context)')
+
+        subHierarchy.childrenElementsStack.length = 0
 
         return true
       }

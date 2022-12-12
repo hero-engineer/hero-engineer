@@ -3,6 +3,7 @@ import { ReactNode, useCallback, useContext, useEffect, useRef } from 'react'
 import { createHierarchy } from '~processors/typescript'
 
 import LogsContext from '~contexts/LogsContext'
+import HierarchyContext from '~contexts/HierarchyContext2'
 
 import useCurrentComponentPath from '~hooks/useCurrentComponentPath'
 import useThrottleAsynchronous from '~hooks/useThrottleAsynchronous'
@@ -18,6 +19,7 @@ function WithComponentHierarchy({ children }: WithComponentHierarchyPropsType) {
   const path = useCurrentComponentPath()
   const previousPath = usePreviousWithDefault(path, path)
 
+  const { setHierarchy } = useContext(HierarchyContext)
   const { logs } = useContext(LogsContext)
 
   const computeHierarchy = useCallback(async (componentElement: HTMLElement | null) => {
@@ -32,7 +34,9 @@ function WithComponentHierarchy({ children }: WithComponentHierarchyPropsType) {
     const hierarchy = await createHierarchy(path, componentElements, logs.hierarchy)
 
     console.log('hierarchy', hierarchy)
-  }, [path, logs.hierarchy])
+
+    setHierarchy(hierarchy)
+  }, [path, logs.hierarchy, setHierarchy])
 
   const throttledComputeHierarchy = useThrottleAsynchronous(computeHierarchy, 500, true)
 
