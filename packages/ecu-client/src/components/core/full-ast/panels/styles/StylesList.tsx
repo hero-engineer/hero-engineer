@@ -4,7 +4,7 @@ import { HiPlus } from 'react-icons/hi'
 
 import { CssAttributeType, CssValuesType } from '~types'
 
-import StylesAttributeTitle from './StylesAttributeTitle'
+import StylesAttributeTitle from '~core/full-ast/panels/styles/StylesAttributeTitle'
 
 type StylesListPropsType = {
   cssValues: CssValuesType

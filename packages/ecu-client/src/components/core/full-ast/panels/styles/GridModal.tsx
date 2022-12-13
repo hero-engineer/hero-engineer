@@ -2,7 +2,7 @@ import { H3, Modal } from 'honorable'
 
 import { CssAttributeType, CssValuesType } from '~types'
 
-import GridEditor from './GridEditor'
+import GridEditor from '~core/full-ast/panels/styles/GridEditor'
 
 type GridModalPropsType = {
   open: boolean

@@ -9,10 +9,10 @@ import useStylesSubSectionHelpers from '~hooks/useStylesSubSectionHelpers'
 
 import capitalize from '~utils/capitalize'
 
-import StylesDisabledOverlay from './StylesDisabledOverlay'
-import SpacingEditor from './SpacingEditor'
-import StylesAttributeTitle from './StylesAttributeTitle'
-import StylesTitle from './StylesTitle'
+import StylesDisabledOverlay from '~core/full-ast/panels/styles/StylesDisabledOverlay'
+import SpacingEditor from '~core/full-ast/panels/styles/SpacingEditor'
+import StylesAttributeTitle from '~core/full-ast/panels/styles/StylesAttributeTitle'
+import StylesTitle from '~core/full-ast/panels/styles/StylesTitle'
 
 type StylesSubSectionPositionPropsType = {
   cssValues: CssValuesType

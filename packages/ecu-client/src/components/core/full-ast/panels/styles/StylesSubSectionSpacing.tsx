@@ -6,9 +6,9 @@ import { CssAttributeType, CssValuesType } from '~types'
 import useRefresh from '~hooks/useRefresh'
 import usePersistedState from '~hooks/usePersistedState'
 
-import StylesTitle from './StylesTitle'
-import SpacingEditor from './SpacingEditor'
-import StylesDisabledOverlay from './StylesDisabledOverlay'
+import StylesTitle from '~core/full-ast/panels/styles/StylesTitle'
+import SpacingEditor from '~core/full-ast/panels/styles/SpacingEditor'
+import StylesDisabledOverlay from '~core/full-ast/panels/styles/StylesDisabledOverlay'
 
 type StylesSubSectionSpacingPropsType = {
   onChange: (attributes: CssAttributeType[]) => void,

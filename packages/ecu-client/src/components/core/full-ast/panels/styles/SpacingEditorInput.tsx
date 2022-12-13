@@ -8,7 +8,7 @@ import BreakpointContext from '~contexts/BreakpointContext'
 
 import splitSpacingValue from '~utils/splitSpacingValue'
 
-import CssValueInput from '../../css/CssValueInput'
+import CssValueInput from '~core/css/CssValueInput'
 
 type SpacingEditorInputPropsType = {
   title: string

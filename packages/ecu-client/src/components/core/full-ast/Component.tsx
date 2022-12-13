@@ -2,6 +2,7 @@ import { useContext, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Div } from 'honorable'
 import { RiNodeTree } from 'react-icons/ri'
+import { MdBrush } from 'react-icons/md'
 
 import { ComponentFileMetadataQuery, ComponentFileQueryDataType } from '~queries'
 
@@ -16,11 +17,10 @@ import WidthBar from '~core/component/WidthBar'
 import HierarchyBar from '~core/full-ast/HierarchyBar'
 import InteractiveModeButton from '~core/component/InteractiveModeButton'
 import RemountButton from '~core/component/RemountButton'
-// import EditCodeButton from '~core/component/EditCodeButton'
 import ComponentWindow from '~core/component-window/ComponentWindow'
-// import BottomTabsPanel from '~core/full-ast/BottomTabsPanel'
 import RetractablePanel from '~core/layout/RetractablePanel'
 import PanelHierarchy from '~core/full-ast/panels/PanelHierarchy'
+import PanelStyles from '~core/full-ast/panels/styles/PanelStyles'
 
 function Component() {
   const { '*': ecuComponentPath = '' } = useParams()
@@ -104,14 +104,19 @@ function Component() {
         <WidthBar />
         <HierarchyBar />
       </Div>
-      {/* <Div
-        position="absolute"
-        bottom={0}
-        left={0}
-        right={0}
-      >
-        <BottomTabsPanel />
-      </Div> */}
+      {!isInteractiveMode && (
+        <RetractablePanel
+          direction="right"
+          openPersistedStateKey="right-panel-open"
+          items={[
+            {
+              label: 'Style',
+              icon: <MdBrush />,
+              children: <PanelStyles />,
+            },
+          ]}
+        />
+      )}
     </Div>
   )
 }

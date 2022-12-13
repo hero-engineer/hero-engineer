@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useCallback, useContext, useMemo, useState } from 'react'
+import { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Autocomplete, Div, WithOutsideClick } from 'honorable'
 import createEmojiRegex from 'emoji-regex'
@@ -9,23 +9,19 @@ import { CssClassType } from '~types'
 
 import { refetchKeys, zIndexes } from '~constants'
 
-import { CreateCssClassMutation, CreateCssClassMutationDataType } from '~queries'
-
-import EditionContext from '~contexts/EditionContext'
-import CssClassesContext from '~contexts/CssClassesContext'
-
-import useMutation from '~hooks/useMutation'
 import useRefetch from '~hooks/useRefetch'
 
 import extractClassNamesFromSelector from '~utils/extractClassNamesFromSelector'
 
-import EmojiPickerBase from '../../emoji/EmojiPickerBase'
+import EmojiPickerBase from '~core/emoji/EmojiPickerBase'
 
 type CssClassesSelector = {
   allClasses: CssClassType[]
   classNames: string[]
+  selectedClassName: string
   onLoading: Dispatch<SetStateAction<boolean>>
   onClassNamesChange: (classes: string[]) => void
+  onSelectedClassNameChange: Dispatch<SetStateAction<string>>
 }
 
 const emojiRegex = createEmojiRegex()
@@ -37,17 +33,13 @@ const anyOption = { value: ecuAnyValue, label: 'Create new class' }
 const ecuErrorValue = `__ecu_error__${Math.random()}`
 const errorOption = { value: ecuErrorValue, label: 'Invalid class name' }
 
-function CssClassesSelector({ allClasses, classNames, onClassNamesChange, onLoading }: CssClassesSelector) {
-  const { componentAddress = '' } = useParams()
-  const { hierarchyId, componentDelta } = useContext(EditionContext)
-  const { selectedClassName, setSelectedClassName } = useContext(CssClassesContext)
-
+function CssClassesSelector({ allClasses, classNames, selectedClassName, onSelectedClassNameChange, onClassNamesChange, onLoading }: CssClassesSelector) {
   const [search, setSearch] = useState('')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false)
   const [forceOpen, setForceOpen] = useState(false)
 
-  const [{ fetching }, createCssClass] = useMutation<CreateCssClassMutationDataType>(CreateCssClassMutation)
+  // const [{ fetching }, createCssClass] = useMutation<CreateCssClassMutationDataType>(CreateCssClassMutation)
 
   const isError = useMemo(() => {
     if (!search) return false
@@ -72,23 +64,19 @@ function CssClassesSelector({ allClasses, classNames, onClassNamesChange, onLoad
 
     onLoading(true)
 
-    await createCssClass({
-      sourceComponentAddress: componentAddress,
-      targetHierarchyId: hierarchyId,
-      componentDelta,
-      classNames,
-    })
+    // await createCssClass({
+    //   sourceComponentAddress: componentAddress,
+    //   targetHierarchyId: hierarchyId,
+    //   componentDelta,
+    //   classNames,
+    // })
 
     onLoading(false)
 
     refetch(refetchKeys.cssClasses)
   }, [
     isError,
-    componentAddress,
-    hierarchyId,
-    componentDelta,
     onLoading,
-    createCssClass,
     refetch,
   ])
 
@@ -108,14 +96,14 @@ function CssClassesSelector({ allClasses, classNames, onClassNamesChange, onLoad
 
       onClassNamesChange(nextClassNames)
       handleCreateClass(nextClassNames)
-      setSelectedClassName(addedClassName)
+      onSelectedClassNameChange(addedClassName)
     }
   }, [
     isError,
     search,
     classNames,
     onClassNamesChange,
-    setSelectedClassName,
+    onSelectedClassNameChange,
     handleCreateClass,
   ])
 
@@ -123,13 +111,13 @@ function CssClassesSelector({ allClasses, classNames, onClassNamesChange, onLoad
     const nextClassNames = classNames.filter(c => c !== className)
 
     onClassNamesChange(nextClassNames)
-    setSelectedClassName(x => nextClassNames.includes(x) ? x : '')
+    onSelectedClassNameChange(x => nextClassNames.includes(x) ? x : '')
     handleCreateClass(nextClassNames)
-  }, [classNames, onClassNamesChange, setSelectedClassName, handleCreateClass])
+  }, [classNames, onClassNamesChange, onSelectedClassNameChange, handleCreateClass])
 
   const handleChipSelect = useCallback((className: string) => {
-    setSelectedClassName(x => x === className ? '' : className)
-  }, [setSelectedClassName])
+    onSelectedClassNameChange(x => x === className ? '' : className)
+  }, [onSelectedClassNameChange])
 
   const handleEmojiSelect = useCallback((_unified: string, emoji: string) => {
     setSearch(x => x + emoji)
@@ -229,7 +217,7 @@ function CssClassesSelector({ allClasses, classNames, onClassNamesChange, onLoad
           </WithOutsideClick>
         </>
       )}
-      {fetching && (
+      {false && (
         <Div
           position="absolute"
           top={0}

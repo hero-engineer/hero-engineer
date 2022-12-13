@@ -2,7 +2,7 @@ import { H1 } from 'honorable'
 
 import FilesTree from '~core/full-ast/FilesTree'
 
-const filterComponents = (relativePath: string) => relativePath.endsWith('.tsx') && !relativePath.startsWith('/decorators/') && relativePath !== 'main.tsx'
+const filterComponents = (relativePath: string) => relativePath.endsWith('.tsx') && !relativePath.startsWith('decorators/') && relativePath !== 'main.tsx'
 
 function Components() {
   return (

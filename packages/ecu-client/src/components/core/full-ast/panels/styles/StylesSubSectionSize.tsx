@@ -9,11 +9,10 @@ import useStylesSubSectionHelpers from '~hooks/useStylesSubSectionHelpers'
 
 import capitalize from '~utils/capitalize'
 
-import CssValueInput from '../../css/CssValueInput'
-
-import StylesTitle from './StylesTitle'
-import StylesAttributeTitle from './StylesAttributeTitle'
-import StylesDisabledOverlay from './StylesDisabledOverlay'
+import CssValueInput from '~core/css/CssValueInput'
+import StylesTitle from '~core/full-ast/panels/styles/StylesTitle'
+import StylesAttributeTitle from '~core/full-ast/panels/styles/StylesAttributeTitle'
+import StylesDisabledOverlay from '~core/full-ast/panels/styles/StylesDisabledOverlay'
 
 type StylesSubSectionSizePropsType = {
   cssValues: CssValuesType

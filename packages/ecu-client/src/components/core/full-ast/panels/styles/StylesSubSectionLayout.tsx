@@ -21,12 +21,11 @@ import { cssAttributesMap } from '~constants'
 import usePersistedState from '~hooks/usePersistedState'
 import useStylesSubSectionHelpers from '~hooks/useStylesSubSectionHelpers'
 
-import CssValueInput from '../../css/CssValueInput'
-
-import GridModal from './GridModal'
-import StylesTitle from './StylesTitle'
-import StylesAttributeTitle from './StylesAttributeTitle'
-import StylesDisabledOverlay from './StylesDisabledOverlay'
+import CssValueInput from '~core/css/CssValueInput'
+import GridModal from '~core/full-ast/panels/styles/GridModal'
+import StylesTitle from '~core/full-ast/panels/styles/StylesTitle'
+import StylesAttributeTitle from '~core/full-ast/panels/styles/StylesAttributeTitle'
+import StylesDisabledOverlay from '~core/full-ast/panels/styles/StylesDisabledOverlay'
 
 type StylesSubSectionLayoutPropsType = {
   cssValues: CssValuesType

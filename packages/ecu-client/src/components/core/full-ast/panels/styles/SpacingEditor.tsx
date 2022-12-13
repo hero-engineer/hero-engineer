@@ -11,7 +11,7 @@ import useStylesSubSectionHelpers from '~hooks/useStylesSubSectionHelpers'
 
 import doesParentHaveId from '~utils/doesParentHaveId'
 
-import SpacingEditorInput from './SpacingEditorInput'
+import SpacingEditorInput from '~core/full-ast/panels/styles/SpacingEditorInput'
 
 type SpacingEditorPropsType = {
   title: string

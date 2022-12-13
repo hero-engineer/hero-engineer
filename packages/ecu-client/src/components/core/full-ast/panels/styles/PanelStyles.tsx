@@ -1,28 +1,25 @@
-import { memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
-import { Button, Div } from 'honorable'
+import { CSSProperties, memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { Div } from 'honorable'
 
-import { CssAttributeType, CssValuesType } from '~types'
+import { CssAttributeType, CssValuesType, HierarchyType } from '~types'
 
 import { refetchKeys } from '~constants'
 
 import { CssClassesQuery, CssClassesQueryDataType, UpdateCssClassMutation, UpdateCssClassMutationDataType } from '~queries'
 
-import HierarchyContext from '~contexts/HierarchyContext'
-import CssClassesContext from '~contexts/CssClassesContext'
+import HierarchyContext from '~contexts/HierarchyContext2'
 import BreakpointContext from '~contexts/BreakpointContext'
-import EditionContext from '~contexts/EditionContext'
 
 import useQuery from '~hooks/useQuery'
 import useMutation from '~hooks/useMutation'
 import useRefetch from '~hooks/useRefetch'
+import usePrevious from '~hooks/usePrevious'
 import useCssValues from '~hooks/useCssValues'
 import useJsCssValues from '~hooks/useJsCssValues'
-import usePrevious from '~hooks/usePrevious'
+import usePersistedState from '~hooks/usePersistedState'
 import useThrottleAsynchronous from '~hooks/useThrottleAsynchronous'
 
-import getComponentRootHierarchyIds from '~utils/getComponentRootHierarchyIds'
-import getLastComponentHierarchyItem from '~utils/getLastComponentHierarchyItem'
 import convertCssAttributeNameToJs from '~utils/convertCssAttributeNameToJs'
 import filterClassesByClassNamesAndMedias from '~utils/filterClassesByClassNamesAndMedias'
 import areAttributesValid from '~utils/areAttributesValid'
@@ -34,14 +31,17 @@ import StylesSubSectionSpacing from './StylesSubSectionSpacing'
 import StylesSubSectionTypography from './StylesSubSectionTypography'
 import CssClassesSelector from './CssClassesSelector'
 
-// The styles section
-// Displayed in the right panel
+function findElement(hierarchy: HierarchyType, targetId: string): HTMLElement | null {
+  if (hierarchy.id === targetId) return hierarchy.element
+
+  return hierarchy.children.map(h => findElement(h, targetId)).find(x => x) ?? null
+}
+
+// The styles panel
+// Displayed in the right retractable panel
 function PanelStyles() {
-  const { componentAddress = '' } = useParams()
-  const { hierarchy } = useContext(HierarchyContext)
-  const { componentDelta, hierarchyId } = useContext(EditionContext)
-  const { className, setClassName, selectedClassName, style, setStyle } = useContext(CssClassesContext)
   const { breakpoint, breakpoints } = useContext(BreakpointContext)
+  const { hierarchy, currentHierarchyId } = useContext(HierarchyContext)
 
   const [cssClassesQueryResult, refetchCssClassesQuery] = useQuery<CssClassesQueryDataType>({
     query: CssClassesQuery,
@@ -53,16 +53,16 @@ function PanelStyles() {
     refetch: refetchCssClassesQuery,
   })
 
+  const element = useMemo(() => hierarchy ? findElement(hierarchy, currentHierarchyId) : null, [hierarchy, currentHierarchyId])
+  const className = useMemo(() => element ? element.className : '', [element])
   const classNames = useMemo(() => className.split(' ').map(c => c.trim()).filter(Boolean), [className])
+  const isNoElementSelected = useMemo(() => hierarchy?.type !== 'element', [hierarchy])
+
+  const [selectedClassName, setSelelectedClassName] = usePersistedState('selected-class-name', '')
+  const [style, setStyle] = useState<CSSProperties>({})
 
   const [isStyleUpdated, setIsStyleUpdated] = useState(false)
   const [loading, setLoading] = useState(false)
-
-  const lastComponentHierarchyItem = useMemo(() => getLastComponentHierarchyItem(hierarchy), [hierarchy])
-  const componentRootHierarchyIds = useMemo(() => getComponentRootHierarchyIds(hierarchy), [hierarchy])
-  const isComponentRoot = useMemo(() => componentDelta < 0 && componentRootHierarchyIds.some(x => x === hierarchyId), [componentDelta, componentRootHierarchyIds, hierarchyId])
-  const isOnAnotherComponent = useMemo(() => !hierarchy.length || hierarchy[hierarchy.length - 1].onComponentAddress !== componentAddress, [hierarchy, componentAddress])
-  const isNoElementSelected = useMemo(() => !hierarchy.length || hierarchy[hierarchy.length - 1].isRoot || isComponentRoot || isOnAnotherComponent, [hierarchy, isComponentRoot, isOnAnotherComponent])
 
   // The medias that can impact the current breakpoint
   const concernedMedias = useMemo(() => {
@@ -153,13 +153,21 @@ function PanelStyles() {
     refetch,
   ])
 
+  const updateClassName = useCallback((className: string) => {
+    if (!element) return
+
+    element.className = className
+
+    // TODO update the file
+  }, [element])
+
   const throttledHandleCssUpdate = useThrottleAsynchronous(handleCssUpdate, 500)
 
   const handleSetClassNames = useCallback((classes: string[]) => {
-    setClassName(classes.join(' ') || ' ') // HACK to force useEditionProps to use an empty updated className
+    updateClassName(classes.join(' '))
     setStyle({})
     setIsStyleUpdated(false)
-  }, [setClassName, setStyle])
+  }, [updateClassName, setStyle])
 
   const handleStyleChange = useCallback((attributes: CssAttributeType[]) => {
     if (!selectedClassName) return
@@ -182,34 +190,11 @@ function PanelStyles() {
       fontSize="0.85rem"
       px={0.5}
     >
-      {isOnAnotherComponent ? (
-        <>
-          <Div color="text-light">
-            To style this element you must edit its parent component
-          </Div>
-          {!!lastComponentHierarchyItem && (
-            <Button
-              as={Link}
-              to={`/_ecu_/component/${lastComponentHierarchyItem.fileAddress}/${lastComponentHierarchyItem.componentAddress}`}
-              display="flex" // To allow ellipsis, inline-flex is the default
-              maxWidth="100%" // To allow ellipsis
-              mt={0.5}
-            >
-              <Div ellipsis>
-                Edit
-                {' '}
-                {lastComponentHierarchyItem.componentName}
-              </Div>
-            </Button>
-          )}
-        </>
-      ) : (
-        <Div color="text-light">
-          No element selected
-        </Div>
-      )}
+      <Div color="text-light">
+        No element selected
+      </Div>
     </Div>
-  ), [isOnAnotherComponent, lastComponentHierarchyItem])
+  ), [])
 
   const renderNoClassNames = useCallback(() => (
     <Div
@@ -306,6 +291,8 @@ function PanelStyles() {
           classNames={classNames}
           onClassNamesChange={handleSetClassNames}
           onLoading={setLoading}
+          selectedClassName={selectedClassName}
+          onSelectedClassNameChange={setSelelectedClassName}
         />
       </Div>
       {!classNames.length ? renderNoClassNames() : renderSubSections()}
@@ -313,7 +300,9 @@ function PanelStyles() {
   ), [
     allClasses,
     classNames,
+    selectedClassName,
     handleSetClassNames,
+    setSelelectedClassName,
     renderNoClassNames,
     renderSubSections,
   ])

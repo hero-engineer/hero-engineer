@@ -18,13 +18,12 @@ import useStylesSubSectionHelpers from '~hooks/useStylesSubSectionHelpers'
 
 import capitalize from '~utils/capitalize'
 
-import ColorPicker from '../../css/ColorPicker'
-import CssValueInput from '../../css/CssValueInput'
-
-import StylesDisabledOverlay from './StylesDisabledOverlay'
-import StylesTitle from './StylesTitle'
-import StylesAttributeTitle from './StylesAttributeTitle'
-import StylesList from './StylesList'
+import ColorPicker from '~core/css/ColorPicker'
+import CssValueInput from '~core/css/CssValueInput'
+import StylesDisabledOverlay from '~core/full-ast/panels/styles/StylesDisabledOverlay'
+import StylesTitle from '~core/full-ast/panels/styles/StylesTitle'
+import StylesAttributeTitle from '~core/full-ast/panels/styles/StylesAttributeTitle'
+import StylesList from '~core/full-ast/panels/styles/StylesList'
 
 type StylesSubSectionTypographyPropsType = {
   cssValues: CssValuesType
