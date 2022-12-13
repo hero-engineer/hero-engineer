@@ -24,6 +24,8 @@ function flattenHierarchy(hierarchy: HierarchyType, targetId: string): Hierarchy
 }
 
 function isCurrentParentComponent(hierarchy: HierarchyType, targetId: string) {
+  if (hierarchy.id === targetId) return false
+
   return hierarchy.type === 'component' && hasHierarchyChild(hierarchy, targetId)
 }
 
@@ -57,7 +59,7 @@ function HierarchyBar() {
       px={0.5}
     >
       {!isInteractiveMode && flattenedHierarchy.map((hierarchy, i, a) => {
-        const isLatestParent = hierarchy.id !== currentHierarchyId && isCurrentParentComponent(hierarchy, currentHierarchyId) && !a.slice(i + 2).some(h => isCurrentParentComponent(h, currentHierarchyId))
+        const isLatestParent = isCurrentParentComponent(hierarchy, currentHierarchyId) && !a.slice(i + 1).some(h => isCurrentParentComponent(h, currentHierarchyId))
 
         return (
           <Fragment key={hierarchy.id}>
