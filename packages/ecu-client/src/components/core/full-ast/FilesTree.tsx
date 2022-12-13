@@ -9,6 +9,10 @@ import { convertToEcuComponentPath } from '~utils/convertComponentPath'
 
 import TabLink from '~core/full-ast/TabLink'
 
+type FilesTreePropsType = {
+  filter?: (relativePath: string) => boolean
+}
+
 const lookup = 'app/src/'
 
 function extractRelativePath(path: string) {
@@ -17,7 +21,7 @@ function extractRelativePath(path: string) {
   return index === -1 ? path : path.slice(index + lookup.length)
 }
 
-function FilesTree() {
+function FilesTree({ filter }: FilesTreePropsType) {
   const [filePathsQueryResult] = useQuery<FilePathsQueryDataType>({
     query: FilePathsQuery,
   })
@@ -30,6 +34,8 @@ function FilesTree() {
     <Div>
       {paths.map(path => {
         const relativePath = extractRelativePath(path)
+
+        if (typeof filter === 'function' && !filter(relativePath)) return null
 
         return (
           <Div key={relativePath}>

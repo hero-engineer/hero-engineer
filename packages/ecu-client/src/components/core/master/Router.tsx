@@ -1,7 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 
 import Home from '~scenes/Home'
-import Components from '~scenes/Components'
 import Design from '~scenes/Design'
 import DesignSystem from '~scenes/DesignSystem'
 import DesignRootCss from '~scenes/DesignRootCss'
@@ -11,7 +10,8 @@ import Settings from '~scenes/Settings'
 import SettingsGeneral from '~scenes/SettingsGeneral'
 import SettingsLogs from '~scenes/SettingsLogs'
 
-import Component2 from '~core/full-ast/Component'
+import Component from '~core/full-ast/Component'
+import Components from '~core/full-ast/Components'
 import ProviderComponent from '~core/full-ast/ProviderComponent'
 import ProviderTheme from '~core/providers/ProviderTheme'
 import ResponsiveLayout from '~core/layout/ResponsiveLayout'
@@ -111,7 +111,7 @@ function Router({ children }: any) {
               path="~/*"
               element={(
                 <ProviderComponent>
-                  <Component2 />
+                  <Component />
                 </ProviderComponent>
               )}
             />

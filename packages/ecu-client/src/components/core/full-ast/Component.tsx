@@ -20,7 +20,7 @@ import RemountButton from '~core/component/RemountButton'
 import ComponentWindow from '~core/component-window/ComponentWindow'
 // import BottomTabsPanel from '~core/full-ast/BottomTabsPanel'
 import RetractablePanel from '~core/layout/RetractablePanel'
-import PanelHierarchy from '~core/full-ast/PanelHierarchy'
+import PanelHierarchy from '~core/full-ast/panels/PanelHierarchy'
 
 function Component() {
   const { '*': ecuComponentPath = '' } = useParams()
