@@ -57,7 +57,7 @@ function HierarchyBar() {
       px={0.5}
     >
       {!isInteractiveMode && flattenedHierarchy.map((hierarchy, i, a) => {
-        const isLatestParent = hierarchy.id !== currentHierarchyId && isCurrentParentComponent(hierarchy, currentHierarchyId) && !a.slice(i + 1).some(h => isCurrentParentComponent(h, currentHierarchyId))
+        const isLatestParent = hierarchy.id !== currentHierarchyId && isCurrentParentComponent(hierarchy, currentHierarchyId) && !a.slice(i + 2).some(h => isCurrentParentComponent(h, currentHierarchyId))
 
         return (
           <Fragment key={hierarchy.id}>
