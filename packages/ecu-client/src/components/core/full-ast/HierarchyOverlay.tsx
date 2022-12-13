@@ -1,10 +1,11 @@
-import { ReactNode, useCallback, useContext } from 'react'
+import { ReactNode, useCallback, useContext, useEffect, useState } from 'react'
 import { Div } from 'honorable'
 
 import { HierarchyType } from '~types'
 
 import IsInteractiveModeContext from '~contexts/IsInteractiveModeContext'
 import HierarchyContext from '~contexts/HierarchyContext2'
+import BreakpointContext from '~contexts/BreakpointContext'
 
 import HierarchyOverlayElement from '~core/full-ast/HierarchyOverlayElement'
 
@@ -13,8 +14,11 @@ type HierarchyOverlayPropsType = {
 }
 
 function HierarchyOverlay({ children }: HierarchyOverlayPropsType) {
+  const { isDragging, width, height } = useContext(BreakpointContext)
   const { isInteractiveMode } = useContext(IsInteractiveModeContext)
   const { hierarchy, currentHierarchyId, setCurrentHierarchyId } = useContext(HierarchyContext)
+
+  const [isScrolling, setIsScrolling] = useState(false)
 
   const renderOverlayElement = useCallback((hierarchy: HierarchyType, parentHierarchy: HierarchyType | null = null) => {
     if (hierarchy.element?.nodeType === Node.TEXT_NODE) return null
@@ -25,12 +29,14 @@ function HierarchyOverlay({ children }: HierarchyOverlayPropsType) {
         hierarchy={hierarchy}
         parentHierarchy={parentHierarchy}
         isSelected={hierarchy.id === currentHierarchyId}
+        isHidden={isScrolling}
         onSelect={() => setCurrentHierarchyId(hierarchy.id)}
+        onScroll={() => setIsScrolling(true)}
       >
         {hierarchy.children.map(childHierarchy => renderOverlayElement(childHierarchy, hierarchy))}
       </HierarchyOverlayElement>
     )
-  }, [currentHierarchyId, setCurrentHierarchyId])
+  }, [currentHierarchyId, isScrolling, setCurrentHierarchyId])
 
   const renderOverlay = useCallback(() => {
     if (!hierarchy) return null
@@ -46,12 +52,29 @@ function HierarchyOverlay({ children }: HierarchyOverlayPropsType) {
         {renderOverlayElement(hierarchy)}
       </Div>
     )
-  }, [hierarchy, renderOverlayElement])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hierarchy, width, height, renderOverlayElement])
+
+  useEffect(() => {
+    if (!isScrolling) return
+
+    const timeoutId = setTimeout(() => {
+      setIsScrolling(false)
+    }, 250)
+
+    return () => {
+      clearTimeout(timeoutId)
+    }
+  }, [isScrolling])
 
   return (
-    <Div position="relative">
+    <Div
+      position="relative"
+      height={height}
+      overflow="hidden"
+    >
       {children}
-      {!isInteractiveMode && renderOverlay()}
+      {!(isDragging || isInteractiveMode) && renderOverlay()}
     </Div>
   )
 }
