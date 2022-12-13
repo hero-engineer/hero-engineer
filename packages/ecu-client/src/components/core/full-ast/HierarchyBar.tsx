@@ -9,14 +9,18 @@ import HierarchyContext from '~contexts/HierarchyContext2'
 import BreakpointContext from '~contexts/BreakpointContext'
 import IsInteractiveModeContext from '~contexts/IsInteractiveModeContext'
 
-function flattenHierarchy(hierarchy: HierarchyType, targetId: string): HierarchyType[] {
-  const foundChildren = hierarchy.children.find(h => targetId.startsWith(h.id))
-
-  return foundChildren ? [hierarchy, ...flattenHierarchy(foundChildren, targetId)] : [hierarchy]
-}
-
 function hasHierarchyChild(hierarchy: HierarchyType, targetId: string): boolean {
   return hierarchy.id === targetId || hierarchy.children.some(h => hasHierarchyChild(h, targetId))
+}
+
+function flattenHierarchy(hierarchy: HierarchyType, targetId: string): HierarchyType[] {
+  if (hierarchy.id === targetId) return [hierarchy]
+
+  const indexOfChild = hierarchy.children.findIndex(h => hasHierarchyChild(h, targetId))
+
+  if (indexOfChild === -1) return []
+
+  return [hierarchy, ...flattenHierarchy(hierarchy.children[indexOfChild], targetId)]
 }
 
 function isCurrentParentComponent(hierarchy: HierarchyType, targetId: string) {
@@ -53,7 +57,7 @@ function HierarchyBar() {
       px={0.5}
     >
       {!isInteractiveMode && flattenedHierarchy.map((hierarchy, i, a) => {
-        const isLatestParent = isCurrentParentComponent(hierarchy, currentHierarchyId) && !a.slice(i + 1).some(h => isCurrentParentComponent(h, currentHierarchyId))
+        const isLatestParent = hierarchy.id !== currentHierarchyId && isCurrentParentComponent(hierarchy, currentHierarchyId) && !a.slice(i + 1).some(h => isCurrentParentComponent(h, currentHierarchyId))
 
         return (
           <Fragment key={hierarchy.id}>

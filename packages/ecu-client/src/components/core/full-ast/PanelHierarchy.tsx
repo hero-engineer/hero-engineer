@@ -138,6 +138,7 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand, 
           xflex="x5"
           flexShrink={0}
           transform={expanded ? 'rotate(90deg)' : undefined}
+          transformOrigin="45% 45%"
           onClick={handleExpand}
           pr={0.25}
           ml="-6px"
