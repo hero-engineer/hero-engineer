@@ -166,7 +166,6 @@ export type ExtendedHierarchyContextType = {
   children: JsxChild[]
   imports: ImportType[]
   identifiers: IdentifierType[]
-  onFilePath: string
   childrenOnFilePath: string
 }
 

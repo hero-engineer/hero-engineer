@@ -187,7 +187,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
         childrenElements: [...componentElements],
         childrenElementsStack: [...componentElements],
         children: [],
-        onFilePath: filePath,
+        onFilePath: parentContext?.childrenOnFilePath ?? filePath,
         context: {
           id: `${id}${hierarchyComponentSeparator}`,
           previousTopJsxIds: [],
@@ -195,7 +195,6 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
           children: parentContext?.children ?? [],
           imports: [...parentContext?.imports ?? [], ...imports],
           identifiers: [...parentContext?.identifiers ?? [], ...identifiers],
-          onFilePath: filePath,
           childrenOnFilePath: filePath,
         },
       }
@@ -311,6 +310,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
           ...hierarchy.context,
           childIndex: sourceFilePathToChildIndex[sourceFilePath]++,
           children: (jsxElement as JsxElement).getJsxChildren?.() ?? [],
+          childrenOnFilePath: hierarchy.onFilePath,
         }, shouldLog)
 
         if (!subHierarchy) {
@@ -370,7 +370,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
         childrenElements,
         childrenElementsStack: [...childrenElements],
         children: [],
-        onFilePath: parentContext?.onFilePath ?? hierarchy.context.onFilePath,
+        onFilePath: hierarchy.context.childrenOnFilePath,
         context: hierarchy.context,
       }
 
@@ -447,7 +447,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
         childrenElements: [],
         childrenElementsStack: [],
         children: [],
-        onFilePath: parentContext?.onFilePath ?? hierarchy.context.onFilePath,
+        onFilePath: hierarchy.context.childrenOnFilePath,
         context: hierarchy.context,
       }
 
@@ -528,10 +528,10 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
           childrenElements: hierarchy.childrenElements,
           childrenElementsStack: [...hierarchy.childrenElementsStack],
           children: [],
-          onFilePath: parentContext?.onFilePath ?? hierarchy.context.onFilePath,
+          onFilePath: hierarchy.context.childrenOnFilePath,
           context: {
             ...hierarchy.context,
-            onFilePath: hierarchy.context.childrenOnFilePath,
+            childrenOnFilePath: parentContext?.childrenOnFilePath ?? hierarchy.context.childrenOnFilePath,
           },
         }
 
@@ -611,7 +611,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
           childrenElements: hierarchy.childrenElements,
           childrenElementsStack: [...hierarchy.childrenElementsStack],
           children: [],
-          onFilePath: parentContext?.onFilePath ?? hierarchy.context.onFilePath,
+          onFilePath: hierarchy.context.childrenOnFilePath,
           context: hierarchy.context,
         }
 
@@ -688,7 +688,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
           childrenElements: [],
           childrenElementsStack: [],
           children: [],
-          onFilePath: parentContext?.onFilePath ?? hierarchy.context.onFilePath,
+          onFilePath: hierarchy.context.childrenOnFilePath,
           context: hierarchy.context,
         }
 
@@ -726,7 +726,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
           childrenElements: [],
           childrenElementsStack: [],
           children: [],
-          onFilePath: parentContext?.onFilePath ?? hierarchy.context.onFilePath,
+          onFilePath: hierarchy.context.childrenOnFilePath,
           context: hierarchy.context,
         }
 
@@ -860,7 +860,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
             childrenElements: hierarchy.childrenElements,
             childrenElementsStack: [...hierarchy.childrenElementsStack],
             children: [],
-            onFilePath: parentContext?.onFilePath ?? hierarchy.context.onFilePath,
+            onFilePath: hierarchy.context.childrenOnFilePath,
             context: hierarchy.context,
           }
 
@@ -1007,7 +1007,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
         childrenElements: [],
         childrenElementsStack: [],
         children: [],
-        onFilePath: parentContext?.onFilePath ?? hierarchy.context.onFilePath,
+        onFilePath: hierarchy.context.childrenOnFilePath,
         context: hierarchy.context,
       }
 
@@ -1046,7 +1046,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
         childrenElements: [],
         childrenElementsStack: [],
         children: [],
-        onFilePath: parentContext?.onFilePath ?? hierarchy.context.onFilePath,
+        onFilePath: hierarchy.context.childrenOnFilePath,
         context: hierarchy.context,
       }
 
@@ -1258,7 +1258,7 @@ function createHierarchyFromElement(hierarchy: ExtendedHierarchyType, element: H
       children: [],
       childrenElements: [],
       childrenElementsStack: [],
-      onFilePath: hierarchy.context.onFilePath,
+      onFilePath: hierarchy.context.childrenOnFilePath,
       context: hierarchy.context,
     }
   }
@@ -1279,7 +1279,7 @@ function createHierarchyFromElement(hierarchy: ExtendedHierarchyType, element: H
     children: [],
     childrenElements: childElements,
     childrenElementsStack: [],
-    onFilePath: hierarchy.context.onFilePath,
+    onFilePath: hierarchy.context.childrenOnFilePath,
     context: hierarchy.context,
   }
 
