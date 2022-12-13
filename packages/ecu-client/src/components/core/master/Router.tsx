@@ -13,10 +13,9 @@ import SettingsLogs from '~scenes/SettingsLogs'
 
 import Component2 from '~core/full-ast/Component'
 import ProviderComponent from '~core/full-ast/ProviderComponent'
-
-import ProviderTheme from '../providers/ProviderTheme'
-import ResponsiveLayout from '../layout/ResponsiveLayout'
-import Layout from '../layout/Layout'
+import ProviderTheme from '~core/providers/ProviderTheme'
+import ResponsiveLayout from '~core/layout/ResponsiveLayout'
+import Layout from '~core/layout/Layout'
 
 // The Ecu router
 function Router({ children }: any) {

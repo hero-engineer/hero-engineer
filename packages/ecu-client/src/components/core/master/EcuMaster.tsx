@@ -4,11 +4,9 @@ import { ViteHotContext } from 'vite/types/hot'
 import { ReactNode } from 'react'
 
 import WithProcessors from '~core/full-ast/WithProcessors'
-
-import ProviderMaster from '../providers/ProviderMaster'
-
-import Router from './Router'
-import WithEcuHomeButton from './WithEcuHomeButton'
+import ProviderMaster from '~core/providers/ProviderMaster'
+import Router from '~core/master/Router'
+import WithEcuHomeButton from '~core/master/WithEcuHomeButton'
 
 type EcuMasterPropsType = {
   mode?: string

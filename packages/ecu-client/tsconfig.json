@@ -21,7 +21,6 @@
       "~constants": ["constants.ts"],
       "~queries": ["queries.ts"],
       "~core/*": ["components/core/*"],
-      "~lib/*": ["components/lib/*"],
       "~scenes/*": ["components/scenes/*"],
       "~contexts/*": ["contexts/*"],
       "~hooks/*": ["hooks/*"],
