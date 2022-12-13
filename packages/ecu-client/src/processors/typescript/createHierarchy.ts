@@ -58,6 +58,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
   const consoleLog = shouldLog ? console.log : () => {}
   const consoleGroup = shouldLog ? console.group : () => {}
   const consoleGroupEnd = shouldLog ? console.groupEnd : () => {}
+  const consoleGroupCollapsed = shouldLog ? console.groupCollapsed : () => {}
 
   let childrenCount = 0
   const sourceFilePathToChildIndex: Record<string, number> = {}
@@ -1097,7 +1098,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
     * EXECUTION
   -- */
 
-  consoleGroup('HIERARCHY_TRAVERSAL_START', filePath)
+  consoleGroupCollapsed('HIERARCHY_TRAVERSAL_START', filePath)
 
   const startTime = Date.now()
 

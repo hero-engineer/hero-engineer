@@ -1,4 +1,4 @@
-import { Project, ts } from 'ts-morph'
+import { IndentationText, NewLineKind, Project, QuoteKind, ts } from 'ts-morph'
 
 import { FileType } from '~types'
 
@@ -13,6 +13,13 @@ const project = new Project({
   skipAddingFilesFromTsConfig: true,
   compilerOptions: {
     target: ts.ScriptTarget.ESNext,
+  },
+  manipulationSettings: {
+    indentationText: IndentationText.TwoSpaces,
+    newLineKind: NewLineKind.LineFeed,
+    quoteKind: QuoteKind.Single,
+    usePrefixAndSuffixTextForRename: false,
+    useTrailingCommas: true,
   },
 })
 
