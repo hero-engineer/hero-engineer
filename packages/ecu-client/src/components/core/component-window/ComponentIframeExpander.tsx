@@ -5,7 +5,7 @@ import { zIndexes } from '~constants'
 
 import BreakpointContext from '~contexts/BreakpointContext'
 
-import useClearHierarchyIdsAndComponentDeltaOnClick from '~hooks/useClearHierarchyIdsAndComponentDeltaOnClick'
+// import useClearHierarchyIdsAndComponentDeltaOnClick from '~hooks/useClearHierarchyIdsAndComponentDeltaOnClick'
 
 type ComponentIframeWidthExanderPropsType = {
   children: ReactNode
@@ -13,13 +13,7 @@ type ComponentIframeWidthExanderPropsType = {
 
 function ComponentIframeExpander({ children }: ComponentIframeWidthExanderPropsType) {
   const rootRef = useRef<HTMLDivElement>(null)
-  const leftRef = useRef<HTMLDivElement>(null)
-  const rightRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
-
-  useClearHierarchyIdsAndComponentDeltaOnClick(leftRef)
-  useClearHierarchyIdsAndComponentDeltaOnClick(rightRef)
-  useClearHierarchyIdsAndComponentDeltaOnClick(contentRef)
 
   const { width } = useContext(BreakpointContext)
 
@@ -31,10 +25,7 @@ function ComponentIframeExpander({ children }: ComponentIframeWidthExanderPropsT
       ref={rootRef}
       xflex="x4s"
     >
-      <Div
-        ref={leftRef}
-        flexGrow
-      />
+      <Div flexGrow />
       <ComponentIframeExanderHandle
         isLeft
         maxWidth={maxWidth}
@@ -55,10 +46,7 @@ function ComponentIframeExpander({ children }: ComponentIframeWidthExanderPropsT
       <ComponentIframeExanderHandle
         maxWidth={maxWidth}
       />
-      <Div
-        ref={rightRef}
-        flexGrow
-      />
+      <Div flexGrow />
     </Div>
   )
 }

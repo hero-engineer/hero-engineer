@@ -9,10 +9,10 @@ export const zIndexes = {
   colorPicker: 999999999, // 9 9
   breakpointsMenu: 999999999, // 9 9
   componentIframeExpanderHandle: 99999999, // 8 9
-  bottomTabsPanelHandle: 99999999, // 8 9
   retractablePanel: 9999999, // 7 9
-  contextualInformationVignette: 999999 + 1, // 6 9 + 1
-  editionOverlay: 999999, // 6 9
+  contextualInformationVignette: 999999 + 1, // 6 9 + 1 TODO remove
+  editionOverlay: 999999, // 6 9 TODO remove
+  hierarchyOverlayElement: 999999, // 6 9
   tabDropGhost: 99999, // 5 9
   hierarchyBarItem: 9, // 1 9
 }

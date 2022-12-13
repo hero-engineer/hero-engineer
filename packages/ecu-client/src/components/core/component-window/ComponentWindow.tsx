@@ -7,6 +7,7 @@ import { Div } from 'honorable'
 import ComponentRemountContext from '~contexts/ComponentRemountContext'
 
 import WithComponentHierarchy from '~core/full-ast/WithComponentHierarchy'
+import HierarchyOverlay from '~core/full-ast/HierarchyOverlay'
 import WithComponentError from '~core/component-window/WithComponentError'
 
 // import theme from '../../../theme'
@@ -34,8 +35,9 @@ function ComponentWindow({ componentPath, decoratorPaths }: ComponentWindowProps
       overflowY="auto"
     >
       <ComponentIframeExpander>
-        <ComponentIframe>
-          {({ window, head, setHeight }) => (
+        <HierarchyOverlay>
+          <ComponentIframe>
+            {({ window, head, setHeight }) => (
             // <ProviderEmotion head={head}>
             // <DndProvider
             //   backend={HTML5Backend}
@@ -43,25 +45,26 @@ function ComponentWindow({ componentPath, decoratorPaths }: ComponentWindowProps
             // >
               // {/* <ThemeProvider theme={theme}> */}
               // {/* <CssBaseline /> */}
-            <WithComponentIframeHeight setHeight={setHeight}>
-              {/* TODO investigate why EditionOverlay should be inside of the iframe, and if removable remove also ThemeProvider */}
-              {/* <EditionOverlay> */}
-              <WithComponentError key={key}>
-                <WithComponentHierarchy>
-                  <ComponentLoader
-                    head={head}
-                    componentPath={componentPath}
-                    decoratorPaths={decoratorPaths}
-                  />
-                </WithComponentHierarchy>
-              </WithComponentError>
-              {/* </EditionOverlay> */}
-            </WithComponentIframeHeight>
+              <WithComponentIframeHeight setHeight={setHeight}>
+                {/* TODO investigate why EditionOverlay should be inside of the iframe, and if removable remove also ThemeProvider */}
+                {/* <EditionOverlay> */}
+                <WithComponentError key={key}>
+                  <WithComponentHierarchy>
+                    <ComponentLoader
+                      head={head}
+                      componentPath={componentPath}
+                      decoratorPaths={decoratorPaths}
+                    />
+                  </WithComponentHierarchy>
+                </WithComponentError>
+                {/* </EditionOverlay> */}
+              </WithComponentIframeHeight>
               // {/* </ThemeProvider> */}
             // </DndProvider>
             // </ProviderEmotion>
-          )}
-        </ComponentIframe>
+            )}
+          </ComponentIframe>
+        </HierarchyOverlay>
       </ComponentIframeExpander>
     </Div>
   )

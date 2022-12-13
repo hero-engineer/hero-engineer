@@ -13,6 +13,7 @@ import useCurrentComponentPath from '~hooks/useCurrentComponentPath'
 
 import BreakpointsButtons from '~core/component/BreakpointsButtons'
 import WidthBar from '~core/component/WidthBar'
+import HierarchyBar from '~core/full-ast/HierarchyBar'
 import InteractiveModeButton from '~core/component/InteractiveModeButton'
 import RemountButton from '~core/component/RemountButton'
 // import EditCodeButton from '~core/component/EditCodeButton'
@@ -101,6 +102,7 @@ function Component() {
           decoratorPaths={decoratorPaths}
         />
         <WidthBar />
+        <HierarchyBar />
       </Div>
       {/* <Div
         position="absolute"

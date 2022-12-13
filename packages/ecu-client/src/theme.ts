@@ -167,6 +167,7 @@ export default mergeTheme(defaultTheme, {
     'type-element': 'primary',
     'type-children': 'pink.500',
     'type-array': 'green.500',
+    'type-text': 'grey.500',
     breakpoint: {
       light: 'yellow.600',
       dark: 'yellow.300',

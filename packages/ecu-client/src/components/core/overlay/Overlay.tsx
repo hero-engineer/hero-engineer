@@ -5,7 +5,6 @@ import Tabs from '../full-ast/Tabs'
 
 import SnackBar from './SnackBar'
 import EcuButton from './EcuButton'
-import ComponentsLinkButton from './ComponentsLinkButton'
 import CreateComponentButton from './CreateComponentButton'
 import DesignLinkButton from './DesignLinkButton'
 import PackagesLinkButton from './PackagesLinkButton'
@@ -31,7 +30,6 @@ function Overlay({ children }: OverlayPropsType) {
             borderLeft="1px solid transparent"
             borderRight="1px solid border"
           />
-          <ComponentsLinkButton borderRight="1px solid border" />
           <CreateComponentButton borderRight="1px solid border" />
           <DesignLinkButton borderRight="1px solid border" />
           <PackagesLinkButton borderRight="1px solid border" />

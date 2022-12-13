@@ -1,7 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 
 import Home from '~scenes/Home'
-import Component from '~scenes/Component'
 import Components from '~scenes/Components'
 import Design from '~scenes/Design'
 import DesignSystem from '~scenes/DesignSystem'
@@ -44,10 +43,6 @@ function Router({ children }: any) {
                   <Components />
                 </ResponsiveLayout>
               )}
-            />
-            <Route
-              path="component/:fileAddress/:componentAddress"
-              element={<Component />}
             />
             <Route
               path="design"

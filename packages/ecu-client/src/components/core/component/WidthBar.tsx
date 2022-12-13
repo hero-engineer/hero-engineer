@@ -68,7 +68,7 @@ function WidthBar() {
       flexShrink={0}
       height={32}
       backgroundColor="background-light"
-      borderBottom="1px solid border"
+      borderTop="1px solid border"
     >
       <Div
         position="relative"
