@@ -53,6 +53,8 @@ import undoMutation from './mutations/undoMutation.js'
 import redoMutation from './mutations/redoMutation.js'
 import pushMutation from './mutations/pushMutation.js'
 
+import saveFileMutation from './mutations2/saveFileMutation.js'
+
 export const typeDefs = gql`
 
   scalar Upload
@@ -277,6 +279,8 @@ export const typeDefs = gql`
     undo: Boolean!
     redo: Boolean!
     push: Boolean!
+
+    saveFile(filePath: String!, code: String!, commitMessage: String!): Boolean!
   }
 
 `
@@ -344,6 +348,8 @@ export const resolvers = {
     undo: withLog(undoMutation, 'undo', true),
     redo: withLog(redoMutation, 'redo', true),
     push: withLog(pushMutation, 'push', true),
+
+    saveFile: withLog(saveFileMutation, 'saveFile', true),
   },
   Upload: GraphQLUpload,
   CssValue: new GraphQLScalarType({
