@@ -95,7 +95,8 @@ export type CssAttributeType = {
   value: CssValueType
 }
 
-export type CssClassType= {
+export type CssClassType = {
+  id: string
   selector: string
   declaration: string
   attributes: CssAttributeType[]

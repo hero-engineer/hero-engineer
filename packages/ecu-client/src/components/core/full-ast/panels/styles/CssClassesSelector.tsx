@@ -3,11 +3,10 @@ import { Autocomplete, Div, WithOutsideClick } from 'honorable'
 import createEmojiRegex from 'emoji-regex'
 import { MdOutlineClose } from 'react-icons/md'
 import { HiOutlineFaceSmile } from 'react-icons/hi2'
+
 import { CssClassType } from '~types'
 
-import { refetchKeys, zIndexes } from '~constants'
-
-import useRefetch from '~hooks/useRefetch'
+import { zIndexes } from '~constants'
 
 import extractClassNamesFromSelector from '~utils/extractClassNamesFromSelector'
 
@@ -17,10 +16,10 @@ type CssClassesSelector = {
   allClasses: CssClassType[]
   classNames: string[]
   selectedClassName: string
-  onLoading: Dispatch<SetStateAction<boolean>>
-  onClassNamesChange: (classes: string[]) => void
+  onCreateClassName: (className: string) => void
+  onClassNamesChange: (classNames: string[]) => void
   onSelectedClassNameChange: Dispatch<SetStateAction<string>>
-}®
+}
 
 const emojiRegex = createEmojiRegex()
 const classNameRegex = /^[a-zA-Z_-]+[\w-]*$/
@@ -31,7 +30,7 @@ const anyOption = { value: ecuAnyValue, label: 'Create new class' }
 const ecuErrorValue = `__ecu_error__${Math.random()}`
 const errorOption = { value: ecuErrorValue, label: 'Invalid class name' }
 
-function CssClassesSelector({ allClasses, classNames, selectedClassName, onSelectedClassNameChange, onClassNamesChange, onLoading }: CssClassesSelector) {
+function CssClassesSelector({ allClasses, classNames, selectedClassName, onSelectedClassNameChange, onCreateClassName, onClassNamesChange }: CssClassesSelector) {
   const [search, setSearch] = useState('')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false)
@@ -55,29 +54,6 @@ function CssClassesSelector({ allClasses, classNames, selectedClassName, onSelec
     .filter(className => !classNames.includes(className))
   )], [isError, allClasses, classNames])
 
-  const refetch = useRefetch()
-
-  const handleCreateClass = useCallback(async (classNames: string[]) => {
-    if (isError) return
-
-    onLoading(true)
-
-    // await createCssClass({
-    //   sourceComponentAddress: componentAddress,
-    //   targetHierarchyId: hierarchyId,
-    //   componentDelta,
-    //   classNames,
-    // })
-
-    onLoading(false)
-
-    refetch(refetchKeys.cssClasses)
-  }, [
-    isError,
-    onLoading,
-    refetch,
-  ])
-
   const handleSearch = useCallback((nextSearch: string) => {
     setSearch(nextSearch === anyOption.label || nextSearch === errorOption.label ? '' : nextSearch)
   }, [])
@@ -92,17 +68,17 @@ function CssClassesSelector({ allClasses, classNames, selectedClassName, onSelec
     if (addedClassName) {
       const nextClassNames = [...new Set(addedClassName ? [...classNames, addedClassName] : classNames)]
 
+      onCreateClassName(addedClassName)
       onClassNamesChange(nextClassNames)
-      handleCreateClass(nextClassNames)
       onSelectedClassNameChange(addedClassName)
     }
   }, [
     isError,
     search,
     classNames,
+    onCreateClassName,
     onClassNamesChange,
     onSelectedClassNameChange,
-    handleCreateClass,
   ])
 
   const handleDiscardClass = useCallback((className: string) => {
@@ -110,8 +86,7 @@ function CssClassesSelector({ allClasses, classNames, selectedClassName, onSelec
 
     onClassNamesChange(nextClassNames)
     onSelectedClassNameChange(x => nextClassNames.includes(x) ? x : '')
-    handleCreateClass(nextClassNames)
-  }, [classNames, onClassNamesChange, onSelectedClassNameChange, handleCreateClass])
+  }, [classNames, onClassNamesChange, onSelectedClassNameChange])
 
   const handleChipSelect = useCallback((className: string) => {
     onSelectedClassNameChange(x => x === className ? '' : className)

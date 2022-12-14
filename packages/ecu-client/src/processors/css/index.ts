@@ -1,13 +1,13 @@
-// import Postcss from 'postcss'
-// import PosscssNested from 'postcss-nested'
+import Postcss from 'postcss'
+import PosscssNested from 'postcss-nested'
 
 import { FileType } from '~types'
 
-// const postcss = Postcss([PosscssNested])
+const postcss = Postcss([PosscssNested])
 
 const allowedCssExtensions = ['css']
 
-const filePathToCode: Record<string, string> = {}
+export const filePathToCode: Record<string, string> = {}
 
 export function addCssSourceFiles(files: FileType[], shouldLog = false) {
   const consoleLog = shouldLog ? console.log : () => {}
@@ -20,3 +20,5 @@ export function addCssSourceFiles(files: FileType[], shouldLog = false) {
 
   consoleLog('css', Object.keys(filePathToCode).length)
 }
+
+export default postcss

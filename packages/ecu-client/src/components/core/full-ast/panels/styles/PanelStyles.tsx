@@ -1,5 +1,4 @@
 import { CSSProperties, memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { useParams } from 'react-router-dom'
 import { Div } from 'honorable'
 
 import { CssAttributeType, CssValuesType, HierarchyType } from '~types'
@@ -7,6 +6,8 @@ import { CssAttributeType, CssValuesType, HierarchyType } from '~types'
 import { refetchKeys } from '~constants'
 
 import { CssClassesQuery, CssClassesQueryDataType, UpdateCssClassMutation, UpdateCssClassMutationDataType } from '~queries'
+
+import createSelector from '~processors/css/createSelector'
 
 import HierarchyContext from '~contexts/HierarchyContext2'
 import BreakpointContext from '~contexts/BreakpointContext'
@@ -48,7 +49,7 @@ function PanelStyles() {
   const [cssClassesQueryResult, refetchCssClassesQuery] = useQuery<CssClassesQueryDataType>({
     query: CssClassesQuery,
   })
-  const [, updateCssClass] = useMutation<UpdateCssClassMutationDataType>(UpdateCssClassMutation)
+  // const [, updateCssClass] = useMutation<UpdateCssClassMutationDataType>(UpdateCssClassMutation)
 
   const refetch = useRefetch({
     key: refetchKeys.cssClasses,
@@ -136,11 +137,11 @@ function PanelStyles() {
     if (!areAttributesValid(attributes)) return
     if (!isStyleUpdated) return
 
-    await updateCssClass({
-      classNames: selectedClassName,
-      attributesJson: JSON.stringify(attributes),
-      breakpointId: breakpoint.id,
-    })
+    // await updateCssClass({
+    //   classNames: selectedClassName,
+    //   attributesJson: JSON.stringify(attributes),
+    //   breakpointId: breakpoint.id,
+    // })
 
     refetch(refetchKeys.cssClasses)
   }, [
@@ -148,12 +149,20 @@ function PanelStyles() {
     attributes,
     attributesHash,
     previousAttributesHash,
-    selectedClassName,
-    breakpoint,
+    // selectedClassName,
+    // breakpoint,
     isStyleUpdated,
-    updateCssClass,
+    // updateCssClass,
     refetch,
   ])
+
+  const throttledHandleCssUpdate = useThrottleAsynchronous(handleCssUpdate, 500)
+
+  const handleCreateClassName = useCallback((className: string) => {
+    const code = createSelector(`.${className}`, breakpoints)
+
+    console.log('code', code)
+  }, [breakpoints])
 
   const updateClassName = useCallback((className: string) => {
     if (!(currentHierarchy && currentHierarchy.element)) return
@@ -162,8 +171,6 @@ function PanelStyles() {
 
     // TODO update the file
   }, [currentHierarchy])
-
-  const throttledHandleCssUpdate = useThrottleAsynchronous(handleCssUpdate, 500)
 
   const handleSetClassNames = useCallback((classes: string[]) => {
     updateClassName(classes.join(' '))
@@ -291,8 +298,8 @@ function PanelStyles() {
         <CssClassesSelector
           allClasses={allClasses}
           classNames={classNames}
+          onCreateClassName={handleCreateClassName}
           onClassNamesChange={handleSetClassNames}
-          onLoading={setLoading}
           selectedClassName={selectedClassName}
           onSelectedClassNameChange={setSelelectedClassName}
         />
@@ -303,6 +310,7 @@ function PanelStyles() {
     allClasses,
     classNames,
     selectedClassName,
+    handleCreateClassName,
     handleSetClassNames,
     setSelelectedClassName,
     renderNoClassNames,
