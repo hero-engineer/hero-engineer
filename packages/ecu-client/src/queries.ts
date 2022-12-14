@@ -541,7 +541,7 @@ export const RedoMutation = `
 `
 
 export type RedoMutationDataType = {
-  undo: boolean
+  redo: boolean
 }
 
 export const PushMutation = `
@@ -598,3 +598,13 @@ export type ComponentFileQueryDataType = {
 /* --
   * full-ast MUTATIONs
 -- */
+
+export const SaveFileMutation = `
+  mutation ($filePath: String!, $code: String!, $commitMessage: String!) {
+    saveFile (filePath: $filePath, code: $code, commitMessage: $commitMessage)
+  }
+`
+
+export type SaveFileMutationDataType = {
+  saveFile: boolean
+}

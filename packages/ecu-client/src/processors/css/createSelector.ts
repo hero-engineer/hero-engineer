@@ -1,6 +1,6 @@
 import { BreakpointType } from '~types'
 
-import postCss, { filePathToCode } from '~processors/css'
+import postCss, { cssReady, getIndexCss, setIndexCss } from '~processors/css'
 import traverseCss from '~processors/css/traverseCss'
 
 function sortBreakpoints(a: BreakpointType, b: BreakpointType) {
@@ -10,33 +10,34 @@ function sortBreakpoints(a: BreakpointType, b: BreakpointType) {
   return b.base - a.base
 }
 
-function createSelector(selector: string, breakpoints: BreakpointType[]) {
-  const indexCssPath = Object.keys(filePathToCode).find(path => path.endsWith('/src/index.css'))
+async function createSelector(selector: string, breakpoints: BreakpointType[]) {
+  await cssReady.promise
 
-  if (!indexCssPath) {
-    console.log('No index.css file found')
+  const { filePath, code } = getIndexCss()
 
-    return null
-  }
+  const { root } = postCss.process(code, { from: filePath })
 
-  let code = filePathToCode[indexCssPath]
-  const { root } = postCss.process(code, { from: indexCssPath })
-
-  let isAlradyInserted = null
+  let isAlradyInserted = false
 
   traverseCss(root, selector, breakpoints[0], () => {
     isAlradyInserted = true
   })
 
-  if (isAlradyInserted) return null
-
-  for (const breakpoint of [...breakpoints].sort(sortBreakpoints)) {
-    code = breakpoint.media
-      ? `${code}\n@media ${breakpoint.media} {\n  ${selector} {\n  }\n}\n`
-      : `${code}\n${selector} {\n}\n`
+  if (isAlradyInserted) {
+    throw new Error(`Selector ${selector} already exists in index.css`)
   }
 
-  return code
+  let nextCode = code
+
+  for (const breakpoint of [...breakpoints].sort(sortBreakpoints)) {
+    nextCode = breakpoint.media
+      ? `${nextCode}\n@media ${breakpoint.media} {\n  ${selector} {\n  }\n}\n`
+      : `${nextCode}\n${selector} {\n}\n`
+  }
+
+  setIndexCss(nextCode)
+
+  return { code: nextCode, filePath }
 }
 
 export default createSelector

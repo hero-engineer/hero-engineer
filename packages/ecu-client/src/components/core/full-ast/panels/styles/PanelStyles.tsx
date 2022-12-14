@@ -3,18 +3,16 @@ import { Div } from 'honorable'
 
 import { CssAttributeType, CssValuesType, HierarchyType } from '~types'
 
-import { refetchKeys } from '~constants'
-
-import { CssClassesQuery, CssClassesQueryDataType, UpdateCssClassMutation, UpdateCssClassMutationDataType } from '~queries'
+import { SaveFileMutation, SaveFileMutationDataType } from '~queries'
 
 import createSelector from '~processors/css/createSelector'
+import getClasses from '~processors/css/getClasses'
 
 import HierarchyContext from '~contexts/HierarchyContext2'
 import BreakpointContext from '~contexts/BreakpointContext'
 
-import useQuery from '~hooks/useQuery'
+import useAsync from '~hooks/useAsync'
 import useMutation from '~hooks/useMutation'
-import useRefetch from '~hooks/useRefetch'
 import usePrevious from '~hooks/usePrevious'
 import useCssValues from '~hooks/useCssValues'
 import useJsCssValues from '~hooks/useJsCssValues'
@@ -46,26 +44,16 @@ function PanelStyles() {
   const { breakpoint, breakpoints } = useContext(BreakpointContext)
   const { hierarchy, currentHierarchyId } = useContext(HierarchyContext)
 
-  const [cssClassesQueryResult, refetchCssClassesQuery] = useQuery<CssClassesQueryDataType>({
-    query: CssClassesQuery,
-  })
-  // const [, updateCssClass] = useMutation<UpdateCssClassMutationDataType>(UpdateCssClassMutation)
+  const [, saveFile] = useMutation<SaveFileMutationDataType>(SaveFileMutation)
 
-  const refetch = useRefetch({
-    key: refetchKeys.cssClasses,
-    refetch: refetchCssClassesQuery,
-  })
-
-  const currentHierarchy = useMemo(() => findHierarchy(hierarchy, currentHierarchyId), [hierarchy, currentHierarchyId])
-  const className = useMemo(() => currentHierarchy && currentHierarchy.element ? currentHierarchy.element.className : '', [currentHierarchy])
-  const classNames = useMemo(() => className.split(' ').map(c => c.trim()).filter(Boolean), [className])
-  const isNoElementSelected = useMemo(() => currentHierarchy?.type !== 'element', [currentHierarchy])
-
+  // Could be a useMemo of currentHierarchy.element.className
+  // But for speed we use useState
+  const [className, setClassName] = useState('')
   const [selectedClassName, setSelelectedClassName] = usePersistedState('selected-class-name', '')
   const [style, setStyle] = useState<CSSProperties>({})
 
   const [isStyleUpdated, setIsStyleUpdated] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [classesRefresh, setClassesRefresh] = useState(0)
 
   // The medias that can impact the current breakpoint
   const concernedMedias = useMemo(() => {
@@ -90,9 +78,13 @@ function PanelStyles() {
     return concernedMedias
   }, [breakpoints, breakpoint])
 
+  const currentHierarchy = useMemo(() => findHierarchy(hierarchy, currentHierarchyId), [hierarchy, currentHierarchyId])
+  const isNoElementSelected = useMemo(() => currentHierarchy?.type !== 'element', [currentHierarchy])
+  const classNames = useMemo(() => className.split(' ').map(c => c.trim()).filter(Boolean), [className])
   // Arrays of CssClasses
   // All classes
-  const allClasses = useMemo(() => cssClassesQueryResult.data?.cssClasses ?? [], [cssClassesQueryResult.data])
+  const allClassesOrNull = useAsync(getClasses, [classesRefresh]) // eslint-disable-line react-hooks/exhaustive-deps
+  const allClasses = useMemo(() => allClassesOrNull ?? [], [allClassesOrNull])
   // Master breakpoint classes for the full className
   const masterBreakpointClasses = useMemo(() => filterClassesByClassNamesAndMedias(allClasses, classNames, ['']), [allClasses, classNames])
   // Master breakpoint classes for the selected className
@@ -132,6 +124,10 @@ function PanelStyles() {
   // console.log('style', style)
   // console.log('v, bv, cv', passedCssValues, passedBreakpointCssValues, passedCurrentBreakpointCssValues)
 
+  const refreshClasses = useCallback(() => {
+    setClassesRefresh(x => x + 1)
+  }, [])
+
   const handleCssUpdate = useCallback(async () => {
     if (!classNames.length || previousAttributesHash === attributesHash) return
     if (!areAttributesValid(attributes)) return
@@ -142,8 +138,7 @@ function PanelStyles() {
     //   attributesJson: JSON.stringify(attributes),
     //   breakpointId: breakpoint.id,
     // })
-
-    refetch(refetchKeys.cssClasses)
+    console.log()
   }, [
     classNames,
     attributes,
@@ -153,19 +148,27 @@ function PanelStyles() {
     // breakpoint,
     isStyleUpdated,
     // updateCssClass,
-    refetch,
   ])
 
   const throttledHandleCssUpdate = useThrottleAsynchronous(handleCssUpdate, 500)
 
-  const handleCreateClassName = useCallback((className: string) => {
-    const code = createSelector(`.${className}`, breakpoints)
+  // TODO error handling
+  const handleCreateClassName = useCallback(async (className: string) => {
+    const { code, filePath } = await createSelector(`.${className}`, breakpoints)
 
-    console.log('code', code)
-  }, [breakpoints])
+    refreshClasses()
+
+    await saveFile({
+      filePath,
+      code,
+      commitMessage: `Add class ${className} to index.css`,
+    })
+  }, [breakpoints, saveFile, refreshClasses])
 
   const updateClassName = useCallback((className: string) => {
     if (!(currentHierarchy && currentHierarchy.element)) return
+
+    setClassName(className)
 
     currentHierarchy.element.className = className
 
@@ -219,7 +222,6 @@ function PanelStyles() {
   const renderSubSections = useCallback(() => (
     <Div
       xflex="y2s"
-      position="relative"
       mt={0.5}
     >
       {!selectedClassName && (
@@ -269,23 +271,12 @@ function PanelStyles() {
         onChange={handleStyleChange}
         disabled={!selectedClassName}
       />
-      {loading && (
-        <Div
-          position="absolute"
-          top={0}
-          left={0}
-          right={0}
-          bottom={0}
-          backgroundColor="transparency(black, 75)"
-        />
-      )}
     </Div>
   ), [
     passedCssValues,
     passedBreakpointCssValues,
     passedCurrentBreakpointCssValues,
     selectedClassName,
-    loading,
     handleStyleChange,
   ])
 
@@ -316,6 +307,10 @@ function PanelStyles() {
     renderNoClassNames,
     renderSubSections,
   ])
+
+  useEffect(() => {
+    setClassName(currentHierarchy?.element ? currentHierarchy.element.className : '')
+  }, [currentHierarchy])
 
   // Reset style state on new breakpoint or new selected className
   useEffect(() => {
