@@ -86,16 +86,23 @@ function Component() {
         <Div
           xflex="x4"
           height={32}
-          backgroundColor="background-light"
-          borderBottom="1px solid border"
+          backgroundColor="background-component"
         >
-          <Div width={32 * 2} />
           <Div flexGrow />
+          <Div width={128} />
+          <InteractiveModeButton
+            borderLeft="1px solid border"
+            borderRight="1px solid border"
+            borderBottom="1px solid border"
+          />
+          <RemountButton
+            borderRight="1px solid border"
+            borderBottom="1px solid border"
+          />
+          <Div width={32} />
           <BreakpointsButtons />
+          <Div width={3 * 32} />
           <Div flexGrow />
-          <InteractiveModeButton borderLeft="1px solid border" />
-          <RemountButton borderLeft="1px solid border" />
-          {/* <EditCodeButton /> */}
         </Div>
         <ComponentWindow
           componentPath={path}

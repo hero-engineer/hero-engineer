@@ -166,7 +166,7 @@ function PanelStyles() {
   }, [breakpoints, saveFile, refreshClasses])
 
   const updateClassName = useCallback((className: string) => {
-    if (!(currentHierarchy && currentHierarchy.element)) return
+    if (!currentHierarchy?.element) return
 
     setClassName(className)
 
