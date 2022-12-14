@@ -1,10 +1,8 @@
 import { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react'
-import { useParams } from 'react-router-dom'
 import { Autocomplete, Div, WithOutsideClick } from 'honorable'
 import createEmojiRegex from 'emoji-regex'
 import { MdOutlineClose } from 'react-icons/md'
 import { HiOutlineFaceSmile } from 'react-icons/hi2'
-
 import { CssClassType } from '~types'
 
 import { refetchKeys, zIndexes } from '~constants'
@@ -22,7 +20,7 @@ type CssClassesSelector = {
   onLoading: Dispatch<SetStateAction<boolean>>
   onClassNamesChange: (classes: string[]) => void
   onSelectedClassNameChange: Dispatch<SetStateAction<string>>
-}
+}®
 
 const emojiRegex = createEmojiRegex()
 const classNameRegex = /^[a-zA-Z_-]+[\w-]*$/

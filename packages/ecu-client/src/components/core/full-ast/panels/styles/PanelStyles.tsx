@@ -31,10 +31,12 @@ import StylesSubSectionSpacing from './StylesSubSectionSpacing'
 import StylesSubSectionTypography from './StylesSubSectionTypography'
 import CssClassesSelector from './CssClassesSelector'
 
-function findElement(hierarchy: HierarchyType, targetId: string): HTMLElement | null {
-  if (hierarchy.id === targetId) return hierarchy.element
+// TODO move to utils and dedupe from HierarchyOverlay
+function findHierarchy(hierarchy: HierarchyType | null, targetId: string): HierarchyType | null {
+  if (!hierarchy) return null
+  if (hierarchy.id === targetId) return hierarchy
 
-  return hierarchy.children.map(h => findElement(h, targetId)).find(x => x) ?? null
+  return hierarchy.children.map(h => findHierarchy(h, targetId)).find(x => x) ?? null
 }
 
 // The styles panel
@@ -53,10 +55,10 @@ function PanelStyles() {
     refetch: refetchCssClassesQuery,
   })
 
-  const element = useMemo(() => hierarchy ? findElement(hierarchy, currentHierarchyId) : null, [hierarchy, currentHierarchyId])
-  const className = useMemo(() => element ? element.className : '', [element])
+  const currentHierarchy = useMemo(() => findHierarchy(hierarchy, currentHierarchyId), [hierarchy, currentHierarchyId])
+  const className = useMemo(() => currentHierarchy && currentHierarchy.element ? currentHierarchy.element.className : '', [currentHierarchy])
   const classNames = useMemo(() => className.split(' ').map(c => c.trim()).filter(Boolean), [className])
-  const isNoElementSelected = useMemo(() => hierarchy?.type !== 'element', [hierarchy])
+  const isNoElementSelected = useMemo(() => currentHierarchy?.type !== 'element', [currentHierarchy])
 
   const [selectedClassName, setSelelectedClassName] = usePersistedState('selected-class-name', '')
   const [style, setStyle] = useState<CSSProperties>({})
@@ -154,12 +156,12 @@ function PanelStyles() {
   ])
 
   const updateClassName = useCallback((className: string) => {
-    if (!element) return
+    if (!(currentHierarchy && currentHierarchy.element)) return
 
-    element.className = className
+    currentHierarchy.element.className = className
 
     // TODO update the file
-  }, [element])
+  }, [currentHierarchy])
 
   const throttledHandleCssUpdate = useThrottleAsynchronous(handleCssUpdate, 500)
 
