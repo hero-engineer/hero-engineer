@@ -7,6 +7,7 @@ import { SaveFileMutation, SaveFileMutationDataType } from '~queries'
 
 import createSelector from '~processors/css/createSelector'
 import getClasses from '~processors/css/getClasses'
+import updateHierarchyElementAttribute from '~processors/typescript/updateHierarchyElementAttribute'
 
 import HierarchyContext from '~contexts/HierarchyContext2'
 import BreakpointContext from '~contexts/BreakpointContext'
@@ -22,6 +23,7 @@ import useThrottleAsynchronous from '~hooks/useThrottleAsynchronous'
 import convertCssAttributeNameToJs from '~utils/convertCssAttributeNameToJs'
 import filterClassesByClassNamesAndMedias from '~utils/filterClassesByClassNamesAndMedias'
 import areAttributesValid from '~utils/areAttributesValid'
+import convertStylesToCssString from '~utils/convertStylesToCssString'
 
 import StylesSubSectionPosition from './StylesSubSectionPosition'
 import StylesSubSectionSize from './StylesSubSectionSize'
@@ -152,9 +154,11 @@ function PanelStyles() {
 
   const throttledHandleCssUpdate = useThrottleAsynchronous(handleCssUpdate, 500)
 
-  // TODO error handling
   const handleCreateClassName = useCallback(async (className: string) => {
     const { code, filePath } = await createSelector(`.${className}`, breakpoints)
+
+    // TODO error handling
+    if (!code) return
 
     refreshClasses()
 
@@ -165,15 +169,24 @@ function PanelStyles() {
     })
   }, [breakpoints, saveFile, refreshClasses])
 
-  const updateClassName = useCallback((className: string) => {
+  const updateClassName = useCallback(async (className: string) => {
     if (!currentHierarchy?.element) return
 
     setClassName(className)
 
     currentHierarchy.element.className = className
 
-    // TODO update the file
-  }, [currentHierarchy])
+    const code = await updateHierarchyElementAttribute(currentHierarchy, 'className', className)
+
+    // TODO error handling
+    if (!code) return
+
+    await saveFile({
+      filePath: currentHierarchy.onFilePath,
+      code,
+      commitMessage: `Add className ${className} to ${currentHierarchy.name}`,
+    })
+  }, [currentHierarchy, saveFile])
 
   const handleSetClassNames = useCallback((classes: string[]) => {
     updateClassName(classes.join(' '))
@@ -182,19 +195,19 @@ function PanelStyles() {
   }, [updateClassName, setStyle])
 
   const handleStyleChange = useCallback((attributes: CssAttributeType[]) => {
-    if (!selectedClassName) return
+    if (!(selectedClassName && currentHierarchy?.element)) return
 
-    setStyle(x => {
-      const updatedStyle: CssValuesType = { ...x }
+    const updatedStyle: CssValuesType = { ...style }
 
-      attributes.forEach(({ name, value }) => {
-        updatedStyle[convertCssAttributeNameToJs(name)] = value
-      })
-
-      return updatedStyle
+    attributes.forEach(({ name, value }) => {
+      updatedStyle[convertCssAttributeNameToJs(name)] = value
     })
+
+    currentHierarchy.element.setAttribute('style', convertStylesToCssString(updatedStyle))
+
+    setStyle(updatedStyle)
     setIsStyleUpdated(true)
-  }, [selectedClassName, setStyle])
+  }, [selectedClassName, currentHierarchy, style, setStyle])
 
   const renderNoElement = useCallback(() => (
     <Div
