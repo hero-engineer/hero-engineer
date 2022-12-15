@@ -510,8 +510,7 @@ export default mergeTheme(defaultTheme, {
       ({ short }: any) => short && {
         minHeight: 0,
         width: 64,
-        paddingLeft: 0,
-        paddingRight: 0,
+        paddingLeft: 4,
       },
     ],
     InputBase: [

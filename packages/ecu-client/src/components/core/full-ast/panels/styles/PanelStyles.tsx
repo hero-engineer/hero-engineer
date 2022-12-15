@@ -1,7 +1,7 @@
-import { CSSProperties, memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { A, Div } from 'honorable'
 
-import { CssAttributeType, CssValueType } from '~types'
+import { CssAttributeType } from '~types'
 
 import { SaveFileMutation, SaveFileMutationDataType } from '~queries'
 
@@ -30,7 +30,6 @@ import normalizeCssAttributes from '~utils/normalizeCssAttributes'
 import getCascadingCssAttributes from '~utils/getCascadingCssAttributes'
 import deleteAndConvertCssAttributes from '~utils/deleteAndConvertCssAttributes'
 import convertStylesToCssString from '~utils/convertStylesToCssString'
-import { appendCssImportantToString } from '~utils/cssImportantUtils'
 
 import CssSelector from './CssSelector'
 import StylesSubSectionPosition from './StylesSubSectionPosition'
@@ -242,10 +241,11 @@ function PanelStyles() {
   const handleAttributesChange = useCallback((attributes: CssAttributeType[]) => {
     if (!selectedClassName) return
 
+    const mergedAttributes = mergeCssAttributes(updatedAttributes, attributes)
     // setIsStyleUpdated(true)
-    setUpdatedAttributes(x => mergeCssAttributes(x, attributes))
-    handleUpdateElementStyle(attributes)
-  }, [selectedClassName, handleUpdateElementStyle])
+    setUpdatedAttributes(mergedAttributes)
+    handleUpdateElementStyle(mergedAttributes)
+  }, [selectedClassName, updatedAttributes, handleUpdateElementStyle])
 
   const handleWarnAboutCssClassOrdering = useCallback(() => {
     if (!warnings.cssClassOrdering) return

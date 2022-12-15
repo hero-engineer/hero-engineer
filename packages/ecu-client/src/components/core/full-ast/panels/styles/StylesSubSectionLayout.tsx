@@ -305,7 +305,7 @@ function StylesSubSectionLayout({ attributes, breakpointAttributes, currentBreak
   }, [attributeTitleProps, getValue, isToggled, updateCssAttribute, onChange])
 
   const renderFlexAlignEditor = useCallback(() => {
-    const alignItemsValue = getValue('align-items')
+    const flexDirectionValue = getValue('flex-direction')
 
     return (
       <Div xflex="x1">
@@ -321,7 +321,7 @@ function StylesSubSectionLayout({ attributes, breakpointAttributes, currentBreak
           gridTemplateColumns="repeat(8, minmax(0, 1fr))"
         >
           {flexAligns.map(({ name, label, getIcon }) => {
-            const Icon = getIcon(['row', 'row-reverse'].includes(alignItemsValue))
+            const Icon = getIcon(['row', 'row-reverse'].includes(flexDirectionValue))
 
             return (
               <Tooltip
@@ -345,7 +345,7 @@ function StylesSubSectionLayout({ attributes, breakpointAttributes, currentBreak
   }, [attributeTitleProps, getValue, isToggled, updateCssAttribute, onChange])
 
   const renderFlexJustifyEditor = useCallback(() => {
-    const justifyContentValue = getValue('justify-content')
+    const flexDirectionValue = getValue('flex-direction')
 
     return (
       <Div xflex="x1">
@@ -361,7 +361,7 @@ function StylesSubSectionLayout({ attributes, breakpointAttributes, currentBreak
           gridTemplateColumns="repeat(8, minmax(0, 1fr))"
         >
           {flexJustifys.map(({ name, label, getIcon }) => {
-            const Icon = getIcon(['row', 'row-reverse'].includes(justifyContentValue))
+            const Icon = getIcon(['row', 'row-reverse'].includes(flexDirectionValue))
 
             return (
               <Tooltip
