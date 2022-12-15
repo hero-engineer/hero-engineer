@@ -444,7 +444,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
       const subHierarchy: ExtendedHierarchyType = {
         id: `${hierarchy.id}${hierarchyIdSeparator}text${hierarchyIndexSeparator}${indexOfStackElement}`,
         name: 'text',
-        type: 'element',
+        type: 'text',
         start: jsxText.getFullStart(),
         element: stackElement,
         childrenElements: [],
@@ -685,7 +685,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
         const subHierarchy: ExtendedHierarchyType = {
           id: `${hierarchy.id}${hierarchyIdSeparator}text${hierarchyIndexSeparator}${indexOfStackElement}`,
           name: 'text',
-          type: 'element',
+          type: 'text',
           start: node.getFullStart(),
           element: stackElement,
           childrenElements: [],
@@ -723,7 +723,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
         const subHierarchy: ExtendedHierarchyType = {
           id: `${hierarchy.id}${hierarchyIdSeparator}text${hierarchyIndexSeparator}${indexOfStackElement}`,
           name: 'text',
-          type: 'element',
+          type: 'text',
           start: node.getFullStart(),
           element: stackElement,
           childrenElements: [],
@@ -1004,7 +1004,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
       const subHierarchy: ExtendedHierarchyType = {
         id: `${hierarchy.id}${hierarchyIdSeparator}text${hierarchyIndexSeparator}${indexOfStackElement}`,
         name: 'text',
-        type: 'element',
+        type: 'text',
         start: literal.getFullStart(),
         element: stackElement,
         childrenElements: [],
@@ -1255,7 +1255,7 @@ function createHierarchyFromElement(hierarchy: ExtendedHierarchyType, element: H
     return {
       id: `${hierarchy.id}${hierarchyIdSeparator}text${hierarchyIndexSeparator}${hierarchy.childrenElements.indexOf(element)}`,
       name: 'text',
-      type: 'element',
+      type: 'text',
       element,
       start: -1,
       children: [],
@@ -1313,27 +1313,5 @@ function countCommonItemsAtStart(a: any[], b: any[]) {
 
   return count
 }
-
-// function hashElement(element: HTMLElement): string {
-//   if (element.nodeType === Node.TEXT_NODE) return element.textContent ?? ''
-
-//   const childElementHashes: string[] = []
-
-//   for (const child of element.childNodes) {
-//     childElementHashes.push(hashElement(child as HTMLElement))
-//   }
-
-//   return `${element.tagName}~${hashElementAttributes(element)}~${childElementHashes.join('~~')}`
-// }
-
-// function hashElementAttributes(element: HTMLElement) {
-//   const hashes: string[] = []
-
-//   for (const attribute of element.attributes) {
-//     hashes.push(`${attribute.name}~${attribute.value}`)
-//   }
-
-//   return hashes.join('~~')
-// }
 
 export default createHierarchy

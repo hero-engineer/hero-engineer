@@ -21,7 +21,7 @@ function HierarchyOverlay({ children }: HierarchyOverlayPropsType) {
   const [isScrolling, setIsScrolling] = useState(false)
 
   const renderOverlayElement = useCallback((hierarchy: HierarchyType, parentHierarchy: HierarchyType | null = null) => {
-    if (hierarchy.element?.nodeType === Node.TEXT_NODE) return null
+    if (hierarchy.type === 'text') return null
 
     return (
       <HierarchyOverlayElement

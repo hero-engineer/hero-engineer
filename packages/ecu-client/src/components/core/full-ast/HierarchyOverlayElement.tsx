@@ -16,11 +16,11 @@ type HierarchyOverlayElementPropsType = {
 }
 
 const typeToColor = {
-  component: 'type-component',
-  element: 'type-element',
-  children: 'type-children',
-  array: 'type-array',
-  text: 'type-text',
+  component: 'hierarchy-type-component',
+  element: 'hierarchy-type-element',
+  children: 'hierarchy-type-children',
+  array: 'hierarchy-type-array',
+  text: 'hierarchy-type-text',
 }
 
 function scrollElement(element: HTMLElement, deltaY: number, deltaX: number): boolean {
@@ -61,7 +61,7 @@ function getLimitedDomRect(hierarchy: HierarchyType) {
 }
 
 function getChildElements(hierarchy: HierarchyType): HTMLElement[] {
-  if (hierarchy.element && hierarchy.element.nodeType !== Node.TEXT_NODE) return [hierarchy.element]
+  if (hierarchy.element && hierarchy.type === 'text') return [hierarchy.element]
 
   return hierarchy.children.map(getChildElements).flat()
 }

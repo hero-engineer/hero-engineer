@@ -13,10 +13,11 @@ import LogsContext from '~contexts/LogsContext'
 import usePersistedState from '~hooks/usePersistedState'
 
 const typeToColor = {
-  component: 'type-component',
-  element: 'type-element',
-  children: 'type-children',
-  array: 'type-array',
+  component: 'hierarchy-type-component',
+  element: 'hierarchy-type-element',
+  children: 'hierarchy-type-children',
+  array: 'hierarchy-type-array',
+  text: 'hierarchy-type-text',
 }
 
 // The hierarchy section
@@ -31,7 +32,7 @@ function PanelHierarchy() {
   }, [logs.hierarchy])
 
   const renderHierarchy = useCallback((hierarchy: HierarchyType, isRoot = false) => {
-    if (hierarchy.element?.nodeType === Node.TEXT_NODE) return null
+    if (hierarchy.type === 'text') return null
 
     return (
       <TreeView
@@ -133,7 +134,7 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand, 
         },
       }}
     >
-      {!!hierarchy.children.filter(h => h.element?.nodeType !== Node.TEXT_NODE).length && (
+      {!!hierarchy.children.filter(h => h.type !== 'text').length && (
         <Div
           xflex="x5"
           flexShrink={0}

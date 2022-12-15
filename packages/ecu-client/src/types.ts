@@ -155,7 +155,7 @@ export type TabType = {
 export type HierarchyType = {
   id: string
   name: string
-  type: 'component' | 'element' | 'array' | 'children'
+  type: 'component' | 'element' | 'text' | 'array' | 'children'
   start: number
   element: HTMLElement | null
   children: HierarchyType[]
