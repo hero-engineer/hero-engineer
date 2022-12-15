@@ -9,6 +9,7 @@ import { LogsType, SnackBarItemType, TabType } from '~types'
 import ModeContext from '~contexts/ModeContext'
 import HotContext from '~contexts/HotContext'
 import LogsContext, { LogsContextType } from '~contexts/LogsContext'
+import WarningContext, { WarningsContextType, WarningsType } from '~contexts/WarningsContext'
 import RefetchContext, { RefetchContextType } from '~contexts/RefetchContext'
 import ThemeModeContext, { ThemeModeContextType } from '~contexts/ThemeModeContext'
 import SnackBarContext, { SnackBarContextType } from '~contexts/SnackBarContext'
@@ -30,6 +31,9 @@ function ProviderMaster({ mode, hot, children }: ProviderMasterPropsType) {
   const [logs, setLogs] = usePersistedState<LogsType>('logs', { hierarchy: false })
   const logsContextValue = useMemo<LogsContextType>(() => ({ logs, setLogs }), [logs, setLogs])
 
+  const [warnings, setWarnings] = usePersistedState<WarningsType>('warnings', { cssClassOrdering: true })
+  const warningsContextValue = useMemo<WarningsContextType>(() => ({ warnings, setWarnings }), [warnings, setWarnings])
+
   const { refetch, register } = useCreateRefetchRegistry()
   const refetchContextValue = useMemo<RefetchContextType>(() => ({ refetch, register }), [refetch, register])
 
@@ -49,15 +53,17 @@ function ProviderMaster({ mode, hot, children }: ProviderMasterPropsType) {
         <ModeContext.Provider value={mode}>
           <HotContext.Provider value={hot}>
             <LogsContext.Provider value={logsContextValue}>
-              <RefetchContext.Provider value={refetchContextValue}>
-                <ThemeModeContext.Provider value={themeModeContextValue}>
-                  <SnackBarContext.Provider value={snackBarContextValue}>
-                    <TabsContext.Provider value={tabsContextValue}>
-                      {children}
-                    </TabsContext.Provider>
-                  </SnackBarContext.Provider>
-                </ThemeModeContext.Provider>
-              </RefetchContext.Provider>
+              <WarningContext.Provider value={warningsContextValue}>
+                <RefetchContext.Provider value={refetchContextValue}>
+                  <ThemeModeContext.Provider value={themeModeContextValue}>
+                    <SnackBarContext.Provider value={snackBarContextValue}>
+                      <TabsContext.Provider value={tabsContextValue}>
+                        {children}
+                      </TabsContext.Provider>
+                    </SnackBarContext.Provider>
+                  </ThemeModeContext.Provider>
+                </RefetchContext.Provider>
+              </WarningContext.Provider>
             </LogsContext.Provider>
           </HotContext.Provider>
         </ModeContext.Provider>

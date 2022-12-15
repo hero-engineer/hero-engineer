@@ -8,6 +8,7 @@ export const zIndexes = {
   emojiPicker: 999999999, // 9 9
   colorPicker: 999999999, // 9 9
   breakpointsMenu: 999999999, // 9 9
+  cssSelectorChipMenu: 999999999, // 9 9
   componentIframeExpanderHandle: 99999999, // 8 9
   retractablePanel: 9999999, // 7 9
   contextualInformationVignette: 999999 + 1, // 6 9 + 1 TODO remove

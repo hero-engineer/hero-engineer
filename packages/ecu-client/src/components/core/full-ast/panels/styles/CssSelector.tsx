@@ -17,8 +17,10 @@ type CssSelectorPropType = {
   classNames: string[]
   selectedClassName: string
   onCreateClassName: (className: string) => void
+  onDeleteClassName: (className: string) => void
   onClassNamesChange: (classNames: string[]) => void
   onSelectedClassNameChange: Dispatch<SetStateAction<string>>
+  onWarnAboutCssClassOrdering: () => void
 }
 
 const emojiRegex = createEmojiRegex()
@@ -30,7 +32,7 @@ const anyOption = { value: ecuAnyValue, label: 'Create new class' }
 const ecuErrorValue = `__ecu_error__${Math.random()}`
 const errorOption = { value: ecuErrorValue, label: 'Invalid class name' }
 
-function CssSelector({ allClasses, classNames, selectedClassName, onSelectedClassNameChange, onCreateClassName, onClassNamesChange }: CssSelectorPropType) {
+function CssSelector({ allClasses, classNames, selectedClassName, onSelectedClassNameChange, onCreateClassName, onDeleteClassName, onClassNamesChange, onWarnAboutCssClassOrdering }: CssSelectorPropType) {
   const [search, setSearch] = useState('')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false)
@@ -61,7 +63,8 @@ function CssSelector({ allClasses, classNames, selectedClassName, onSelectedClas
   const handleSelect = useCallback((selectedValue: any) => {
     if (selectedValue === ecuErrorValue || isError) return
 
-    const addedClassName = selectedValue === ecuAnyValue ? search : selectedValue
+    const isCreated = selectedValue === ecuAnyValue
+    const addedClassName = isCreated ? search : selectedValue
 
     setSearch('')
 
@@ -70,40 +73,48 @@ function CssSelector({ allClasses, classNames, selectedClassName, onSelectedClas
 
       if (nextClassNames.length === classNames.length) return
 
-      onCreateClassName(addedClassName)
-      onClassNamesChange(nextClassNames)
+      const orderedNextClassNames = [...nextClassNames].sort((a, b) => {
+        const selectorA = `.${a}`
+        const selectorB = `.${b}`
+        const indexOfA = allClasses.findIndex(c => c.selector === selectorA)
+        const indexOfB = allClasses.findIndex(c => c.selector === selectorB)
+
+        return indexOfA < indexOfB ? -1 : 1
+      })
+
+      if (isCreated) onCreateClassName(addedClassName)
+
+      onClassNamesChange(orderedNextClassNames)
       onSelectedClassNameChange(addedClassName)
+
+      if (nextClassNames.join(' ') !== orderedNextClassNames.join(' ')) onWarnAboutCssClassOrdering()
     }
   }, [
     isError,
     search,
+    allClasses,
     classNames,
     onCreateClassName,
     onClassNamesChange,
     onSelectedClassNameChange,
+    onWarnAboutCssClassOrdering,
   ])
 
-  const handleDiscardClass = useCallback((className: string) => {
+  const handleChipSelect = useCallback((className: string) => {
+    onSelectedClassNameChange(x => x === className ? '' : className)
+  }, [onSelectedClassNameChange])
+
+  const handleChipDiscard = useCallback((className: string) => {
     const nextClassNames = classNames.filter(c => c !== className)
 
     onClassNamesChange(nextClassNames)
     onSelectedClassNameChange(x => nextClassNames.includes(x) ? x : '')
   }, [classNames, onClassNamesChange, onSelectedClassNameChange])
 
-  const handleChipSelect = useCallback((className: string) => {
-    onSelectedClassNameChange(x => x === className ? '' : className)
-  }, [onSelectedClassNameChange])
-
-  const handleChipDrop = useCallback((dragSelector: string, dropSelector: string, isLeftDropZone: boolean) => {
-    const nextClassNames = [...classNames]
-
-    nextClassNames.splice(nextClassNames.indexOf(dragSelector), 1)
-    nextClassNames.splice(nextClassNames.indexOf(dropSelector) + (isLeftDropZone ? 0 : 1), 0, dragSelector)
-
-    if (nextClassNames.join(' ') === classNames.join(' ')) return
-
-    onClassNamesChange(nextClassNames)
-  }, [classNames, onClassNamesChange])
+  const handleChipDelete = useCallback((className: string) => {
+    handleChipDiscard(className)
+    onDeleteClassName(className)
+  }, [handleChipDiscard, onDeleteClassName])
 
   const handleEmojiSelect = useCallback((_unified: string, emoji: string) => {
     setSearch(x => x + emoji)
@@ -138,10 +149,10 @@ function CssSelector({ allClasses, classNames, selectedClassName, onSelectedClas
             <CssSelectorChip
               key={className}
               selector={className}
-              onDiscard={() => handleDiscardClass(className)}
-              onSelect={() => handleChipSelect(className)}
-              onDrop={handleChipDrop}
               isSelected={selectedClassName === className}
+              onSelect={() => handleChipSelect(className)}
+              onDiscard={() => handleChipDiscard(className)}
+              onDelete={() => handleChipDelete(className)}
             />
           ))}
         </Div>

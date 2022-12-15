@@ -1,5 +1,5 @@
 import { CSSProperties, memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { Div } from 'honorable'
+import { A, Div } from 'honorable'
 
 import { CssAttributeType, CssValuesType, HierarchyType } from '~types'
 
@@ -10,9 +10,11 @@ import createSelector from '~processors/css/createSelector'
 import getClasses from '~processors/css/getClasses'
 import updateHierarchyElementAttribute from '~processors/typescript/updateHierarchyElementAttribute'
 import updateSelector from '~processors/css/updateSelector'
+import deleteSelector from '~processors/css/deleteSelector'
 
 import HierarchyContext from '~contexts/HierarchyContext2'
 import BreakpointContext from '~contexts/BreakpointContext'
+import WarningsContext from '~contexts/WarningsContext'
 
 import useAsync from '~hooks/useAsync'
 import useMutation from '~hooks/useMutation'
@@ -76,6 +78,7 @@ function getLimitedHierarchyId(id: string) {
 function PanelStyles() {
   const { breakpoint, breakpoints } = useContext(BreakpointContext)
   const { hierarchy, currentHierarchyId } = useContext(HierarchyContext)
+  const { warnings, setWarnings } = useContext(WarningsContext)
 
   const [, saveFile] = useMutation<SaveFileMutationDataType>(SaveFileMutation)
 
@@ -87,6 +90,7 @@ function PanelStyles() {
 
   const [isStyleUpdated, setIsStyleUpdated] = useState(false)
   const [classesRefresh, setClassesRefresh] = useState(0)
+  const [shouldDisplayCssClassOrderingWarning, setShouldDisplayCssClassOrderingWarning] = useState(false)
 
   // The medias that can impact the current breakpoint
   const concernedMedias = useMemo(() => {
@@ -154,12 +158,12 @@ function PanelStyles() {
   const attributesHash = useMemo(() => attributes.map(({ name, value }) => `${name}:${value}`).join('_'), [attributes])
   const previousAttributesHash = usePrevious(attributesHash)
 
-  // console.log('concernedMedias', concernedMedias)
-  // console.log('style', style)
-  // console.log('v, bv, cv', passedCssValues, passedBreakpointCssValues, passedCurrentBreakpointCssValues)
   // console.log('similiarHierarchies', similiarHierarchies)
+  // console.log('style', style)
+  // console.log('concernedMedias', concernedMedias)
+  // console.log('v, bv, cv', passedCssValues, passedBreakpointCssValues, passedCurrentBreakpointCssValues)
 
-  const refreshClasses = useCallback(() => {
+  const handleRefreshClasses = useCallback(() => {
     setClassesRefresh(x => x + 1)
   }, [])
 
@@ -170,6 +174,8 @@ function PanelStyles() {
     if (!isStyleUpdated) return
 
     const { filePath, code } = await updateSelector(`.${selectedClassName}`, attributes, breakpoint)
+
+    handleRefreshClasses()
 
     await saveFile({
       filePath,
@@ -184,6 +190,7 @@ function PanelStyles() {
     selectedClassName,
     breakpoint,
     isStyleUpdated,
+    handleRefreshClasses,
     saveFile,
   ])
 
@@ -195,21 +202,24 @@ function PanelStyles() {
     // TODO error handling
     if (!code) return
 
-    refreshClasses()
+    handleRefreshClasses()
 
     await saveFile({
       filePath,
       code,
-      commitMessage: `Add class ${className} to index.css`,
+      commitMessage: `Add selector .${className} to index.css`,
     })
-  }, [breakpoints, saveFile, refreshClasses])
+  }, [breakpoints, saveFile, handleRefreshClasses])
 
-  const updateClassName = useCallback(async (className: string) => {
+  const handleUpdateClassName = useCallback(async (className: string) => {
     if (!currentHierarchy?.element) return
 
+    setShouldDisplayCssClassOrderingWarning(false)
     setClassName(className)
 
-    currentHierarchy.element.className = className
+    similiarHierarchies.forEach(similarHierarchy => {
+      similarHierarchy.element!.className = className
+    })
 
     const code = await updateHierarchyElementAttribute(currentHierarchy, 'className', className)
 
@@ -221,9 +231,26 @@ function PanelStyles() {
       code,
       commitMessage: `Add className ${className} to ${currentHierarchy.name}`,
     })
-  }, [currentHierarchy, saveFile])
+  }, [currentHierarchy, similiarHierarchies, saveFile])
 
-  const updateElementStyle = useCallback((style: CSSProperties) => {
+  const handleDeleteClassName = useCallback(async (className: string) => {
+    setShouldDisplayCssClassOrderingWarning(false)
+
+    const { code, filePath } = await deleteSelector(`.${className}`)
+
+    // TODO error handling
+    if (!code) return
+
+    handleRefreshClasses()
+
+    await saveFile({
+      filePath,
+      code,
+      commitMessage: `Delete selector .${className} in index.css`,
+    })
+  }, [handleRefreshClasses, saveFile])
+
+  const handleUpdateElementStyle = useCallback((style: CSSProperties) => {
     const css = convertStylesToCssString(style)
 
     similiarHierarchies.forEach(similarHierarchy => {
@@ -235,11 +262,12 @@ function PanelStyles() {
   }, [similiarHierarchies])
 
   const handleSetClassNames = useCallback((classes: string[]) => {
-    updateClassName(classes.join(' '))
+    setShouldDisplayCssClassOrderingWarning(false)
+    handleUpdateClassName(classes.join(' '))
     setIsStyleUpdated(false)
     setStyle({})
-    updateElementStyle({})
-  }, [updateClassName, updateElementStyle])
+    handleUpdateElementStyle({})
+  }, [handleUpdateClassName, handleUpdateElementStyle])
 
   const handleStyleChange = useCallback((attributes: CssAttributeType[]) => {
     if (!selectedClassName) return
@@ -252,8 +280,14 @@ function PanelStyles() {
 
     setIsStyleUpdated(true)
     setStyle(updatedStyle)
-    updateElementStyle(updatedStyle)
-  }, [selectedClassName, style, updateElementStyle])
+    handleUpdateElementStyle(updatedStyle)
+  }, [selectedClassName, style, handleUpdateElementStyle])
+
+  const handleWarnAboutCssClassOrdering = useCallback(() => {
+    if (!warnings.cssClassOrdering) return
+
+    setShouldDisplayCssClassOrderingWarning(true)
+  }, [warnings.cssClassOrdering])
 
   const renderNoElement = useCallback(() => (
     <Div
@@ -283,12 +317,45 @@ function PanelStyles() {
       xflex="y2s"
       mt={0.5}
     >
+      {shouldDisplayCssClassOrderingWarning && (
+        <Div
+          fontSize="0.75rem"
+          mb={0.5}
+          px={0.75}
+        >
+          <Div
+            color="danger"
+            mb={0.5}
+          >
+            Your selectors have been reordered to respect the order of CSS inheritence.
+            To override a behavior on a later selector you can use the "!important" modifier.
+            You can also delete the selector and recreate it to give it the inheritence priority.
+          </Div>
+          <A
+            color="danger"
+            onClick={() => setShouldDisplayCssClassOrderingWarning(false)}
+          >
+            Hide warning
+          </A>
+          <A
+            color="danger"
+            onClick={() => {
+              setShouldDisplayCssClassOrderingWarning(false)
+              setWarnings(x => ({ ...x, cssClassOrdering: false }))
+            }}
+            ml={0.5}
+          >
+            Do not show again
+          </A>
+        </Div>
+      )}
       {!selectedClassName && (
         <Div
           textAlign="center"
           fontSize="0.75rem"
           color="text-light"
           mb={0.5}
+          px={0.75}
         >
           Select a class to edit it.
           <br />
@@ -332,10 +399,12 @@ function PanelStyles() {
       />
     </Div>
   ), [
+    shouldDisplayCssClassOrderingWarning,
     passedCssValues,
     passedBreakpointCssValues,
     passedCurrentBreakpointCssValues,
     selectedClassName,
+    setWarnings,
     handleStyleChange,
   ])
 
@@ -348,10 +417,12 @@ function PanelStyles() {
         <CssSelector
           allClasses={allClasses}
           classNames={classNames}
-          onCreateClassName={handleCreateClassName}
-          onClassNamesChange={handleSetClassNames}
           selectedClassName={selectedClassName}
+          onCreateClassName={handleCreateClassName}
+          onDeleteClassName={handleDeleteClassName}
+          onClassNamesChange={handleSetClassNames}
           onSelectedClassNameChange={setSelelectedClassName}
+          onWarnAboutCssClassOrdering={handleWarnAboutCssClassOrdering}
         />
       </Div>
       {!classNames.length ? renderNoClassNames() : renderSubSections()}
@@ -360,9 +431,11 @@ function PanelStyles() {
     allClasses,
     classNames,
     selectedClassName,
-    handleCreateClassName,
-    handleSetClassNames,
     setSelelectedClassName,
+    handleCreateClassName,
+    handleDeleteClassName,
+    handleSetClassNames,
+    handleWarnAboutCssClassOrdering,
     renderNoClassNames,
     renderSubSections,
   ])
@@ -375,7 +448,7 @@ function PanelStyles() {
   useEffect(() => {
     setIsStyleUpdated(false)
     setStyle({})
-    updateElementStyle({})
+    handleUpdateElementStyle({})
   // Omiting updateElementStyle on purpose as it would trigger the effect on every hierarchy change
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [breakpoint, selectedClassName])

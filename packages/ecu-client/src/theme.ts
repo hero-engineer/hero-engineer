@@ -550,6 +550,10 @@ export default mergeTheme(defaultTheme, {
         backgroundColor: 'transparent',
         borderRadius: 0,
       },
+      ({ slim }: any) => slim && ({
+        paddingTop: 0,
+        paddingBottom: 0,
+      }),
     ],
   },
   MenuItem: {
