@@ -1,7 +1,6 @@
 import { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react'
 import { Autocomplete, Div, WithOutsideClick } from 'honorable'
 import createEmojiRegex from 'emoji-regex'
-import { MdOutlineClose } from 'react-icons/md'
 import { HiOutlineFaceSmile } from 'react-icons/hi2'
 
 import { CssClassType } from '~types'
@@ -11,8 +10,9 @@ import { zIndexes } from '~constants'
 import extractClassNamesFromSelector from '~utils/extractClassNamesFromSelector'
 
 import EmojiPickerBase from '~core/emoji/EmojiPickerBase'
+import CssSelectorChip from '~core/full-ast/panels/styles/CssSelectorChip'
 
-type CssClassesSelector = {
+type CssSelectorPropType = {
   allClasses: CssClassType[]
   classNames: string[]
   selectedClassName: string
@@ -30,7 +30,7 @@ const anyOption = { value: ecuAnyValue, label: 'Create new class' }
 const ecuErrorValue = `__ecu_error__${Math.random()}`
 const errorOption = { value: ecuErrorValue, label: 'Invalid class name' }
 
-function CssClassesSelector({ allClasses, classNames, selectedClassName, onSelectedClassNameChange, onCreateClassName, onClassNamesChange }: CssClassesSelector) {
+function CssSelector({ allClasses, classNames, selectedClassName, onSelectedClassNameChange, onCreateClassName, onClassNamesChange }: CssSelectorPropType) {
   const [search, setSearch] = useState('')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false)
@@ -92,6 +92,17 @@ function CssClassesSelector({ allClasses, classNames, selectedClassName, onSelec
     onSelectedClassNameChange(x => x === className ? '' : className)
   }, [onSelectedClassNameChange])
 
+  const handleChipDrop = useCallback((dragSelector: string, dropSelector: string, isLeftDropZone: boolean) => {
+    const nextClassNames = [...classNames]
+
+    nextClassNames.splice(nextClassNames.indexOf(dragSelector), 1)
+    nextClassNames.splice(nextClassNames.indexOf(dropSelector) + (isLeftDropZone ? 0 : 1), 0, dragSelector)
+
+    if (nextClassNames.join(' ') === classNames.join(' ')) return
+
+    onClassNamesChange(nextClassNames)
+  }, [classNames, onClassNamesChange])
+
   const handleEmojiSelect = useCallback((_unified: string, emoji: string) => {
     setSearch(x => x + emoji)
     setIsEmojiPickerOpen(false)
@@ -122,14 +133,14 @@ function CssClassesSelector({ allClasses, classNames, selectedClassName, onSelec
           gap={0.25}
         >
           {classNames.map(className => (
-            <CssClassChip
+            <CssSelectorChip
               key={className}
+              selector={className}
               onDiscard={() => handleDiscardClass(className)}
               onSelect={() => handleChipSelect(className)}
-              primary={selectedClassName === className}
-            >
-              {className}
-            </CssClassChip>
+              onDrop={handleChipDrop}
+              isSelected={selectedClassName === className}
+            />
           ))}
         </Div>
       )}
@@ -203,43 +214,4 @@ function CssClassesSelector({ allClasses, classNames, selectedClassName, onSelec
   )
 }
 
-type CssClassChipPropsType = {
-  children: string
-  onDiscard: () => void
-  onSelect: () => void
-  primary: boolean
-}
-
-function CssClassChip({ children, onDiscard, onSelect, primary }: CssClassChipPropsType) {
-  return (
-    <Div
-      xflex="x4"
-      flexShrink={0}
-      backgroundColor={primary ? 'primary' : 'background-light-light'}
-      color={primary ? 'white' : 'text'}
-      borderRadius="medium"
-      p={0.25}
-      minWidth={0}
-      maxWidth="100%"
-      cursor="pointer"
-      userSelect="none"
-    >
-      <Div
-        ellipsis
-        onClick={onSelect}
-        pr={0.25}
-      >
-        {children}
-      </Div>
-      <Div
-        xflex="x5"
-        fontSize="0.75em"
-        onClick={onDiscard}
-      >
-        <MdOutlineClose />
-      </Div>
-    </Div>
-  )
-}
-
-export default CssClassesSelector
+export default CssSelector

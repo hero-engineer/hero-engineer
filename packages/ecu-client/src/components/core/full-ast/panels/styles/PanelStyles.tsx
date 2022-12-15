@@ -26,12 +26,12 @@ import filterClassesByClassNamesAndMedias from '~utils/filterClassesByClassNames
 import areAttributesValid from '~utils/areAttributesValid'
 import convertStylesToCssString from '~utils/convertStylesToCssString'
 
+import CssSelector from './CssSelector'
 import StylesSubSectionPosition from './StylesSubSectionPosition'
 import StylesSubSectionSize from './StylesSubSectionSize'
 import StylesSubSectionLayout from './StylesSubSectionLayout'
 import StylesSubSectionSpacing from './StylesSubSectionSpacing'
 import StylesSubSectionTypography from './StylesSubSectionTypography'
-import CssClassesSelector from './CssClassesSelector'
 
 // TODO move to utils and dedupe from HierarchyOverlay
 function findHierarchy(hierarchy: HierarchyType | null, targetId: string): HierarchyType | null {
@@ -313,7 +313,7 @@ function PanelStyles() {
         xflex="x4"
         px={0.5}
       >
-        <CssClassesSelector
+        <CssSelector
           allClasses={allClasses}
           classNames={classNames}
           onCreateClassName={handleCreateClassName}

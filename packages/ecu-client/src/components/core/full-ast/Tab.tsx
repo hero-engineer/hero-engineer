@@ -1,7 +1,7 @@
 import { MouseEvent, ReactNode, useCallback, useContext, useRef, useState } from 'react'
 import { Div, useForkedRef } from 'honorable'
-import { MdClose } from 'react-icons/md'
 import { XYCoord, useDrag, useDrop } from 'react-dnd'
+import { MdClose } from 'react-icons/md'
 
 import { TabType } from '~types'
 
