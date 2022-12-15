@@ -512,6 +512,9 @@ export default mergeTheme(defaultTheme, {
         width: 64,
         paddingLeft: 4,
       },
+      ({ colorInput }: any) => colorInput && {
+        paddingLeft: 0,
+      },
     ],
     InputBase: [
       ({ bare }: any) => bare && {

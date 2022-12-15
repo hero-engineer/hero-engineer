@@ -34,13 +34,13 @@ import project, { projectReady } from '~processors/typescript'
   * HIERARCHY
 -- */
 
-export const hierarchyFileSeparator = '__@#file#@__'
+export const hierarchyFileSeparator = '__@@##file##@@__'
 
-export const hierarchyIdSeparator = '__@#id#@__'
+export const hierarchyIdSeparator = '__@@##id##@@__'
 
-export const hierarchyIndexSeparator = '__@#index#@__'
+export const hierarchyIndexSeparator = '__@@##index##@@__'
 
-export const hierarchyComponentSeparator = '__@#component#@__'
+export const hierarchyComponentSeparator = '__@@##component##@@__'
 
 const allowedFunctionComponentFirstCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 

@@ -129,6 +129,7 @@ function ColorPicker({
           <Input
             slim
             short
+            colorInput
             disabledNoBackground
             noStartIconPadding
             width={72}
