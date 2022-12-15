@@ -66,7 +66,9 @@ function CssSelector({ allClasses, classNames, selectedClassName, onSelectedClas
     setSearch('')
 
     if (addedClassName) {
-      const nextClassNames = [...new Set(addedClassName ? [...classNames, addedClassName] : classNames)]
+      const nextClassNames = [...new Set([...classNames, addedClassName])]
+
+      if (nextClassNames.length === classNames.length) return
 
       onCreateClassName(addedClassName)
       onClassNamesChange(nextClassNames)
