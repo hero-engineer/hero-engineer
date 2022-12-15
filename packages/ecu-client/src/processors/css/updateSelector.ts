@@ -14,8 +14,9 @@ async function updateSelector(selector: string, attributes: CssAttributeType[], 
 
     attributes.forEach(attribute => {
       rule.append({
-        prop: attribute.name,
+        prop: attribute.cssName,
         value: attribute.value.toString(),
+        important: attribute.isImportant,
       })
 
       // Styling: prepend spaces to the declaration

@@ -1,33 +1,53 @@
 import { useCallback } from 'react'
 
-import { CssValueType, CssValuesType } from '~types'
+import { CssAttributeType, CssValueType, NormalizedCssAttributesType } from '~types'
 
 import { cssAttributesMap } from '~constants'
 
-function useStylesSubSectionHelpers(cssValues: CssValuesType, breakpointCssValues: CssValuesType) {
-  const getValue = useCallback((attributeName: string) => breakpointCssValues[attributeName] ?? cssValues[attributeName] ?? cssAttributesMap[attributeName].defaultValue, [breakpointCssValues, cssValues])
+import convertCssAttributeCssNameToJs from '~utils/convertCssAttributeCssNameToJs'
 
-  const getTextColor = useCallback((attributeNames: string[]) => (
-    attributeNames
-    .map(attributeName => (
-      typeof breakpointCssValues[attributeName] !== 'undefined'
-      && breakpointCssValues[attributeName] !== cssValues[attributeName]
-      && (typeof cssValues[attributeName] !== 'undefined' || breakpointCssValues[attributeName] !== cssAttributesMap[attributeName].defaultValue)
+function useStylesSubSectionHelpers(attributes: NormalizedCssAttributesType, breakpointAttributes: NormalizedCssAttributesType) {
+  const getValue = useCallback((attributeCssName: string) => (breakpointAttributes[attributeCssName]?.value ?? attributes[attributeCssName]?.value ?? cssAttributesMap[attributeCssName].defaultValue).toString(), [breakpointAttributes, attributes])
+
+  const getIsImportant = useCallback((attributeCssName: string) => breakpointAttributes[attributeCssName]?.isImportant ?? attributes[attributeCssName]?.isImportant ?? false, [breakpointAttributes, attributes])
+
+  const getTextColor = useCallback((attributeCssNames: string[]) => (
+    attributeCssNames
+    .map(attributeCssName => (
+      typeof breakpointAttributes[attributeCssName]?.value !== 'undefined'
+      && breakpointAttributes[attributeCssName]?.value !== attributes[attributeCssName]?.value
+      && (typeof attributes[attributeCssName]?.value !== 'undefined' || breakpointAttributes[attributeCssName]?.value !== cssAttributesMap[attributeCssName].defaultValue)
         ? 'breakpoint'
-        : typeof cssValues[attributeName] !== 'undefined'
-        && ((typeof breakpointCssValues[attributeName] !== 'undefined' && breakpointCssValues[attributeName] !== cssValues[attributeName]) || cssValues[attributeName] !== cssAttributesMap[attributeName].defaultValue)
+        : typeof attributes[attributeCssName]?.value !== 'undefined'
+        && ((typeof breakpointAttributes[attributeCssName]?.value !== 'undefined' && breakpointAttributes[attributeCssName]?.value !== attributes[attributeCssName]?.value) || attributes[attributeCssName]?.value !== cssAttributesMap[attributeCssName].defaultValue)
           ? 'primary'
           : 'text-light'
     ))
     .reduce((acc, color) => color === 'breakpoint' ? color : color === 'primary' ? color : acc, 'text-light')
-  ), [breakpointCssValues, cssValues])
+  ), [breakpointAttributes, attributes])
 
-  const isToggled = useCallback((attributeName: string, values: CssValueType[]) => values.includes(getValue(attributeName)), [getValue])
+  const isToggled = useCallback((attributeCssName: string, values: CssValueType[]) => values.includes(getValue(attributeCssName)), [getValue])
+
+  const createCssAttribute = useCallback((attributeCssName: string, value: CssValueType, isImportant: boolean) => ({
+    cssName: attributeCssName,
+    jsName: convertCssAttributeCssNameToJs(attributeCssName),
+    value,
+    isImportant,
+  } as CssAttributeType), [])
+
+  const updateCssAttribute = useCallback((attributeCssName: string, value: CssValueType) => {
+    const existingCssAttribute = breakpointAttributes[attributeCssName]
+
+    return existingCssAttribute ? { ...existingCssAttribute, value } : createCssAttribute(attributeCssName, value, false)
+  }, [breakpointAttributes, createCssAttribute])
 
   return {
     getValue,
+    getIsImportant,
     getTextColor,
     isToggled,
+    createCssAttribute,
+    updateCssAttribute,
   }
 }
 

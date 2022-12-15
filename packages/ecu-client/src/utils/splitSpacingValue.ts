@@ -1,15 +1,20 @@
+import { CssValueType } from '~types'
+
 import { cssValueUnits } from '~constants'
 
-function splitSpacingValue(cssValue: string | number): [string, typeof cssValueUnits[number] | 'inherit'] {
+function splitSpacingValue(cssValue: CssValueType): [string, typeof cssValueUnits[number] | 'inherit'] {
   if (typeof cssValue === 'number') return [cssValue.toString(), 'px']
-  if (cssValue === 'auto') return ['', 'auto']
-  if (cssValue === 'inherit') return ['', 'inherit']
 
-  const unit = cssValueUnits.find(unit => cssValue.endsWith(unit))
+  const workingValue = cssValue.trim()
 
-  if (unit) return [cssValue.slice(0, -unit.length), unit]
+  if (workingValue === 'auto') return ['', 'auto']
+  if (workingValue === 'inherit') return ['', 'inherit']
 
-  return [cssValue, 'px']
+  const unit = cssValueUnits.find(unit => workingValue.endsWith(unit))
+
+  if (unit) return [workingValue.slice(0, -unit.length), unit]
+
+  return [workingValue, 'px']
 }
 
 export default splitSpacingValue

@@ -91,8 +91,10 @@ export type CssValueType = string | number
 export type CssValuesType = Record<string, CssValueType>
 
 export type CssAttributeType = {
-  name: string
+  cssName: string
+  jsName: string
   value: CssValueType
+  isImportant: boolean
 }
 
 export type CssClassType = {
@@ -104,11 +106,11 @@ export type CssClassType = {
 }
 
 export type CSsAttributesMapType = Record<string, {
-  attributes: readonly string[]
+  cssNames: readonly string[]
   defaultValue: CssValueType
-  extractValue?: (value: CssValueType) => CssValueType
-  converter?: (value: CssValueType) => CssValuesType
+  // extractValue?: (value: CssValueType) => CssValueType
   isValueValid: (value: CssValueType) => boolean
+  converter?: (value: CssValueType, isImportant: boolean) => CssAttributeType[]
 }>
 
 export type FontType = {
@@ -197,3 +199,5 @@ export type IdentifierType = {
 export type LogsType = {
   hierarchy: boolean
 }
+
+export type NormalizedCssAttributesType = Record<string, CssAttributeType>

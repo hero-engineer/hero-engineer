@@ -4,14 +4,14 @@ import { CssValuesType } from '~types'
 
 import { cssAttributesMap, cssValueReset } from '~constants'
 
-import convertJsAttributeNameToCss from '~utils/convertJsAttributeNameToCss'
+import convertCssAttributeJsNameToCss from '~utils/convertCssAttributeJsNameToCss'
 
 function useJsCssValues(cssValues: CssValuesType, style: CSSProperties) {
   return useMemo(() => {
     const nextCssValues = { ...cssValues }
 
     Object.entries(style).forEach(([attributeName, value]) => {
-      const cssAttributeName = convertJsAttributeNameToCss(attributeName)
+      const cssAttributeName = convertCssAttributeJsNameToCss(attributeName)
 
       if (value === cssValueReset) {
         delete nextCssValues[cssAttributeName]

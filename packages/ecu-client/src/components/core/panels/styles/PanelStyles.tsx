@@ -23,7 +23,7 @@ import useThrottleAsynchronous from '~hooks/useThrottleAsynchronous'
 
 import getComponentRootHierarchyIds from '~utils/getComponentRootHierarchyIds'
 import getLastComponentHierarchyItem from '~utils/getLastComponentHierarchyItem'
-import convertCssAttributeNameToJs from '~utils/convertCssAttributeNameToJs'
+import convertCssAttributeCssNameToJs from '~utils/convertCssAttributeCssNameToJs'
 import filterClassesByClassNamesAndMedias from '~utils/filterClassesByClassNamesAndMedias'
 import areAttributesValid from '~utils/areAttributesValid'
 
@@ -168,7 +168,7 @@ function PanelStyles() {
       const updatedStyle: CssValuesType = { ...x }
 
       attributes.forEach(({ name, value }) => {
-        updatedStyle[convertCssAttributeNameToJs(name)] = value
+        updatedStyle[convertCssAttributeCssNameToJs(name)] = value
       })
 
       return updatedStyle

@@ -5,8 +5,6 @@ import { BsTypeItalic } from 'react-icons/bs'
 import { RxLetterCaseCapitalize, RxLetterCaseLowercase, RxLetterCaseUppercase, RxOverline, RxStrikethrough, RxUnderline } from 'react-icons/rx'
 import { MdClose, MdOutlineFormatTextdirectionLToR, MdOutlineFormatTextdirectionRToL } from 'react-icons/md'
 
-import { CssAttributeType, CssValuesType } from '~types'
-
 import { refetchKeys } from '~constants'
 
 import { ColorsQuery, ColorsQueryDataType, FontsQuery, FontsQueryDataType } from '~queries'
@@ -24,14 +22,7 @@ import StylesDisabledOverlay from '~core/full-ast/panels/styles/StylesDisabledOv
 import StylesTitle from '~core/full-ast/panels/styles/StylesTitle'
 import StylesAttributeTitle from '~core/full-ast/panels/styles/StylesAttributeTitle'
 import StylesList from '~core/full-ast/panels/styles/StylesList'
-
-type StylesSubSectionTypographyPropsType = {
-  cssValues: CssValuesType
-  breakpointCssValues: CssValuesType
-  currentBreakpointCssValues: CssValuesType
-  onChange: (attributes: CssAttributeType[]) => void
-  disabled: boolean
-}
+import { StylesSubSectionPropsType } from '~core/full-ast/panels/styles/StylesSubSectionPropsType'
 
 const attributeNames = [
   'font-family',
@@ -140,7 +131,7 @@ const defaultWeights = [100, 200, 300, 400, 500, 600, 700, 800, 900]
 
 const prepareFontFamily = (fontName: string) => fontName.includes(' ') ? `"${fontName}", sans-serif` : `${fontName}, sans-serif`
 
-function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBreakpointCssValues, onChange, disabled }: StylesSubSectionTypographyPropsType) {
+function StylesSubSectionTypography({ attributes, breakpointAttributes, currentBreakpointAttributes, onChange, isDisabled }: StylesSubSectionPropsType) {
   const [expanded, setExpanded] = usePersistedState('styles-sub-section-typography-expanded', true)
 
   const [fontsQueryResult, refetchFontsQuery] = useQuery<FontsQueryDataType>({
@@ -161,7 +152,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
     }
   )
 
-  const { getValue, isToggled } = useStylesSubSectionHelpers(cssValues, breakpointCssValues)
+  const { getValue, isToggled, updateCssAttribute } = useStylesSubSectionHelpers(attributes, breakpointAttributes)
 
   const fonts = useMemo(() => fontsQueryResult.data?.fonts ?? [], [fontsQueryResult.data])
   const colors = useMemo(() => colorsQueryResult.data?.colors ?? [], [colorsQueryResult.data])
@@ -175,11 +166,11 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
   }, [fonts, fontFamily])
 
   const attributeTitleProps = useMemo(() => ({
-    cssValues,
-    breakpointCssValues,
-    currentBreakpointCssValues,
+    attributes,
+    breakpointAttributes,
+    currentBreakpointAttributes,
     onChange,
-  }), [cssValues, breakpointCssValues, currentBreakpointCssValues, onChange])
+  }), [attributes, breakpointAttributes, currentBreakpointAttributes, onChange])
 
   const renderInheritButton = useCallback((attributeName: string) => (
     <>
@@ -190,13 +181,13 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
         <Button
           ghost
           toggled={isToggled(attributeName, ['inherit'])}
-          onClick={() => onChange([{ name: attributeName, value: 'inherit' }])}
+          onClick={() => onChange([updateCssAttribute(attributeName, 'inherit')])}
         >
           inherit
         </Button>
       </Tooltip>
     </>
-  ), [isToggled, onChange])
+  ), [isToggled, updateCssAttribute, onChange])
 
   const renderFamilySection = useCallback(() => (
     <Div xflex="x4">
@@ -210,7 +201,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
         tiny
         menuOnTop
         value={getValue('font-family')}
-        onChange={event => onChange([{ name: 'font-family', value: event.target.value }])}
+        onChange={event => onChange([updateCssAttribute('font-family', event.target.value)])}
         SelectedProps={{
           fontFamily: getValue('font-family'),
         }}
@@ -262,7 +253,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
         ))}
       </Select>
     </Div>
-  ), [attributeTitleProps, fonts, getValue, onChange])
+  ), [attributeTitleProps, fonts, getValue, updateCssAttribute, onChange])
 
   const renderWeightsSection = useCallback(() => (
     <Div xflex="x4">
@@ -276,7 +267,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
         tiny
         menuOnTop
         value={getValue('font-weight')}
-        onChange={event => onChange([{ name: 'font-weight', value: event.target.value }])}
+        onChange={event => onChange([updateCssAttribute('font-weight', event.target.value)])}
       >
         <MenuItem value="inherit">
           inherit
@@ -291,7 +282,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
         ))}
       </Select>
     </Div>
-  ), [attributeTitleProps, weights, getValue, onChange])
+  ), [attributeTitleProps, weights, getValue, updateCssAttribute, onChange])
 
   const renderSizeSection = useCallback(() => (
     <Div xflex="x5b">
@@ -307,7 +298,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
         </StylesAttributeTitle>
         <CssValueInput
           allowInherit
-          onChange={value => onChange([{ name: 'font-size', value }])}
+          onChange={value => onChange([updateCssAttribute('font-size', value)])}
           value={getValue('font-size').toString()}
         />
       </Div>
@@ -324,12 +315,12 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
         </StylesAttributeTitle>
         <CssValueInput
           allowInherit
-          onChange={value => onChange([{ name: 'line-height', value }])}
+          onChange={value => onChange([updateCssAttribute('line-height', value)])}
           value={getValue('line-height').toString()}
         />
       </Div>
     </Div>
-  ), [attributeTitleProps, getValue, onChange])
+  ), [attributeTitleProps, getValue, updateCssAttribute, onChange])
 
   const renderColorSection = useCallback(() => {
     const color = getValue('color').toString()
@@ -348,7 +339,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
         <ColorPicker
           withOverlay
           value={color === 'inherit' ? null : color}
-          onChange={value => onChange([{ name: 'color', value }])}
+          onChange={value => onChange([updateCssAttribute('color', value)])}
           size={16}
           pickerLeftOffset={-29} // Adjusted from sight
           colors={colors}
@@ -356,7 +347,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
         {renderInheritButton('color')}
       </Div>
     )
-  }, [attributeTitleProps, colors, renderInheritButton, getValue, onChange])
+  }, [attributeTitleProps, colors, renderInheritButton, getValue, updateCssAttribute, onChange])
 
   const renderAlignSection = useCallback(() => (
     <Div xflex="x4">
@@ -374,7 +365,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
           <Button
             ghost
             toggled={isToggled('text-align', [name])}
-            onClick={() => onChange([{ name: 'text-align', value: name }])}
+            onClick={() => onChange([updateCssAttribute('text-align', name)])}
           >
             <Icon />
           </Button>
@@ -382,7 +373,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
       ))}
       {renderInheritButton('text-align')}
     </Div>
-  ), [attributeTitleProps, renderInheritButton, isToggled, onChange])
+  ), [attributeTitleProps, renderInheritButton, isToggled, updateCssAttribute, onChange])
 
   const renderItalicSection = useCallback(() => (
     <Div xflex="x4">
@@ -400,7 +391,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
           <Button
             ghost
             toggled={isToggled('font-style', [name])}
-            onClick={() => onChange([{ name: 'font-style', value: name }])}
+            onClick={() => onChange([updateCssAttribute('font-style', name)])}
           >
             <Icon />
           </Button>
@@ -408,7 +399,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
       ))}
       {renderInheritButton('font-style')}
     </Div>
-  ), [attributeTitleProps, renderInheritButton, isToggled, onChange])
+  ), [attributeTitleProps, renderInheritButton, isToggled, updateCssAttribute, onChange])
 
   const renderDecorationSection = useCallback(() => (
     <Div xflex="x4">
@@ -426,7 +417,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
           <Button
             ghost
             toggled={isToggled('text-decoration', [name])}
-            onClick={() => onChange([{ name: 'text-decoration', value: name }])}
+            onClick={() => onChange([updateCssAttribute('text-decoration', name)])}
           >
             <Icon />
           </Button>
@@ -434,7 +425,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
       ))}
       {renderInheritButton('text-decoration')}
     </Div>
-  ), [attributeTitleProps, renderInheritButton, isToggled, onChange])
+  ), [attributeTitleProps, renderInheritButton, isToggled, updateCssAttribute, onChange])
 
   const renderSpacingSection = useCallback(() => (
     <Div xflex="x4">
@@ -447,10 +438,10 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
       <CssValueInput
         allowInherit
         value={getValue('letter-spacing').toString()}
-        onChange={value => onChange([{ name: 'letter-spacing', value }])}
+        onChange={value => onChange([updateCssAttribute('letter-spacing', value)])}
       />
     </Div>
-  ), [attributeTitleProps, getValue, onChange])
+  ), [attributeTitleProps, getValue, updateCssAttribute, onChange])
 
   const renderTransformSection = useCallback(() => (
     <Div xflex="x4">
@@ -468,7 +459,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
           <Button
             ghost
             toggled={isToggled('text-transform', [name])}
-            onClick={() => onChange([{ name: 'text-transform', value: name }])}
+            onClick={() => onChange([updateCssAttribute('text-transform', name)])}
           >
             <Icon />
           </Button>
@@ -476,7 +467,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
       ))}
       {renderInheritButton('text-transform')}
     </Div>
-  ), [attributeTitleProps, renderInheritButton, isToggled, onChange])
+  ), [attributeTitleProps, renderInheritButton, isToggled, updateCssAttribute, onChange])
 
   const renderDirectionSection = useCallback(() => (
     <Div xflex="x4">
@@ -494,7 +485,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
           <Button
             ghost
             toggled={isToggled('direction', [name])}
-            onClick={() => onChange([{ name: 'direction', value: name }])}
+            onClick={() => onChange([updateCssAttribute('direction', name)])}
           >
             <Icon />
           </Button>
@@ -502,7 +493,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
       ))}
       {renderInheritButton('direction')}
     </Div>
-  ), [attributeTitleProps, renderInheritButton, isToggled, onChange])
+  ), [attributeTitleProps, renderInheritButton, isToggled, updateCssAttribute, onChange])
 
   const renderWhiteSpaceSection = useCallback(() => (
     <Div xflex="x4">
@@ -516,7 +507,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
         tiny
         menuOnTop
         value={getValue('white-space')}
-        onChange={event => onChange([{ name: 'white-space', value: event.target.value }])}
+        onChange={event => onChange([updateCssAttribute('white-space', event.target.value)])}
       >
         <MenuItem value="inherit">
           inherit
@@ -531,7 +522,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
         ))}
       </Select>
     </Div>
-  ), [attributeTitleProps, getValue, onChange])
+  ), [attributeTitleProps, getValue, updateCssAttribute, onChange])
 
   const renderShadowSection = useCallback(() => {
     const items: ReactNode[] = []
@@ -559,9 +550,9 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
 
     const closestWeight = weights.reduce((previous, current) => Math.abs(current - numericWeight) < Math.abs(previous - numericWeight) ? current : previous, Math.max(...weights))
 
-    onChange([{ name: 'font-weight', value: closestWeight }])
+    onChange([updateCssAttribute('font-weight', closestWeight)])
   // Add fontFamily as the trigger
-  }, [fontFamily, weights, getValue, onChange])
+  }, [fontFamily, weights, getValue, updateCssAttribute, onChange])
 
   return (
     <Accordion
@@ -575,8 +566,8 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
         <StylesTitle
           title="Typography"
           expanded={expanded}
-          cssValues={cssValues}
-          breakpointCssValues={breakpointCssValues}
+          attributes={attributes}
+          breakpointAttributes={breakpointAttributes}
           attributeNames={attributeNames}
         />
       )}
@@ -602,7 +593,7 @@ function StylesSubSectionTypography({ cssValues, breakpointCssValues, currentBre
         {renderWhiteSpaceSection()}
       </Div>
       {renderShadowSection()}
-      {disabled && <StylesDisabledOverlay />}
+      {isDisabled && <StylesDisabledOverlay />}
     </Accordion>
   )
 }

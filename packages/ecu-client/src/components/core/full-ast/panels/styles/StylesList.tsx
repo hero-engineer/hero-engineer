@@ -2,28 +2,28 @@ import { ReactNode } from 'react'
 import { Div } from 'honorable'
 import { HiPlus } from 'react-icons/hi'
 
-import { CssAttributeType, CssValuesType } from '~types'
+import { CssAttributeType, NormalizedCssAttributesType } from '~types'
 
 import StylesAttributeTitle from '~core/full-ast/panels/styles/StylesAttributeTitle'
 
 type StylesListPropsType = {
-  cssValues: CssValuesType
-  breakpointCssValues: CssValuesType
-  currentBreakpointCssValues: CssValuesType
-  attributeName: string
   title: string
   items: ReactNode[]
-  onAddItem: () => void
+  attributeName: string
+  attributes: NormalizedCssAttributesType
+  breakpointAttributes: NormalizedCssAttributesType
+  currentBreakpointAttributes: NormalizedCssAttributesType
   onChange: (attributes: CssAttributeType[]) => void
+  onAddItem: () => void
 }
 
 function StylesList({
-  cssValues,
-  breakpointCssValues,
-  currentBreakpointCssValues,
-  attributeName,
   title,
   items,
+  attributeName,
+  attributes,
+  breakpointAttributes,
+  currentBreakpointAttributes,
   onAddItem,
   onChange,
 }: StylesListPropsType) {
@@ -41,9 +41,9 @@ function StylesList({
       >
         <StylesAttributeTitle
           attributeNames={[attributeName]}
-          cssValues={cssValues}
-          breakpointCssValues={breakpointCssValues}
-          currentBreakpointCssValues={currentBreakpointCssValues}
+          attributes={attributes}
+          breakpointAttributes={breakpointAttributes}
+          currentBreakpointAttributes={currentBreakpointAttributes}
           onChange={onChange}
           width="auto"
         >

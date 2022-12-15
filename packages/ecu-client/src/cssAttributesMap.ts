@@ -1,8 +1,8 @@
-import { CSsAttributesMapType, CssValueType } from '~types'
+import { CSsAttributesMapType, CssAttributeType, CssValueType } from '~types'
 
 import { cssValueUnits } from '~constants'
 
-import splitSpacingValue from './utils/splitSpacingValue'
+import splitSpacingValue from '~utils/splitSpacingValue'
 
 const cssDisplayValues = ['block', 'inline-block', 'flex', 'grid', 'none']
 const cssFlexDirectionValues = ['row', 'column']
@@ -18,65 +18,46 @@ const cssTextTransformValues = ['none', 'capitalize', 'uppercase', 'lowercase', 
 const cssDirectionValues = ['ltr', 'rtl']
 const cssWhiteSpaceValues = ['normal', 'nowrap', 'pre', 'pre-wrap', 'pre-line', 'break-spaces']
 
-function extractSpacing(value: CssValueType, index: number): CssValueType {
-  if (typeof value === 'number') return value
-
-  const spacing = value.split(' ').map(x => x.trim())
-
-  return spacing[index] || spacing[0]
+function prepareSpacingValue(value: string) {
+  return value.split(' ').map(x => x.trim()).filter(x => x.length)
 }
 
-function convertSpacing(name: string, value: CssValueType) {
-  if (typeof value !== 'string') {
-    return {
-      [name]: value.toString(),
-    }
-  }
+// function extractSpacing(value: CssValueType, index: number): CssValueType {
+//   if (typeof value === 'number') return value
 
-  const spacings = value.split(' ').map(x => x.trim())
+//   const spacings = prepareSpacingValue(value)
 
-  if (spacings.length === 1) {
-    return {
-      [`${name}-top`]: value,
-      [`${name}-right`]: value,
-      [`${name}-bottom`]: value,
-      [`${name}-left`]: value,
-    }
-  }
+//   return (
+//     spacings.length === 4
+//       ? spacings[index]
+//       : spacings.length === 3
+//         ? spacings[index === 0 ? 0 : index === 1 || index === 2 ? 1 : 2]
+//         : spacings.length === 2
+//           ? spacings[index === 0 || index === 1 ? 0 : 1]
+//           : spacings[0]
+//   )
+// }
 
-  if (spacings.length === 2) {
-    return {
-      [`${name}-top`]: spacings[0],
-      [`${name}-right`]: spacings[1],
-      [`${name}-bottom`]: spacings[0],
-      [`${name}-left`]: spacings[1],
-    }
-  }
+function convertSpacing(name: string, value: CssValueType, isImportant: boolean) {
+  if (typeof value === 'number') return createSpacingAttributes(name, value, value, value, value, isImportant)
 
-  if (spacings.length === 3) {
-    return {
-      [`${name}-top`]: spacings[0],
-      [`${name}-right`]: spacings[1],
-      [`${name}-bottom`]: spacings[2],
-      [`${name}-left`]: spacings[1],
-    }
-  }
+  const spacings = prepareSpacingValue(value)
 
-  if (spacings.length === 4) {
-    return {
-      [`${name}-top`]: spacings[0],
-      [`${name}-right`]: spacings[1],
-      [`${name}-bottom`]: spacings[2],
-      [`${name}-left`]: spacings[3],
-    }
-  }
+  if (spacings.length === 1) return createSpacingAttributes(name, spacings[0], spacings[0], spacings[0], spacings[0], isImportant)
+  if (spacings.length === 2) return createSpacingAttributes(name, spacings[0], spacings[1], spacings[0], spacings[1], isImportant)
+  if (spacings.length === 3) return createSpacingAttributes(name, spacings[0], spacings[1], spacings[2], spacings[1], isImportant)
+  if (spacings.length === 4) return createSpacingAttributes(name, spacings[0], spacings[1], spacings[2], spacings[3], isImportant)
 
-  return {
-    [`${name}-top`]: value,
-    [`${name}-right`]: value,
-    [`${name}-bottom`]: value,
-    [`${name}-left`]: value,
-  }
+  return createSpacingAttributes(name, spacings[0], spacings[0], spacings[0], spacings[0], isImportant)
+}
+
+function createSpacingAttributes(name: string, top: CssValueType, right: CssValueType, bottom: CssValueType, left: CssValueType, isImportant: boolean): CssAttributeType[] {
+  return [
+    { cssName: `${name}-top`, jsName: `${name}Top`, value: top, isImportant },
+    { cssName: `${name}-right`, jsName: `${name}Right`, value: right, isImportant },
+    { cssName: `${name}-bottom`, jsName: `${name}Bottom`, value: bottom, isImportant },
+    { cssName: `${name}-Left`, jsName: `${name}Left`, value: left, isImportant },
+  ]
 }
 
 function isSpacingValueValid(value: CssValueType) {
@@ -91,9 +72,9 @@ function isSpacingValueValid(value: CssValueType) {
 function isSpacingsValueValid(value: CssValueType) {
   if (typeof value === 'number') return true
 
-  const values = value.split(' ').filter(x => Boolean(x.trim()))
+  const spacings = prepareSpacingValue(value)
 
-  return values.length <= 4 && values.every(isSpacingValueValid)
+  return spacings.length <= 4 && spacings.every(isSpacingValueValid)
 }
 
 const isSizeValueValid = isSpacingValueValid
@@ -106,252 +87,252 @@ function isNumberOrNumberString(value: CssValueType) {
 
 const cssAttributesMap: CSsAttributesMapType = {
   margin: {
-    attributes: ['margin'],
+    cssNames: ['margin'],
     defaultValue: '0 0 0 0',
-    converter: value => convertSpacing('margin', value),
+    converter: (value, isImportant) => convertSpacing('margin', value, isImportant),
     isValueValid: isSpacingsValueValid,
   },
   'margin-top': {
-    attributes: ['margin-top', 'margin'],
+    cssNames: ['margin-top', 'margin'],
     defaultValue: 0,
-    extractValue: value => extractSpacing(value, 0),
+    // extractValue: value => extractSpacing(value, 0),
     isValueValid: isSpacingValueValid,
   },
   'margin-right': {
-    attributes: ['margin-right', 'margin'],
+    cssNames: ['margin-right', 'margin'],
     defaultValue: 0,
-    extractValue: value => extractSpacing(value, 1),
+    // extractValue: value => extractSpacing(value, 1),
     isValueValid: isSpacingValueValid,
   },
   'margin-bottom': {
-    attributes: ['margin-bottom', 'margin'],
+    cssNames: ['margin-bottom', 'margin'],
     defaultValue: 0,
-    extractValue: value => extractSpacing(value, 2),
+    // extractValue: value => extractSpacing(value, 2),
     isValueValid: isSpacingValueValid,
   },
   'margin-left': {
-    attributes: ['margin-left', 'margin'],
+    cssNames: ['margin-left', 'margin'],
     defaultValue: 0,
-    extractValue: value => extractSpacing(value, 3),
+    // extractValue: value => extractSpacing(value, 3),
     isValueValid: isSpacingValueValid,
   },
   padding: {
-    attributes: ['padding'],
+    cssNames: ['padding'],
     defaultValue: '0 0 0 0',
-    converter: value => convertSpacing('padding', value),
+    converter: (value, isImportant) => convertSpacing('padding', value, isImportant),
     isValueValid: isSpacingsValueValid,
   },
   'padding-top': {
-    attributes: ['padding-top', 'padding'],
+    cssNames: ['padding-top', 'padding'],
     defaultValue: 0,
-    extractValue: value => extractSpacing(value, 0),
+    // extractValue: value => extractSpacing(value, 0),
     isValueValid: isSpacingValueValid,
   },
   'padding-right': {
-    attributes: ['padding-right', 'padding'],
+    cssNames: ['padding-right', 'padding'],
     defaultValue: 0,
-    extractValue: value => extractSpacing(value, 1),
+    // extractValue: value => extractSpacing(value, 1),
     isValueValid: isSpacingValueValid,
   },
   'padding-bottom': {
-    attributes: ['padding-bottom', 'padding'],
+    cssNames: ['padding-bottom', 'padding'],
     defaultValue: 0,
-    extractValue: value => extractSpacing(value, 2),
+    // extractValue: value => extractSpacing(value, 2),
     isValueValid: isSpacingValueValid,
   },
   'padding-left': {
-    attributes: ['padding-left', 'padding'],
+    cssNames: ['padding-left', 'padding'],
     defaultValue: 0,
-    extractValue: value => extractSpacing(value, 3),
+    // extractValue: value => extractSpacing(value, 3),
     isValueValid: isSpacingValueValid,
   },
   display: {
-    attributes: ['display'],
+    cssNames: ['display'],
     defaultValue: 'block',
     isValueValid: value => typeof value === 'string' && cssDisplayValues.includes(value),
   },
   'flex-direction': {
-    attributes: ['flex-direction'],
+    cssNames: ['flex-direction'],
     defaultValue: 'row',
     isValueValid: value => typeof value === 'string' && cssFlexDirectionValues.includes(value),
   },
   'align-items': {
-    attributes: ['align-items'],
+    cssNames: ['align-items'],
     defaultValue: 'stretch',
     isValueValid: value => typeof value === 'string' && cssAlignItemsValues.includes(value),
   },
   'justify-items': {
-    attributes: ['justify-items'],
+    cssNames: ['justify-items'],
     defaultValue: 'stretch',
     isValueValid: value => typeof value === 'string' && cssAlignItemsValues.includes(value),
   },
   'justify-content': {
-    attributes: ['justify-content'],
+    cssNames: ['justify-content'],
     defaultValue: 'flex-start',
     isValueValid: value => typeof value === 'string' && cssAlignItemsValues.includes(value),
   },
   'align-content': {
-    attributes: ['align-content'],
+    cssNames: ['align-content'],
     defaultValue: 'stretch',
     isValueValid: value => typeof value === 'string' && cssAlignItemsValues.includes(value),
   },
   'flex-wrap': {
-    attributes: ['flex-wrap'],
+    cssNames: ['flex-wrap'],
     defaultValue: 'nowrap',
     isValueValid: value => typeof value === 'string' && cssFlexWrapValues.includes(value),
   },
   'row-gap': {
-    attributes: ['row-gap'],
-    defaultValue: '0px', // A bit of a hack, to make the gap editor display no modified value on 0px
+    cssNames: ['row-gap'],
+    defaultValue: '0px', // A bit of a hack, to make the gap editor display no modified value on 0px // TODO investigate
     isValueValid: isSpacingValueValid,
   },
   'grid-auto-flow': {
-    attributes: ['grid-auto-flow'],
+    cssNames: ['grid-auto-flow'],
     defaultValue: 'row',
     isValueValid: value => typeof value === 'string' && cssGridAutoFlowValues.includes(value),
   },
   'column-gap': {
-    attributes: ['column-gap'],
+    cssNames: ['column-gap'],
     defaultValue: '0px',
     isValueValid: isSpacingValueValid,
   },
   width: {
-    attributes: ['width'],
+    cssNames: ['width'],
     defaultValue: 'auto',
     isValueValid: isSizeValueValid,
   },
   'min-width': {
-    attributes: ['min-width'],
+    cssNames: ['min-width'],
     defaultValue: 'auto',
     isValueValid: isSizeValueValid,
   },
   'max-width': {
-    attributes: ['max-width'],
+    cssNames: ['max-width'],
     defaultValue: 'auto',
     isValueValid: isSizeValueValid,
   },
   height: {
-    attributes: ['height'],
+    cssNames: ['height'],
     defaultValue: 'auto',
     isValueValid: isSizeValueValid,
   },
   'min-height': {
-    attributes: ['min-height'],
+    cssNames: ['min-height'],
     defaultValue: 'auto',
     isValueValid: isSizeValueValid,
   },
   'max-height': {
-    attributes: ['max-height'],
+    cssNames: ['max-height'],
     defaultValue: 'auto',
     isValueValid: isSizeValueValid,
   },
   overflow: {
-    attributes: ['overflow'],
+    cssNames: ['overflow'],
     defaultValue: 'visible',
     isValueValid: value => typeof value === 'string' && cssOverflowValues.includes(value),
   },
   'overflow-x': {
-    attributes: ['overflow-x'],
+    cssNames: ['overflow-x'],
     defaultValue: 'visible',
     isValueValid: value => typeof value === 'string' && cssOverflowValues.includes(value),
   },
   'overflow-y': {
-    attributes: ['overflow-y'],
+    cssNames: ['overflow-y'],
     defaultValue: 'visible',
     isValueValid: value => typeof value === 'string' && cssOverflowValues.includes(value),
   },
   position: {
-    attributes: ['position'],
+    cssNames: ['position'],
     defaultValue: 'static',
     isValueValid: value => typeof value === 'string' && cssPositionValues.includes(value),
   },
   top: {
-    attributes: ['top'],
+    cssNames: ['top'],
     defaultValue: 'auto',
     isValueValid: isSizeValueValid,
   },
   right: {
-    attributes: ['right'],
+    cssNames: ['right'],
     defaultValue: 'auto',
     isValueValid: isSizeValueValid,
   },
   bottom: {
-    attributes: ['bottom'],
+    cssNames: ['bottom'],
     defaultValue: 'auto',
     isValueValid: isSizeValueValid,
   },
   left: {
-    attributes: ['left'],
+    cssNames: ['left'],
     defaultValue: 'auto',
     isValueValid: isSizeValueValid,
   },
   'font-family': {
-    attributes: ['font-family'],
+    cssNames: ['font-family'],
     defaultValue: 'inherit',
     isValueValid: value => typeof value === 'string',
   },
   'font-size': {
-    attributes: ['font-size'],
+    cssNames: ['font-size'],
     defaultValue: 'inherit',
     isValueValid: isSizeValueValid,
   },
   'font-weight': {
-    attributes: ['font-weight'],
+    cssNames: ['font-weight'],
     defaultValue: 'inherit',
     isValueValid: value => isNumberOrNumberString(value) || value === 'inherit',
   },
   'font-style': {
-    attributes: ['font-style'],
+    cssNames: ['font-style'],
     defaultValue: 'inherit',
     isValueValid: value => typeof value === 'string' && cssFontStyleValues.includes(value) || value === 'inherit',
   },
   'text-align': {
-    attributes: ['text-align'],
+    cssNames: ['text-align'],
     defaultValue: 'inherit',
     isValueValid: value => typeof value === 'string' && cssTextAlignValues.includes(value) || value === 'inherit',
   },
   'text-decoration': {
-    attributes: ['text-decoration'],
+    cssNames: ['text-decoration'],
     defaultValue: 'inherit',
     isValueValid: value => typeof value === 'string' && cssTextDecorationValues.includes(value) || value === 'inherit',
   },
   'text-transform': {
-    attributes: ['text-transform'],
+    cssNames: ['text-transform'],
     defaultValue: 'inherit',
     isValueValid: value => typeof value === 'string' && cssTextTransformValues.includes(value) || value === 'inherit',
   },
   'text-shadow': {
-    attributes: ['text-shadow'],
+    cssNames: ['text-shadow'],
     defaultValue: 'inherit',
     isValueValid: value => typeof value === 'string',
   },
   'line-height': {
-    attributes: ['line-height'],
+    cssNames: ['line-height'],
     defaultValue: 'inherit',
     isValueValid: value => isSizeValueValid(value) || value === 'inherit',
   },
   'letter-spacing': {
-    attributes: ['letter-spacing'],
+    cssNames: ['letter-spacing'],
     defaultValue: 'inherit',
     isValueValid: value => isSizeValueValid(value) || value === 'inherit',
   },
   'word-spacing': {
-    attributes: ['word-spacing'],
+    cssNames: ['word-spacing'],
     defaultValue: 'inherit',
     isValueValid: value => isSizeValueValid(value) || value === 'inherit',
   },
   color: {
-    attributes: ['color'],
+    cssNames: ['color'],
     defaultValue: 'inherit',
     isValueValid: value => typeof value === 'string',
   },
   'white-space': {
-    attributes: ['white-space'],
+    cssNames: ['white-space'],
     defaultValue: 'inherit',
     isValueValid: value => typeof value === 'string' && cssWhiteSpaceValues.includes(value) || value === 'inherit',
   },
   direction: {
-    attributes: ['direction'],
+    cssNames: ['direction'],
     defaultValue: 'inherit',
     isValueValid: value => typeof value === 'string' && cssDirectionValues.includes(value) || value === 'inherit',
   },

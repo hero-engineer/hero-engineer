@@ -1,23 +1,13 @@
 import { useRef } from 'react'
 import { Accordion } from 'honorable'
 
-import { CssAttributeType, CssValuesType } from '~types'
-
 import useRefresh from '~hooks/useRefresh'
 import usePersistedState from '~hooks/usePersistedState'
 
 import StylesTitle from '~core/full-ast/panels/styles/StylesTitle'
 import SpacingEditor from '~core/full-ast/panels/styles/SpacingEditor'
 import StylesDisabledOverlay from '~core/full-ast/panels/styles/StylesDisabledOverlay'
-
-type StylesSubSectionSpacingPropsType = {
-  onChange: (attributes: CssAttributeType[]) => void,
-  cssValues: CssValuesType
-  breakpointCssValues: CssValuesType
-  // eslint-disable-next-line react/no-unused-prop-types
-  currentBreakpointCssValues: CssValuesType
-  disabled: boolean
-}
+import { StylesSubSectionPropsType } from '~core/full-ast/panels/styles/StylesSubSectionPropsType'
 
 const baseHeight = 128
 const borderSizeDivider = 3.45
@@ -34,7 +24,7 @@ const attributeNames = [
   'padding-left',
 ]
 
-function StylesSubSectionSpacing({ cssValues, breakpointCssValues, onChange, disabled }: StylesSubSectionSpacingPropsType) {
+function StylesSubSectionSpacing({ attributes, breakpointAttributes, onChange, isDisabled }: StylesSubSectionPropsType) {
   const inputMountNodeRef = useRef<HTMLDivElement>(null)
 
   useRefresh()
@@ -53,8 +43,8 @@ function StylesSubSectionSpacing({ cssValues, breakpointCssValues, onChange, dis
         <StylesTitle
           title="Spacing"
           expanded={expanded}
-          cssValues={cssValues}
-          breakpointCssValues={breakpointCssValues}
+          attributes={attributes}
+          breakpointAttributes={breakpointAttributes}
           attributeNames={attributeNames}
         />
       )}
@@ -69,8 +59,8 @@ function StylesSubSectionSpacing({ cssValues, breakpointCssValues, onChange, dis
         onChange={onChange}
         borderSize={baseHeight / borderSizeDivider - spacingEditorPadding}
         inputMountNode={inputMountNodeRef.current}
-        cssValues={cssValues}
-        breakpointCssValues={breakpointCssValues}
+        attributes={attributes}
+        breakpointAttributes={breakpointAttributes}
       >
         <SpacingEditor
           title="Padding"
@@ -80,12 +70,12 @@ function StylesSubSectionSpacing({ cssValues, breakpointCssValues, onChange, dis
           borderSize={baseHeight / borderSizeDivider - spacingEditorPadding}
           offetHorizontal={2}
           inputMountNode={inputMountNodeRef.current}
-          cssValues={cssValues}
-          breakpointCssValues={breakpointCssValues}
+          attributes={attributes}
+          breakpointAttributes={breakpointAttributes}
         />
       </SpacingEditor>
       <div ref={inputMountNodeRef} />
-      {disabled && <StylesDisabledOverlay />}
+      {isDisabled && <StylesDisabledOverlay />}
     </Accordion>
   )
 }

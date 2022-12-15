@@ -2,7 +2,7 @@ import { ReactNode, useCallback, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Div, Path, Svg, WithOutsideClick } from 'honorable'
 
-import { CssAttributeType, CssValuesType } from '~types'
+import { CssAttributeType, NormalizedCssAttributesType } from '~types'
 
 import { cssAttributesMap } from '~constants'
 
@@ -22,8 +22,8 @@ type SpacingEditorPropsType = {
   borderSize?: number
   offetHorizontal?: number
   inputMountNode: Element | null
-  cssValues: CssValuesType
-  breakpointCssValues: CssValuesType
+  attributes: NormalizedCssAttributesType
+  breakpointAttributes: NormalizedCssAttributesType
   children?: ReactNode
 }
 
@@ -36,8 +36,8 @@ function SpacingEditor({
   borderSize = 25,
   offetHorizontal = 0,
   inputMountNode,
-  cssValues,
-  breakpointCssValues,
+  attributes,
+  breakpointAttributes,
   children,
 }: SpacingEditorPropsType) {
   const rootRef = useRef<HTMLDivElement>(null)
@@ -51,7 +51,7 @@ function SpacingEditor({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const { width: svgWidth, height: svgHeight } = useMemo(() => rootRef.current?.getBoundingClientRect() ?? { width: 0, height: 0 }, [rootRef.current])
 
-  const { getValue, getTextColor } = useStylesSubSectionHelpers(cssValues, breakpointCssValues)
+  const { getValue, getTextColor, updateCssAttribute } = useStylesSubSectionHelpers(attributes, breakpointAttributes)
 
   const handleHover = useCallback((index: number) => {
     setHoveredIndex(index)
@@ -63,13 +63,13 @@ function SpacingEditor({
     const editedValue = getValue(editedAttribute)
 
     if (!cssAttributesMap[editedAttribute].isValueValid(editedValue)) {
-      onChange([{ name: editedAttribute, value: cssAttributesMap[editedAttribute].defaultValue }])
+      onChange([updateCssAttribute(editedAttribute, cssAttributesMap[editedAttribute].defaultValue)])
     }
 
     if ((!rootRef.current?.contains(event.target as Node) || childrenRef.current?.contains(event.target as Node)) && !doesParentHaveId(event.target as Element, 'CssValueInput-unit-menu')) {
       setEditedAttribute('')
     }
-  }, [editedAttribute, onChange, getValue])
+  }, [editedAttribute, onChange, getValue, updateCssAttribute])
 
   return (
     <Div
@@ -274,7 +274,7 @@ function SpacingEditor({
         >
           <SpacingEditorInput
             value={getValue(editedAttribute)}
-            onChange={x => onChange([{ name: editedAttribute, value: x }])}
+            onChange={x => onChange([updateCssAttribute(editedAttribute, x)])}
             title={editedAttribute}
             allowNegativeValues={allowNegativeValues}
           />

@@ -1,7 +1,7 @@
 import { CSSProperties, memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { A, Div } from 'honorable'
 
-import { CssAttributeType, CssValuesType } from '~types'
+import { CssAttributeType, CssValueType } from '~types'
 
 import { SaveFileMutation, SaveFileMutationDataType } from '~queries'
 
@@ -18,17 +18,19 @@ import WarningsContext from '~contexts/WarningsContext'
 import useAsync from '~hooks/useAsync'
 import useMutation from '~hooks/useMutation'
 import usePrevious from '~hooks/usePrevious'
-import useCssValues from '~hooks/useCssValues'
-import useJsCssValues from '~hooks/useJsCssValues'
 import usePersistedState from '~hooks/usePersistedState'
 import useThrottleAsynchronous from '~hooks/useThrottleAsynchronous'
 
 import findHierarchy from '~utils/findHierarchy'
 import findSimilarHierarchies from '~utils/findSimilarHierarchies'
-import convertCssAttributeNameToJs from '~utils/convertCssAttributeNameToJs'
 import filterClassesByClassNamesAndMedias from '~utils/filterClassesByClassNamesAndMedias'
-import convertStylesToCssString from '~utils/convertStylesToCssString'
 import areAttributesValid from '~utils/areAttributesValid'
+import mergeCssAttributes from '~utils/mergeCssAttributes'
+import normalizeCssAttributes from '~utils/normalizeCssAttributes'
+import getCascadingCssAttributes from '~utils/getCascadingCssAttributes'
+import deleteAndConvertCssAttributes from '~utils/deleteAndConvertCssAttributes'
+import convertStylesToCssString from '~utils/convertStylesToCssString'
+import { appendCssImportantToString } from '~utils/cssImportantUtils'
 
 import CssSelector from './CssSelector'
 import StylesSubSectionPosition from './StylesSubSectionPosition'
@@ -50,9 +52,9 @@ function PanelStyles() {
   // But for speed we use useState
   const [className, setClassName] = useState('')
   const [selectedClassName, setSelelectedClassName] = usePersistedState('selected-class-name', '')
-  const [style, setStyle] = useState<CSSProperties>({})
+  const [updatedAttributes, setUpdatedAttributes] = useState<CssAttributeType[]>([])
 
-  const [isStyleUpdated, setIsStyleUpdated] = useState(false)
+  // const [isStyleUpdated, setIsStyleUpdated] = useState(false)
   const [classesRefresh, setClassesRefresh] = useState(0)
   const [shouldDisplayCssClassOrderingWarning, setShouldDisplayCssClassOrderingWarning] = useState(false)
 
@@ -100,32 +102,32 @@ function PanelStyles() {
   // Current breakpoint classes for the selected className
   const selectedCurrentBreakpointClasses = useMemo(() => filterClassesByClassNamesAndMedias(allClasses, [selectedClassName], [breakpoint.media]), [allClasses, selectedClassName, breakpoint.media])
 
-  // The css values for the complete styling
+  // The attributes for the complete styling
   // Displayed when no class is selected
-  const fullCssValues = useCssValues(masterBreakpointClasses)
-  const fullBreakpointCssValues = useCssValues(breakpointClasses)
-  const fullCurrentBreakpointCssValues = useCssValues(currentBreakpointClasses) // Might be unused
+  const fullAttributes = useMemo(() => normalizeCssAttributes(getCascadingCssAttributes(masterBreakpointClasses)), [masterBreakpointClasses])
+  const fullBreakpointAttributes = useMemo(() => normalizeCssAttributes(getCascadingCssAttributes(breakpointClasses)), [breakpointClasses])
+  const fullCurrentBreakpointAttributes = useMemo(() => normalizeCssAttributes(getCascadingCssAttributes(currentBreakpointClasses)), [currentBreakpointClasses]) // Might be unused
 
-  // The css values for the selected class
+  // The attributes for the selected class
   // Displayed when a class is selected
-  const selectedCssValues = useJsCssValues(useCssValues(selectedMasterBreakpointClasses), breakpoint.media ? {} : style)
-  const selectedBreakpointCssValues = useJsCssValues(useCssValues(selectedBreakpointClasses), style)
-  const selectedCurrentBreakpointCssValues = useJsCssValues(useCssValues(selectedCurrentBreakpointClasses), style)
+  // TODO investigate why the tertiary operator on media and create comment about it
+  const selectedAttributes = useMemo(() => normalizeCssAttributes(deleteAndConvertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(selectedMasterBreakpointClasses), breakpoint.media ? [] : updatedAttributes))), [selectedMasterBreakpointClasses, breakpoint, updatedAttributes])
+  const selectedBreakpointAttributes = useMemo(() => normalizeCssAttributes(deleteAndConvertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(selectedBreakpointClasses), updatedAttributes))), [selectedBreakpointClasses, updatedAttributes])
+  const selectedCurrentBreakpointAttributes = useMemo(() => normalizeCssAttributes(deleteAndConvertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(selectedCurrentBreakpointClasses), updatedAttributes))), [selectedCurrentBreakpointClasses, updatedAttributes])
 
-  // The css values passed to sub sections
-  const passedCssValues = selectedClassName ? selectedCssValues : fullCssValues
-  const passedBreakpointCssValues = selectedClassName ? selectedBreakpointCssValues : fullBreakpointCssValues
-  const passedCurrentBreakpointCssValues = selectedClassName ? selectedCurrentBreakpointCssValues : fullCurrentBreakpointCssValues
+  // The attributes passed to sub sections
+  const passedAttributes = selectedClassName ? selectedAttributes : fullAttributes
+  const passedBreakpointAttributes = selectedClassName ? selectedBreakpointAttributes : fullBreakpointAttributes
+  const passedCurrentBreakpointAttributes = selectedClassName ? selectedCurrentBreakpointAttributes : fullCurrentBreakpointAttributes
 
   // The attributes to be updated
-  const attributes = useMemo(() => Object.entries(selectedBreakpointCssValues).map(([name, value]) => ({ name, value })), [selectedBreakpointCssValues])
-  const attributesHash = useMemo(() => attributes.map(({ name, value }) => `${name}:${value}`).join('_'), [attributes])
+  const attributesHash = useMemo(() => Object.values(selectedBreakpointAttributes).map(({ cssName, value, isImportant }) => `${cssName}${value}${isImportant}`).join(''), [selectedBreakpointAttributes])
   const previousAttributesHash = usePrevious(attributesHash)
 
   // console.log('similiarHierarchies', similiarHierarchies)
-  // console.log('style', style)
+  console.log('updatedAttributes', updatedAttributes)
   // console.log('concernedMedias', concernedMedias)
-  // console.log('v, bv, cv', passedCssValues, passedBreakpointCssValues, passedCurrentBreakpointCssValues)
+  console.log('v, bv, cv', passedAttributes, passedBreakpointAttributes, passedCurrentBreakpointAttributes)
 
   const handleRefreshClasses = useCallback(() => {
     setClassesRefresh(x => x + 1)
@@ -134,8 +136,11 @@ function PanelStyles() {
   const handleCssUpdate = useCallback(async () => {
     if (!selectedClassName) return
     if (!classNames.length || previousAttributesHash === attributesHash) return
+    // if (!isStyleUpdated) return
+
+    const attributes = Object.values(selectedBreakpointAttributes)
+
     if (!areAttributesValid(attributes)) return
-    if (!isStyleUpdated) return
 
     const { filePath, code } = await updateSelector(`.${selectedClassName}`, attributes, breakpoint)
 
@@ -148,17 +153,17 @@ function PanelStyles() {
     })
   }, [
     classNames,
-    attributes,
+    selectedBreakpointAttributes,
     attributesHash,
     previousAttributesHash,
     selectedClassName,
     breakpoint,
-    isStyleUpdated,
+    // isStyleUpdated,
     handleRefreshClasses,
     saveFile,
   ])
 
-  const throttledHandleCssUpdate = useThrottleAsynchronous(handleCssUpdate, 500)
+  const throttledHandleCssUpdate = useThrottleAsynchronous(handleCssUpdate, 1000)
 
   const handleCreateClassName = useCallback(async (className: string) => {
     const { code, filePath } = await createSelector(`.${className}`, breakpoints)
@@ -211,7 +216,13 @@ function PanelStyles() {
     })
   }, [handleRefreshClasses, saveFile])
 
-  const handleUpdateElementStyle = useCallback((style: CSSProperties) => {
+  const handleUpdateElementStyle = useCallback((attributes: CssAttributeType[]) => {
+    const style: Record<string, string> = {}
+
+    attributes.forEach(attribute => {
+      style[attribute.jsName] = attribute.value + (attribute.isImportant ? '!important' : '')
+    })
+
     const css = convertStylesToCssString(style)
 
     similiarHierarchies.forEach(similarHierarchy => {
@@ -224,24 +235,17 @@ function PanelStyles() {
 
   const handleSetClassNames = useCallback((classes: string[]) => {
     handleUpdateClassName(classes.join(' '))
-    setIsStyleUpdated(false)
-    setStyle({})
-    handleUpdateElementStyle({})
+    // setIsStyleUpdated(false)
+    handleUpdateElementStyle([])
   }, [handleUpdateClassName, handleUpdateElementStyle])
 
-  const handleStyleChange = useCallback((attributes: CssAttributeType[]) => {
+  const handleAttributesChange = useCallback((attributes: CssAttributeType[]) => {
     if (!selectedClassName) return
 
-    const updatedStyle: CssValuesType = { ...style }
-
-    attributes.forEach(({ name, value }) => {
-      updatedStyle[convertCssAttributeNameToJs(name)] = value
-    })
-
-    setIsStyleUpdated(true)
-    setStyle(updatedStyle)
-    handleUpdateElementStyle(updatedStyle)
-  }, [selectedClassName, style, handleUpdateElementStyle])
+    // setIsStyleUpdated(true)
+    setUpdatedAttributes(x => mergeCssAttributes(x, attributes))
+    handleUpdateElementStyle(attributes)
+  }, [selectedClassName, handleUpdateElementStyle])
 
   const handleWarnAboutCssClassOrdering = useCallback(() => {
     if (!warnings.cssClassOrdering) return
@@ -323,49 +327,49 @@ function PanelStyles() {
         </Div>
       )}
       <StylesSubSectionLayout
-        cssValues={passedCssValues}
-        breakpointCssValues={passedBreakpointCssValues}
-        currentBreakpointCssValues={passedCurrentBreakpointCssValues}
-        onChange={handleStyleChange}
-        disabled={!selectedClassName}
+        attributes={passedAttributes}
+        breakpointAttributes={passedBreakpointAttributes}
+        currentBreakpointAttributes={passedCurrentBreakpointAttributes}
+        onChange={handleAttributesChange}
+        isDisabled={!selectedClassName}
       />
       <StylesSubSectionSpacing
-        cssValues={passedCssValues}
-        breakpointCssValues={passedBreakpointCssValues}
-        currentBreakpointCssValues={passedCurrentBreakpointCssValues}
-        onChange={handleStyleChange}
-        disabled={!selectedClassName}
+        attributes={passedAttributes}
+        breakpointAttributes={passedBreakpointAttributes}
+        currentBreakpointAttributes={passedCurrentBreakpointAttributes}
+        onChange={handleAttributesChange}
+        isDisabled={!selectedClassName}
       />
       <StylesSubSectionSize
-        cssValues={passedCssValues}
-        breakpointCssValues={passedBreakpointCssValues}
-        currentBreakpointCssValues={passedCurrentBreakpointCssValues}
-        onChange={handleStyleChange}
-        disabled={!selectedClassName}
+        attributes={passedAttributes}
+        breakpointAttributes={passedBreakpointAttributes}
+        currentBreakpointAttributes={passedCurrentBreakpointAttributes}
+        onChange={handleAttributesChange}
+        isDisabled={!selectedClassName}
       />
       <StylesSubSectionPosition
-        cssValues={passedCssValues}
-        breakpointCssValues={passedBreakpointCssValues}
-        currentBreakpointCssValues={passedCurrentBreakpointCssValues}
-        onChange={handleStyleChange}
-        disabled={!selectedClassName}
+        attributes={passedAttributes}
+        breakpointAttributes={passedBreakpointAttributes}
+        currentBreakpointAttributes={passedCurrentBreakpointAttributes}
+        onChange={handleAttributesChange}
+        isDisabled={!selectedClassName}
       />
       <StylesSubSectionTypography
-        cssValues={passedCssValues}
-        breakpointCssValues={passedBreakpointCssValues}
-        currentBreakpointCssValues={passedCurrentBreakpointCssValues}
-        onChange={handleStyleChange}
-        disabled={!selectedClassName}
+        attributes={passedAttributes}
+        breakpointAttributes={passedBreakpointAttributes}
+        currentBreakpointAttributes={passedCurrentBreakpointAttributes}
+        onChange={handleAttributesChange}
+        isDisabled={!selectedClassName}
       />
     </Div>
   ), [
     shouldDisplayCssClassOrderingWarning,
-    passedCssValues,
-    passedBreakpointCssValues,
-    passedCurrentBreakpointCssValues,
+    passedAttributes,
+    passedBreakpointAttributes,
+    passedCurrentBreakpointAttributes,
     selectedClassName,
     setWarnings,
-    handleStyleChange,
+    handleAttributesChange,
   ])
 
   const renderSection = useCallback(() => (
@@ -406,10 +410,10 @@ function PanelStyles() {
 
   // Reset style state on new breakpoint or new selected className
   useEffect(() => {
-    setIsStyleUpdated(false)
-    setStyle({})
-    handleUpdateElementStyle({})
-  // Omiting updateElementStyle on purpose as it would trigger the effect on every hierarchy change
+    // setIsStyleUpdated(false)
+    setUpdatedAttributes([])
+    handleUpdateElementStyle([])
+  // Omiting handleUpdateElementStyle on purpose as it would trigger the effect on every hierarchy change
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [breakpoint, selectedClassName])
 

@@ -2,8 +2,6 @@ import { useCallback, useMemo } from 'react'
 import { Accordion, Button, Div, Tooltip } from 'honorable'
 import { AiOutlineColumnHeight, AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 
-import { CssAttributeType, CssValuesType } from '~types'
-
 import usePersistedState from '~hooks/usePersistedState'
 import useStylesSubSectionHelpers from '~hooks/useStylesSubSectionHelpers'
 
@@ -13,14 +11,7 @@ import CssValueInput from '~core/css/CssValueInput'
 import StylesTitle from '~core/full-ast/panels/styles/StylesTitle'
 import StylesAttributeTitle from '~core/full-ast/panels/styles/StylesAttributeTitle'
 import StylesDisabledOverlay from '~core/full-ast/panels/styles/StylesDisabledOverlay'
-
-type StylesSubSectionSizePropsType = {
-  cssValues: CssValuesType
-  breakpointCssValues: CssValuesType
-  currentBreakpointCssValues: CssValuesType
-  onChange: (attributes: CssAttributeType[]) => void
-  disabled: boolean
-}
+import { StylesSubSectionPropsType } from '~core/full-ast/panels/styles/StylesSubSectionPropsType'
 
 const attributeNames = [
   'width',
@@ -51,17 +42,17 @@ const overflows = [
   },
 ]
 
-function StylesSubSectionSize({ cssValues, breakpointCssValues, currentBreakpointCssValues, onChange, disabled }: StylesSubSectionSizePropsType) {
+function StylesSubSectionSize({ attributes, breakpointAttributes, currentBreakpointAttributes, onChange, isDisabled }: StylesSubSectionPropsType) {
   const [expanded, setExpanded] = usePersistedState('styles-sub-section-size-expanded', true)
 
-  const { getValue, isToggled } = useStylesSubSectionHelpers(cssValues, breakpointCssValues)
+  const { getValue, isToggled, updateCssAttribute } = useStylesSubSectionHelpers(attributes, breakpointAttributes)
 
   const attributeTitleProps = useMemo(() => ({
-    cssValues,
-    breakpointCssValues,
-    currentBreakpointCssValues,
+    attributes,
+    breakpointAttributes,
+    currentBreakpointAttributes,
     onChange,
-  }), [cssValues, breakpointCssValues, currentBreakpointCssValues, onChange])
+  }), [attributes, breakpointAttributes, currentBreakpointAttributes, onChange])
 
   const renderSizeInput = useCallback((attributeName: string, label: string) => (
     <Div xflex="x4">
@@ -74,10 +65,10 @@ function StylesSubSectionSize({ cssValues, breakpointCssValues, currentBreakpoin
       </StylesAttributeTitle>
       <CssValueInput
         value={getValue(attributeName).toString()}
-        onChange={value => onChange([{ name: attributeName, value }])}
+        onChange={value => onChange([updateCssAttribute(attributeName, value)])}
       />
     </Div>
-  ), [attributeTitleProps, getValue, onChange])
+  ), [attributeTitleProps, getValue, updateCssAttribute, onChange])
 
   const renderSizeSection = useCallback((attributeName: string) => (
     <Div
@@ -106,14 +97,14 @@ function StylesSubSectionSize({ cssValues, breakpointCssValues, currentBreakpoin
           <Button
             ghost
             toggled={isToggled('overflow', [name])}
-            onClick={() => onChange([{ name: 'overflow', value: name }])}
+            onClick={() => onChange([updateCssAttribute('overflow', name)])}
           >
             <Icon />
           </Button>
         </Tooltip>
       ))}
     </Div>
-  ), [attributeTitleProps, isToggled, onChange])
+  ), [attributeTitleProps, isToggled, updateCssAttribute, onChange])
 
   return (
     <Accordion
@@ -127,8 +118,8 @@ function StylesSubSectionSize({ cssValues, breakpointCssValues, currentBreakpoin
         <StylesTitle
           title="Size"
           expanded={expanded}
-          cssValues={cssValues}
-          breakpointCssValues={breakpointCssValues}
+          attributes={attributes}
+          breakpointAttributes={breakpointAttributes}
           attributeNames={attributeNames}
         />
       )}
@@ -146,7 +137,7 @@ function StylesSubSectionSize({ cssValues, breakpointCssValues, currentBreakpoin
         </Div>
         {renderOverflowSection()}
       </Div>
-      {disabled && <StylesDisabledOverlay />}
+      {isDisabled && <StylesDisabledOverlay />}
     </Accordion>
   )
 }

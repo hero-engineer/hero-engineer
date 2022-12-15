@@ -14,10 +14,6 @@ import {
   MdOutlineSwapHoriz,
 } from 'react-icons/md'
 
-import { CssAttributeType, CssValuesType } from '~types'
-
-import { cssAttributesMap } from '~constants'
-
 import usePersistedState from '~hooks/usePersistedState'
 import useStylesSubSectionHelpers from '~hooks/useStylesSubSectionHelpers'
 
@@ -26,14 +22,7 @@ import GridModal from '~core/full-ast/panels/styles/GridModal'
 import StylesTitle from '~core/full-ast/panels/styles/StylesTitle'
 import StylesAttributeTitle from '~core/full-ast/panels/styles/StylesAttributeTitle'
 import StylesDisabledOverlay from '~core/full-ast/panels/styles/StylesDisabledOverlay'
-
-type StylesSubSectionLayoutPropsType = {
-  cssValues: CssValuesType
-  breakpointCssValues: CssValuesType
-  currentBreakpointCssValues: CssValuesType
-  onChange: (attributes: CssAttributeType[]) => void
-  disabled: boolean
-}
+import { StylesSubSectionPropsType } from '~core/full-ast/panels/styles/StylesSubSectionPropsType'
 
 const attributeNames = [
   'display',
@@ -233,18 +222,18 @@ const gridJustifys = [
   },
 ]
 
-function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpointCssValues, onChange, disabled }: StylesSubSectionLayoutPropsType) {
+function StylesSubSectionLayout({ attributes, breakpointAttributes, currentBreakpointAttributes, onChange, isDisabled }: StylesSubSectionPropsType) {
   const [expanded, setExpanded] = usePersistedState('styles-sub-section-layout-expanded', true)
   const [isGridModalOpen, setIsGridModalOpen] = useState(false)
 
-  const { isToggled } = useStylesSubSectionHelpers(cssValues, breakpointCssValues)
+  const { getValue, isToggled, updateCssAttribute } = useStylesSubSectionHelpers(attributes, breakpointAttributes)
 
   const attributeTitleProps = useMemo(() => ({
-    cssValues,
-    breakpointCssValues,
-    currentBreakpointCssValues,
+    attributes,
+    breakpointAttributes,
+    currentBreakpointAttributes,
     onChange,
-  }), [cssValues, breakpointCssValues, currentBreakpointCssValues, onChange])
+  }), [attributes, breakpointAttributes, currentBreakpointAttributes, onChange])
 
   const renderDisplayEditor = useCallback(() => (
     <Div xflex="x4s">
@@ -262,17 +251,18 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
           <Button
             ghost
             toggled={isToggled('display', [name])}
-            onClick={() => onChange([{ name: 'display', value: name }])}
+            onClick={() => onChange([updateCssAttribute('display', name)])}
           >
             <Icon />
           </Button>
         </Tooltip>
       ))}
     </Div>
-  ), [attributeTitleProps, isToggled, onChange])
+  ), [attributeTitleProps, isToggled, updateCssAttribute, onChange])
 
   const renderFlexDirectionEditor = useCallback(() => {
-    const isReverse = (breakpointCssValues['flex-direction'] ?? cssValues['flex-direction'] ?? '').toString().endsWith('-reverse')
+    const flexDirectionValue = getValue('flex-direction')
+    const isReverse = flexDirectionValue.endsWith('-reverse')
 
     return (
       <Div
@@ -288,14 +278,14 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
         <Button
           ghost
           toggled={isToggled('flex-direction', ['row', 'row-reverse'])}
-          onClick={() => onChange([{ name: 'flex-direction', value: `row${isReverse ? '-reverse' : ''}` }])}
+          onClick={() => onChange([updateCssAttribute('flex-direction', `row${isReverse ? '-reverse' : ''}`)])}
         >
           Horizontal
         </Button>
         <Button
           ghost
           toggled={isToggled('flex-direction', ['column', 'column-reverse'])}
-          onClick={() => onChange([{ name: 'flex-direction', value: `column${isReverse ? '-reverse' : ''}` }])}
+          onClick={() => onChange([updateCssAttribute('flex-direction', `column${isReverse ? '-reverse' : ''}`)])}
         >
           Vertical
         </Button>
@@ -305,130 +295,144 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
           <Button
             ghost
             toggled={isReverse}
-            onClick={() => onChange([{ name: 'flex-direction', value: isReverse ? (breakpointCssValues['flex-direction'] ?? cssValues['flex-direction']).toString().slice(0, -'-reverse'.length) : `${breakpointCssValues['flex-direction'] ?? cssValues['flex-direction'] ?? cssAttributesMap['flex-direction'].defaultValue}-reverse` }])}
+            onClick={() => onChange([updateCssAttribute('flex-direction', isReverse ? flexDirectionValue.slice(0, -'-reverse'.length) : `${flexDirectionValue}-reverse`)])}
           >
             <MdOutlineSwapHoriz />
           </Button>
         </Tooltip>
       </Div>
     )
-  }, [cssValues, breakpointCssValues, attributeTitleProps, isToggled, onChange])
+  }, [attributeTitleProps, getValue, isToggled, updateCssAttribute, onChange])
 
-  const renderFlexAlignEditor = useCallback(() => (
-    <Div xflex="x1">
-      <StylesAttributeTitle
-        attributeNames={['align-items']}
-        pt={0.25 / 2}
-        {...attributeTitleProps}
-      >
-        Align
-      </StylesAttributeTitle>
-      <Div
-        display="grid"
-        gridTemplateColumns="repeat(8, minmax(0, 1fr))"
-      >
-        {flexAligns.map(({ name, label, getIcon }) => {
-          const Icon = getIcon(['row', 'row-reverse'].includes((breakpointCssValues['flex-direction'] ?? cssValues['flex-direction'] ?? cssAttributesMap['flex-direction'].defaultValue).toString()))
+  const renderFlexAlignEditor = useCallback(() => {
+    const alignItemsValue = getValue('align-items')
 
-          return (
-            <Tooltip
-              key={name}
-              label={label}
-            >
-              <Button
-                ghost
-                tiny
-                toggled={isToggled('align-items', [name])}
-                onClick={() => onChange([{ name: 'align-items', value: name }])}
-              >
-                <Icon />
-              </Button>
-            </Tooltip>
-          )
-        })}
-      </Div>
-    </Div>
-  ), [cssValues, breakpointCssValues, attributeTitleProps, isToggled, onChange])
-
-  const renderFlexJustifyEditor = useCallback(() => (
-    <Div xflex="x1">
-      <StylesAttributeTitle
-        attributeNames={['justify-content']}
-        pt={0.25 / 2}
-        {...attributeTitleProps}
-      >
-        Justify
-      </StylesAttributeTitle>
-      <Div
-        display="grid"
-        gridTemplateColumns="repeat(8, minmax(0, 1fr))"
-      >
-        {flexJustifys.map(({ name, label, getIcon }) => {
-          const Icon = getIcon(['row', 'row-reverse'].includes((breakpointCssValues['flex-direction'] ?? cssValues['flex-direction'] ?? cssAttributesMap['flex-direction'].defaultValue).toString()))
-
-          return (
-            <Tooltip
-              key={name}
-              label={label}
-            >
-              <Button
-                ghost
-                tiny
-                toggled={isToggled('justify-content', [name])}
-                onClick={() => onChange([{ name: 'justify-content', value: name }])}
-              >
-                <Icon />
-              </Button>
-            </Tooltip>
-          )
-        })}
-      </Div>
-    </Div>
-  ), [cssValues, breakpointCssValues, attributeTitleProps, isToggled, onChange])
-
-  const renderGapEditor = useCallback(() => (
-    <Div xflex="x1">
-      <StylesAttributeTitle
-        attributeNames={['column-gap', 'row-gap']}
-        pt={0.25 / 2}
-        {...attributeTitleProps}
-      >
-        Gap
-      </StylesAttributeTitle>
-      <Div
-        xflex="x4"
-        gap={0.5}
-      >
-        <Div
-          xflex="y1"
-          gap={0.25}
+    return (
+      <Div xflex="x1">
+        <StylesAttributeTitle
+          attributeNames={['align-items']}
+          pt={0.25 / 2}
+          {...attributeTitleProps}
         >
-          <CssValueInput
-            value={(cssValues['row-gap'] ?? cssAttributesMap['row-gap'].defaultValue).toString()}
-            onChange={value => onChange([{ name: 'row-gap', value }])}
-          />
-          <Div color="text-light">
-            Rows
-          </Div>
-        </Div>
+          Align
+        </StylesAttributeTitle>
         <Div
-          xflex="y1"
-          gap={0.25}
+          display="grid"
+          gridTemplateColumns="repeat(8, minmax(0, 1fr))"
         >
-          <CssValueInput
-            value={(cssValues['column-gap'] ?? cssAttributesMap['column-gap'].defaultValue).toString()}
-            onChange={value => onChange([{ name: 'column-gap', value }])}
-          />
-          <Div color="text-light">
-            Columns
-          </Div>
+          {flexAligns.map(({ name, label, getIcon }) => {
+            const Icon = getIcon(['row', 'row-reverse'].includes(alignItemsValue))
+
+            return (
+              <Tooltip
+                key={name}
+                label={label}
+              >
+                <Button
+                  ghost
+                  tiny
+                  toggled={isToggled('align-items', [name])}
+                  onClick={() => onChange([updateCssAttribute('align-items', name)])}
+                >
+                  <Icon />
+                </Button>
+              </Tooltip>
+            )
+          })}
         </Div>
       </Div>
-    </Div>
-  ), [cssValues, attributeTitleProps, onChange])
+    )
+  }, [attributeTitleProps, getValue, isToggled, updateCssAttribute, onChange])
+
+  const renderFlexJustifyEditor = useCallback(() => {
+    const justifyContentValue = getValue('justify-content')
+
+    return (
+      <Div xflex="x1">
+        <StylesAttributeTitle
+          attributeNames={['justify-content']}
+          pt={0.25 / 2}
+          {...attributeTitleProps}
+        >
+          Justify
+        </StylesAttributeTitle>
+        <Div
+          display="grid"
+          gridTemplateColumns="repeat(8, minmax(0, 1fr))"
+        >
+          {flexJustifys.map(({ name, label, getIcon }) => {
+            const Icon = getIcon(['row', 'row-reverse'].includes(justifyContentValue))
+
+            return (
+              <Tooltip
+                key={name}
+                label={label}
+              >
+                <Button
+                  ghost
+                  tiny
+                  toggled={isToggled('justify-content', [name])}
+                  onClick={() => onChange([updateCssAttribute('justify-content', name)])}
+                >
+                  <Icon />
+                </Button>
+              </Tooltip>
+            )
+          })}
+        </Div>
+      </Div>
+    )
+  }, [attributeTitleProps, getValue, isToggled, updateCssAttribute, onChange])
+
+  const renderGapEditor = useCallback(() => {
+    const rowGapValue = getValue('row-gap')
+    const columnGapValue = getValue('column-gap')
+
+    return (
+      <Div xflex="x1">
+        <StylesAttributeTitle
+          attributeNames={['column-gap', 'row-gap']}
+          pt={0.25 / 2}
+          {...attributeTitleProps}
+        >
+          Gap
+        </StylesAttributeTitle>
+        <Div
+          xflex="x4"
+          gap={0.5}
+        >
+          <Div
+            xflex="y1"
+            gap={0.25}
+          >
+            <CssValueInput
+              value={rowGapValue}
+              onChange={value => onChange([updateCssAttribute('row-gap', value)])}
+            />
+            <Div color="text-light">
+              Rows
+            </Div>
+          </Div>
+          <Div
+            xflex="y1"
+            gap={0.25}
+          >
+            <CssValueInput
+              value={columnGapValue}
+              onChange={value => onChange([updateCssAttribute('column-gap', value)])}
+            />
+            <Div color="text-light">
+              Columns
+            </Div>
+          </Div>
+        </Div>
+      </Div>
+    )
+  }, [attributeTitleProps, getValue, updateCssAttribute, onChange])
 
   const renderFlexWrapEditor = useCallback(() => {
-    const isReverse = (breakpointCssValues['flex-wrap'] ?? cssValues['flex-wrap'] ?? '').toString() === 'wrap-reverse'
+    const flexWrapValue = getValue('flex-wrap')
+    const isReverse = flexWrapValue === 'wrap-reverse'
 
     return (
       <Div
@@ -446,20 +450,20 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
           ghost
           toggled={isToggled('flex-wrap', ['wrap', 'wrap-reverse'])}
           onClick={() => onChange([
-            { name: 'flex-wrap', value: ['wrap', 'wrap-reverse'].includes((cssValues['flex-wrap'] ?? '').toString()) ? 'nowrap' : `wrap${isReverse ? '-reverse' : ''}` },
-            { name: 'align-content', value: 'stretch' },
+            updateCssAttribute('flex-wrap', ['wrap', 'wrap-reverse'].includes(flexWrapValue) ? 'nowrap' : `wrap${isReverse ? '-reverse' : ''}`),
+            updateCssAttribute('align-content', 'stretch'),
           ])}
         >
           Wrap
         </Button>
-        {['wrap', 'wrap-reverse'].includes((cssValues['flex-wrap'] ?? '').toString()) && (
+        {['wrap', 'wrap-reverse'].includes(flexWrapValue) && (
           <Tooltip
             label="Reverse"
           >
             <Button
               ghost
               toggled={isReverse}
-              onClick={() => onChange([{ name: 'flex-wrap', value: isReverse ? 'wrap' : 'wrap-reverse' }])}
+              onClick={() => onChange([updateCssAttribute('flex-wrap', isReverse ? 'wrap' : 'wrap-reverse')])}
             >
               <MdOutlineSwapHoriz />
             </Button>
@@ -467,43 +471,47 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
         )}
       </Div>
     )
-  }, [cssValues, breakpointCssValues, attributeTitleProps, isToggled, onChange])
+  }, [attributeTitleProps, getValue, isToggled, updateCssAttribute, onChange])
 
-  const renderFlexContentEditor = useCallback(() => (
-    <Div xflex="x1">
-      <StylesAttributeTitle
-        attributeNames={['align-content']}
-        pt={0.25 / 2}
-        {...attributeTitleProps}
-      >
-        Align
-      </StylesAttributeTitle>
-      <Div
-        display="grid"
-        gridTemplateColumns="repeat(8, minmax(0, 1fr))"
-      >
-        {flexAligns.map(({ name, label, getIcon }) => {
-          const Icon = getIcon(['row', 'row-reverse'].includes((breakpointCssValues['flex-direction'] ?? cssValues['flex-direction'] ?? cssAttributesMap['flex-direction'].defaultValue).toString()))
+  const renderFlexContentEditor = useCallback(() => {
+    const alignContentValue = getValue('align-content')
 
-          return (
-            <Tooltip
-              key={name}
-              label={label}
-            >
-              <Button
-                ghost
-                tiny
-                toggled={isToggled('align-content', [name])}
-                onClick={() => onChange([{ name: 'align-content', value: name }])}
+    return (
+      <Div xflex="x1">
+        <StylesAttributeTitle
+          attributeNames={['align-content']}
+          pt={0.25 / 2}
+          {...attributeTitleProps}
+        >
+          Align
+        </StylesAttributeTitle>
+        <Div
+          display="grid"
+          gridTemplateColumns="repeat(8, minmax(0, 1fr))"
+        >
+          {flexAligns.map(({ name, label, getIcon }) => {
+            const Icon = getIcon(['row', 'row-reverse'].includes(alignContentValue))
+
+            return (
+              <Tooltip
+                key={name}
+                label={label}
               >
-                <Icon />
-              </Button>
-            </Tooltip>
-          )
-        })}
+                <Button
+                  ghost
+                  tiny
+                  toggled={isToggled('align-content', [name])}
+                  onClick={() => onChange([updateCssAttribute('align-content', name)])}
+                >
+                  <Icon />
+                </Button>
+              </Tooltip>
+            )
+          })}
+        </Div>
       </Div>
-    </Div>
-  ), [cssValues, breakpointCssValues, attributeTitleProps, isToggled, onChange])
+    )
+  }, [attributeTitleProps, getValue, isToggled, updateCssAttribute, onChange])
 
   const renderGridEditor = useCallback(() => (
     <>
@@ -523,12 +531,12 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
       <GridModal
         open={isGridModalOpen}
         onClose={() => setIsGridModalOpen(false)}
-        cssValues={cssValues}
-        breakpointCssValues={breakpointCssValues}
+        attributes={attributes}
+        breakpointAttributes={breakpointAttributes}
         onChange={onChange}
       />
     </>
-  ), [isGridModalOpen, cssValues, breakpointCssValues, onChange])
+  ), [isGridModalOpen, attributes, breakpointAttributes, onChange])
 
   const renderGridAlignEditor = useCallback(() => (
     <Div xflex="x1">
@@ -554,7 +562,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
               <Button
                 ghost
                 toggled={isToggled('align-items', [name])}
-                onClick={() => onChange([{ name: 'align-items', value: name }])}
+                onClick={() => onChange([updateCssAttribute('align-items', name)])}
               >
                 <Icon />
               </Button>
@@ -572,7 +580,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
               <Button
                 ghost
                 toggled={isToggled('justify-items', [name])}
-                onClick={() => onChange([{ name: 'justify-items', value: name }])}
+                onClick={() => onChange([updateCssAttribute('justify-items', name)])}
               >
                 <Icon />
               </Button>
@@ -581,7 +589,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
         })}
       </Div>
     </Div>
-  ), [attributeTitleProps, isToggled, onChange])
+  ), [attributeTitleProps, isToggled, updateCssAttribute, onChange])
 
   const renderGridJustifyEditor = useCallback(() => (
     <Div xflex="x1">
@@ -608,7 +616,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
                 ghost
                 tiny
                 toggled={isToggled('align-content', [name])}
-                onClick={() => onChange([{ name: 'align-content', value: name }])}
+                onClick={() => onChange([updateCssAttribute('align-content', name)])}
               >
                 <Icon />
               </Button>
@@ -627,7 +635,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
                 ghost
                 tiny
                 toggled={isToggled('justify-content', [name])}
-                onClick={() => onChange([{ name: 'justify-content', value: name }])}
+                onClick={() => onChange([updateCssAttribute('justify-content', name)])}
               >
                 <Icon />
               </Button>
@@ -636,7 +644,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
         })}
       </Div>
     </Div>
-  ), [attributeTitleProps, isToggled, onChange])
+  ), [attributeTitleProps, isToggled, updateCssAttribute, onChange])
 
   const isFlex = isToggled('display', ['flex'])
   const isGrid = isToggled('display', ['grid'])
@@ -654,8 +662,8 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
         <StylesTitle
           title="Layout"
           expanded={expanded}
-          cssValues={cssValues}
-          breakpointCssValues={breakpointCssValues}
+          attributes={attributes}
+          breakpointAttributes={breakpointAttributes}
           attributeNames={attributeNames}
         />
       )}
@@ -680,7 +688,7 @@ function StylesSubSectionLayout({ cssValues, breakpointCssValues, currentBreakpo
         {isGrid && renderGridJustifyEditor()}
         {isGrid && renderGapEditor()}
       </Div>
-      {disabled && <StylesDisabledOverlay />}
+      {isDisabled && <StylesDisabledOverlay />}
     </Accordion>
   )
 }

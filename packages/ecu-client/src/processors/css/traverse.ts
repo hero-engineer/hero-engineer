@@ -3,6 +3,7 @@ import { AtRule, ChildNode, Document, Root, Rule } from 'postcss'
 import { BreakpointType, CssAttributeType, CssClassType } from '~types'
 
 import areSelectorsEqual from '~utils/areSelectorsEqual'
+import convertCssAttributeCssNameToJs from '~utils/convertCssAttributeCssNameToJs'
 
 function traverse(root: Root, targetSelector?: string, breakpoint?: BreakpointType, onSuccess?: (cssClass: CssClassType, rule: Rule, root: Root | Document) => void,) {
   const classes: CssClassType[] = []
@@ -16,8 +17,10 @@ function traverse(root: Root, targetSelector?: string, breakpoint?: BreakpointTy
     rule.nodes.forEach((node: ChildNode) => {
       if (node.type === 'decl') {
         attributes.push({
-          name: node.prop,
+          cssName: node.prop,
+          jsName: convertCssAttributeCssNameToJs(node.prop),
           value: node.value,
+          isImportant: node.important,
         })
       }
     })

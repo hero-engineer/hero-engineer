@@ -1,8 +1,6 @@
 import { useCallback, useMemo, useRef } from 'react'
 import { Accordion, Div, MenuItem, Select } from 'honorable'
 
-import { CssAttributeType, CssValuesType } from '~types'
-
 import useRefresh from '~hooks/useRefresh'
 import usePersistedState from '~hooks/usePersistedState'
 import useStylesSubSectionHelpers from '~hooks/useStylesSubSectionHelpers'
@@ -13,14 +11,7 @@ import StylesDisabledOverlay from '~core/full-ast/panels/styles/StylesDisabledOv
 import SpacingEditor from '~core/full-ast/panels/styles/SpacingEditor'
 import StylesAttributeTitle from '~core/full-ast/panels/styles/StylesAttributeTitle'
 import StylesTitle from '~core/full-ast/panels/styles/StylesTitle'
-
-type StylesSubSectionPositionPropsType = {
-  cssValues: CssValuesType
-  breakpointCssValues: CssValuesType
-  currentBreakpointCssValues: CssValuesType
-  onChange: (attributes: CssAttributeType[]) => void
-  disabled: boolean
-}
+import { StylesSubSectionPropsType } from '~core/full-ast/panels/styles/StylesSubSectionPropsType'
 
 const attributeNames = [
   'position',
@@ -42,21 +33,21 @@ const baseHeight = 128 + 32 + 8 + 2
 const borderSizeDivider = 3.58
 const spacingEditorPadding = 8
 
-function StylesSubSectionPosition({ cssValues, breakpointCssValues, currentBreakpointCssValues, onChange, disabled }: StylesSubSectionPositionPropsType) {
+function StylesSubSectionPosition({ attributes, breakpointAttributes, currentBreakpointAttributes, onChange, isDisabled }: StylesSubSectionPropsType) {
   const inputMountNodeRef = useRef<HTMLDivElement>(null)
 
   useRefresh()
 
   const [expanded, setExpanded] = usePersistedState('styles-sub-section-position-expanded', true)
 
-  const { getValue } = useStylesSubSectionHelpers(cssValues, breakpointCssValues)
+  const { getValue, updateCssAttribute } = useStylesSubSectionHelpers(attributes, breakpointAttributes)
 
   const attributeTitleProps = useMemo(() => ({
-    cssValues,
-    breakpointCssValues,
-    currentBreakpointCssValues,
+    attributes,
+    breakpointAttributes,
+    currentBreakpointAttributes,
     onChange,
-  }), [cssValues, breakpointCssValues, currentBreakpointCssValues, onChange])
+  }), [attributes, breakpointAttributes, currentBreakpointAttributes, onChange])
 
   const renderPositionSection = useCallback(() => (
     <Div xflex="x4">
@@ -70,7 +61,7 @@ function StylesSubSectionPosition({ cssValues, breakpointCssValues, currentBreak
         tiny
         menuOnTop
         value={getValue('position')}
-        onChange={event => onChange([{ name: 'position', value: event.target.value }])}
+        onChange={event => onChange([updateCssAttribute('position', event.target.value)])}
       >
         {positions.map(position => (
           <MenuItem
@@ -83,7 +74,7 @@ function StylesSubSectionPosition({ cssValues, breakpointCssValues, currentBreak
         ))}
       </Select>
     </Div>
-  ), [attributeTitleProps, getValue, onChange])
+  ), [attributeTitleProps, getValue, updateCssAttribute, onChange])
 
   const renderPositionEditorSection = useCallback(() => (
     <SpacingEditor
@@ -94,10 +85,10 @@ function StylesSubSectionPosition({ cssValues, breakpointCssValues, currentBreak
       borderSize={baseHeight / borderSizeDivider - spacingEditorPadding}
       offetHorizontal={2}
       inputMountNode={inputMountNodeRef.current}
-      cssValues={cssValues}
-      breakpointCssValues={breakpointCssValues}
+      attributes={attributes}
+      breakpointAttributes={breakpointAttributes}
     />
-  ), [cssValues, breakpointCssValues, onChange])
+  ), [attributes, breakpointAttributes, onChange])
 
   return (
     <Accordion
@@ -111,8 +102,8 @@ function StylesSubSectionPosition({ cssValues, breakpointCssValues, currentBreak
         <StylesTitle
           title="Position"
           expanded={expanded}
-          cssValues={cssValues}
-          breakpointCssValues={breakpointCssValues}
+          attributes={attributes}
+          breakpointAttributes={breakpointAttributes}
           attributeNames={attributeNames}
         />
       )}
@@ -128,7 +119,7 @@ function StylesSubSectionPosition({ cssValues, breakpointCssValues, currentBreak
         {getValue('position') !== 'static' && renderPositionEditorSection()}
       </Div>
       <div ref={inputMountNodeRef} />
-      {disabled && <StylesDisabledOverlay />}
+      {isDisabled && <StylesDisabledOverlay />}
     </Accordion>
   )
 }
