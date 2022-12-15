@@ -1,7 +1,14 @@
+import { useContext } from 'react'
 import { Div } from 'honorable'
 
-// An overlay to block editing whenno classNAme is selected
+import StylesContext from '~contexts/StylesContext'
+
+// An overlay to block editing when no className is selected
 function StylesDisabledOverlay() {
+  const { isDisabled } = useContext(StylesContext)
+
+  if (!isDisabled) return null
+
   return (
     <Div
       position="absolute"

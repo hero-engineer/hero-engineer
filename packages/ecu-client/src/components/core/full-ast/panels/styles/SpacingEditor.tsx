@@ -1,10 +1,10 @@
-import { ReactNode, useCallback, useMemo, useRef, useState } from 'react'
+import { ReactNode, useCallback, useContext, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Div, Path, Svg, WithOutsideClick } from 'honorable'
 
-import { CssAttributeType, NormalizedCssAttributesType } from '~types'
-
 import { cssAttributesMap } from '~constants'
+
+import StylesContext from '~contexts/StylesContext'
 
 import useRefresh from '~hooks/useRefresh'
 import useStylesSubSectionHelpers from '~hooks/useStylesSubSectionHelpers'
@@ -17,13 +17,10 @@ type SpacingEditorPropsType = {
   title: string
   semanticName: string
   allowNegativeValues?: boolean
-  onChange: (attributes: CssAttributeType[]) => void
   height?: number | string
   borderSize?: number
   offetHorizontal?: number
   inputMountNode: Element | null
-  attributes: NormalizedCssAttributesType
-  breakpointAttributes: NormalizedCssAttributesType
   children?: ReactNode
 }
 
@@ -31,13 +28,10 @@ function SpacingEditor({
   title,
   semanticName,
   allowNegativeValues,
-  onChange,
   height = '100%',
   borderSize = 25,
   offetHorizontal = 0,
   inputMountNode,
-  attributes,
-  breakpointAttributes,
   children,
 }: SpacingEditorPropsType) {
   const rootRef = useRef<HTMLDivElement>(null)
@@ -45,13 +39,15 @@ function SpacingEditor({
 
   useRefresh()
 
+  const { onChange } = useContext(StylesContext)
+
   const [hoveredIndex, setHoveredIndex] = useState(-1)
   const [editedAttribute, setEditedAttribute] = useState('')
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const { width: svgWidth, height: svgHeight } = useMemo(() => rootRef.current?.getBoundingClientRect() ?? { width: 0, height: 0 }, [rootRef.current])
 
-  const { getValue, getTextColor, updateCssAttribute } = useStylesSubSectionHelpers(attributes, breakpointAttributes)
+  const { getValue, getTextColor, updateCssAttribute } = useStylesSubSectionHelpers()
 
   const handleHover = useCallback((index: number) => {
     setHoveredIndex(index)

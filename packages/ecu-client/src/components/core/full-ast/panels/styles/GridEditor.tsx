@@ -1,14 +1,6 @@
 import { Div } from 'honorable'
 
-import { CssAttributeType, NormalizedCssAttributesType } from '~types'
-
-type GridEditorPropsType = {
-  attributes: NormalizedCssAttributesType
-  breakpointAttributes: NormalizedCssAttributesType
-  onChange: (attributes: CssAttributeType[]) => void
-}
-
-function GridEditor({ attributes, breakpointAttributes, onChange }: GridEditorPropsType) {
+function GridEditor() {
   // const getValue = useCallback((attributeName: string) => breakpointCssValues[attributeName] ?? cssValues[attributeName] ?? cssAttributesMap[attributeName].defaultValue, [breakpointCssValues, cssValues])
 
   // const getTextColor = useCallback((attributeNames: string[]) => (
@@ -83,6 +75,7 @@ function GridEditor({ attributes, breakpointAttributes, onChange }: GridEditorPr
 
   return (
     <Div width="100%">
+      GridEditor
       {/* {renderGridAutoFlowEditor()}
       {renderGridEditor()} */}
     </Div>

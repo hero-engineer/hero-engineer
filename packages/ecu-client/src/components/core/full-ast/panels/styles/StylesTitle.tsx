@@ -1,22 +1,18 @@
 import { useMemo } from 'react'
 import { Div } from 'honorable'
 
-import { NormalizedCssAttributesType } from '~types'
-
 import useStylesSubSectionHelpers from '~hooks/useStylesSubSectionHelpers'
 
 type StylesSubSectionTitlePropsType = {
   title: string
   expanded: boolean
-  attributes: NormalizedCssAttributesType
-  breakpointAttributes: NormalizedCssAttributesType
   attributeNames: string[]
 }
 
 // Display the title of a styles sub section
 // With a chip if modified
-function StylesTitle({ title, expanded, attributes, breakpointAttributes, attributeNames }: StylesSubSectionTitlePropsType) {
-  const { getTextColor } = useStylesSubSectionHelpers(attributes, breakpointAttributes)
+function StylesTitle({ title, expanded, attributeNames }: StylesSubSectionTitlePropsType) {
+  const { getTextColor } = useStylesSubSectionHelpers()
 
   const allColors = useMemo(() => attributeNames.map(attributeName => getTextColor([attributeName])), [attributeNames, getTextColor])
   const isModified = useMemo(() => allColors.some(color => color === 'primary'), [allColors])

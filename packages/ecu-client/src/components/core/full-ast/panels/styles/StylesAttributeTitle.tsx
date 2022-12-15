@@ -1,33 +1,27 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useContext, useMemo } from 'react'
 import { Div, DivProps } from 'honorable'
 import { TbExclamationMark, TbExclamationMarkOff } from 'react-icons/tb'
 import { BiUndo } from 'react-icons/bi'
 
-import { CssAttributeType, NormalizedCssAttributesType } from '~types'
-
 import { cssAttributesMap, cssValueReset } from '~constants'
+
+import StylesContext from '~contexts/StylesContext'
 
 import useStylesSubSectionHelpers from '~hooks/useStylesSubSectionHelpers'
 
 type StylesSubSectionAttributeTitlePropsType = DivProps & {
-  attributes: NormalizedCssAttributesType
-  breakpointAttributes: NormalizedCssAttributesType
-  currentBreakpointAttributes: NormalizedCssAttributesType
   attributeNames: string[]
-  onChange: (attributes: CssAttributeType[]) => void
 }
 
 function StylesAttributeTitle({
-  attributes,
-  breakpointAttributes,
-  currentBreakpointAttributes,
   attributeNames,
   width = 52,
   children,
-  onChange,
   ...props
 }: StylesSubSectionAttributeTitlePropsType) {
-  const { getTextColor, createCssAttribute } = useStylesSubSectionHelpers(attributes, breakpointAttributes)
+  const { breakpointAttributes, currentBreakpointAttributes, fullBreakpointAttributes, onChange } = useContext(StylesContext)
+
+  const { getTextColor, createCssAttribute } = useStylesSubSectionHelpers()
 
   const handleResetClick = useCallback(() => {
     // cssValueReset will tell PanelStyles to reset the style and delete the attribute
@@ -35,6 +29,7 @@ function StylesAttributeTitle({
   }, [attributeNames, createCssAttribute, onChange])
 
   const isImportant = useMemo(() => attributeNames.some(attributeName => breakpointAttributes[attributeName]?.isImportant), [attributeNames, breakpointAttributes])
+  const isOtherwiseImportant = useMemo(() => attributeNames.some(attributeName => fullBreakpointAttributes[attributeName]?.isImportant), [attributeNames, fullBreakpointAttributes])
   const isResetable = useMemo(() => attributeNames.some(attributeName => currentBreakpointAttributes[attributeName] && currentBreakpointAttributes[attributeName].value !== cssAttributesMap[attributeName].defaultValue), [attributeNames, currentBreakpointAttributes])
   const color = getTextColor(attributeNames)
 
@@ -75,6 +70,7 @@ function StylesAttributeTitle({
       >
         {children}
         {isImportant ? '!' : ''}
+        {isOtherwiseImportant && !isImportant ? '(!)' : ''}
       </Div>
       <Div
         id="StylesSubSectionAttributeTitle-important"

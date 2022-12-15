@@ -1,5 +1,7 @@
-import { useCallback, useMemo, useRef } from 'react'
+import { useCallback, useContext, useRef } from 'react'
 import { Accordion, Div, MenuItem, Select } from 'honorable'
+
+import StylesContext from '~contexts/StylesContext'
 
 import useRefresh from '~hooks/useRefresh'
 import usePersistedState from '~hooks/usePersistedState'
@@ -11,7 +13,6 @@ import StylesDisabledOverlay from '~core/full-ast/panels/styles/StylesDisabledOv
 import SpacingEditor from '~core/full-ast/panels/styles/SpacingEditor'
 import StylesAttributeTitle from '~core/full-ast/panels/styles/StylesAttributeTitle'
 import StylesTitle from '~core/full-ast/panels/styles/StylesTitle'
-import { StylesSubSectionPropsType } from '~core/full-ast/panels/styles/StylesSubSectionPropsType'
 
 const attributeNames = [
   'position',
@@ -33,28 +34,20 @@ const baseHeight = 128 + 32 + 8 + 2
 const borderSizeDivider = 3.58
 const spacingEditorPadding = 8
 
-function StylesSubSectionPosition({ attributes, breakpointAttributes, currentBreakpointAttributes, onChange, isDisabled }: StylesSubSectionPropsType) {
+function StylesSubSectionPosition() {
   const inputMountNodeRef = useRef<HTMLDivElement>(null)
 
   useRefresh()
 
+  const { onChange } = useContext(StylesContext)
+
   const [expanded, setExpanded] = usePersistedState('styles-sub-section-position-expanded', true)
 
-  const { getValue, updateCssAttribute } = useStylesSubSectionHelpers(attributes, breakpointAttributes)
-
-  const attributeTitleProps = useMemo(() => ({
-    attributes,
-    breakpointAttributes,
-    currentBreakpointAttributes,
-    onChange,
-  }), [attributes, breakpointAttributes, currentBreakpointAttributes, onChange])
+  const { getValue, updateCssAttribute } = useStylesSubSectionHelpers()
 
   const renderPositionSection = useCallback(() => (
     <Div xflex="x4">
-      <StylesAttributeTitle
-        attributeNames={['position']}
-        {...attributeTitleProps}
-      >
+      <StylesAttributeTitle attributeNames={['position']}>
         Position
       </StylesAttributeTitle>
       <Select
@@ -74,21 +67,18 @@ function StylesSubSectionPosition({ attributes, breakpointAttributes, currentBre
         ))}
       </Select>
     </Div>
-  ), [attributeTitleProps, getValue, updateCssAttribute, onChange])
+  ), [getValue, updateCssAttribute, onChange])
 
   const renderPositionEditorSection = useCallback(() => (
     <SpacingEditor
       title=""
       semanticName=""
-      onChange={onChange}
       height={(borderSizeDivider - 2) * baseHeight / borderSizeDivider + spacingEditorPadding}
       borderSize={baseHeight / borderSizeDivider - spacingEditorPadding}
       offetHorizontal={2}
       inputMountNode={inputMountNodeRef.current}
-      attributes={attributes}
-      breakpointAttributes={breakpointAttributes}
     />
-  ), [attributes, breakpointAttributes, onChange])
+  ), [])
 
   return (
     <Accordion
@@ -102,8 +92,6 @@ function StylesSubSectionPosition({ attributes, breakpointAttributes, currentBre
         <StylesTitle
           title="Position"
           expanded={expanded}
-          attributes={attributes}
-          breakpointAttributes={breakpointAttributes}
           attributeNames={attributeNames}
         />
       )}
@@ -119,7 +107,7 @@ function StylesSubSectionPosition({ attributes, breakpointAttributes, currentBre
         {getValue('position') !== 'static' && renderPositionEditorSection()}
       </Div>
       <div ref={inputMountNodeRef} />
-      {isDisabled && <StylesDisabledOverlay />}
+      <StylesDisabledOverlay />
     </Accordion>
   )
 }

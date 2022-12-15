@@ -61,7 +61,7 @@ function getLimitedDomRect(hierarchy: HierarchyType) {
 }
 
 function getChildElements(hierarchy: HierarchyType): HTMLElement[] {
-  if (hierarchy.element && hierarchy.type === 'text') return [hierarchy.element]
+  if (hierarchy.element && hierarchy.type !== 'text') return [hierarchy.element]
 
   return hierarchy.children.map(getChildElements).flat()
 }

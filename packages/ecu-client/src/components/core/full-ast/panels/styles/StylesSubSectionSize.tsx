@@ -1,6 +1,8 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useContext } from 'react'
 import { Accordion, Button, Div, Tooltip } from 'honorable'
 import { AiOutlineColumnHeight, AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
+
+import StylesContext from '~contexts/StylesContext'
 
 import usePersistedState from '~hooks/usePersistedState'
 import useStylesSubSectionHelpers from '~hooks/useStylesSubSectionHelpers'
@@ -11,7 +13,6 @@ import CssValueInput from '~core/css/CssValueInput'
 import StylesTitle from '~core/full-ast/panels/styles/StylesTitle'
 import StylesAttributeTitle from '~core/full-ast/panels/styles/StylesAttributeTitle'
 import StylesDisabledOverlay from '~core/full-ast/panels/styles/StylesDisabledOverlay'
-import { StylesSubSectionPropsType } from '~core/full-ast/panels/styles/StylesSubSectionPropsType'
 
 const attributeNames = [
   'width',
@@ -42,24 +43,18 @@ const overflows = [
   },
 ]
 
-function StylesSubSectionSize({ attributes, breakpointAttributes, currentBreakpointAttributes, onChange, isDisabled }: StylesSubSectionPropsType) {
+function StylesSubSectionSize() {
   const [expanded, setExpanded] = usePersistedState('styles-sub-section-size-expanded', true)
 
-  const { getValue, isToggled, updateCssAttribute } = useStylesSubSectionHelpers(attributes, breakpointAttributes)
+  const { onChange } = useContext(StylesContext)
 
-  const attributeTitleProps = useMemo(() => ({
-    attributes,
-    breakpointAttributes,
-    currentBreakpointAttributes,
-    onChange,
-  }), [attributes, breakpointAttributes, currentBreakpointAttributes, onChange])
+  const { getValue, isToggled, updateCssAttribute } = useStylesSubSectionHelpers()
 
   const renderSizeInput = useCallback((attributeName: string, label: string) => (
     <Div xflex="x4">
       <StylesAttributeTitle
         attributeNames={[attributeName]}
         width={42}
-        {...attributeTitleProps}
       >
         {label}
       </StylesAttributeTitle>
@@ -68,7 +63,7 @@ function StylesSubSectionSize({ attributes, breakpointAttributes, currentBreakpo
         onChange={value => onChange([updateCssAttribute(attributeName, value)])}
       />
     </Div>
-  ), [attributeTitleProps, getValue, updateCssAttribute, onChange])
+  ), [getValue, updateCssAttribute, onChange])
 
   const renderSizeSection = useCallback((attributeName: string) => (
     <Div
@@ -83,10 +78,7 @@ function StylesSubSectionSize({ attributes, breakpointAttributes, currentBreakpo
 
   const renderOverflowSection = useCallback(() => (
     <Div xflex="x4">
-      <StylesAttributeTitle
-        attributeNames={['overflow']}
-        {...attributeTitleProps}
-      >
+      <StylesAttributeTitle attributeNames={['overflow']}>
         Overflow
       </StylesAttributeTitle>
       {overflows.map(({ name, Icon }) => (
@@ -104,7 +96,7 @@ function StylesSubSectionSize({ attributes, breakpointAttributes, currentBreakpo
         </Tooltip>
       ))}
     </Div>
-  ), [attributeTitleProps, isToggled, updateCssAttribute, onChange])
+  ), [isToggled, updateCssAttribute, onChange])
 
   return (
     <Accordion
@@ -118,8 +110,6 @@ function StylesSubSectionSize({ attributes, breakpointAttributes, currentBreakpo
         <StylesTitle
           title="Size"
           expanded={expanded}
-          attributes={attributes}
-          breakpointAttributes={breakpointAttributes}
           attributeNames={attributeNames}
         />
       )}
@@ -137,7 +127,7 @@ function StylesSubSectionSize({ attributes, breakpointAttributes, currentBreakpo
         </Div>
         {renderOverflowSection()}
       </Div>
-      {isDisabled && <StylesDisabledOverlay />}
+      <StylesDisabledOverlay />
     </Accordion>
   )
 }

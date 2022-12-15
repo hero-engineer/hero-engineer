@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useContext, useState } from 'react'
 import { Accordion, Button, Div, Tooltip } from 'honorable'
 import { CgArrowAlignH, CgArrowAlignV, CgDisplayFlex, CgDisplayFullwidth, CgDisplayGrid } from 'react-icons/cg'
 import { FaRegEyeSlash } from 'react-icons/fa'
@@ -14,6 +14,8 @@ import {
   MdOutlineSwapHoriz,
 } from 'react-icons/md'
 
+import StylesContext from '~contexts/StylesContext'
+
 import usePersistedState from '~hooks/usePersistedState'
 import useStylesSubSectionHelpers from '~hooks/useStylesSubSectionHelpers'
 
@@ -22,7 +24,6 @@ import GridModal from '~core/full-ast/panels/styles/GridModal'
 import StylesTitle from '~core/full-ast/panels/styles/StylesTitle'
 import StylesAttributeTitle from '~core/full-ast/panels/styles/StylesAttributeTitle'
 import StylesDisabledOverlay from '~core/full-ast/panels/styles/StylesDisabledOverlay'
-import { StylesSubSectionPropsType } from '~core/full-ast/panels/styles/StylesSubSectionPropsType'
 
 const attributeNames = [
   'display',
@@ -222,25 +223,16 @@ const gridJustifys = [
   },
 ]
 
-function StylesSubSectionLayout({ attributes, breakpointAttributes, currentBreakpointAttributes, onChange, isDisabled }: StylesSubSectionPropsType) {
+function StylesSubSectionLayout() {
+  const { onChange } = useContext(StylesContext)
   const [expanded, setExpanded] = usePersistedState('styles-sub-section-layout-expanded', true)
   const [isGridModalOpen, setIsGridModalOpen] = useState(false)
 
-  const { getValue, isToggled, updateCssAttribute } = useStylesSubSectionHelpers(attributes, breakpointAttributes)
-
-  const attributeTitleProps = useMemo(() => ({
-    attributes,
-    breakpointAttributes,
-    currentBreakpointAttributes,
-    onChange,
-  }), [attributes, breakpointAttributes, currentBreakpointAttributes, onChange])
+  const { getValue, isToggled, updateCssAttribute } = useStylesSubSectionHelpers()
 
   const renderDisplayEditor = useCallback(() => (
     <Div xflex="x4s">
-      <StylesAttributeTitle
-        attributeNames={['display']}
-        {...attributeTitleProps}
-      >
+      <StylesAttributeTitle attributeNames={['display']}>
         Display
       </StylesAttributeTitle>
       {displays.map(({ name, label, Icon }) => (
@@ -258,7 +250,7 @@ function StylesSubSectionLayout({ attributes, breakpointAttributes, currentBreak
         </Tooltip>
       ))}
     </Div>
-  ), [attributeTitleProps, isToggled, updateCssAttribute, onChange])
+  ), [isToggled, updateCssAttribute, onChange])
 
   const renderFlexDirectionEditor = useCallback(() => {
     const flexDirectionValue = getValue('flex-direction')
@@ -269,10 +261,7 @@ function StylesSubSectionLayout({ attributes, breakpointAttributes, currentBreak
         xflex="x4s"
         fontSize="0.75rem"
       >
-        <StylesAttributeTitle
-          attributeNames={['flex-direction']}
-          {...attributeTitleProps}
-        >
+        <StylesAttributeTitle attributeNames={['flex-direction']}>
           Direction
         </StylesAttributeTitle>
         <Button
@@ -302,7 +291,7 @@ function StylesSubSectionLayout({ attributes, breakpointAttributes, currentBreak
         </Tooltip>
       </Div>
     )
-  }, [attributeTitleProps, getValue, isToggled, updateCssAttribute, onChange])
+  }, [getValue, isToggled, updateCssAttribute, onChange])
 
   const renderFlexAlignEditor = useCallback(() => {
     const flexDirectionValue = getValue('flex-direction')
@@ -312,7 +301,6 @@ function StylesSubSectionLayout({ attributes, breakpointAttributes, currentBreak
         <StylesAttributeTitle
           attributeNames={['align-items']}
           pt={0.25 / 2}
-          {...attributeTitleProps}
         >
           Align
         </StylesAttributeTitle>
@@ -342,7 +330,7 @@ function StylesSubSectionLayout({ attributes, breakpointAttributes, currentBreak
         </Div>
       </Div>
     )
-  }, [attributeTitleProps, getValue, isToggled, updateCssAttribute, onChange])
+  }, [getValue, isToggled, updateCssAttribute, onChange])
 
   const renderFlexJustifyEditor = useCallback(() => {
     const flexDirectionValue = getValue('flex-direction')
@@ -352,7 +340,6 @@ function StylesSubSectionLayout({ attributes, breakpointAttributes, currentBreak
         <StylesAttributeTitle
           attributeNames={['justify-content']}
           pt={0.25 / 2}
-          {...attributeTitleProps}
         >
           Justify
         </StylesAttributeTitle>
@@ -382,7 +369,7 @@ function StylesSubSectionLayout({ attributes, breakpointAttributes, currentBreak
         </Div>
       </Div>
     )
-  }, [attributeTitleProps, getValue, isToggled, updateCssAttribute, onChange])
+  }, [getValue, isToggled, updateCssAttribute, onChange])
 
   const renderGapEditor = useCallback(() => {
     const rowGapValue = getValue('row-gap')
@@ -393,7 +380,6 @@ function StylesSubSectionLayout({ attributes, breakpointAttributes, currentBreak
         <StylesAttributeTitle
           attributeNames={['column-gap', 'row-gap']}
           pt={0.25 / 2}
-          {...attributeTitleProps}
         >
           Gap
         </StylesAttributeTitle>
@@ -428,7 +414,7 @@ function StylesSubSectionLayout({ attributes, breakpointAttributes, currentBreak
         </Div>
       </Div>
     )
-  }, [attributeTitleProps, getValue, updateCssAttribute, onChange])
+  }, [getValue, updateCssAttribute, onChange])
 
   const renderFlexWrapEditor = useCallback(() => {
     const flexWrapValue = getValue('flex-wrap')
@@ -440,10 +426,7 @@ function StylesSubSectionLayout({ attributes, breakpointAttributes, currentBreak
         minHeight={30} // For flex-wrap button not to change the layout
         fontSize="0.75rem"
       >
-        <StylesAttributeTitle
-          attributeNames={['flex-wrap']}
-          {...attributeTitleProps}
-        >
+        <StylesAttributeTitle attributeNames={['flex-wrap']}>
           Wrap
         </StylesAttributeTitle>
         <Button
@@ -471,7 +454,7 @@ function StylesSubSectionLayout({ attributes, breakpointAttributes, currentBreak
         )}
       </Div>
     )
-  }, [attributeTitleProps, getValue, isToggled, updateCssAttribute, onChange])
+  }, [getValue, isToggled, updateCssAttribute, onChange])
 
   const renderFlexContentEditor = useCallback(() => {
     const alignContentValue = getValue('align-content')
@@ -481,7 +464,6 @@ function StylesSubSectionLayout({ attributes, breakpointAttributes, currentBreak
         <StylesAttributeTitle
           attributeNames={['align-content']}
           pt={0.25 / 2}
-          {...attributeTitleProps}
         >
           Align
         </StylesAttributeTitle>
@@ -511,7 +493,7 @@ function StylesSubSectionLayout({ attributes, breakpointAttributes, currentBreak
         </Div>
       </Div>
     )
-  }, [attributeTitleProps, getValue, isToggled, updateCssAttribute, onChange])
+  }, [getValue, isToggled, updateCssAttribute, onChange])
 
   const renderGridEditor = useCallback(() => (
     <>
@@ -531,19 +513,15 @@ function StylesSubSectionLayout({ attributes, breakpointAttributes, currentBreak
       <GridModal
         open={isGridModalOpen}
         onClose={() => setIsGridModalOpen(false)}
-        attributes={attributes}
-        breakpointAttributes={breakpointAttributes}
-        onChange={onChange}
       />
     </>
-  ), [isGridModalOpen, attributes, breakpointAttributes, onChange])
+  ), [isGridModalOpen])
 
   const renderGridAlignEditor = useCallback(() => (
     <Div xflex="x1">
       <StylesAttributeTitle
         attributeNames={['align-items', 'justify-items']}
         pt={0.5}
-        {...attributeTitleProps}
       >
         Align
       </StylesAttributeTitle>
@@ -589,14 +567,13 @@ function StylesSubSectionLayout({ attributes, breakpointAttributes, currentBreak
         })}
       </Div>
     </Div>
-  ), [attributeTitleProps, isToggled, updateCssAttribute, onChange])
+  ), [isToggled, updateCssAttribute, onChange])
 
   const renderGridJustifyEditor = useCallback(() => (
     <Div xflex="x1">
       <StylesAttributeTitle
         attributeNames={['align-content', 'justify-content']}
         pt={0.5}
-        {...attributeTitleProps}
       >
         Distribute
       </StylesAttributeTitle>
@@ -644,7 +621,7 @@ function StylesSubSectionLayout({ attributes, breakpointAttributes, currentBreak
         })}
       </Div>
     </Div>
-  ), [attributeTitleProps, isToggled, updateCssAttribute, onChange])
+  ), [isToggled, updateCssAttribute, onChange])
 
   const isFlex = isToggled('display', ['flex'])
   const isGrid = isToggled('display', ['grid'])
@@ -662,8 +639,6 @@ function StylesSubSectionLayout({ attributes, breakpointAttributes, currentBreak
         <StylesTitle
           title="Layout"
           expanded={expanded}
-          attributes={attributes}
-          breakpointAttributes={breakpointAttributes}
           attributeNames={attributeNames}
         />
       )}
@@ -688,7 +663,7 @@ function StylesSubSectionLayout({ attributes, breakpointAttributes, currentBreak
         {isGrid && renderGridJustifyEditor()}
         {isGrid && renderGapEditor()}
       </Div>
-      {isDisabled && <StylesDisabledOverlay />}
+      <StylesDisabledOverlay />
     </Accordion>
   )
 }

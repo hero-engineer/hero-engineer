@@ -1,18 +1,13 @@
 import { H3, Modal } from 'honorable'
 
-import { CssAttributeType, NormalizedCssAttributesType } from '~types'
-
 import GridEditor from '~core/full-ast/panels/styles/GridEditor'
 
 type GridModalPropsType = {
   open: boolean
-  attributes: NormalizedCssAttributesType
-  breakpointAttributes: NormalizedCssAttributesType
-  onChange: (attributes: CssAttributeType[]) => void
   onClose: () => void
 }
 
-function GridModal({ open, attributes, breakpointAttributes, onChange, onClose }: GridModalPropsType) {
+function GridModal({ open, onClose }: GridModalPropsType) {
   return (
     <Modal
       open={open}
@@ -21,11 +16,7 @@ function GridModal({ open, attributes, breakpointAttributes, onChange, onClose }
       backgroundColor="background-light"
     >
       <H3 mb={2}>Edit grid</H3>
-      <GridEditor
-        attributes={attributes}
-        breakpointAttributes={breakpointAttributes}
-        onChange={onChange}
-      />
+      <GridEditor />
     </Modal>
   )
 }

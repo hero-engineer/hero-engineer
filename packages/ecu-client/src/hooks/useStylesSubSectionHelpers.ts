@@ -1,12 +1,16 @@
-import { useCallback } from 'react'
+import { useCallback, useContext } from 'react'
 
-import { CssAttributeType, CssValueType, NormalizedCssAttributesType } from '~types'
+import { CssAttributeType, CssValueType } from '~types'
 
 import { cssAttributesMap } from '~constants'
 
+import StylesContext from '~contexts/StylesContext'
+
 import convertCssAttributeCssNameToJs from '~utils/convertCssAttributeCssNameToJs'
 
-function useStylesSubSectionHelpers(attributes: NormalizedCssAttributesType, breakpointAttributes: NormalizedCssAttributesType) {
+function useStylesSubSectionHelpers() {
+  const { attributes, breakpointAttributes } = useContext(StylesContext)
+
   const getValue = useCallback((attributeCssName: string) => (breakpointAttributes[attributeCssName]?.value ?? attributes[attributeCssName]?.value ?? cssAttributesMap[attributeCssName].defaultValue).toString(), [breakpointAttributes, attributes])
 
   const getIsImportant = useCallback((attributeCssName: string) => breakpointAttributes[attributeCssName]?.isImportant ?? attributes[attributeCssName]?.isImportant ?? false, [breakpointAttributes, attributes])

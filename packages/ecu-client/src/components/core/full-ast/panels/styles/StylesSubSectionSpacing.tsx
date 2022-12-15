@@ -7,7 +7,6 @@ import usePersistedState from '~hooks/usePersistedState'
 import StylesTitle from '~core/full-ast/panels/styles/StylesTitle'
 import SpacingEditor from '~core/full-ast/panels/styles/SpacingEditor'
 import StylesDisabledOverlay from '~core/full-ast/panels/styles/StylesDisabledOverlay'
-import { StylesSubSectionPropsType } from '~core/full-ast/panels/styles/StylesSubSectionPropsType'
 
 const baseHeight = 128
 const borderSizeDivider = 3.45
@@ -24,7 +23,7 @@ const attributeNames = [
   'padding-left',
 ]
 
-function StylesSubSectionSpacing({ attributes, breakpointAttributes, onChange, isDisabled }: StylesSubSectionPropsType) {
+function StylesSubSectionSpacing() {
   const inputMountNodeRef = useRef<HTMLDivElement>(null)
 
   useRefresh()
@@ -43,8 +42,6 @@ function StylesSubSectionSpacing({ attributes, breakpointAttributes, onChange, i
         <StylesTitle
           title="Spacing"
           expanded={expanded}
-          attributes={attributes}
-          breakpointAttributes={breakpointAttributes}
           attributeNames={attributeNames}
         />
       )}
@@ -56,26 +53,20 @@ function StylesSubSectionSpacing({ attributes, breakpointAttributes, onChange, i
         title="Margin"
         semanticName="margin-"
         height={baseHeight}
-        onChange={onChange}
         borderSize={baseHeight / borderSizeDivider - spacingEditorPadding}
         inputMountNode={inputMountNodeRef.current}
-        attributes={attributes}
-        breakpointAttributes={breakpointAttributes}
       >
         <SpacingEditor
           title="Padding"
           semanticName="padding-"
-          onChange={onChange}
           height={(borderSizeDivider - 2) * baseHeight / borderSizeDivider + spacingEditorPadding}
           borderSize={baseHeight / borderSizeDivider - spacingEditorPadding}
           offetHorizontal={2}
           inputMountNode={inputMountNodeRef.current}
-          attributes={attributes}
-          breakpointAttributes={breakpointAttributes}
         />
       </SpacingEditor>
       <div ref={inputMountNodeRef} />
-      {isDisabled && <StylesDisabledOverlay />}
+      <StylesDisabledOverlay />
     </Accordion>
   )
 }

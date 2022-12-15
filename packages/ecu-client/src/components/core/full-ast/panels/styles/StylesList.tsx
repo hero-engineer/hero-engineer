@@ -2,18 +2,12 @@ import { ReactNode } from 'react'
 import { Div } from 'honorable'
 import { HiPlus } from 'react-icons/hi'
 
-import { CssAttributeType, NormalizedCssAttributesType } from '~types'
-
 import StylesAttributeTitle from '~core/full-ast/panels/styles/StylesAttributeTitle'
 
 type StylesListPropsType = {
   title: string
   items: ReactNode[]
   attributeName: string
-  attributes: NormalizedCssAttributesType
-  breakpointAttributes: NormalizedCssAttributesType
-  currentBreakpointAttributes: NormalizedCssAttributesType
-  onChange: (attributes: CssAttributeType[]) => void
   onAddItem: () => void
 }
 
@@ -21,11 +15,7 @@ function StylesList({
   title,
   items,
   attributeName,
-  attributes,
-  breakpointAttributes,
-  currentBreakpointAttributes,
   onAddItem,
-  onChange,
 }: StylesListPropsType) {
 
   return (
@@ -41,10 +31,6 @@ function StylesList({
       >
         <StylesAttributeTitle
           attributeNames={[attributeName]}
-          attributes={attributes}
-          breakpointAttributes={breakpointAttributes}
-          currentBreakpointAttributes={currentBreakpointAttributes}
-          onChange={onChange}
           width="auto"
         >
           {title}
