@@ -70,7 +70,7 @@ function StylesAttributeTitle({
       >
         {children}
         {isImportant ? '!' : ''}
-        {isOtherwiseImportant && !isImportant ? '(!)' : ''}
+        {isOtherwiseImportant && !isImportant ? '[!]' : ''}
       </Div>
       <Div
         id="StylesSubSectionAttributeTitle-important"
