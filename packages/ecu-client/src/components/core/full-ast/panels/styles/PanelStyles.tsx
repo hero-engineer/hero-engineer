@@ -1,11 +1,10 @@
 import { CSSProperties, memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { A, Div } from 'honorable'
 
-import { CssAttributeType, CssValuesType, HierarchyType } from '~types'
+import { CssAttributeType, CssValuesType } from '~types'
 
 import { SaveFileMutation, SaveFileMutationDataType } from '~queries'
 
-import { hierarchyIdSeparator, hierarchyIndexSeparator } from '~processors/typescript/createHierarchy'
 import createSelector from '~processors/css/createSelector'
 import getClasses from '~processors/css/getClasses'
 import updateHierarchyElementAttribute from '~processors/typescript/updateHierarchyElementAttribute'
@@ -24,10 +23,12 @@ import useJsCssValues from '~hooks/useJsCssValues'
 import usePersistedState from '~hooks/usePersistedState'
 import useThrottleAsynchronous from '~hooks/useThrottleAsynchronous'
 
+import findHierarchy from '~utils/findHierarchy'
+import findSimilarHierarchies from '~utils/findSimilarHierarchies'
 import convertCssAttributeNameToJs from '~utils/convertCssAttributeNameToJs'
 import filterClassesByClassNamesAndMedias from '~utils/filterClassesByClassNamesAndMedias'
-import areAttributesValid from '~utils/areAttributesValid'
 import convertStylesToCssString from '~utils/convertStylesToCssString'
+import areAttributesValid from '~utils/areAttributesValid'
 
 import CssSelector from './CssSelector'
 import StylesSubSectionPosition from './StylesSubSectionPosition'
@@ -35,43 +36,6 @@ import StylesSubSectionSize from './StylesSubSectionSize'
 import StylesSubSectionLayout from './StylesSubSectionLayout'
 import StylesSubSectionSpacing from './StylesSubSectionSpacing'
 import StylesSubSectionTypography from './StylesSubSectionTypography'
-
-// TODO move to utils and dedupe from HierarchyOverlay
-function findHierarchy(hierarchy: HierarchyType | null, targetId: string): HierarchyType | null {
-  if (!hierarchy) return null
-  if (hierarchy.id === targetId) return hierarchy
-
-  return hierarchy.children.map(h => findHierarchy(h, targetId)).find(x => x) ?? null
-}
-
-function findSimilarHierarchies(hierarchy: HierarchyType | null, targetId: string) {
-  if (!hierarchy) return []
-  if (hierarchy.id === targetId) return [hierarchy]
-
-  const limitedTargetId = getLimitedHierarchyId(targetId)
-
-  return findSimilarHierarchiesByLimitedId(hierarchy, limitedTargetId)
-}
-
-function findSimilarHierarchiesByLimitedId(hierarchy: HierarchyType | null, limitedTargetId: string): HierarchyType[] {
-  if (!hierarchy) return []
-
-  const limitedId = getLimitedHierarchyId(hierarchy.id)
-
-  if (limitedId === limitedTargetId) return [hierarchy]
-
-  return hierarchy.children.map(h => findSimilarHierarchiesByLimitedId(h, limitedTargetId)).flat()
-}
-
-const limitedHierarchyRegex = new RegExp(`${hierarchyIdSeparator}([a-zA-Z0-9_]+)${hierarchyIndexSeparator}[0-9]+${hierarchyIdSeparator}([a-zA-Z0-9_]+${hierarchyIndexSeparator}[0-9]+)$`)
-
-function getLimitedHierarchyId(id: string) {
-  const match = limitedHierarchyRegex.exec(id)
-
-  if (!match) return id
-
-  return match[1] + match[2] // Function name + limited id
-}
 
 // The styles panel
 // Displayed in the right retractable panel
@@ -214,7 +178,6 @@ function PanelStyles() {
   const handleUpdateClassName = useCallback(async (className: string) => {
     if (!currentHierarchy?.element) return
 
-    setShouldDisplayCssClassOrderingWarning(false)
     setClassName(className)
 
     similiarHierarchies.forEach(similarHierarchy => {
@@ -234,8 +197,6 @@ function PanelStyles() {
   }, [currentHierarchy, similiarHierarchies, saveFile])
 
   const handleDeleteClassName = useCallback(async (className: string) => {
-    setShouldDisplayCssClassOrderingWarning(false)
-
     const { code, filePath } = await deleteSelector(`.${className}`)
 
     // TODO error handling
@@ -262,7 +223,6 @@ function PanelStyles() {
   }, [similiarHierarchies])
 
   const handleSetClassNames = useCallback((classes: string[]) => {
-    setShouldDisplayCssClassOrderingWarning(false)
     handleUpdateClassName(classes.join(' '))
     setIsStyleUpdated(false)
     setStyle({})

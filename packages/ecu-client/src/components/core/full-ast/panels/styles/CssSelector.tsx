@@ -73,21 +73,25 @@ function CssSelector({ allClasses, classNames, selectedClassName, onSelectedClas
 
       if (nextClassNames.length === classNames.length) return
 
-      const orderedNextClassNames = [...nextClassNames].sort((a, b) => {
-        const selectorA = `.${a}`
-        const selectorB = `.${b}`
-        const indexOfA = allClasses.findIndex(c => c.selector === selectorA)
-        const indexOfB = allClasses.findIndex(c => c.selector === selectorB)
-
-        return indexOfA < indexOfB ? -1 : 1
-      })
-
       if (isCreated) onCreateClassName(addedClassName)
+
+      const orderedNextClassNames = [...nextClassNames]
+
+      if (!isCreated) {
+        orderedNextClassNames.sort((a, b) => {
+          const selectorA = `.${a}`
+          const selectorB = `.${b}`
+          const indexOfA = allClasses.findIndex(c => c.selector === selectorA)
+          const indexOfB = allClasses.findIndex(c => c.selector === selectorB)
+
+          return indexOfA < indexOfB ? -1 : 1
+        })
+
+        if (nextClassNames.join(' ') !== orderedNextClassNames.join(' ')) onWarnAboutCssClassOrdering()
+      }
 
       onClassNamesChange(orderedNextClassNames)
       onSelectedClassNameChange(addedClassName)
-
-      if (nextClassNames.join(' ') !== orderedNextClassNames.join(' ')) onWarnAboutCssClassOrdering()
     }
   }, [
     isError,
