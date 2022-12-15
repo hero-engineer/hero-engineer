@@ -7,7 +7,6 @@ import { MdBrush } from 'react-icons/md'
 import { ComponentFileMetadataQuery, ComponentFileQueryDataType } from '~queries'
 
 import TabsContext from '~contexts/TabsContext'
-import IsInteractiveModeContext from '~contexts/IsInteractiveModeContext'
 
 import useQuery from '~hooks/useQuery'
 import useCurrentComponentPath from '~hooks/useCurrentComponentPath'
@@ -24,7 +23,6 @@ import PanelStyles from '~core/full-ast/panels/styles/PanelStyles'
 
 function Component() {
   const { '*': ecuComponentPath = '' } = useParams()
-  const { isInteractiveMode } = useContext(IsInteractiveModeContext)
 
   const { tabs, setTabs } = useContext(TabsContext)
 
@@ -63,19 +61,17 @@ function Component() {
       flexGrow
       maxHeight="100%"
     >
-      {!isInteractiveMode && (
-        <RetractablePanel
-          direction="left"
-          openPersistedStateKey="left-panel-open"
-          items={[
-            {
-              label: 'Hierarchy',
-              icon: <RiNodeTree />,
-              children: <PanelHierarchy />,
-            },
-          ]}
-        />
-      )}
+      <RetractablePanel
+        direction="left"
+        openPersistedStateKey="left-panel-open"
+        items={[
+          {
+            label: 'Hierarchy',
+            icon: <RiNodeTree />,
+            children: <PanelHierarchy />,
+          },
+        ]}
+      />
       <Div
         xflex="y2s"
         flexGrow
@@ -111,19 +107,17 @@ function Component() {
         <WidthBar />
         <HierarchyBar />
       </Div>
-      {!isInteractiveMode && (
-        <RetractablePanel
-          direction="right"
-          openPersistedStateKey="right-panel-open"
-          items={[
-            {
-              label: 'Style',
-              icon: <MdBrush />,
-              children: <PanelStyles />,
-            },
-          ]}
-        />
-      )}
+      <RetractablePanel
+        direction="right"
+        openPersistedStateKey="right-panel-open"
+        items={[
+          {
+            label: 'Style',
+            icon: <MdBrush />,
+            children: <PanelStyles />,
+          },
+        ]}
+      />
     </Div>
   )
 }

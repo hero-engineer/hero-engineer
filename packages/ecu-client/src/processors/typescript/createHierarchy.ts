@@ -34,6 +34,8 @@ import project, { projectReady } from '~processors/typescript'
   * HIERARCHY
 -- */
 
+export const hierarchyFileSeparator = '__@#file#@__'
+
 export const hierarchyIdSeparator = '__@#id#@__'
 
 export const hierarchyIndexSeparator = '__@#index#@__'
@@ -178,7 +180,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
 
       if (!isDefaultExport) continue // For now
 
-      const id = `${parentContext?.id ?? ''}${filePath}${hierarchyIdSeparator}${functionName}${hierarchyIndexSeparator}${parentContext?.childIndex ?? 0}`
+      const id = `${parentContext?.id ?? ''}${hierarchyFileSeparator}${filePath}${hierarchyIdSeparator}${functionName}${hierarchyIndexSeparator}${parentContext?.childIndex ?? 0}`
       const hierarchy: ExtendedHierarchyType = {
         id,
         name: functionName,

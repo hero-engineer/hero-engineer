@@ -5,6 +5,7 @@ import { CssAttributeType, CssValuesType, HierarchyType } from '~types'
 
 import { SaveFileMutation, SaveFileMutationDataType } from '~queries'
 
+import { hierarchyIdSeparator, hierarchyIndexSeparator } from '~processors/typescript/createHierarchy'
 import createSelector from '~processors/css/createSelector'
 import getClasses from '~processors/css/getClasses'
 import updateHierarchyElementAttribute from '~processors/typescript/updateHierarchyElementAttribute'
@@ -39,6 +40,35 @@ function findHierarchy(hierarchy: HierarchyType | null, targetId: string): Hiera
   if (hierarchy.id === targetId) return hierarchy
 
   return hierarchy.children.map(h => findHierarchy(h, targetId)).find(x => x) ?? null
+}
+
+function findSimilarHierarchies(hierarchy: HierarchyType | null, targetId: string) {
+  if (!hierarchy) return []
+  if (hierarchy.id === targetId) return [hierarchy]
+
+  const limitedTargetId = getLimitedHierarchyId(targetId)
+
+  return findSimilarHierarchiesByLimitedId(hierarchy, limitedTargetId)
+}
+
+function findSimilarHierarchiesByLimitedId(hierarchy: HierarchyType | null, limitedTargetId: string): HierarchyType[] {
+  if (!hierarchy) return []
+
+  const limitedId = getLimitedHierarchyId(hierarchy.id)
+
+  if (limitedId === limitedTargetId) return [hierarchy]
+
+  return hierarchy.children.map(h => findSimilarHierarchiesByLimitedId(h, limitedTargetId)).flat()
+}
+
+const limitedHierarchyRegex = new RegExp(`${hierarchyIdSeparator}([a-zA-Z0-9_]+)${hierarchyIndexSeparator}[0-9]+${hierarchyIdSeparator}([a-zA-Z0-9_]+${hierarchyIndexSeparator}[0-9]+)$`)
+
+function getLimitedHierarchyId(id: string) {
+  const match = limitedHierarchyRegex.exec(id)
+
+  if (!match) return id
+
+  return match[1] + match[2] // Function name + limited id
 }
 
 // The styles panel
@@ -82,6 +112,7 @@ function PanelStyles() {
   }, [breakpoints, breakpoint])
 
   const currentHierarchy = useMemo(() => findHierarchy(hierarchy, currentHierarchyId), [hierarchy, currentHierarchyId])
+  const similiarHierarchies = useMemo(() => findSimilarHierarchies(hierarchy, currentHierarchyId), [hierarchy, currentHierarchyId])
   const isNoElementSelected = useMemo(() => currentHierarchy?.type !== 'element', [currentHierarchy])
   const classNames = useMemo(() => className.split(' ').map(c => c.trim()).filter(Boolean), [className])
   // Arrays of CssClasses
@@ -126,6 +157,7 @@ function PanelStyles() {
   // console.log('concernedMedias', concernedMedias)
   // console.log('style', style)
   // console.log('v, bv, cv', passedCssValues, passedBreakpointCssValues, passedCurrentBreakpointCssValues)
+  // console.log('similiarHierarchies', similiarHierarchies)
 
   const refreshClasses = useCallback(() => {
     setClassesRefresh(x => x + 1)
@@ -192,15 +224,15 @@ function PanelStyles() {
   }, [currentHierarchy, saveFile])
 
   const updateElementStyle = useCallback((style: CSSProperties) => {
-    if (!currentHierarchy?.element) return
-
     const css = convertStylesToCssString(style)
 
-    // Prevent infinite hierarchy recreation
-    if (currentHierarchy.element.getAttribute('style') === css) return
+    similiarHierarchies.forEach(similarHierarchy => {
+      // Prevent infinite hierarchy recreation
+      if (similarHierarchy.element?.getAttribute('style') === css) return
 
-    currentHierarchy.element.setAttribute('style', css)
-  }, [currentHierarchy])
+      similarHierarchy.element?.setAttribute('style', css)
+    })
+  }, [similiarHierarchies])
 
   const handleSetClassNames = useCallback((classes: string[]) => {
     updateClassName(classes.join(' '))
@@ -210,7 +242,7 @@ function PanelStyles() {
   }, [updateClassName, updateElementStyle])
 
   const handleStyleChange = useCallback((attributes: CssAttributeType[]) => {
-    if (!(selectedClassName && currentHierarchy?.element)) return
+    if (!selectedClassName) return
 
     const updatedStyle: CssValuesType = { ...style }
 
@@ -221,7 +253,7 @@ function PanelStyles() {
     setIsStyleUpdated(true)
     setStyle(updatedStyle)
     updateElementStyle(updatedStyle)
-  }, [selectedClassName, currentHierarchy, style, updateElementStyle])
+  }, [selectedClassName, style, updateElementStyle])
 
   const renderNoElement = useCallback(() => (
     <Div
@@ -357,7 +389,7 @@ function PanelStyles() {
   return (
     <Div
       xflex="y2s"
-      width={256}
+      width={256 - 1}
     >
       <Div
         fontWeight="bold"
