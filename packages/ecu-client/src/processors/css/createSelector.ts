@@ -1,7 +1,7 @@
 import { BreakpointType } from '~types'
 
 import postCss, { cssReady, getIndexCss, setIndexCss } from '~processors/css'
-import traverseCss from '~processors/css/traverseCss'
+import traverse from '~processors/css/traverse'
 
 function sortBreakpoints(a: BreakpointType, b: BreakpointType) {
   if (!a.media && b.media) return -1
@@ -19,7 +19,7 @@ async function createSelector(selector: string, breakpoints: BreakpointType[]) {
 
   let isAlradyInserted = false
 
-  traverseCss(root, selector, breakpoints[0], () => {
+  traverse(root, selector, breakpoints[0], () => {
     isAlradyInserted = true
   })
 

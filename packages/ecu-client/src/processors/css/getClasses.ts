@@ -1,5 +1,5 @@
 import postCss, { cssReady, getIndexCss } from '~processors/css'
-import traverseCss from '~processors/css/traverseCss'
+import traverse from '~processors/css/traverse'
 
 async function getClasses() {
   await cssReady.promise
@@ -8,7 +8,7 @@ async function getClasses() {
 
   const { root } = postCss.process(code, { from: filePath })
 
-  return traverseCss(root)
+  return traverse(root)
 }
 
 export default getClasses

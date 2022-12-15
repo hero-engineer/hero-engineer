@@ -8,6 +8,7 @@ import { SaveFileMutation, SaveFileMutationDataType } from '~queries'
 import createSelector from '~processors/css/createSelector'
 import getClasses from '~processors/css/getClasses'
 import updateHierarchyElementAttribute from '~processors/typescript/updateHierarchyElementAttribute'
+import updateSelector from '~processors/css/updateSelector'
 
 import HierarchyContext from '~contexts/HierarchyContext2'
 import BreakpointContext from '~contexts/BreakpointContext'
@@ -131,25 +132,27 @@ function PanelStyles() {
   }, [])
 
   const handleCssUpdate = useCallback(async () => {
+    if (!selectedClassName) return
     if (!classNames.length || previousAttributesHash === attributesHash) return
     if (!areAttributesValid(attributes)) return
     if (!isStyleUpdated) return
 
-    // await updateCssClass({
-    //   classNames: selectedClassName,
-    //   attributesJson: JSON.stringify(attributes),
-    //   breakpointId: breakpoint.id,
-    // })
-    console.log()
+    const { filePath, code } = await updateSelector(`.${selectedClassName}`, attributes, breakpoint)
+
+    await saveFile({
+      filePath,
+      code,
+      commitMessage: `Update .${selectedClassName} in index.css`,
+    })
   }, [
     classNames,
     attributes,
     attributesHash,
     previousAttributesHash,
-    // selectedClassName,
-    // breakpoint,
+    selectedClassName,
+    breakpoint,
     isStyleUpdated,
-    // updateCssClass,
+    saveFile,
   ])
 
   const throttledHandleCssUpdate = useThrottleAsynchronous(handleCssUpdate, 500)
@@ -188,11 +191,23 @@ function PanelStyles() {
     })
   }, [currentHierarchy, saveFile])
 
+  const updateElementStyle = useCallback((style: CSSProperties) => {
+    if (!currentHierarchy?.element) return
+
+    const css = convertStylesToCssString(style)
+
+    // Prevent infinite hierarchy recreation
+    if (currentHierarchy.element.getAttribute('style') === css) return
+
+    currentHierarchy.element.setAttribute('style', css)
+  }, [currentHierarchy])
+
   const handleSetClassNames = useCallback((classes: string[]) => {
     updateClassName(classes.join(' '))
-    setStyle({})
     setIsStyleUpdated(false)
-  }, [updateClassName, setStyle])
+    setStyle({})
+    updateElementStyle({})
+  }, [updateClassName, updateElementStyle])
 
   const handleStyleChange = useCallback((attributes: CssAttributeType[]) => {
     if (!(selectedClassName && currentHierarchy?.element)) return
@@ -203,11 +218,10 @@ function PanelStyles() {
       updatedStyle[convertCssAttributeNameToJs(name)] = value
     })
 
-    currentHierarchy.element.setAttribute('style', convertStylesToCssString(updatedStyle))
-
-    setStyle(updatedStyle)
     setIsStyleUpdated(true)
-  }, [selectedClassName, currentHierarchy, style, setStyle])
+    setStyle(updatedStyle)
+    updateElementStyle(updatedStyle)
+  }, [selectedClassName, currentHierarchy, style, updateElementStyle])
 
   const renderNoElement = useCallback(() => (
     <Div
@@ -327,9 +341,12 @@ function PanelStyles() {
 
   // Reset style state on new breakpoint or new selected className
   useEffect(() => {
-    setStyle({})
     setIsStyleUpdated(false)
-  }, [breakpoint, selectedClassName, setStyle])
+    setStyle({})
+    updateElementStyle({})
+  // Omiting updateElementStyle on purpose as it would trigger the effect on every hierarchy change
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [breakpoint, selectedClassName])
 
   useEffect(() => {
     throttledHandleCssUpdate()

@@ -4,7 +4,7 @@ import { BreakpointType, CssAttributeType, CssClassType } from '~types'
 
 import areSelectorsEqual from '~utils/areSelectorsEqual'
 
-function traverseCss(root: Root, targetSelector?: string, breakpoint?: BreakpointType, onSuccess?: (cssClass: CssClassType, rule: Rule, root: Root | Document) => void,) {
+function traverse(root: Root, targetSelector?: string, breakpoint?: BreakpointType, onSuccess?: (cssClass: CssClassType, rule: Rule, root: Root | Document) => void,) {
   const classes: CssClassType[] = []
 
   root.walkRules(rule => {
@@ -40,4 +40,4 @@ function traverseCss(root: Root, targetSelector?: string, breakpoint?: Breakpoin
   return classes
 }
 
-export default traverseCss
+export default traverse
