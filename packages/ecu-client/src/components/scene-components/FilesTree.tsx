@@ -1,13 +1,13 @@
 import { useMemo } from 'react'
 import { Div } from 'honorable'
 
-import TabLink from '~components/layout/TabLink'
-
 import { FilePathsQuery, FilePathsQueryDataType } from '~queries'
 
 import useQuery from '~hooks/useQuery'
 
 import { convertToEcuComponentPath } from '~utils/convertComponentPath'
+
+import TabLink from '~components/layout/TabLink'
 
 type FilesTreePropsType = {
   filter?: (relativePath: string) => boolean

@@ -28,8 +28,8 @@ function PanelHierarchy() {
   const [collapsed, setCollapsed] = usePersistedState<Record<string, boolean>>('panel-hierarchy-collapsed', {})
 
   const handleDelete = useCallback(async (hierarchy: HierarchyType) => {
-    await deleteNode(hierarchy, logs.hierarchy)
-  }, [logs.hierarchy])
+    await deleteNode(hierarchy, logs.typescript)
+  }, [logs.typescript])
 
   const renderHierarchy = useCallback((hierarchy: HierarchyType, isRoot = false) => {
     if (hierarchy.type === 'text') return null

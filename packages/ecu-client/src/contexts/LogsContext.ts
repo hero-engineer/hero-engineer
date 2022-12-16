@@ -9,7 +9,8 @@ export type LogsContextType = {
 
 export default createContext<LogsContextType>({
   logs: {
-    hierarchy: false,
+    typescript: false,
+    css: false,
   },
   setLogs: () => {},
 })

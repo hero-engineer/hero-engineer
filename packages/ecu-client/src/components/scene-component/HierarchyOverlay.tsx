@@ -1,13 +1,13 @@
 import { ReactNode, useCallback, useContext, useEffect, useState } from 'react'
 import { Div } from 'honorable'
 
-import HierarchyOverlayElement from '~components/scene-component/HierarchyOverlayElement'
-
 import { HierarchyType } from '~types'
 
 import IsInteractiveModeContext from '~contexts/IsInteractiveModeContext'
 import HierarchyContext from '~contexts/HierarchyContext'
 import BreakpointContext from '~contexts/BreakpointContext'
+
+import HierarchyOverlayElement from '~components/scene-component/HierarchyOverlayElement'
 
 type HierarchyOverlayPropsType = {
   children: ReactNode

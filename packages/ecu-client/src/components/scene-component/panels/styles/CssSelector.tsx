@@ -3,14 +3,14 @@ import { Autocomplete, Div, WithOutsideClick } from 'honorable'
 import createEmojiRegex from 'emoji-regex'
 import { HiOutlineFaceSmile } from 'react-icons/hi2'
 
-import EmojiPickerBase from '~components/emoji/EmojiPickerBase'
-import CssSelectorChip from '~components/scene-component/panels/styles/CssSelectorChip'
-
 import { CssClassType } from '~types'
 
 import { zIndexes } from '~constants'
 
 import extractClassNamesFromSelector from '~utils/extractClassNamesFromSelector'
+
+import CssSelectorChip from '~components/scene-component/panels/styles/CssSelectorChip'
+import EmojiPickerBase from '~components/emoji/EmojiPickerBase'
 
 type CssSelectorPropType = {
   allClasses: CssClassType[]

@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Div, H1 } from 'honorable'
 
-import CssFunctionEditor from '~components/css-inputs/CssFunctionEditor'
-
 import { refetchKeys } from '~constants'
 
 import { RootCssQuery, RootCssQueryDataType, UpdateRootCssMutation, UpdateRootCssMutationDataType } from '~queries'
@@ -11,6 +9,8 @@ import useQuery from '~hooks/useQuery'
 import useRefetch from '~hooks/useRefetch'
 import useMutation from '~hooks/useMutation'
 import useThrottleAsynchronous from '~hooks/useThrottleAsynchronous'
+
+import CssFunctionEditor from '~components/css-inputs/CssFunctionEditor'
 
 // Design/root-css scene
 function DesignRootCss() {

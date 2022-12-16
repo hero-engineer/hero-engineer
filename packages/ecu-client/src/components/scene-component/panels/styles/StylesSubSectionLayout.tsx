@@ -14,16 +14,16 @@ import {
   MdOutlineSwapHoriz,
 } from 'react-icons/md'
 
+import StylesContext from '~contexts/StylesContext'
+
+import useStylesSubSectionHelpers from '~hooks/useStylesSubSectionHelpers'
+import usePersistedState from '~hooks/usePersistedState'
+
 import CssValueInput from '~components/css-inputs/CssValueInput'
 import GridModal from '~components/scene-component/panels/styles/GridModal'
 import StylesTitle from '~components/scene-component/panels/styles/StylesTitle'
 import StylesAttributeTitle from '~components/scene-component/panels/styles/StylesAttributeTitle'
 import StylesDisabledOverlay from '~components/scene-component/panels/styles/StylesDisabledOverlay'
-
-import StylesContext from '~contexts/StylesContext'
-
-import useStylesSubSectionHelpers from '~hooks/useStylesSubSectionHelpers'
-import usePersistedState from '~hooks/usePersistedState'
 
 const attributeNames = [
   'display',

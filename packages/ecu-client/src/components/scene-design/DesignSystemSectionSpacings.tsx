@@ -13,7 +13,7 @@ import useRefetch from '~hooks/useRefetch'
 import useMutation from '~hooks/useMutation'
 import useThrottleAsynchronous from '~hooks/useThrottleAsynchronous'
 
-import CssValueInput from '../css-inputs/CssValueInput'
+import CssValueInput from '~components/css-inputs/CssValueInput'
 
 function DesignSystemSectionSpacings() {
   const [spacings, setSpacings] = useState<SpacingType[]>([])

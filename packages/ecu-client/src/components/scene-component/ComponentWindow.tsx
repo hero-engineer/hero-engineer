@@ -1,23 +1,15 @@
 import { memo, useContext } from 'react'
-// import { DndProvider } from 'react-dnd'
-// import { HTML5Backend } from 'react-dnd-html5-backend'
-// import { CssBaseline, Div, ThemeProvider } from 'honorable'
 import { Div } from 'honorable'
+
+import ComponentRemountContext from '~contexts/ComponentRemountContext'
 
 import WithComponentHierarchy from '~components/scene-component/WithComponentHierarchy'
 import HierarchyOverlay from '~components/scene-component/HierarchyOverlay'
 import WithComponentError from '~components/scene-component/WithComponentError'
-
-import ComponentRemountContext from '~contexts/ComponentRemountContext'
-
-// import theme from '../../../theme'
-// import EditionOverlay from '../edition-overlay/EditionOverlay'
-// import ProviderEmotion from '../providers/ProviderEmotion'
-
-import WithComponentIframeHeight from './WithComponentIframeHeight'
-import ComponentLoader from './ComponentLoader'
-import ComponentIframeExpander from './ComponentIframeExpander'
-import ComponentIframe from './ComponentIframe'
+import WithComponentIframeHeight from '~components/scene-component/WithComponentIframeHeight'
+import ComponentLoader from '~components/scene-component/ComponentLoader'
+import ComponentIframeExpander from '~components/scene-component/ComponentIframeExpander'
+import ComponentIframe from '~components/scene-component/ComponentIframe'
 
 type ComponentWindowPropsType = {
   componentPath: string
@@ -38,16 +30,7 @@ function ComponentWindow({ componentPath, decoratorPaths }: ComponentWindowProps
         <HierarchyOverlay>
           <ComponentIframe>
             {({ window, head, setHeight }) => (
-            // <ProviderEmotion head={head}>
-            // <DndProvider
-            //   backend={HTML5Backend}
-            //   context={window}
-            // >
-              // {/* <ThemeProvider theme={theme}> */}
-              // {/* <CssBaseline /> */}
               <WithComponentIframeHeight setHeight={setHeight}>
-                {/* TODO investigate why EditionOverlay should be inside of the iframe, and if removable remove also ThemeProvider */}
-                {/* <EditionOverlay> */}
                 <WithComponentError key={key}>
                   <WithComponentHierarchy>
                     <ComponentLoader
@@ -57,11 +40,7 @@ function ComponentWindow({ componentPath, decoratorPaths }: ComponentWindowProps
                     />
                   </WithComponentHierarchy>
                 </WithComponentError>
-                {/* </EditionOverlay> */}
               </WithComponentIframeHeight>
-              // {/* </ThemeProvider> */}
-            // </DndProvider>
-            // </ProviderEmotion>
             )}
           </ComponentIframe>
         </HierarchyOverlay>

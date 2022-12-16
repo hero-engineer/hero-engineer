@@ -1,15 +1,15 @@
 import { useMemo } from 'react'
 import { Div, H1, Spinner } from 'honorable'
 
-import AddPackageButton from '~components/scene-packages/AddPackageButton'
-import PackagesTable from '~components/scene-packages/PackagesTable'
-
 import { refetchKeys } from '~constants'
 
 import { PackagesQuery, PackagesQueryDataType, PackagesUpdatesQuery, PackagesUpdatesQueryDataType } from '~queries'
 
 import useQuery from '~hooks/useQuery'
 import useRefetch from '~hooks/useRefetch'
+
+import PackagesTable from '~components/scene-packages/PackagesTable'
+import AddPackageButton from '~components/scene-packages/AddPackageButton'
 
 // Packages scene
 function Packages() {

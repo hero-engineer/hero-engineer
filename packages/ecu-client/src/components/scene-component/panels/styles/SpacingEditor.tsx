@@ -2,8 +2,6 @@ import { ReactNode, useCallback, useContext, useMemo, useRef, useState } from 'r
 import { createPortal } from 'react-dom'
 import { Div, Path, Svg, WithOutsideClick } from 'honorable'
 
-import SpacingEditorInput from '~components/scene-component/panels/styles/SpacingEditorInput'
-
 import { cssAttributesMap } from '~constants'
 
 import StylesContext from '~contexts/StylesContext'
@@ -12,6 +10,8 @@ import useRefresh from '~hooks/useRefresh'
 import useStylesSubSectionHelpers from '~hooks/useStylesSubSectionHelpers'
 
 import doesParentHaveId from '~utils/doesParentHaveId'
+
+import SpacingEditorInput from '~components/scene-component/panels/styles/SpacingEditorInput'
 
 type SpacingEditorPropsType = {
   title: string

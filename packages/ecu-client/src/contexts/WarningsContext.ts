@@ -1,8 +1,6 @@
 import { Dispatch, SetStateAction, createContext } from 'react'
 
-export type WarningsType = {
-  cssClassOrdering: boolean
-}
+import { WarningsType } from '~types'
 
 export type WarningsContextType = {
   warnings: WarningsType

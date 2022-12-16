@@ -12,7 +12,7 @@ import useQuery from '~hooks/useQuery'
 import useRefetch from '~hooks/useRefetch'
 import useMutation from '~hooks/useMutation'
 
-import ColorPicker from '../css-inputs/ColorPicker'
+import ColorPicker from '~components/css-inputs/ColorPicker'
 
 function DesignSystemSectionColors() {
   const [colors, setColors] = useState<ColorType[]>([])

@@ -2,9 +2,9 @@ import { MouseEvent, useCallback, useContext } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Div } from 'honorable'
 
-import Tab from '~components/layout/Tab'
-
 import TabsContext from '~contexts/TabsContext'
+
+import Tab from '~components/layout/Tab'
 
 function Tabs() {
   const { tabs, setTabs } = useContext(TabsContext)

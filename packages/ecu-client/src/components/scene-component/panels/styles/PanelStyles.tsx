@@ -32,12 +32,12 @@ import getCascadingCssAttributes from '~utils/getCascadingCssAttributes'
 import deleteAndConvertCssAttributes from '~utils/deleteAndConvertCssAttributes'
 import convertStylesToCssString from '~utils/convertStylesToCssString'
 
-import CssSelector from './CssSelector'
-import StylesSubSectionPosition from './StylesSubSectionPosition'
-import StylesSubSectionSize from './StylesSubSectionSize'
-import StylesSubSectionLayout from './StylesSubSectionLayout'
-import StylesSubSectionSpacing from './StylesSubSectionSpacing'
-import StylesSubSectionTypography from './StylesSubSectionTypography'
+import CssSelector from '~components/scene-component/panels/styles/CssSelector'
+import StylesSubSectionPosition from '~components/scene-component/panels/styles/StylesSubSectionPosition'
+import StylesSubSectionSize from '~components/scene-component/panels/styles/StylesSubSectionSize'
+import StylesSubSectionLayout from '~components/scene-component/panels/styles/StylesSubSectionLayout'
+import StylesSubSectionSpacing from '~components/scene-component/panels/styles/StylesSubSectionSpacing'
+import StylesSubSectionTypography from '~components/scene-component/panels/styles/StylesSubSectionTypography'
 
 // The styles panel
 // Displayed in the right retractable panel

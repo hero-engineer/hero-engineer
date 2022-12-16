@@ -1,11 +1,6 @@
 import { useCallback, useContext, useRef } from 'react'
 import { Accordion, Div, MenuItem, Select } from 'honorable'
 
-import StylesDisabledOverlay from '~components/scene-component/panels/styles/StylesDisabledOverlay'
-import SpacingEditor from '~components/scene-component/panels/styles/SpacingEditor'
-import StylesAttributeTitle from '~components/scene-component/panels/styles/StylesAttributeTitle'
-import StylesTitle from '~components/scene-component/panels/styles/StylesTitle'
-
 import StylesContext from '~contexts/StylesContext'
 
 import useRefresh from '~hooks/useRefresh'
@@ -13,6 +8,11 @@ import usePersistedState from '~hooks/usePersistedState'
 import useStylesSubSectionHelpers from '~hooks/useStylesSubSectionHelpers'
 
 import capitalize from '~utils/capitalize'
+
+import StylesTitle from '~components/scene-component/panels/styles/StylesTitle'
+import StylesAttributeTitle from '~components/scene-component/panels/styles/StylesAttributeTitle'
+import SpacingEditor from '~components/scene-component/panels/styles/SpacingEditor'
+import StylesDisabledOverlay from '~components/scene-component/panels/styles/StylesDisabledOverlay'
 
 const attributeNames = [
   'position',

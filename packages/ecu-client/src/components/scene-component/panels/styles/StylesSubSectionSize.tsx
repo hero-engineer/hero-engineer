@@ -2,17 +2,17 @@ import { useCallback, useContext } from 'react'
 import { Accordion, Button, Div, Tooltip } from 'honorable'
 import { AiOutlineColumnHeight, AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 
-import CssValueInput from '~components/css-inputs/CssValueInput'
-import StylesTitle from '~components/scene-component/panels/styles/StylesTitle'
-import StylesAttributeTitle from '~components/scene-component/panels/styles/StylesAttributeTitle'
-import StylesDisabledOverlay from '~components/scene-component/panels/styles/StylesDisabledOverlay'
-
 import StylesContext from '~contexts/StylesContext'
 
 import usePersistedState from '~hooks/usePersistedState'
 import useStylesSubSectionHelpers from '~hooks/useStylesSubSectionHelpers'
 
 import capitalize from '~utils/capitalize'
+
+import CssValueInput from '~components/css-inputs/CssValueInput'
+import StylesTitle from '~components/scene-component/panels/styles/StylesTitle'
+import StylesAttributeTitle from '~components/scene-component/panels/styles/StylesAttributeTitle'
+import StylesDisabledOverlay from '~components/scene-component/panels/styles/StylesDisabledOverlay'
 
 const attributeNames = [
   'width',

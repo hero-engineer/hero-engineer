@@ -31,12 +31,12 @@ function WithComponentHierarchy({ children }: WithComponentHierarchyPropsType) {
       componentElements.push(child as HTMLElement)
     }
 
-    const hierarchy = await createHierarchy(path, componentElements, logs.hierarchy)
+    const hierarchy = await createHierarchy(path, componentElements, logs.typescript)
 
-    if (logs.hierarchy) console.log('hierarchy', hierarchy)
+    if (logs.typescript) console.log('hierarchy', hierarchy)
 
     setHierarchy(hierarchy)
-  }, [path, logs.hierarchy, setHierarchy])
+  }, [path, logs.typescript, setHierarchy])
 
   const throttledComputeHierarchy = useThrottleAsynchronous(computeHierarchy, 250, true)
 

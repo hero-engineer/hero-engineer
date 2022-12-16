@@ -1,12 +1,12 @@
 import { useRef } from 'react'
 import { Accordion } from 'honorable'
 
+import usePersistedState from '~hooks/usePersistedState'
+import useRefresh from '~hooks/useRefresh'
+
 import StylesTitle from '~components/scene-component/panels/styles/StylesTitle'
 import SpacingEditor from '~components/scene-component/panels/styles/SpacingEditor'
 import StylesDisabledOverlay from '~components/scene-component/panels/styles/StylesDisabledOverlay'
-
-import usePersistedState from '~hooks/usePersistedState'
-import useRefresh from '~hooks/useRefresh'
 
 const baseHeight = 128
 const borderSizeDivider = 3.45

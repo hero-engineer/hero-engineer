@@ -1,4 +1,4 @@
-import '../../../css/ColorPicker.css'
+import '../../css/ColorPicker.css'
 
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { Button, Div, Input, MenuItem, Select, WithOutsideClick } from 'honorable'

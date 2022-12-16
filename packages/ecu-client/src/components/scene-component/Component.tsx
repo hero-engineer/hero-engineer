@@ -4,6 +4,13 @@ import { Div } from 'honorable'
 import { RiNodeTree } from 'react-icons/ri'
 import { MdBrush } from 'react-icons/md'
 
+import { ComponentFileMetadataQuery, ComponentFileQueryDataType } from '~queries'
+
+import TabsContext from '~contexts/TabsContext'
+
+import useCurrentComponentPath from '~hooks/useCurrentComponentPath'
+import useQuery from '~hooks/useQuery'
+
 import BreakpointsButtons from '~components/scene-component/BreakpointsButtons'
 import WidthBar from '~components/scene-component/WidthBar'
 import HierarchyBar from '~components/scene-component/HierarchyBar'
@@ -12,15 +19,7 @@ import RemountButton from '~components/scene-component/RemountButton'
 import ComponentWindow from '~components/scene-component/ComponentWindow'
 import RetractablePanel from '~components/layout/RetractablePanel'
 import PanelHierarchy from '~components/scene-component/panels/PanelHierarchy'
-
-import { ComponentFileMetadataQuery, ComponentFileQueryDataType } from '~queries'
-
-import TabsContext from '~contexts/TabsContext'
-
-import useCurrentComponentPath from '~hooks/useCurrentComponentPath'
-import useQuery from '~hooks/useQuery'
-
-import PanelStyles from '~core/full-ast/panels/styles/PanelStyles'
+import PanelStyles from '~components/scene-component/panels/styles/PanelStyles'
 
 function Component() {
   const { '*': ecuComponentPath = '' } = useParams()

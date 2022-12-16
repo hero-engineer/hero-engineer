@@ -1,6 +1,6 @@
 import { Div, H2 } from 'honorable'
 
-import DesignSystemSubSectionFonts from './DesignSystemSubSectionFonts'
+import DesignSystemSubSectionFonts from '~components/scene-design/DesignSystemSubSectionFonts'
 
 function DesignSystemSectionTypography() {
   return (

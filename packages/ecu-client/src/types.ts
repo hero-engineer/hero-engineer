@@ -197,7 +197,12 @@ export type IdentifierType = {
 }
 
 export type LogsType = {
-  hierarchy: boolean
+  typescript: boolean
+  css: boolean
 }
 
 export type NormalizedCssAttributesType = Record<string, CssAttributeType>
+
+export type WarningsType = {
+  cssClassOrdering: boolean
+}

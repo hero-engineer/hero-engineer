@@ -14,7 +14,7 @@ function WithComponentIframeHeight({ setHeight, children }: WithComponentIframeH
     const observer = new ResizeObserver(() => {
       if (!rootRef.current) return
 
-      setHeight(rootRef.current.offsetHeight + 2) // 2px for body padding
+      setHeight(rootRef.current.offsetHeight)
     })
 
     observer.observe(rootRef.current)

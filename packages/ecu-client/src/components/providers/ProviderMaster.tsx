@@ -4,12 +4,12 @@ import { Provider as GraphqlProvider } from 'urql'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
-import { LogsType, SnackBarItemType, TabType } from '~types'
+import { LogsType, SnackBarItemType, TabType, WarningsType } from '~types'
 
 import ModeContext from '~contexts/ModeContext'
 import HotContext from '~contexts/HotContext'
 import LogsContext, { LogsContextType } from '~contexts/LogsContext'
-import WarningContext, { WarningsContextType, WarningsType } from '~contexts/WarningsContext'
+import WarningContext, { WarningsContextType } from '~contexts/WarningsContext'
 import RefetchContext, { RefetchContextType } from '~contexts/RefetchContext'
 import ThemeModeContext, { ThemeModeContextType } from '~contexts/ThemeModeContext'
 import SnackBarContext, { SnackBarContextType } from '~contexts/SnackBarContext'
@@ -28,7 +28,7 @@ type ProviderMasterPropsType = {
 
 // The providers for the whole application
 function ProviderMaster({ mode, hot, children }: ProviderMasterPropsType) {
-  const [logs, setLogs] = usePersistedState<LogsType>('logs', { hierarchy: false })
+  const [logs, setLogs] = usePersistedState<LogsType>('logs', { typescript: false, css: false })
   const logsContextValue = useMemo<LogsContextType>(() => ({ logs, setLogs }), [logs, setLogs])
 
   const [warnings, setWarnings] = usePersistedState<WarningsType>('warnings', { cssClassOrdering: true })

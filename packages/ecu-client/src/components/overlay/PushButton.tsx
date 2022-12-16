@@ -3,10 +3,7 @@ import { useMutation } from 'urql'
 import { Button, Tooltip } from 'honorable'
 import { GoRepoPush } from 'react-icons/go'
 
-import {
-  PushMutation,
-  PushMutationDataType,
-} from '~queries'
+import { PushMutation, PushMutationDataType } from '~queries'
 
 // The git push button
 function PushButton() {

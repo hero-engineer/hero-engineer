@@ -2,7 +2,7 @@ import { memo } from 'react'
 import { Outlet } from 'react-router-dom'
 import { Div } from 'honorable'
 
-import Overlay from '../overlay/Overlay'
+import Overlay from '~components/overlay/Overlay'
 
 // The Ecu layout
 function Layout() {

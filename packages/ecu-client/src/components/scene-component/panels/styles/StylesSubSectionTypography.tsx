@@ -5,13 +5,6 @@ import { BsTypeItalic } from 'react-icons/bs'
 import { RxLetterCaseCapitalize, RxLetterCaseLowercase, RxLetterCaseUppercase, RxOverline, RxStrikethrough, RxUnderline } from 'react-icons/rx'
 import { MdClose, MdOutlineFormatTextdirectionLToR, MdOutlineFormatTextdirectionRToL } from 'react-icons/md'
 
-import ColorPicker from '~components/css-inputs/ColorPicker'
-import CssValueInput from '~components/css-inputs/CssValueInput'
-import StylesDisabledOverlay from '~components/scene-component/panels/styles/StylesDisabledOverlay'
-import StylesTitle from '~components/scene-component/panels/styles/StylesTitle'
-import StylesAttributeTitle from '~components/scene-component/panels/styles/StylesAttributeTitle'
-import StylesList from '~components/scene-component/panels/styles/StylesList'
-
 import { refetchKeys } from '~constants'
 
 import { ColorsQuery, ColorsQueryDataType, FontsQuery, FontsQueryDataType } from '~queries'
@@ -24,6 +17,13 @@ import usePersistedState from '~hooks/usePersistedState'
 import useStylesSubSectionHelpers from '~hooks/useStylesSubSectionHelpers'
 
 import capitalize from '~utils/capitalize'
+
+import StylesList from '~components/scene-component/panels/styles/StylesList'
+import StylesAttributeTitle from '~components/scene-component/panels/styles/StylesAttributeTitle'
+import StylesTitle from '~components/scene-component/panels/styles/StylesTitle'
+import StylesDisabledOverlay from '~components/scene-component/panels/styles/StylesDisabledOverlay'
+import CssValueInput from '~components/css-inputs/CssValueInput'
+import ColorPicker from '~components/css-inputs/ColorPicker'
 
 const attributeNames = [
   'font-family',

@@ -1,18 +1,17 @@
 import { PropsWithChildren, memo } from 'react'
 import { Div } from 'honorable'
 
-import Tabs from '../layout/Tabs'
-
-import SnackBar from './SnackBar'
-import EcuButton from './EcuButton'
-import CreateComponentButton from './CreateComponentButton'
-import ComponentsLinkButton from './ComponentsLinkButton'
-import DesignLinkButton from './DesignLinkButton'
-import PackagesLinkButton from './PackagesLinkButton'
-import UndoRedoButtons from './UndoRedoButtons'
-import PushButton from './PushButton'
-import SettingsLinkButton from './SettingsLinkButton'
-import ViewAppButton from './ViewAppButton'
+import Tabs from '~components/layout/Tabs'
+import SnackBar from '~components/overlay/SnackBar'
+import EcuButton from '~components/overlay/EcuButton'
+import CreateComponentButton from '~components/overlay/CreateComponentButton'
+import ComponentsLinkButton from '~components/overlay/ComponentsLinkButton'
+import DesignLinkButton from '~components/overlay/DesignLinkButton'
+import PackagesLinkButton from '~components/overlay/PackagesLinkButton'
+import UndoRedoButtons from '~components/overlay/UndoRedoButtons'
+import PushButton from '~components/overlay/PushButton'
+import SettingsLinkButton from '~components/overlay/SettingsLinkButton'
+import ViewAppButton from '~components/overlay/ViewAppButton'
 
 type OverlayPropsType = PropsWithChildren<any>
 

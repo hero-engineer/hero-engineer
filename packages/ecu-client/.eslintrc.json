@@ -60,17 +60,7 @@
             "position": "after"
           },
           {
-            "pattern": "~scenes/**",
-            "group": "internal",
-            "position": "after"
-          },
-          {
-            "pattern": "~core/**",
-            "group": "internal",
-            "position": "after"
-          },
-          {
-            "pattern": "~lib/**",
+            "pattern": "~components/**",
             "group": "internal",
             "position": "after"
           }

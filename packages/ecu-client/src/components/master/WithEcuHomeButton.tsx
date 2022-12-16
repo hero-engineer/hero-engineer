@@ -1,9 +1,11 @@
-import { PropsWithChildren, useState } from 'react'
+import { ReactNode, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from 'honorable'
 import { GiRosaShield } from 'react-icons/gi'
 
-type WithEcuHomeButtonPropsType = PropsWithChildren<any>
+type WithEcuHomeButtonPropsType = {
+  children: ReactNode
+}
 
 // A wrapper that displays a button that links to the home scene
 function WithEcuHomeButton({ children }: WithEcuHomeButtonPropsType) {

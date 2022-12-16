@@ -23,9 +23,9 @@ function WithProcessors({ children }: WithProcessorsPropsType) {
   useEffect(() => {
     if (!filesQueryResult.data?.files) return
 
-    addTypescriptSourceFiles(filesQueryResult.data.files, logs.hierarchy)
-    addCssSourceFiles(filesQueryResult.data.files, logs.hierarchy)
-  }, [filesQueryResult.data, logs.hierarchy])
+    addTypescriptSourceFiles(filesQueryResult.data.files, logs.typescript)
+    addCssSourceFiles(filesQueryResult.data.files, logs.typescript)
+  }, [filesQueryResult.data, logs.typescript])
 
   return (
     <>
