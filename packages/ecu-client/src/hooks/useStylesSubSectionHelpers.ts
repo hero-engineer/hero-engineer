@@ -18,12 +18,12 @@ function useStylesSubSectionHelpers() {
   const getTextColor = useCallback((attributeCssNames: string[]) => (
     attributeCssNames
     .map(attributeCssName => (
-      typeof breakpointAttributes[attributeCssName]?.value !== 'undefined'
+      breakpointAttributes[attributeCssName]
       && breakpointAttributes[attributeCssName]?.value !== attributes[attributeCssName]?.value
-      && (typeof attributes[attributeCssName]?.value !== 'undefined' || breakpointAttributes[attributeCssName]?.value !== cssAttributesMap[attributeCssName].defaultValue)
+      && (attributes[attributeCssName] || breakpointAttributes[attributeCssName]?.value !== cssAttributesMap[attributeCssName].defaultValue)
         ? 'breakpoint'
-        : typeof attributes[attributeCssName]?.value !== 'undefined'
-        && ((typeof breakpointAttributes[attributeCssName]?.value !== 'undefined' && breakpointAttributes[attributeCssName]?.value !== attributes[attributeCssName]?.value) || attributes[attributeCssName]?.value !== cssAttributesMap[attributeCssName].defaultValue)
+        : attributes[attributeCssName]
+        && ((breakpointAttributes[attributeCssName] && breakpointAttributes[attributeCssName]?.value !== attributes[attributeCssName]?.value) || attributes[attributeCssName]?.value !== cssAttributesMap[attributeCssName].defaultValue)
           ? 'primary'
           : 'text-light'
     ))
