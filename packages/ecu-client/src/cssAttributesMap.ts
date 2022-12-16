@@ -183,7 +183,7 @@ const cssAttributesMap: CSsAttributesMapType = {
   },
   'row-gap': {
     cssNames: ['row-gap'],
-    defaultValue: '0px', // A bit of a hack, to make the gap editor display no modified value on 0px // TODO investigate
+    defaultValue: '0px', // A bit of a hack, to make the gap editor display no modified value on 0px
     isValueValid: isSpacingValueValid,
   },
   'grid-auto-flow': {

@@ -201,7 +201,7 @@ function CssSelector({ allClasses, classNames, selectedClassName, onSelectedClas
             left={0}
             right={0}
             bottom={0}
-            zIndex={zIndexes.cssClassesSelectorEmojiPicker}
+            zIndex={zIndexes.emojiPicker}
           />
           <WithOutsideClick
             preventFirstFire
@@ -211,7 +211,7 @@ function CssSelector({ allClasses, classNames, selectedClassName, onSelectedClas
               position="fixed"
               top={8}
               right={8}
-              zIndex={zIndexes.cssClassesSelectorEmojiPicker + 1}
+              zIndex={zIndexes.emojiPicker + 1}
             >
               <EmojiPickerBase onChange={handleEmojiSelect} />
             </Div>
