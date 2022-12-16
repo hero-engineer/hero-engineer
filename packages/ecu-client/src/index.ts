@@ -1,1 +1,1 @@
-export { default as EcuMaster } from '~core/master/EcuMaster'
+export { default as EcuMaster } from 'components/master/EcuMaster'
