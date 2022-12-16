@@ -1,22 +1,4 @@
-/* Do not modify the comments or something might not work anymore */
-
-/* --
-  * FONTS START
--- */
-/* --
-  * FONTS END
--- */
-
 :root {
-/* --
-  * COLORS START
--- */
-/* --
-  * COLORS END
--- */
-/* --
-  * SPACINGS START
--- */
 --spacing-xxsmall: 0.0625rem; /* xxxsmall */
 --spacing-xxsmall: 0.125rem; /* xxsmall */
 --spacing-xsmall: 0.25rem; /* xsmall */
@@ -26,14 +8,8 @@
 --spacing-xlarge: 2rem; /* xlarge */
 --spacing-xxlarge: 4rem; /* xxlarge */
 --spacing-xxxlarge: 6rem; /* xxxlarge */
-/* --
-  * SPACINGS END
--- */
 }
 
-/* --
-  * ROOT CSS START
--- */
 html {
   font-size: 16px;
   /* You should not modify the following */
@@ -46,13 +22,4 @@ html {
 /* You should not modify the following */
 *, *:before, *:after {
   box-sizing: inherit;
-}
-/* --
-  * ROOT CSS END
--- */
-
-
-.div-remove-me {
-  min-width: 16px;
-  min-height: 16px;
 }
