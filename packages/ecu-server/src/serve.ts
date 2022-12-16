@@ -10,12 +10,12 @@ import chalk from 'chalk'
 
 import { resolvers, typeDefs } from './graphql/index.js'
 
-import buildGraph from './graph/build/index.js'
+// import buildGraph from './graph/build/index.js'
 
 import getEcuLocation from './helpers/getEcuLocation.js'
 
 async function serve() {
-  await buildGraph()
+  // await buildGraph()
 
   const server = new ApolloServer({
     typeDefs,

@@ -16,7 +16,6 @@
   "homepage": "https://github.com/dherault/ecu#readme",
   "scripts": {
     "dev": "nodemon --watch src --ext ts,tsx --exec \"npm run build\"",
-    "start": "ts-node scripts/serve.ts",
     "build": "tsc",
     "prepublishOnly": "npm run build"
   },
