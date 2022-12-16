@@ -1,67 +1,5 @@
 import { JsxChild, Node as TsNode } from 'ts-morph'
 
-export type FunctionNodeType = {
-  address: string
-  payload: {
-    name: string
-    path: string
-    relativePath: string
-  }
-}
-
-export type FileNodeType = {
-  address: string
-  payload: {
-    name: string
-    path: string
-    relativePath: string
-    emoji: string
-    description: string
-  }
-}
-
-export type RectType = {
-  x: number
-  y: number
-  width: number
-  height: number
-}
-
-export type HierarchyPosition = 'before' | 'after' | 'children' | 'parent'
-
-export type HierarchyItemType = {
-  id: string
-  label: string
-  displayName: string
-  index: number
-  fileAddress: string
-  fileEmoji: string
-  componentName: string
-  onComponentAddress: string
-  onComponentName: string
-  componentAddress?: string
-  hierarchyId?: string
-  isRoot: boolean
-  isChild: boolean
-  isComponentAcceptingChildren: boolean
-  isComponentEditable: boolean
-  children: HierarchyItemType[]
-}
-
-export type TypeType = {
-  name: string
-  declaration: string
-  fileNodeAddress: string
-}
-
-export type ImportSpecifierType = 'ImportDefaultSpecifier' | 'ImportNamespaceSpecifier' | 'ImportSpecifier'
-
-// export type ImportType = {
-//   name: string
-//   source: string
-//   type: ImportSpecifierType
-// }
-
 export type SnackBarItemType = {
   id: number
   content: string
@@ -87,8 +25,6 @@ export type BreakpointType = {
 }
 
 export type CssValueType = string | number
-
-export type CssValuesType = Record<string, CssValueType>
 
 export type CssAttributeType = {
   cssName: string
@@ -134,13 +70,6 @@ export type SpacingType ={
   name: string
   value: string
 }
-
-export type XYType = {
-  x: number
-  y: number
-}
-
-// full-ast
 
 export type FileType = {
   path: string
