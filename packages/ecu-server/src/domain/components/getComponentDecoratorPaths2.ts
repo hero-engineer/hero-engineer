@@ -1,12 +1,12 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import { appPath, ecuCommonDecoratorName, ecuDecoratorNameSuffix, ecuDecoratorsRelativeLocation } from '../../configuration.js'
+import { appPath, ecuCommonDecoratorName, ecuDecoratorNameSuffix, ecuDecoratorsRelativePath } from '../../configuration.js'
 
 import possiblyAddExtension from '../../utils/possiblyAddExtension.js'
 
 function getComponentDecoratorPaths(componentPath: string) {
-  const decoratorsLocation = path.join(appPath, ecuDecoratorsRelativeLocation)
+  const decoratorsLocation = path.join(appPath, ecuDecoratorsRelativePath)
 
   const decorators: string[] = [
     path.join(decoratorsLocation, possiblyAddExtension(ecuCommonDecoratorName, 'tsx')),

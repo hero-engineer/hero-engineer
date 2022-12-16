@@ -4,7 +4,6 @@ import { jsxText } from '@babel/types'
 
 import { AtomType, BreakpointType, ImportType } from './types.js'
 
-// TODO rename to appLocation
 export const appPath = path.join(process.cwd(), 'app')
 
 export const ecuPackageName = 'ecu'
@@ -29,7 +28,7 @@ export const indexCssFileRelativePath = 'src/index.css'
 
 export const allowedExtensions = ['ts', 'tsx', 'css']
 
-export const ecuDecoratorsRelativeLocation = 'src/decorators'
+export const ecuDecoratorsRelativePath = 'src/decorators'
 
 export const ecuDecoratorNameSuffix = 'Decorator'
 
