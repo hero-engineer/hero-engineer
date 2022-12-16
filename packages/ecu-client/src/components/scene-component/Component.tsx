@@ -4,12 +4,15 @@ import { Div } from 'honorable'
 import { RiNodeTree } from 'react-icons/ri'
 import { MdBrush } from 'react-icons/md'
 
+import { refetchKeys } from '~constants'
+
 import { ComponentFileMetadataQuery, ComponentFileQueryDataType } from '~queries'
 
 import TabsContext from '~contexts/TabsContext'
 
 import useCurrentComponentPath from '~hooks/useCurrentComponentPath'
 import useQuery from '~hooks/useQuery'
+import useRefetch from '~hooks/useRefetch'
 
 import BreakpointsButtons from '~components/scene-component/BreakpointsButtons'
 import WidthBar from '~components/scene-component/WidthBar'
@@ -28,7 +31,7 @@ function Component() {
 
   const path = useCurrentComponentPath()
 
-  const [componentFileMetadataQueryResult] = useQuery<ComponentFileQueryDataType>({
+  const [componentFileMetadataQueryResult, refetchFileMetadataQuery] = useQuery<ComponentFileQueryDataType>({
     query: ComponentFileMetadataQuery,
     variables: {
       path,
@@ -36,7 +39,10 @@ function Component() {
     pause: !path,
   })
 
-  // TODO useRefetch
+  useRefetch({
+    key: refetchKeys.componentFileMetadata,
+    refetch: refetchFileMetadataQuery,
+  })
 
   useEffect(() => {
     if (!ecuComponentPath) return

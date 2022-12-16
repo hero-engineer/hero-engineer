@@ -24,23 +24,14 @@ export const hierarchyPositions: HierarchyPosition[] = [
 
 export const refetchKeys = {
   all: 'all',
-  component: 'component',
-  components: 'components',
-  hierarchy: 'hierarchy',
-  cssClasses: 'cssClasses',
-  componentScreenshot: 'componentScreenshot',
-  isComponentAcceptingChildren: 'isComponentAcceptingChildren',
-  fileImports: 'fileImports',
-  fileTypes: 'fileTypes',
+  componentFileMetadata: 'componentFileMetadata',
   undoRedoMetadata: 'undoRedoMetadata',
   packages: 'packages',
   packagesUpdates: 'packagesUpdates',
   breakpoints: 'breakpoints',
-  fonts: 'fonts',
-  colors: 'colors',
-  spacings: 'spacings',
-  rootCss: 'rootCss',
   favicon: 'favicon',
+  filePaths: 'filePaths',
+  files: 'files',
 }
 
 export const ecuAtoms = [

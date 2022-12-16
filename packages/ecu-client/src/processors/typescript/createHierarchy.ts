@@ -820,7 +820,7 @@ function createHierarchySync(filePath: string, componentElements: HTMLElement[],
       -- */
 
       // HACK for now
-      // TODO check for Array
+      // TODO check for other Array methods
       if (functionName.endsWith('.map')) {
         let predicate = callExpression.getArguments()[0]
 

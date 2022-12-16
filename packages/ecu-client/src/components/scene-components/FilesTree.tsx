@@ -1,9 +1,12 @@
 import { useMemo } from 'react'
 import { Div } from 'honorable'
 
+import { refetchKeys } from '~constants'
+
 import { FilePathsQuery, FilePathsQueryDataType } from '~queries'
 
 import useQuery from '~hooks/useQuery'
+import useRefetch from '~hooks/useRefetch'
 
 import { convertToEcuComponentPath } from '~utils/convertComponentPath'
 
@@ -22,11 +25,14 @@ function extractRelativePath(path: string) {
 }
 
 function FilesTree({ filter }: FilesTreePropsType) {
-  const [filePathsQueryResult] = useQuery<FilePathsQueryDataType>({
+  const [filePathsQueryResult, refetchFilePathsQuery] = useQuery<FilePathsQueryDataType>({
     query: FilePathsQuery,
   })
 
-  // TODO useRefetch
+  useRefetch({
+    key: refetchKeys.filePaths,
+    refetch: refetchFilePathsQuery,
+  })
 
   const paths = useMemo(() => filePathsQueryResult.data?.filePaths ?? [], [filePathsQueryResult.data])
 

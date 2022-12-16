@@ -1,5 +1,7 @@
 import { ReactNode, useContext, useEffect } from 'react'
 
+import { refetchKeys } from '~constants'
+
 import { FilesQuery, FilesQueryDataType } from '~queries'
 
 import { addTypescriptSourceFiles } from '~processors/typescript'
@@ -8,6 +10,7 @@ import { addCssSourceFiles } from '~processors/css'
 import LogsContext from '~contexts/LogsContext'
 
 import useQuery from '~hooks/useQuery'
+import useRefetch from '~hooks/useRefetch'
 
 type WithProcessorsPropsType = {
   children: ReactNode
@@ -16,9 +19,12 @@ type WithProcessorsPropsType = {
 function WithProcessors({ children }: WithProcessorsPropsType) {
   const { logs } = useContext(LogsContext)
 
-  const [filesQueryResult] = useQuery<FilesQueryDataType>({ query: FilesQuery })
+  const [filesQueryResult, refetchFilesQuery] = useQuery<FilesQueryDataType>({ query: FilesQuery })
 
-  // TODO useRefetch
+  useRefetch({
+    key: refetchKeys.files,
+    refetch: refetchFilesQuery,
+  })
 
   useEffect(() => {
     if (!filesQueryResult.data?.files) return
