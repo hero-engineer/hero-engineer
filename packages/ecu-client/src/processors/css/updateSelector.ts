@@ -9,7 +9,9 @@ async function updateSelector(selector: string, attributes: CssAttributeType[], 
   const { filePath, code } = getIndexCss()
   const { root } = postCss.process(code, { from: filePath })
 
-  traverse(root, selector, breakpoint, (_cssClass, rule) => {
+  traverse(root, (rule, media) => {
+    if (!(rule.selector === selector && media === breakpoint.media)) return
+
     rule.nodes.length = 0
 
     attributes.forEach(attribute => {
@@ -21,6 +23,10 @@ async function updateSelector(selector: string, attributes: CssAttributeType[], 
 
       // Styling: prepend spaces to the declaration
       rule.nodes[rule.nodes.length - 1].raws.before = breakpoint.media ? '\n    ' : '\n  '
+
+      if (!attribute.comment) return
+
+      rule.append({ text: attribute.comment })
     })
   })
 

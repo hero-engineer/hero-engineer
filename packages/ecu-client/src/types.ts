@@ -31,6 +31,7 @@ export type CssAttributeType = {
   jsName: string
   value: CssValueType
   isImportant: boolean
+  comment: string
 }
 
 export type CssClassType = {
@@ -55,6 +56,13 @@ export type FontType = {
   url: string
   weights: number[]
   isVariable: boolean
+}
+
+export type CssVariableType ={
+  id: string
+  type: 'color' | 'spacing' | 'other'
+  name: string
+  value: string
 }
 
 export type ColorType ={

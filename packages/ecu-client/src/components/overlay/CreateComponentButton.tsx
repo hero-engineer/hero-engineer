@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { Button, Div, H2, Input, Modal, Tooltip } from 'honorable'
 import { AiOutlinePlus } from 'react-icons/ai'
 
-import { CreateComponentMutation, CreateComponentMutationDataType } from '~queries'
+import { SaveFileMutation, SaveFileMutationDataType } from '~queries'
 
 // A button that pops a modal for creating a new component
 function CreateComponentButton(props: any) {
@@ -12,22 +12,22 @@ function CreateComponentButton(props: any) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const navigate = useNavigate()
 
-  const [, createComponent] = useMutation<CreateComponentMutationDataType>(CreateComponentMutation)
+  const [, saveFile] = useMutation<SaveFileMutationDataType>(SaveFileMutation)
 
   const handleCreateComponentClick = useCallback(async () => {
     if (!name) return
 
-    const results = await createComponent({ name })
+    // const results = await createComponent({ name })
 
     setIsModalOpen(false)
     setName('')
 
-    if (!results.data) return
+    // if (!results.data) return
 
-    const { file, component } = results.data.createComponent
+    // const { file, component } = results.data.createComponent
 
-    navigate(`/_ecu_/component/${file.address}/${component.address}`)
-  }, [name, createComponent, navigate])
+    // navigate(`/_ecu_/component/${file.address}/${component.address}`)
+  }, [name, saveFile, navigate])
 
   return (
     <>

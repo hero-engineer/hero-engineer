@@ -17,13 +17,13 @@ async function createSelector(selector: string, breakpoints: BreakpointType[]) {
 
   const { root } = postCss.process(code, { from: filePath })
 
-  let isAlradyInserted = false
+  let isAlreadyInserted = false
 
-  traverse(root, selector, breakpoints[0], () => {
-    isAlradyInserted = true
+  traverse(root, rule => {
+    if (rule.selector === selector) isAlreadyInserted = true
   })
 
-  if (isAlradyInserted) {
+  if (isAlreadyInserted) {
     throw new Error(`Selector ${selector} already exists in index.css`)
   }
 

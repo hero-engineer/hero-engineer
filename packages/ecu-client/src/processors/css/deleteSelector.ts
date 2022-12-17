@@ -1,12 +1,11 @@
-import postCss, { cssReady, getIndexCss, setIndexCss } from '~processors/css'
-import traverse from '~processors/css/traverse'
+import { cssReady, getIndexCss, setIndexCss } from '~processors/css'
+import getClasses from '~processors/css/getClasses'
 
 async function deleteSelector(selector: string) {
   await cssReady.promise
 
   const { filePath, code } = getIndexCss()
-  const { root } = postCss.process(code, { from: filePath })
-  const classes = traverse(root)
+  const classes = await getClasses()
 
   let nextCode = code
 
