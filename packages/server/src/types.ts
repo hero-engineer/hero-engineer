@@ -1,12 +1,3 @@
-import {
-  JSXElement,
-  JSXExpressionContainer,
-  JSXFragment,
-  JSXSpreadChild,
-  JSXText,
-} from '@babel/types'
-import { NodePath, ParseResult } from '@babel/core'
-
 export type Particule<PayloadType = any, StateType = any> = {
   // A unique address for this particule
   address: string
@@ -29,19 +20,6 @@ export type GraphType = {
 }
 
 export type ExportType = 'Default' | 'Named' | 'None'
-
-export type FileNodePayloadType = {
-  name: string
-  extension: string
-  path: string
-  relativePath: string
-  code: string
-  ast: ParseResult | null
-  description: string
-  emoji: string
-}
-
-export type FileNodeType = Particule<FileNodePayloadType>
 
 export type FunctionNodePayloadType = {
   name: string
@@ -75,14 +53,7 @@ export type HistoryMutationReturnType<T> = {
   description: string
 }
 
-export type ImpactedType = {
-  fileNode: FileNodeType
-  ast: ParseResult
-}
-
 export type MutateType = (x: any, previousX: any) => void
-
-export type PostTraverseType = (fileNode: FileNodeType, ast: ParseResult) => void
 
 export type IndexRegistryType = Record<string, number>
 
@@ -115,17 +86,6 @@ export type EcuHistoryEntryType = {
   branch: string
   message: string
 }
-
-export type AtomType = {
-  id: string
-  name: string
-  defaultClassName: string
-  isComponentAcceptingChildren: boolean
-  isComponentEditable: boolean
-  defaultChildren: (JSXText | JSXExpressionContainer | JSXSpreadChild | JSXElement | JSXFragment)[]
-}
-
-export type TraverseComponentOnSuccessType = (paths: NodePath<JSXElement>[]) => void
 
 export type PackageType = {
   name: string

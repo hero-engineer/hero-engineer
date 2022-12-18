@@ -1,8 +1,6 @@
 import path from 'node:path'
 
-import { jsxText } from '@babel/types'
-
-import { AtomType, BreakpointType, ImportType } from './types.js'
+import { BreakpointType } from './types.js'
 
 export const appPath = path.join(process.cwd(), 'app')
 
@@ -113,39 +111,39 @@ export const rootCssEndComment = `/* --
   * ROOT CSS END
 -- */`
 
-export const externalModulesImports: ImportType[] = [
-  {
-    name: 'PropsWithChildren',
-    source: 'react',
-    type: 'ImportSpecifier',
-  },
-  {
-    name: 'ReactNode',
-    source: 'react',
-    type: 'ImportSpecifier',
-  },
-]
+// export const externalModulesImports: ImportType[] = [
+//   {
+//     name: 'PropsWithChildren',
+//     source: 'react',
+//     type: 'ImportSpecifier',
+//   },
+//   {
+//     name: 'ReactNode',
+//     source: 'react',
+//     type: 'ImportSpecifier',
+//   },
+// ]
 
 export const ecuAtomPrefix = '__ecu_atom__'
 
-export const ecuAtoms: AtomType[] = [
-  {
-    id: `${ecuAtomPrefix}Div`,
-    name: 'Div',
-    defaultClassName: 'div-remove-me',
-    isComponentAcceptingChildren: true,
-    isComponentEditable: false,
-    defaultChildren: [],
-  },
-  {
-    id: `${ecuAtomPrefix}Text`,
-    name: 'Text',
-    defaultClassName: '',
-    isComponentAcceptingChildren: false,
-    isComponentEditable: true,
-    defaultChildren: [jsxText("Edit me I'm a Text")],
-  },
-]
+// export const ecuAtoms: AtomType[] = [
+//   {
+//     id: `${ecuAtomPrefix}Div`,
+//     name: 'Div',
+//     defaultClassName: 'div-remove-me',
+//     isComponentAcceptingChildren: true,
+//     isComponentEditable: false,
+//     defaultChildren: [],
+//   },
+//   {
+//     id: `${ecuAtomPrefix}Text`,
+//     name: 'Text',
+//     defaultClassName: '',
+//     isComponentAcceptingChildren: false,
+//     isComponentEditable: true,
+//     defaultChildren: [jsxText("Edit me I'm a Text")],
+//   },
+// ]
 
 export const defaultBreakpoint: BreakpointType = {
   id: 'Default',
