@@ -1,17 +1,32 @@
 {
-  "name": "ecu-client",
-  "version": "1.0.2",
+  "name": "@hero-engineer/client",
+  "version": "0.0.0",
+  "description": "Build anything you want",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dherault/ecu.git"
+    "url": "git+https://github.com/hero-engineer/hero-engineer.git"
   },
+  "keywords": [
+    "Hero",
+    "engineer",
+    "low-code",
+    "no-code",
+    "lowcode",
+    "nocode",
+    "lcnc"
+  ],
   "author": "David Hérault <dherault@gmail.com> (https://github.com/dherault)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/dherault/ecu/issues"
+    "url": "https://github.com/hero-engineer/hero-engineer/issues"
   },
-  "homepage": "https://github.com/dherault/ecu#readme",
+  "homepage": "https://github.com/hero-engineer/hero-engineer#readme",
+  "files": [
+    "build"
+  ],
+  "module": "./build/ecu-client.es.js",
+  "types": "./build/index.d.ts",
   "scripts": {
     "build": "tsc && vite build",
     "build:watch": "node --max_old_space_size=16384 ./node_modules/vite/bin/vite.js build --watch",
@@ -71,10 +86,5 @@
   "peerDependencies": {
     "react": "18.x",
     "react-dom": "18.x"
-  },
-  "files": [
-    "build"
-  ],
-  "module": "./build/ecu-client.es.js",
-  "types": "./build/index.d.ts"
+  }
 }

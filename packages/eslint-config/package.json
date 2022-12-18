@@ -1,7 +1,7 @@
 {
-  "name": "eslint-config-ecu",
-  "version": "1.3.0",
-  "description": "An ecu-compatible ESlint config",
+  "name": "@hero-engineer/eslint-config",
+  "version": "0.0.0",
+  "description": "A Hero Engineer-compatible ESlint config",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,14 +12,20 @@
   },
   "keywords": [
     "eslint",
-    "ecu"
+    "Hero",
+    "engineer",
+    "low-code",
+    "no-code",
+    "lowcode",
+    "nocode",
+    "lcnc"
   ],
   "author": "David Hérault <dherault@gmail.com> (https://github.com/dherault)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/dherault/ecu/issues"
+    "url": "https://github.com/hero-engineer/hero-engineer/issues"
   },
-  "homepage": "https://github.com/dherault/ecu#readme",
+  "homepage": "https://github.com/hero-engineer/hero-engineer#readme",
   "dependencies": {
     "eslint": "^8.27.0",
     "eslint-config-dherault-typescript": "^1.2.0"

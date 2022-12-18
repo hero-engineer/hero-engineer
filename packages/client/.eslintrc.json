@@ -1,7 +1,4 @@
 {
-  "env": {
-    "serviceworker": true
-  },
   "settings": {
     "import/parsers": {
 			"@typescript-eslint/parser": [".ts", ".tsx"]

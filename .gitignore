@@ -1,3 +1,6 @@
+vite.config.ts.timestamp*
+build
+
 # Logs
 logs
 *.log
