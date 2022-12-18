@@ -9,10 +9,9 @@ async function getVariables() {
   await cssReady.promise
 
   const { filePath, code } = getIndexCss()
+  const { root } = postCss.process(code, { from: filePath })
 
   const variables: CssVariableType[] = []
-
-  const { root } = postCss.process(code, { from: filePath })
 
   traverse(root, rule => {
     if (rule.selector !== ':root') return
