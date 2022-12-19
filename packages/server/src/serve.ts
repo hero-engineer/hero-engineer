@@ -1,6 +1,3 @@
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-
 import { ApolloServer } from 'apollo-server-express'
 import express from 'express'
 // @ts-expect-error
@@ -10,13 +7,7 @@ import chalk from 'chalk'
 
 import { resolvers, typeDefs } from './graphql/index.js'
 
-// import buildGraph from './graph/build/index.js'
-
-import getEcuLocation from './helpers/getEcuLocation.js'
-
 async function serve() {
-  // await buildGraph()
-
   const server = new ApolloServer({
     typeDefs,
     resolvers,
@@ -37,18 +28,7 @@ async function serve() {
     graphqlApp.listen({ port: 4000 }, resolve)
   })
 
-  console.log(chalk.green('~~~'), '🚀 Ecu GraphQL server ready at http://localhost:4000/')
-
-  const __dirname = fileURLToPath(new URL('.', import.meta.url))
-  const staticApp = express()
-
-  staticApp.use(cors())
-  staticApp.use('/.ecu', express.static(getEcuLocation()))
-  staticApp.use('/emojis', express.static(path.join(__dirname, '../data/emojis')))
-
-  staticApp.listen(4001)
-
-  console.log(chalk.green('~~~'), '🚀 Ecu static  server ready at http://localhost:4001/')
+  console.log(chalk.green('~~~'), '🚀 Ecu server ready at http://localhost:4000/')
 }
 
 export default serve
