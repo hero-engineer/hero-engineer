@@ -1,18 +1,18 @@
 /* --
  * DO NOT DELETE THIS FILE
- * EcuCommonDecorator.tsx is used to decorate any Ecu component
- * Its primary role is to inject the index.css into the Ecu iframe
+ * HeroEngineerDecorator.tsx is used to decorate any Hero Engineer component
+ * Its primary role is to inject the index.css into the Hero Engineer iframe
 -- */
 import { ReactNode, useEffect, useState } from 'react'
 
 import indexCss from '../index.css?inline'
 
-type EcuCommonDecoratorPropsType = {
+type HeroEngineerCommonDecoratorPropsType = {
   head?: HTMLHeadElement
   children: ReactNode
 }
 
-function EcuCommonDecorator({ children, head }: EcuCommonDecoratorPropsType) {
+function HeroEngineerDecorator({ children, head }: HeroEngineerCommonDecoratorPropsType) {
   const [styleElement, setStyleElement] = useState<HTMLStyleElement | null>(null)
 
   useEffect(() => {
@@ -35,4 +35,4 @@ function EcuCommonDecorator({ children, head }: EcuCommonDecoratorPropsType) {
   return children
 }
 
-export default EcuCommonDecorator
+export default HeroEngineerDecorator

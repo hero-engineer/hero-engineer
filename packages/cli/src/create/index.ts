@@ -9,7 +9,7 @@ import { commit, getGitAuthor } from '@hero-engineer/server'
 
 import installDependencies from './installDependencies.js'
 
-async function createEcuTemplate() {
+async function createTemplate() {
   const cwd = process.cwd()
 
   console.log('Checking for git directory...')
@@ -22,7 +22,7 @@ async function createEcuTemplate() {
   const { name, email } = getGitAuthor()
 
   if (!(name && email)) {
-    throw new Error('Git author name and email are required, pplease update your git config')
+    throw new Error('Git author name and email are required, please update your git config')
   }
 
   console.log('Copying template files...')
@@ -61,7 +61,7 @@ async function createEcuTemplate() {
   console.log('Commiting...')
 
   // Perform initial commit
-  await commit(cwd, 'Create ecu project')
+  await commit(cwd, 'Create Hero Engineer project')
 }
 
-export default createEcuTemplate
+export default createTemplate

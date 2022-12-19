@@ -26,8 +26,6 @@
     "build",
     "project-template.zip"
   ],
-  "module": "./build/index.js",
-  "types": "./build/index.d.ts",
   "bin": {
     "hero-engineer": "./build/cli.js"
   },

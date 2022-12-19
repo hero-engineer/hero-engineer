@@ -7,8 +7,8 @@
     "dev": "(cd app && npm run dev)"
   },
   "devDependencies": {
-    "ecu": "0.0.0",
+    "@hero-engineer/eslint-config": "0.0.0",
     "eslint": "^8.27.0",
-    "eslint-config-ecu": "^1.3.0"
+    "hero-engineer": "0.0.0"
   }
 }

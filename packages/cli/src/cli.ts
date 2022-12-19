@@ -2,9 +2,9 @@
 import { Command } from 'commander'
 import { serve } from '@hero-engineer/server'
 
-import createEcuTemplate from './create/index.js'
+import createTemplate from './create/index.js'
 
-// The Ecu cli
+// The Hero Engineer cli
 const program = new Command()
 
 program
@@ -29,7 +29,7 @@ program.command('create')
   // .option('-s, --separator <char>', 'separator character', ',')
   // .action((str, options) => {
   .action(async () => {
-    await createEcuTemplate()
+    await createTemplate()
   })
 
 program.parse()
