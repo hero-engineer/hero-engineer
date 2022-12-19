@@ -1,12 +1,12 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import { execSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 
+import { commit, initialCommitMessage } from '@hero-engineer/server'
 import { findUpSync } from 'find-up'
 import unzip from 'extract-zip'
 import gitAuthor from 'git-author'
-
-import { commit } from '@hero-engineer/server'
 
 import installDependencies from './installDependencies.js'
 
@@ -17,7 +17,9 @@ async function createTemplate() {
 
   // Check if cwd is a git repository
   if (!fs.existsSync(path.join(cwd, '.git'))) {
-    throw new Error('Current working directory is not a git repository')
+    console.log('Creating git directory...')
+
+    execSync('git init', { cwd })
   }
 
   const { name, email } = gitAuthor()
@@ -62,7 +64,7 @@ async function createTemplate() {
   console.log('Commiting...')
 
   // Perform initial commit
-  await commit(cwd, 'Create Hero Engineer project')
+  await commit(cwd, initialCommitMessage)
 }
 
 export default createTemplate

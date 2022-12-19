@@ -1,9 +1,9 @@
 {
   "private": true,
-  "name": "ecu-app",
+  "name": "hero-engineer-app",
   "scripts": {
     "start": "npm run dev",
-    "serve": "ecu serve",
+    "serve": "hero-engineer serve",
     "dev": "(cd app && npm run dev)"
   },
   "devDependencies": {
