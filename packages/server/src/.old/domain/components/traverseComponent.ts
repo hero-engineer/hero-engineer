@@ -249,7 +249,7 @@ function traverseComponent(componentAddress: string, targetHierarchyId = '', onS
 
         // console.log('JSXElement', componentName)
 
-        // hierarchyId found means we're at an ecu-client Component
+        // hierarchyId found means we're at an @hero-engineer/client Component
         if (hierarchyId) {
           hierarchy.children.push({
             id: shortId(),

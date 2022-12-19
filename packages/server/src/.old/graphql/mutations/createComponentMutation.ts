@@ -12,7 +12,7 @@ import { getNodesByFirstNeighbourg } from '../../graph/index.js'
 import addFile from '../../graph/add/addFile.js'
 import addFileDependencies from '../../graph/add/addFileDependencies.js'
 
-import updateDataEcuAttributes from '../../domain/components/updateDataEcuAttributes.js'
+import updateDataHeroEngineerAttributes from '../../domain/components/updateDataHeroEngineerAttributes.js'
 import regenerate from '../../domain/regenerate.js'
 
 import capitalize from '../../utils/capitalize.js'
@@ -49,7 +49,7 @@ async function createComponentMutation(_: any, { name }: CreateComponentMutation
 
   const componentNode = getNodesByFirstNeighbourg<FunctionNodeType>(fileNode.address, 'DeclaresFunction')[0]
 
-  const ast = updateDataEcuAttributes(componentNode, fileNode.payload.ast)
+  const ast = updateDataHeroEngineerAttributes(componentNode, fileNode.payload.ast)
 
   await regenerate(fileNode, ast)
 

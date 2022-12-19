@@ -3,10 +3,10 @@ import path from 'node:path'
 
 import { ecuScreenshotsRelativePath } from '../configuration.js'
 
-import getEcuLocation from './getEcuLocation.js'
+import getHeroEngineerLocation from './getHeroEngineerLocation.js'
 
-function getEcuScreenshotsLocation() {
-  const ecuLocation = getEcuLocation()
+function getHeroEngineerScreenshotsLocation() {
+  const ecuLocation = getHeroEngineerLocation()
 
   const ecuScreenshotsLocation = path.join(ecuLocation, ecuScreenshotsRelativePath)
 
@@ -17,4 +17,4 @@ function getEcuScreenshotsLocation() {
   return ecuScreenshotsLocation
 }
 
-export default getEcuScreenshotsLocation
+export default getHeroEngineerScreenshotsLocation

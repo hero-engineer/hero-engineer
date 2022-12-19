@@ -2,10 +2,10 @@ import { execSync } from 'node:child_process'
 
 import { appPath } from '../configuration.js'
 
-import popEcuHistory from '../history/popEcuHistory.js'
+import popHistory from '../history/popHistory.js'
 
 function redo() {
-  const historyItem = popEcuHistory()
+  const historyItem = popHistory()
 
   if (!historyItem) {
     console.log('Nothing to redo')

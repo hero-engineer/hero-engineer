@@ -8,7 +8,7 @@ const postcssInstance = postcss([
   posscssNested,
   stylelint({
     config: {
-      extends: path.join(process.cwd(), 'node_modules/ecu/node_modules/ecu-server/node_modules', 'stylelint-config-standard'),
+      extends: path.join(process.cwd(), 'node_modules/hero-engineer/node_modules/hero-engineer-server/node_modules', 'stylelint-config-standard'),
     },
   }),
 ])

@@ -4,7 +4,7 @@ import path from 'node:path'
 import { GraphType } from '../types.js'
 import { ecuGraphFileName } from '../configuration.js'
 
-import getEcuLocation from '../helpers/getEcuLocation.js'
+import getHeroEngineerLocation from '../helpers/getHeroEngineerLocation.js'
 
 import createFileNode from './models/createFileNode.js'
 import createFunctionNode from './models/createFunctionNode.js'
@@ -18,7 +18,7 @@ function replacer(key: string, value: any) {
 }
 
 export function getGraph(): GraphType {
-  const ecuLocation = getEcuLocation()
+  const ecuLocation = getHeroEngineerLocation()
   const ecuGraphFileLocation = path.join(ecuLocation, ecuGraphFileName)
 
   if (!fs.existsSync(ecuGraphFileLocation)) {
@@ -41,7 +41,7 @@ export function getGraph(): GraphType {
 }
 
 export function setGraph(graph: GraphType) {
-  const ecuLocation = getEcuLocation()
+  const ecuLocation = getHeroEngineerLocation()
   const ecuGraphFileLocation = path.join(ecuLocation, ecuGraphFileName)
 
   fs.writeFileSync(ecuGraphFileLocation, JSON.stringify(graph, replacer, 2), 'utf8')

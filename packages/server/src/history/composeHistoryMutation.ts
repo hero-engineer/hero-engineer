@@ -4,13 +4,13 @@ import { appPath } from '../configuration.js'
 
 import commit from '../git/commit.js'
 
-import writeEcuHistory from './writeEcuHistory.js'
+import writeHistory from './writeHistory.js'
 
 function composeHistoryMutation<T>(mutate: (...args: any[]) => Promise<HistoryMutationReturnType<T>>) {
   return async (...args: Parameters<typeof mutate>) => {
     const { returnValue, description } = await mutate(...args)
 
-    writeEcuHistory([])
+    writeHistory([])
 
     await commit(appPath, description)
 

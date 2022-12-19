@@ -82,7 +82,7 @@ export type TypeType = {
   fileNodeAddress: string
 }
 
-export type EcuHistoryEntryType = {
+export type HistoryEntryType = {
   branch: string
   message: string
 }

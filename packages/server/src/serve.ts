@@ -28,7 +28,7 @@ async function serve() {
     graphqlApp.listen({ port: 4000 }, resolve)
   })
 
-  console.log(chalk.green('~~~'), '🚀 Ecu server ready at http://localhost:4000/')
+  console.log(chalk.green('~~~'), '🚀 Hero Engineer server ready at http://localhost:4000/')
 }
 
 export default serve

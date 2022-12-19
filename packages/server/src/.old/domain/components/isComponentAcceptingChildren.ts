@@ -11,7 +11,7 @@ function isComponentAcceptingChildren(componentAddress?: string, ecuAtomName?: s
     const ecuAtom = ecuAtoms.find(x => x.name === ecuAtomName)
 
     if (!ecuAtom) {
-      throw new Error(`Ecu atom ${ecuAtomName} not found`)
+      throw new Error(`Hero Engineer atom ${ecuAtomName} not found`)
     }
 
     return ecuAtom.isComponentAcceptingChildren

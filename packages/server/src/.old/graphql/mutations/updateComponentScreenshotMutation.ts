@@ -6,7 +6,7 @@ import { FunctionNodeType } from '../../types.js'
 
 import { getNodeByAddress } from '../../graph/index.js'
 
-import getEcuScreenshotsLocation from '../../helpers/getEcuScreenshotsLocation.js'
+import getHeroEngineerScreenshotsLocation from '../../helpers/getHeroEngineerScreenshotsLocation.js'
 
 type UpdateComponentScreenshotMutationArgsType = {
   sourceComponentAddress: string
@@ -23,7 +23,7 @@ async function updateComponentScreenshotMutation(_: any, { sourceComponentAddres
   try {
     await sharp(Buffer.from(dataUrl.split(',')[1], 'base64'))
       .trim()
-      .toFile(path.join(getEcuScreenshotsLocation(), `${componentNode.address}.png`))
+      .toFile(path.join(getHeroEngineerScreenshotsLocation(), `${componentNode.address}.png`))
   }
   catch (error) {
     console.log(error)

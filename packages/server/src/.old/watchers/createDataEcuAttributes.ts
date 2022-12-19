@@ -3,9 +3,9 @@ import { FileNodeType, FunctionNodeType } from '../types.js'
 import { getNodesByRole, getNodesBySecondNeighbourg } from '../graph/index.js'
 
 import regenerate from '../domain/regenerate.js'
-import updateDataEcuAttributes from '../domain/components/updateDataEcuAttributes.js'
+import updateDataHeroEngineerAttributes from '../domain/components/updateDataHeroEngineerAttributes.js'
 
-async function createDataEcuAttributes() {
+async function createDataHeroEngineerAttributes() {
   const componentNodes = getNodesByRole<FunctionNodeType>('Function').filter(node => node.payload.isComponent)
 
   await Promise.all(componentNodes.map(async componentNode => {
@@ -15,10 +15,10 @@ async function createDataEcuAttributes() {
 
     const { ast } = fileNode.payload
 
-    updateDataEcuAttributes(componentNode, ast)
+    updateDataHeroEngineerAttributes(componentNode, ast)
 
     await regenerate(fileNode, ast)
   }))
 }
 
-export default createDataEcuAttributes
+export default createDataHeroEngineerAttributes

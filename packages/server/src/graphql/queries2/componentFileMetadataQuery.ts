@@ -1,4 +1,4 @@
-import getComponentDecoratorPaths from '../../domain/components/getComponentDecoratorPaths2.js'
+import getComponentDecoratorPaths from '../../domain/components/getComponentDecoratorPaths.js'
 
 type ComponentQueryArgsType = {
   path: string

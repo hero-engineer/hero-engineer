@@ -1,8 +1,8 @@
-import readEcuHistory from './readEcuHistory.js'
-import writeEcuHistory from './writeEcuHistory.js'
+import readHeroEngineerHistory from './readHeroEngineerHistory.js'
+import writeHeroEngineerHistory from './writeHeroEngineerHistory.js'
 
-function appendToEcuHistory(branch: string, message: string) {
-  writeEcuHistory([...readEcuHistory(), { branch, message }])
+function appendToHeroEngineerHistory(branch: string, message: string) {
+  writeHeroEngineerHistory([...readHeroEngineerHistory(), { branch, message }])
 }
 
-export default appendToEcuHistory
+export default appendToHeroEngineerHistory

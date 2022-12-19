@@ -1,7 +1,7 @@
 export default (name: string) => `/* --
 * IMPORTS START
 -- */
-import { Text } from 'ecu'
+import { Text } from 'hero-engineer'
 
 /* --
 * IMPORTS END

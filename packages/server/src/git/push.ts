@@ -1,6 +1,6 @@
 import { execSync } from 'node:child_process'
 
-import { appPath, ecuCommitPrefix } from '../configuration.js'
+import { appPath, commitPrefix } from '../configuration.js'
 
 function push() {
   try {
@@ -9,7 +9,7 @@ function push() {
 
     // If we're on an undo branch
     if (currentBranch !== 'main') {
-      execSync(`git checkout main' && git merge ${currentBranch} -X theirs -m "${ecuCommitPrefix}Merge ${currentBranch} into main before push"`, { cwd: appPath })
+      execSync(`git checkout main' && git merge ${currentBranch} -X theirs -m "${commitPrefix}Merge ${currentBranch} into main before push"`, { cwd: appPath })
     }
 
     try {

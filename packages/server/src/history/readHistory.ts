@@ -1,17 +1,17 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import { appPath, ecuHistoryFileName, ecuRelativePath } from '../configuration.js'
-import { EcuHistoryEntryType } from '../types.js'
+import { appPath, heroEngineerRelativePath, historyFileName } from '../configuration.js'
+import { HistoryEntryType } from '../types.js'
 
-function readEcuHistory(): EcuHistoryEntryType[] {
-  const ecuPath = path.join(appPath, ecuRelativePath)
+function readHistory(): HistoryEntryType[] {
+  const ecuPath = path.join(appPath, heroEngineerRelativePath)
 
   if (!fs.existsSync(ecuPath)) {
     fs.mkdirSync(ecuPath)
   }
 
-  const ecuHistoryFilePath = path.join(ecuPath, ecuHistoryFileName)
+  const ecuHistoryFilePath = path.join(ecuPath, historyFileName)
 
   if (!fs.existsSync(ecuHistoryFilePath)) {
     fs.writeFileSync(ecuHistoryFilePath, '[]')
@@ -31,4 +31,4 @@ function readEcuHistory(): EcuHistoryEntryType[] {
   }
 }
 
-export default readEcuHistory
+export default readHistory

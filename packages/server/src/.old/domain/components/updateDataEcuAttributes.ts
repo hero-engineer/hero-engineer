@@ -29,22 +29,22 @@ function insertPropFactory(key: string, getValue: () => string) {
   }
 }
 
-function updateDataEcuAttributes(componentNode: FunctionNodeType, ast: ParseResult | null) {
+function updateDataHeroEngineerAttributes(componentNode: FunctionNodeType, ast: ParseResult | null) {
   const cursors = [0]
-  const importedEcuComponentNames: string[] = []
+  const importedHeroEngineerComponentNames: string[] = []
 
-  const insertEcuProp = insertPropFactory(ecuPropName, () => createHierarchyId(componentNode.address, cursors.join('_')))
+  const insertHeroEngineerProp = insertPropFactory(ecuPropName, () => createHierarchyId(componentNode.address, cursors.join('_')))
 
   traverse(ast, {
     ImportDeclaration(path: any) {
       if (path.node.source.value === ecuPackageName) {
-        importedEcuComponentNames.push(...path.node.specifiers.map((x: any) => x.local.name))
+        importedHeroEngineerComponentNames.push(...path.node.specifiers.map((x: any) => x.local.name))
       }
     },
     JSXElement(path: any) {
-      if (!importedEcuComponentNames.includes(path.node.openingElement.name.name)) return
+      if (!importedHeroEngineerComponentNames.includes(path.node.openingElement.name.name)) return
 
-      insertEcuProp(path)
+      insertHeroEngineerProp(path)
 
       if (path.node.closingElement) {
         cursors.push(0)
@@ -54,7 +54,7 @@ function updateDataEcuAttributes(componentNode: FunctionNodeType, ast: ParseResu
       }
     },
     JSXClosingElement(path: any) {
-      if (!importedEcuComponentNames.includes(path.node.name.name)) return
+      if (!importedHeroEngineerComponentNames.includes(path.node.name.name)) return
 
       cursors.pop()
       cursors[cursors.length - 1]++
@@ -64,4 +64,4 @@ function updateDataEcuAttributes(componentNode: FunctionNodeType, ast: ParseResu
   return ast
 }
 
-export default updateDataEcuAttributes
+export default updateDataHeroEngineerAttributes

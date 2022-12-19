@@ -1,9 +1,9 @@
 import getLastGitMessage from '../../git/getLastGitMessage.js'
 
-import readEcuHistory from '../../history/readEcuHistory.js'
+import readHistory from '../../history/readHistory.js'
 
 function canRedoQuery() {
-  const ecuHistory = readEcuHistory()
+  const ecuHistory = readHistory()
 
   return {
     undoMessage: getLastGitMessage(),

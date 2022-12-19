@@ -1,10 +1,10 @@
 import { execSync } from 'node:child_process'
 
-import { ecuCommitPrefix } from '../configuration.js'
+import { commitPrefix } from '../configuration.js'
 
 async function commit(cwd: string, message: string) {
   try {
-    execSync(`git add . -A && git commit --allow-empty -m "${ecuCommitPrefix}${message}"`, { cwd, stdio: 'inherit' })
+    execSync(`git add . -A && git commit --allow-empty -m "${commitPrefix}${message}"`, { cwd, stdio: 'inherit' })
   }
   catch (error) {
     console.log(error)

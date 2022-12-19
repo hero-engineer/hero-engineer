@@ -1,15 +1,15 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import { defaultBreakpoint, ecuBreakpointsFileName } from '../../configuration.js'
+import { breakpointsFileName, defaultBreakpoint } from '../../configuration.js'
 import { BreakpointType } from '../../types.js'
 
-import getEcuLocation from '../../helpers/getEcuLocation.js'
+import getHeroEngineerLocation from '../../helpers/getHeroEngineerLocation.js'
 
 function readBreakpoints() {
-  const ecuLocation = getEcuLocation()
+  const ecuLocation = getHeroEngineerLocation()
 
-  const breakpointsFileLocation = path.join(ecuLocation, ecuBreakpointsFileName)
+  const breakpointsFileLocation = path.join(ecuLocation, breakpointsFileName)
 
   if (!fs.existsSync(breakpointsFileLocation)) {
     return [defaultBreakpoint]

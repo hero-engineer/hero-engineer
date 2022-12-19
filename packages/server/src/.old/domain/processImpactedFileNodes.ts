@@ -4,14 +4,14 @@ import { getNodesByFirstNeighbourg } from '../graph/index.js'
 
 import regenerate from './regenerate.js'
 
-import updateDataEcuAttributes from './components/updateDataEcuAttributes.js'
+import updateDataHeroEngineerAttributes from './components/updateDataHeroEngineerAttributes.js'
 
 type ProcessImpactedFileNodesResolveType = {
   impactedFileNode: FileNodeType | null
   impactedComponentNode: FunctionNodeType | null
 }
 
-async function processImpactedFileNodes(impacted: ImpactedType[], postTraverse: PostTraverseType = () => {}, refreshDataEcuAttributes = true): Promise<ProcessImpactedFileNodesResolveType> {
+async function processImpactedFileNodes(impacted: ImpactedType[], postTraverse: PostTraverseType = () => {}, refreshDataHeroEngineerAttributes = true): Promise<ProcessImpactedFileNodesResolveType> {
   let impactedFileNode: FileNodeType | null = null
   let impactedComponentNode: FunctionNodeType | null = null
 
@@ -24,8 +24,8 @@ async function processImpactedFileNodes(impacted: ImpactedType[], postTraverse: 
 
     if (!componentNode) return
 
-    if (refreshDataEcuAttributes) {
-      updateDataEcuAttributes(componentNode, ast)
+    if (refreshDataHeroEngineerAttributes) {
+      updateDataHeroEngineerAttributes(componentNode, ast)
     }
 
     const regenerated = await regenerate(fileNode, ast)
