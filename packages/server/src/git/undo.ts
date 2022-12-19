@@ -1,6 +1,6 @@
 import { execSync } from 'node:child_process'
 
-import { appPath, commitPrefix } from '../configuration.js'
+import { appPath, commitPrefix, initialCommitMessage } from '../configuration.js'
 
 import readHistory from '../history/readHistory.js'
 import writeHistory from '../history/writeHistory.js'
@@ -12,7 +12,6 @@ async function undo() {
   let message = ''
 
   try {
-    // TODO prevent deleting commits from 3rd parties
     const messageBuffer = execSync('git log -1 --pretty=%B', { cwd: appPath })
     message = messageBuffer.toString().trim()
   }
@@ -26,8 +25,8 @@ async function undo() {
     throw new Error('Cannot undo non-Hero Engineer commit')
   }
 
-  if (message === `${commitPrefix}Create Hero Engineer project`) {
-    throw new Error('End of Hero Engineer history')
+  if (message === initialCommitMessage) {
+    throw new Error('End of Hero Engineer commit history')
   }
 
   try {
