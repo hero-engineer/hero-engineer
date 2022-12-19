@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "ecu-monorepo",
+  "name": "hero-engineer-monorepo",
   "scripts": {
     "link": "npm run link:server && npm run link:client && npm run link:ecu && npm run link:app",
     "link:server": "cd packages/ecu-server && npm link",
