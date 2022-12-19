@@ -53,10 +53,10 @@ function convertSpacing(name: string, value: CssValueType, isImportant: boolean)
 
 function createSpacingAttributes(name: string, top: CssValueType, right: CssValueType, bottom: CssValueType, left: CssValueType, isImportant: boolean): CssAttributeType[] {
   return [
-    { cssName: `${name}-top`, jsName: `${name}Top`, value: top, isImportant },
-    { cssName: `${name}-right`, jsName: `${name}Right`, value: right, isImportant },
-    { cssName: `${name}-bottom`, jsName: `${name}Bottom`, value: bottom, isImportant },
-    { cssName: `${name}-Left`, jsName: `${name}Left`, value: left, isImportant },
+    { cssName: `${name}-top`, jsName: `${name}Top`, value: top, isImportant, comment: '' },
+    { cssName: `${name}-right`, jsName: `${name}Right`, value: right, isImportant, comment: '' },
+    { cssName: `${name}-bottom`, jsName: `${name}Bottom`, value: bottom, isImportant, comment: '' },
+    { cssName: `${name}-Left`, jsName: `${name}Left`, value: left, isImportant, comment: '' },
   ]
 }
 

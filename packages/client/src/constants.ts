@@ -1,5 +1,3 @@
-import { HierarchyPosition } from '~types'
-
 export const zIndexes = {
   tooltip: 99999999999, // 11 9
   snackBar: 9999999999, // 10 9
@@ -15,13 +13,6 @@ export const zIndexes = {
   hierarchyBarItem: 9, // 1 9
 }
 
-export const hierarchyPositions: HierarchyPosition[] = [
-  'before',
-  'after',
-  'children',
-  'parent',
-]
-
 export const refetchKeys = {
   all: 'all',
   componentFileMetadata: 'componentFileMetadata',
@@ -33,28 +24,6 @@ export const refetchKeys = {
   filePaths: 'filePaths',
   files: 'files',
 }
-
-export const ecuAtoms = [
-  {
-    name: 'Div',
-    isComponentAcceptingChildren: true,
-  },
-  {
-    name: 'Text',
-    isComponentAcceptingChildren: false,
-  },
-]
-
-export const ecuAtomPrefix = '__ecu_atom__'
-
-export const ecuSpecials = [
-  {
-    name: 'children',
-    isComponentAcceptingChildren: false,
-  },
-]
-
-export const ecuSpecialPrefix = '__ecu_special__'
 
 export const cssValueReset = `__reset__${Math.random()}`
 

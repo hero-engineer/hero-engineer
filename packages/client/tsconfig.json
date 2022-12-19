@@ -27,6 +27,6 @@
       "~utils/*": ["utils/*"]
     },
   },
-  "include": ["src"],
+  "include": ["src", "src/.old/components/core/DesignRootCss.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
