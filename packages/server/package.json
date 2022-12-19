@@ -1,6 +1,6 @@
 {
   "name": "@hero-engineer/server",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Build anything you want",
   "type": "module",
   "repository": {
@@ -26,6 +26,7 @@
     "build",
     "data"
   ],
+  "main": "./build/index.js",
   "module": "./build/index.js",
   "types": "./build/index.d.ts",
   "scripts": {
