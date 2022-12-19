@@ -231,7 +231,7 @@ function HierarchyLabel({ hierarchyItem, collapsed, isSelected, isFetching, setI
       cursor="pointer"
       userSelect="none"
       py={0.25}
-      className="ecu-hierarchy-label"
+      className="hero-engineer-hierarchy-label"
     >
       {!!hierarchyItem.children.length && (
         <Div
@@ -291,7 +291,7 @@ function HierarchyLabel({ hierarchyItem, collapsed, isSelected, isFetching, setI
             onClick={handleEditDisplayName}
             flexShrink={0}
             fontSize="0.75rem"
-            className="ecu-hierarchy-label-edit"
+            className="hero-engineer-hierarchy-label-edit"
             pl={0.25}
             pr={isSelected ? 0.25 : 0.5}
           >
@@ -304,7 +304,7 @@ function HierarchyLabel({ hierarchyItem, collapsed, isSelected, isFetching, setI
             flexShrink={0}
             color="danger"
             fontSize="0.75rem"
-            className="ecu-hierarchy-label-edit"
+            className="hero-engineer-hierarchy-label-edit"
             pl={0.25}
             pr={0.5}
           >

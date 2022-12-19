@@ -10,7 +10,7 @@ type ProviderEmotionPropsType = {
 
 // https://codesandbox.io/embed/rendering-emotion-iframe-into-iframe-body-bq63w
 // https://github.com/emotion-js/emotion/issues/760#issuecomment-404353706
-const memoizedCreateCacheWithContainer = weakMemoize((container: HTMLElement) => createCache({ container, key: 'ecu-iframe' }))
+const memoizedCreateCacheWithContainer = weakMemoize((container: HTMLElement) => createCache({ container, key: 'hero-engineer-iframe' }))
 
 function ProviderEmotion({ children, head }: ProviderEmotionPropsType) {
   if (!head) {

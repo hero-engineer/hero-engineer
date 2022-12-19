@@ -20,14 +20,14 @@ import usePersistedState from '~hooks/usePersistedState'
 
 import client from '../../client'
 
-type ProviderMasterPropsType = {
+type ProviderHeroEngineerPropsType = {
   mode: string
   hot: ViteHotContext | null
   children: ReactNode
 }
 
 // The providers for the whole application
-function ProviderMaster({ mode, hot, children }: ProviderMasterPropsType) {
+function ProviderHeroEngineer({ mode, hot, children }: ProviderHeroEngineerPropsType) {
   const [logs, setLogs] = usePersistedState<LogsType>('logs', { typescript: false, css: false })
   const logsContextValue = useMemo<LogsContextType>(() => ({ logs, setLogs }), [logs, setLogs])
 
@@ -72,4 +72,4 @@ function ProviderMaster({ mode, hot, children }: ProviderMasterPropsType) {
   )
 }
 
-export default ProviderMaster
+export default ProviderHeroEngineer

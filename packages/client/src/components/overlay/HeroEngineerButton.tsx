@@ -3,10 +3,10 @@ import { Button, Tooltip } from 'honorable'
 import { GiRosaShield } from 'react-icons/gi'
 
 // A button that links to the home scene
-function EcuButton(props: any) {
+function HeroEngineerButton(props: any) {
   return (
     <Tooltip
-      label="Ecu home"
+      label="Hero Engineer home"
       placement="bottom-start"
     >
       <Button
@@ -21,4 +21,4 @@ function EcuButton(props: any) {
   )
 }
 
-export default EcuButton
+export default HeroEngineerButton

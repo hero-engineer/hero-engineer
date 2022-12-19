@@ -16,7 +16,7 @@ import Packages from '~components/scene-packages/Packages'
 import ProviderComponent from '~components/providers/ProviderComponent'
 import ProviderTheme from '~components/providers/ProviderTheme'
 
-// The Ecu router
+// The Hero Engineer router
 function Router({ children }: any) {
   return (
     <BrowserRouter>

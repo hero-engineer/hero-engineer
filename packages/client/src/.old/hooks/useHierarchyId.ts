@@ -2,13 +2,13 @@ import { RefObject, useCallback, useContext, useEffect, useState } from 'react'
 
 import HotContext from '~contexts/HotContext'
 
-function getHierarchyId(targetElement: HTMLElement, targetEcuId: string) {
+function getHierarchyId(targetElement: HTMLElement, targetHeroEngineerId: string) {
   const hierarchyIdsRegistry: Record<string, number> = {}
 
   let currentElement = targetElement
 
   while (currentElement) {
-    const ecuId = currentElement.getAttribute('data-ecu')
+    const ecuId = currentElement.getAttribute('data-hero-engineer')
 
     if (!ecuId) break
 
@@ -16,7 +16,7 @@ function getHierarchyId(targetElement: HTMLElement, targetEcuId: string) {
   }
 
   function traverse(element: HTMLElement) {
-    const ecuId = element.getAttribute('data-ecu')
+    const ecuId = element.getAttribute('data-hero-engineer')
 
     if (ecuId) {
       if (typeof hierarchyIdsRegistry[ecuId] === 'undefined') hierarchyIdsRegistry[ecuId] = 0
@@ -36,7 +36,7 @@ function getHierarchyId(targetElement: HTMLElement, targetEcuId: string) {
 
   const found = traverse(currentElement)
 
-  return found ? `${targetEcuId}:${hierarchyIdsRegistry[targetEcuId]}` : targetEcuId
+  return found ? `${targetHeroEngineerId}:${hierarchyIdsRegistry[targetHeroEngineerId]}` : targetHeroEngineerId
 }
 
 // Return a hierarchyId from an ecuId

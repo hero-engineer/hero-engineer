@@ -8,7 +8,7 @@ import { FilePathsQuery, FilePathsQueryDataType } from '~queries'
 import useQuery from '~hooks/useQuery'
 import useRefetch from '~hooks/useRefetch'
 
-import { convertToEcuComponentPath } from '~utils/convertComponentPath'
+import { convertToComponentPath } from '~utils/convertComponentPath'
 
 import TabLink from '~components/layout/TabLink'
 
@@ -46,7 +46,7 @@ function FilesTree({ filter }: FilesTreePropsType) {
         return (
           <Div key={relativePath}>
             <TabLink
-              to={`/_ecu_/~/${convertToEcuComponentPath(relativePath)}`}
+              to={`/_ecu_/~/${convertToComponentPath(relativePath)}`}
               label={relativePath.split('/').pop() ?? '?'}
             >
               {relativePath}

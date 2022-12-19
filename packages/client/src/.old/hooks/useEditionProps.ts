@@ -123,7 +123,7 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '') {
   // const ref = useForkedRef(rootRef, useForkedRef(drag, drop)) as Ref<T>
 
   const generateClassName = useCallback(
-    () => `${isInteractiveMode ? '' : 'ecu-edition'} ${isSelected ? updatedClassName || className : className}`.trim(),
+    () => `${isInteractiveMode ? '' : 'hero-engineer-edition'} ${isSelected ? updatedClassName || className : className}`.trim(),
     [
       className,
       isInteractiveMode,
@@ -155,8 +155,8 @@ function useEditionProps<T extends HTMLElement>(ecuId: string, className = '') {
     editionProps: {
       className: generateClassName(),
       style: isSelected || className.includes(selectedClassName) ? removeResetStyles(updatedStyle) : {},
-      'data-ecu': ecuId,
-      'data-ecu-hierarchy': hierarchyId,
+      'data-hero-engineer': ecuId,
+      'data-hero-engineer-hierarchy': hierarchyId,
     },
   }
 }

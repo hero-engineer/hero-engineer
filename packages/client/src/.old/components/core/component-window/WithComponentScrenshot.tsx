@@ -13,12 +13,12 @@ import useMutation from '~hooks/useMutation'
 
 // import useRefetch from '~hooks/useRefetch'
 
-function traverseElementToRemoveEcuClasses(element: HTMLElement) {
+function traverseElementToRemoveHeroEngineerClasses(element: HTMLElement) {
   const classes: string[] = []
 
   element.classList.forEach(klass => {
-    // HACK Ignore ecu-can-be-edited for now
-    if (klass.startsWith('ecu-') && klass !== 'ecu-can-be-edited') {
+    // HACK Ignore hero-engineer-can-be-edited for now
+    if (klass.startsWith('hero-engineer-') && klass !== 'hero-engineer-can-be-edited') {
       classes.push(klass)
     }
   })
@@ -26,7 +26,7 @@ function traverseElementToRemoveEcuClasses(element: HTMLElement) {
   classes.forEach(klass => element.classList.remove(klass))
 
   for (const child of element.children) {
-    traverseElementToRemoveEcuClasses(child as HTMLElement)
+    traverseElementToRemoveHeroEngineerClasses(child as HTMLElement)
   }
 }
 
@@ -47,7 +47,7 @@ function WithComponentScrenshot({ children }: WithComponentScrenshotPropsType) {
 
     const componentElement = componentRef.current.cloneNode(true) as HTMLElement
 
-    traverseElementToRemoveEcuClasses(componentElement)
+    traverseElementToRemoveHeroEngineerClasses(componentElement)
 
     // Hidden by overflow: hidden on layout
     document.body.appendChild(componentElement)

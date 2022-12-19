@@ -29,7 +29,7 @@ function useHierarchySelection() {
     }
     else {
       const element = elementRegistry[hierarchyItem.hierarchyId ?? ''] ?? null
-      const classNames = element?.getAttribute('class')?.split(' ').map(x => x.trim()).filter(x => !x.startsWith('ecu-')) ?? []
+      const classNames = element?.getAttribute('class')?.split(' ').map(x => x.trim()).filter(x => !x.startsWith('hero-engineer-')) ?? []
 
       setHierarchyId(nextHierarchyId)
       setComponentDelta(nextComponentDelta)

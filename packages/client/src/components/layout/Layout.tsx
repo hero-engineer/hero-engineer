@@ -4,7 +4,7 @@ import { Div } from 'honorable'
 
 import Overlay from '~components/overlay/Overlay'
 
-// The Ecu layout
+// The Hero Engineer layout
 function Layout() {
   return (
     <Div

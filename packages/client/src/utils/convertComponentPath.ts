@@ -1,4 +1,4 @@
-export function convertToEcuComponentPath(path: string) {
+export function convertToComponentPath(path: string) {
   if (!path) return path
 
   const pathArray = path.split('.')
@@ -8,7 +8,7 @@ export function convertToEcuComponentPath(path: string) {
   return `${pathArray.join('.')}/${extension}`
 }
 
-export function convertFromEcuComponentPath(ecuPath: string) {
+export function convertFromComponentPath(ecuPath: string) {
   if (!ecuPath) return ecuPath
 
   const pathArray = ecuPath.split('/')

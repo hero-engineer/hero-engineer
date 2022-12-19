@@ -24,10 +24,8 @@ export default defineConfig({
     emptyOutDir: isProductionBuild,
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
-      name: 'ecu-client',
       formats: ['es'],
-      // formats: ['es', 'umd],
-      fileName: format => `ecu-client.${format}.js`,
+      fileName: 'hero-engineer-client.js',
     },
     rollupOptions: {
       plugins: [

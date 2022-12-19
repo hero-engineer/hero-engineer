@@ -96,7 +96,7 @@ const pink = {
 }
 
 export default mergeTheme(defaultTheme, {
-  name: 'Ecu',
+  name: 'Hero Engineer',
   stylesheet: {
     html: [
       {

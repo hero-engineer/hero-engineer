@@ -4,7 +4,7 @@ import { H1 } from 'honorable'
 function Home() {
   return (
     <>
-      <H1 mb={2}>Ecu home</H1>
+      <H1 mb={2}>Hero Engineer home</H1>
     </>
   )
 }

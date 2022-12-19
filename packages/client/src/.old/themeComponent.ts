@@ -19,7 +19,7 @@ const inputStyles = {
 }
 
 const themeComponent = mergeTheme(theme, {
-  name: 'Ecu-Component',
+  name: 'Hero Engineer-Component',
   stylesheet: {
     html: [
       {

@@ -1,1 +1,3 @@
-export { default as EcuMaster } from '~components/master/EcuMaster'
+import HeroEngineer from '~components/main/HeroEngineer'
+
+export default HeroEngineer

@@ -3,7 +3,7 @@ import { Div } from 'honorable'
 
 import Tabs from '~components/layout/Tabs'
 import SnackBar from '~components/overlay/SnackBar'
-import EcuButton from '~components/overlay/EcuButton'
+import HeroEngineerButton from '~components/overlay/HeroEngineerButton'
 import CreateComponentButton from '~components/overlay/CreateComponentButton'
 import ComponentsLinkButton from '~components/overlay/ComponentsLinkButton'
 import DesignLinkButton from '~components/overlay/DesignLinkButton'
@@ -15,7 +15,7 @@ import ViewAppButton from '~components/overlay/ViewAppButton'
 
 type OverlayPropsType = PropsWithChildren<any>
 
-// The whole ecu overlay
+// The whole Hero Engineer overlay
 function Overlay({ children }: OverlayPropsType) {
   return (
     <>
@@ -26,7 +26,7 @@ function Overlay({ children }: OverlayPropsType) {
         borderBottom="1px solid border"
       >
         <Div xflex="x4s">
-          <EcuButton
+          <HeroEngineerButton
             borderLeft="1px solid transparent"
             borderRight="1px solid border"
           />

@@ -5,7 +5,7 @@ import { IoCodeSlashOutline } from 'react-icons/io5'
 
 import BottomTabsContext from '~contexts/BottomTabsContext'
 
-import { convertFromEcuComponentPath } from '~utils/convertComponentPath'
+import { convertFromHeroEngineerComponentPath } from '~utils/convertComponentPath'
 
 function EditCodeButton(props: any) {
   const { '*': ecuComponentPath = '' } = useParams()
@@ -15,7 +15,7 @@ function EditCodeButton(props: any) {
   const handleClick = useCallback(() => {
     if (!ecuComponentPath) return
 
-    const url = `/Users/sven/dev/ecu-app/app/src/${convertFromEcuComponentPath(ecuComponentPath)}`
+    const url = `/Users/sven/dev/hero-engineer-app/app/src/${convertFromHeroEngineerComponentPath(ecuComponentPath)}`
     const nextTabs = tabs.some(x => x.url === url) ? tabs : [...tabs, { url, label: url.split('/').pop() ?? '?' }]
 
     setTabs(nextTabs)
