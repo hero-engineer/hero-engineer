@@ -1,0 +1,41 @@
+{
+  "name": "git-author",
+  "version": "1.0.0",
+  "description": "Read git name and email from config",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hero-engineer/hero-engineer.git"
+  },
+  "keywords": [
+    "git",
+    "author",
+    "name",
+    "email"
+  ],
+  "author": "David Hérault <dherault@gmail.com> (https://github.com/dherault)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hero-engineer/hero-engineer/issues"
+  },
+  "homepage": "https://github.com/hero-engineer/hero-engineer#readme",
+  "files": [
+    "build"
+  ],
+  "module": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "lint": "eslint ./src",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "git-user-email-2": "^1.0.0",
+    "git-user-name": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/git-user-name": "^2.0.1",
+    "typescript": "^4.9.4"
+  }
+}
