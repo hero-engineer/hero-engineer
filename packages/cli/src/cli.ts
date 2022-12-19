@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 import { Command } from 'commander'
-import { serve } from 'ecu-server'
+import { serve } from '@hero-engineer/server'
 
 import createEcuTemplate from './create/index.js'
 
@@ -8,12 +8,12 @@ import createEcuTemplate from './create/index.js'
 const program = new Command()
 
 program
-  .name('ecu')
+  .name('hero-engineer')
   .description('Self-reprogrammation rocks!')
   .version('0.0.0')
 
 program.command('serve')
-  .description('Starts an ecu-server instance')
+  .description('Starts an hero-engineer server instance')
   // .argument('<string>', 'string to split')
   // .option('--first', 'display just the first substring')
   // .option('-s, --separator <char>', 'separator character', ',')
@@ -23,7 +23,7 @@ program.command('serve')
   })
 
 program.command('create')
-  .description('Creates a new ecu project')
+  .description('Creates a new hero-engineer project')
   // .argument('<string>', 'string to split')
   // .option('--first', 'display just the first substring')
   // .option('-s, --separator <char>', 'separator character', ',')

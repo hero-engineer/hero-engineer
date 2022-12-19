@@ -1,2 +1,2 @@
 // Export everything form ecu-client
-export * from 'ecu-client'
+export * from '@hero-engineer/client'

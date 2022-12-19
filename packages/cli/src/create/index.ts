@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url'
 import { findUpSync } from 'find-up'
 import unzip from 'extract-zip'
 
-import { commit, getGitAuthor } from 'ecu-server'
+import { commit, getGitAuthor } from '@hero-engineer/server'
 
 import installDependencies from './installDependencies.js'
 
