@@ -20,7 +20,6 @@ import redoMutation from './mutations/redoMutation.js'
 import pushMutation from './mutations/pushMutation.js'
 
 export const typeDefs = gql`
-
   scalar Upload
 
   type Package {
@@ -81,7 +80,6 @@ export const typeDefs = gql`
     redo: Boolean!
     push: Boolean!
   }
-
 `
 
 export const resolvers = {
