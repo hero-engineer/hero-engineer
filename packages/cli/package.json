@@ -1,6 +1,6 @@
 {
   "name": "hero-engineer",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Build anything you want",
   "type": "module",
   "repository": {
@@ -39,11 +39,11 @@
     "minor": "npm version minor && git add . -A && git commit -m \"[cli] Publish minor\" && npm publish"
   },
   "dependencies": {
-    "@hero-engineer/server": "^0.0.3",
+    "@hero-engineer/server": "^0.0.4",
     "commander": "^9.4.1",
     "extract-zip": "^2.0.1",
     "find-up": "^6.3.0",
-    "git-author": "^1.0.2"
+    "git-author": "^1.0.3"
   },
   "devDependencies": {
     "@hero-engineer/client": "^0.0.3"
