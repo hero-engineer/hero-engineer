@@ -2,10 +2,10 @@ import { execSync } from 'node:child_process'
 
 import { appPath, commitPrefix } from '../configuration.js'
 
-import readHeroEngineerHistory from '../history/readHeroEngineerHistory.js'
-import writeHeroEngineerHistory from '../history/writeHeroEngineerHistory.js'
+import readHistory from '../history/readHistory.js'
+import writeHistory from '../history/writeHistory.js'
 
-import possiblyRemoveHeroEngineerCommitPrefix from './utils/possiblyRemoveHeroEngineerCommitPrefix.js'
+import possiblyRemoveCommitPrefix from './utils/possiblyRemoveCommitPrefix.js'
 
 async function undo() {
   const branch = `undo-${Date.now()}`
@@ -31,10 +31,10 @@ async function undo() {
   }
 
   try {
-    const historyArray = readHeroEngineerHistory()
+    const historyArray = readHistory()
 
     execSync(`git branch ${branch} && git reset --hard HEAD~1`, { cwd: appPath })
-    writeHeroEngineerHistory([...historyArray, { branch, message: possiblyRemoveHeroEngineerCommitPrefix(message) }])
+    writeHistory([...historyArray, { branch, message: possiblyRemoveCommitPrefix(message) }])
 
     return true
   }
