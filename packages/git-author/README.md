@@ -1,6 +1,6 @@
 # git-author
 
-Read git author anme and email from config
+Read git author name and email from config.
 
 ## Installation
 
