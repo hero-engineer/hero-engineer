@@ -32,7 +32,8 @@
     "dev": "nodemon --watch src --ext ts,tsx --exec \"npm run build\"",
     "build": "tsc",
     "prepublishOnly": "npm run build",
-    "patch": "npm version patch && git add . -A && git commit -m \"[server] Publish patch\" && npm publish"
+    "patch": "npm version patch && git add . -A && git commit -m \"[server] Publish patch\" && npm publish",
+    "minor": "npm version minor && git add . -A && git commit -m \"[server] Publish minor\" && npm publish"
   },
   "dependencies": {
     "apollo-server-express": "^3.11.1",
