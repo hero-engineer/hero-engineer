@@ -9,6 +9,6 @@
   "devDependencies": {
     "@hero-engineer/eslint-config": "0.0.0",
     "eslint": "^8.27.0",
-    "hero-engineer": "0.0.1"
+    "hero-engineer": "0.0.2"
   }
 }
