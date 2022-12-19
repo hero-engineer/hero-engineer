@@ -1,6 +1,6 @@
 {
   "name": "git-author",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Read git name and email from config",
   "type": "module",
   "repository": {
@@ -22,13 +22,16 @@
   "files": [
     "build"
   ],
+  "main": "./build/index.js",
   "module": "./build/index.js",
   "types": "./build/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "lint": "eslint ./src",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "patch": "npm version patch && git add . -A && git commit -m \"[git-author] Publish patch\" && npm publish",
+    "minor": "npm version minor && git add . -A && git commit -m \"[git-author] Publish minor\" && npm publish"
   },
   "dependencies": {
     "git-user-email-2": "^1.0.0",
