@@ -37,10 +37,11 @@
     "prepublishOnly": "npm run update-project-template-package && npm run zip-project-template && npm run build"
   },
   "dependencies": {
-    "commander": "^9.4.1",
     "@hero-engineer/client": "^0.0.1",
     "@hero-engineer/server": "^0.0.1",
+    "commander": "^9.4.1",
     "extract-zip": "^2.0.1",
-    "find-up": "^6.3.0"
+    "find-up": "^6.3.0",
+    "git-author": "^1.0.1"
   }
 }

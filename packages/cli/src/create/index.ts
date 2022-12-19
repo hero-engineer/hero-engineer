@@ -4,8 +4,9 @@ import { fileURLToPath } from 'node:url'
 
 import { findUpSync } from 'find-up'
 import unzip from 'extract-zip'
+import gitAuthor from 'git-author'
 
-import { commit, getGitAuthor } from '@hero-engineer/server'
+import { commit } from '@hero-engineer/server'
 
 import installDependencies from './installDependencies.js'
 
@@ -19,7 +20,7 @@ async function createTemplate() {
     throw new Error('Current working directory is not a git repository')
   }
 
-  const { name, email } = getGitAuthor()
+  const { name, email } = gitAuthor()
 
   if (!(name && email)) {
     throw new Error('Git author name and email are required, please update your git config')
