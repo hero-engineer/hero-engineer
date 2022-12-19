@@ -1,6 +1,6 @@
 {
   "name": "devices-viewport-size",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A list of common device viewport sizes",
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
   "files": [
     "build"
   ],
+  "main": "./build/index.js",
   "module": "./build/index.js",
   "types": "./build/index.d.ts",
   "scripts": {
