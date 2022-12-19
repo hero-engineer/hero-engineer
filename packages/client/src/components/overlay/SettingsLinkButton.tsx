@@ -12,7 +12,7 @@ function SettingsLinkButton(props: any) {
       <Button
         ghost
         as={Link}
-        to="/_ecu_/settings"
+        to="/_hero_/settings"
         {...props}
       >
         <SlSettings />

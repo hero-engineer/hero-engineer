@@ -47,7 +47,7 @@ function Component() {
   useEffect(() => {
     if (!ecuComponentPath) return
 
-    const url = `/_ecu_/~/${ecuComponentPath}`
+    const url = `/_hero_/~/${ecuComponentPath}`
 
     if (tabs.some(tab => tab.url === url)) return
 

@@ -12,7 +12,7 @@ function DesignLinkButton(props: any) {
       <Button
         ghost
         as={Link}
-        to="/_ecu_/design"
+        to="/_hero_/design"
         {...props}
       >
         <MdOutlineWorkspaces />

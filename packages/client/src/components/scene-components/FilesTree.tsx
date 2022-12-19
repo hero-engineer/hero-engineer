@@ -46,7 +46,7 @@ function FilesTree({ filter }: FilesTreePropsType) {
         return (
           <Div key={relativePath}>
             <TabLink
-              to={`/_ecu_/~/${convertToComponentPath(relativePath)}`}
+              to={`/_hero_/~/${convertToComponentPath(relativePath)}`}
               label={relativePath.split('/').pop() ?? '?'}
             >
               {relativePath}

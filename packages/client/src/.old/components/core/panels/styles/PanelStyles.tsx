@@ -190,7 +190,7 @@ function PanelStyles() {
           {!!lastComponentHierarchyItem && (
             <Button
               as={Link}
-              to={`/_ecu_/component/${lastComponentHierarchyItem.fileAddress}/${lastComponentHierarchyItem.componentAddress}`}
+              to={`/_hero_/component/${lastComponentHierarchyItem.fileAddress}/${lastComponentHierarchyItem.componentAddress}`}
               display="flex" // To allow ellipsis, inline-flex is the default
               maxWidth="100%" // To allow ellipsis
               mt={0.5}

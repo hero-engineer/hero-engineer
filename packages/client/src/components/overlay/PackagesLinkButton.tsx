@@ -12,7 +12,7 @@ function PackagesLinkButton(props: any) {
       <Button
         ghost
         as={Link}
-        to="/_ecu_/packages"
+        to="/_hero_/packages"
         {...props}
       >
         <VscPackage />

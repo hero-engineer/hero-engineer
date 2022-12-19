@@ -14,7 +14,7 @@ function WithHomeButton({ children }: WithHomeButtonPropsType) {
       <Button
         small
         as={Link}
-        to="/_ecu_"
+        to="/_hero_"
         position="fixed"
         top={8}
         right={8}

@@ -107,7 +107,7 @@ function PanelAddComponent() {
 
     if (!lastEditedHierarchyItem) return
 
-    navigate(`/_ecu_/component/${lastEditedHierarchyItem.fileAddress}/${lastEditedHierarchyItem.componentAddress}`)
+    navigate(`/_hero_/component/${lastEditedHierarchyItem.fileAddress}/${lastEditedHierarchyItem.componentAddress}`)
   }, [navigate, lastEditedHierarchyItem])
 
   const navigateToSelectedComponent = useCallback(() => {
@@ -115,7 +115,7 @@ function PanelAddComponent() {
 
     if (!selectedComponentUrlPart) return
 
-    navigate(`/_ecu_/component/${selectedComponentUrlPart}`)
+    navigate(`/_hero_/component/${selectedComponentUrlPart}`)
   }, [navigate, selectedComponentUrlPart])
 
   if (componentsQueryResult.error) {

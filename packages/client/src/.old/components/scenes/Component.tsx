@@ -61,7 +61,7 @@ function Component() {
       </Div>
       <Button
         as={Link}
-        to="/_ecu_/components"
+        to="/_hero_/components"
       >
         Back to components
       </Button>

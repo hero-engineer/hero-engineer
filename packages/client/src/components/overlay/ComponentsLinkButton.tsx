@@ -12,7 +12,7 @@ function ComponentsLinkButton(props: any) {
       <Button
         ghost
         as={Link}
-        to="/_ecu_/components"
+        to="/_hero_/components"
         {...props}
       >
         <CgComponents />

@@ -31,7 +31,7 @@ function Settings() {
         width={128 + 32 + 8 + 2}
       >
         <Link
-          to="/_ecu_/settings/general"
+          to="/_hero_/settings/general"
           style={linkStyle}
         >
           <Div
@@ -42,7 +42,7 @@ function Settings() {
           </Div>
         </Link>
         <Link
-          to="/_ecu_/settings/logs"
+          to="/_hero_/settings/logs"
           style={linkStyle}
         >
           <Div {...tabProps}>

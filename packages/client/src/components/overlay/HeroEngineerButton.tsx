@@ -12,7 +12,7 @@ function HeroEngineerButton(props: any) {
       <Button
         ghost
         as={Link}
-        to="/_ecu_"
+        to="/_hero_"
         {...props}
       >
         <GiRosaShield />

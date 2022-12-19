@@ -26,7 +26,7 @@ function CreateComponentButton(props: any) {
 
     // const { file, component } = results.data.createComponent
 
-    // navigate(`/_ecu_/component/${file.address}/${component.address}`)
+    // navigate(`/_hero_/component/${file.address}/${component.address}`)
   }, [name])
 
   return (

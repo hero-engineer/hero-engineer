@@ -44,7 +44,7 @@ function Components() {
         {components.map(componentAndFile => (
           <Link
             key={componentAndFile.component.address}
-            to={`/_ecu_/component/${componentAndFile.file.address}/${componentAndFile.component.address}`}
+            to={`/_hero_/component/${componentAndFile.file.address}/${componentAndFile.component.address}`}
             style={{ textDecoration: 'none' }}
           >
             <ComponentThumbnail

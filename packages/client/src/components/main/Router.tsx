@@ -22,7 +22,7 @@ function Router({ children }: any) {
       <ProviderTheme>
         <Routes>
           <Route
-            path="_ecu_"
+            path="_hero_"
             element={<Layout />}
           >
             <Route

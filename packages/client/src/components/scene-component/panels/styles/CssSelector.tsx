@@ -27,9 +27,9 @@ const emojiRegex = createEmojiRegex()
 const classNameRegex = /^[a-zA-Z_-]+[\w-]*$/
 const classNameRegex2 = /^[a-zA-Z_-]*[\w-]*$/
 
-const ecuAnyValue = `__ecu_any__${Math.random()}`
+const ecuAnyValue = `__hero_any__${Math.random()}`
 const anyOption = { value: ecuAnyValue, label: 'Create new class' }
-const ecuErrorValue = `__ecu_error__${Math.random()}`
+const ecuErrorValue = `__hero_error__${Math.random()}`
 const errorOption = { value: ecuErrorValue, label: 'Invalid class name' }
 
 function CssSelector({ allClasses, classNames, selectedClassName, onSelectedClassNameChange, onCreateClassName, onDeleteClassName, onClassNamesChange, onWarnAboutCssClassOrdering }: CssSelectorPropType) {

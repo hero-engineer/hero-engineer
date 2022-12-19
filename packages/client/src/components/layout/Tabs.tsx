@@ -26,7 +26,7 @@ function Tabs() {
     setTabs(nextTabs)
 
     if (pathname === url) {
-      navigate(nextTabs[index]?.url ?? nextTabs[index - 1]?.url ?? '/_ecu_')
+      navigate(nextTabs[index]?.url ?? nextTabs[index - 1]?.url ?? '/_hero_')
     }
   }, [tabs, pathname, setTabs, navigate])
 

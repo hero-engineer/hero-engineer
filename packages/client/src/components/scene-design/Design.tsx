@@ -32,7 +32,7 @@ function Design() {
         width={128 + 32 + 8 + 2}
       >
         <Link
-          to="/_ecu_/design/system"
+          to="/_hero_/design/system"
           style={linkStyle}
         >
           <Div
@@ -43,7 +43,7 @@ function Design() {
           </Div>
         </Link>
         <Link
-          to="/_ecu_/design/favicon"
+          to="/_hero_/design/favicon"
           style={linkStyle}
         >
           <Div {...tabProps}>
