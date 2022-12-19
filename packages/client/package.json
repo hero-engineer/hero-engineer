@@ -1,6 +1,6 @@
 {
   "name": "@hero-engineer/client",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Build anything you want",
   "type": "module",
   "repository": {
@@ -46,7 +46,7 @@
     "@monaco-editor/react": "^4.4.6",
     "@urql/exchange-multipart-fetch": "^1.0.1",
     "@urql/exchange-persisted-fetch": "^2.0.0",
-    "devices-viewport-size": "^1.0.3",
+    "devices-viewport-size": "^1.0.4",
     "emoji-picker-react": "^4.4.7",
     "emoji-regex": "^10.2.1",
     "graphql": "^16.6.0",
