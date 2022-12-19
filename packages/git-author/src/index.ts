@@ -1,11 +1,9 @@
-import gitUserName from 'git-user-name'
-// @ts-expect-error
-import gitUserEmail from 'git-user-email-2'
+import { execSync } from 'node:child_process'
 
 function gitAuthor() {
   return {
-    name: gitUserName() ?? '',
-    email: (gitUserEmail() as string) ?? '',
+    name: execSync('git config --get user.name').toString(),
+    email: execSync('git config --get user.email').toString(),
   }
 }
 

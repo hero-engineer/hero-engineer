@@ -1,6 +1,6 @@
 {
   "name": "git-author",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Read git name and email from config",
   "type": "module",
   "repository": {
@@ -33,12 +33,7 @@
     "patch": "npm version patch && git add . -A && git commit -m \"[git-author] Publish patch\" && npm publish",
     "minor": "npm version minor && git add . -A && git commit -m \"[git-author] Publish minor\" && npm publish"
   },
-  "dependencies": {
-    "git-user-email-2": "^1.0.0",
-    "git-user-name": "^2.0.0"
-  },
   "devDependencies": {
-    "@types/git-user-name": "^2.0.1",
     "typescript": "^4.9.4"
   }
 }
