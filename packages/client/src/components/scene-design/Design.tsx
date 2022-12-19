@@ -43,14 +43,6 @@ function Design() {
           </Div>
         </Link>
         <Link
-          to="/_ecu_/design/root-css"
-          style={linkStyle}
-        >
-          <Div {...tabProps}>
-            Root CSS
-          </Div>
-        </Link>
-        <Link
           to="/_ecu_/design/favicon"
           style={linkStyle}
         >

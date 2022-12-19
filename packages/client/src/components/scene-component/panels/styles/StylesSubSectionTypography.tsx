@@ -5,16 +5,15 @@ import { BsTypeItalic } from 'react-icons/bs'
 import { RxLetterCaseCapitalize, RxLetterCaseLowercase, RxLetterCaseUppercase, RxOverline, RxStrikethrough, RxUnderline } from 'react-icons/rx'
 import { MdClose, MdOutlineFormatTextdirectionLToR, MdOutlineFormatTextdirectionRToL } from 'react-icons/md'
 
-import { refetchKeys } from '~constants'
+import { FontType } from '~types'
 
-import { ColorsQuery, ColorsQueryDataType, FontsQuery, FontsQueryDataType } from '~queries'
+import getColors from '~processors/css/getColors'
 
 import StylesContext from '~contexts/StylesContext'
 
-import useQuery from '~hooks/useQuery'
-import useRefetch from '~hooks/useRefetch'
 import usePersistedState from '~hooks/usePersistedState'
 import useStylesSubSectionHelpers from '~hooks/useStylesSubSectionHelpers'
+import useAsync from '~hooks/useAsync'
 
 import capitalize from '~utils/capitalize'
 
@@ -137,28 +136,10 @@ function StylesSubSectionTypography() {
 
   const [expanded, setExpanded] = usePersistedState('styles-sub-section-typography-expanded', true)
 
-  const [fontsQueryResult, refetchFontsQuery] = useQuery<FontsQueryDataType>({
-    query: FontsQuery,
-  })
-  const [colorsQueryResult, refetchColorsQuery] = useQuery<ColorsQueryDataType>({
-    query: ColorsQuery,
-  })
-
-  useRefetch(
-    {
-      key: refetchKeys.fonts,
-      refetch: refetchFontsQuery,
-    },
-    {
-      key: refetchKeys.colors,
-      refetch: refetchColorsQuery,
-    }
-  )
-
   const { getValue, isToggled, updateCssAttribute } = useStylesSubSectionHelpers()
 
-  const fonts = useMemo(() => fontsQueryResult.data?.fonts ?? [], [fontsQueryResult.data])
-  const colors = useMemo(() => colorsQueryResult.data?.colors ?? [], [colorsQueryResult.data])
+  const fonts = useMemo<FontType[]>(() => [], [])
+  const colors = useAsync(getColors, [])
   const fontFamily = getValue('font-family')
   const weights = useMemo(() => {
     const font = fonts.find(({ name }) => fontFamily === prepareFontFamily(name))
@@ -325,7 +306,7 @@ function StylesSubSectionTypography() {
           onChange={value => onChange([updateCssAttribute('color', value)])}
           size={16}
           pickerLeftOffset={-29} // Adjusted from sight
-          colors={colors}
+          colors={colors ?? []}
         />
         {renderInheritButton('color')}
       </Div>

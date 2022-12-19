@@ -2,38 +2,26 @@ import { useCallback, useEffect, useState } from 'react'
 import { Button, Div, H2, Input } from 'honorable'
 import shortId from 'shortid'
 
-import { ColorType } from '~types'
+import { CssVariableType } from '~types'
 
-import { refetchKeys } from '~constants'
+import getColors from '~processors/css/getColors'
 
-import { ColorsQuery, ColorsQueryDataType, UpdateColorsMutation, UpdateColorsMutationDataType } from '~queries'
-
-import useQuery from '~hooks/useQuery'
-import useRefetch from '~hooks/useRefetch'
-import useMutation from '~hooks/useMutation'
+import useAsync from '~hooks/useAsync'
 
 import ColorPicker from '~components/css-inputs/ColorPicker'
 
 function DesignSystemSectionColors() {
-  const [colors, setColors] = useState<ColorType[]>([])
+  const [colors, setColors] = useState<CssVariableType[]>([])
 
-  const [colorsQueryResult, refetchColorsQuery] = useQuery<ColorsQueryDataType>({
-    query: ColorsQuery,
-  })
-  const [, updateColors] = useMutation<UpdateColorsMutationDataType>(UpdateColorsMutation)
+  const foundColors = useAsync(getColors, [])
 
-  useRefetch({
-    key: refetchKeys.colors,
-    refetch: refetchColorsQuery,
-  })
-
-  const handleColorChange = useCallback(async (colors: ColorType[]) => {
+  const handleColorChange = useCallback(async (colors: CssVariableType[]) => {
     setColors(colors)
 
-    await updateColors({
-      colorsJson: JSON.stringify(colors),
-    })
-  }, [updateColors])
+    // await updateColors({
+    //   colorsJson: JSON.stringify(colors),
+    // })
+  }, [])
 
   const handleCreateColor = useCallback(() => {
     const id = shortId()
@@ -41,8 +29,8 @@ function DesignSystemSectionColors() {
     handleColorChange([
       ...colors,
       {
-        id,
-        variableName: `--color-${id}`,
+        id: `--color-${id}`,
+        type: 'color',
         name: `Color ${colors.length + 1}`,
         value: '#ffffff',
       },
@@ -50,10 +38,10 @@ function DesignSystemSectionColors() {
   }, [colors, handleColorChange])
 
   useEffect(() => {
-    if (!colorsQueryResult.data?.colors) return
+    if (!foundColors) return
 
-    setColors(colorsQueryResult.data.colors)
-  }, [colorsQueryResult.data])
+    setColors(foundColors)
+  }, [foundColors])
 
   return (
     <Div xflex="y2s">
@@ -63,16 +51,16 @@ function DesignSystemSectionColors() {
         columnGap={2}
         rowGap={1}
       >
-        {colors.map(color => (
+        {colors?.map(color => (
           <ColorItem
             key={color.id}
             color={color}
             onChange={color => handleColorChange(colors.map(c => c.id === color.id ? color : c))}
           />
         ))}
-        {!colors.length && (
+        {!colors?.length && (
           <Div color="text-light">
-            {colorsQueryResult.fetching ? 'Fetching...' : 'No colors'}
+            No colors
           </Div>
         )}
       </Div>
@@ -88,8 +76,8 @@ function DesignSystemSectionColors() {
 }
 
 type ColorItemPropsType = {
-  color: ColorType
-  onChange: (color: ColorType) => void
+  color: CssVariableType
+  onChange: (color: CssVariableType) => void
 }
 
 function ColorItem({ color, onChange }: ColorItemPropsType) {

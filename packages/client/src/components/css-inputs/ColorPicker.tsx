@@ -4,7 +4,7 @@ import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { Button, Div, Input, MenuItem, Select, WithOutsideClick } from 'honorable'
 import { ChromePicker } from 'react-color'
 
-import { ColorType } from '~types'
+import { CssVariableType } from '~types'
 
 import { zIndexes } from '~constants'
 
@@ -15,10 +15,10 @@ type ColorPickerPropsType = {
   size?: number
   pickerLeftOffset?: number
   withOverlay?: boolean
-  colors?: ColorType[]
+  colors?: CssVariableType[]
 }
 
-const prepareVariable = (color: ColorType) => `var(${color.variableName})`
+const prepareVariable = (color: CssVariableType) => `var(${color.id})`
 
 function ColorPicker({
   value,
@@ -185,7 +185,7 @@ function ColorPicker({
                           <Div
                             width={12}
                             height={12}
-                            backgroundColor={`var(${color.variableName})`}
+                            backgroundColor={prepareVariable(color)}
                           />
                           {color.name}
                         </Div>

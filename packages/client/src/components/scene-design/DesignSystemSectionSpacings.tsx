@@ -2,41 +2,26 @@ import { useCallback, useEffect, useState } from 'react'
 import { A, Button, Div, H2, Input } from 'honorable'
 import shortId from 'shortid'
 
-import { SpacingType } from '~types'
+import { CssVariableType } from '~types'
 
-import { refetchKeys } from '~constants'
+import getSpacings from '~processors/css/getSpacings'
 
-import { SpacingsQuery, SpacingsQueryDataType, UpdateSpacingsMutation, UpdateSpacingsMutationDataType } from '~queries'
-
-import useQuery from '~hooks/useQuery'
-import useRefetch from '~hooks/useRefetch'
-import useMutation from '~hooks/useMutation'
-import useThrottleAsynchronous from '~hooks/useThrottleAsynchronous'
+import useAsync from '~hooks/useAsync'
 
 import CssValueInput from '~components/css-inputs/CssValueInput'
 
 function DesignSystemSectionSpacings() {
-  const [spacings, setSpacings] = useState<SpacingType[]>([])
+  const [spacings, setSpacings] = useState<CssVariableType[]>([])
 
-  const [spacingsQueryResult, refetchSpacingsQuery] = useQuery<SpacingsQueryDataType>({
-    query: SpacingsQuery,
-  })
-  const [, updateSpacings] = useMutation<UpdateSpacingsMutationDataType>(UpdateSpacingsMutation)
+  const foundSpacings = useAsync(getSpacings, [])
 
-  const throttledUpdateSpacings = useThrottleAsynchronous(updateSpacings, 1000)
-
-  useRefetch({
-    key: refetchKeys.spacings,
-    refetch: refetchSpacingsQuery,
-  })
-
-  const handleSpacingChange = useCallback(async (spacings: SpacingType[]) => {
+  const handleSpacingChange = useCallback(async (spacings: CssVariableType[]) => {
     setSpacings(spacings)
 
-    await throttledUpdateSpacings({
-      spacingsJson: JSON.stringify(spacings),
-    })
-  }, [throttledUpdateSpacings])
+    // await throttledUpdateSpacings({
+    //   spacingsJson: JSON.stringify(spacings),
+    // })
+  }, [])
 
   const handleCreateSpacing = useCallback(() => {
     const id = shortId()
@@ -44,8 +29,8 @@ function DesignSystemSectionSpacings() {
     handleSpacingChange([
       ...spacings,
       {
-        id,
-        variableName: `--spacing-${id}`,
+        id: `--spacing-${id}`,
+        type: 'spacing',
         name: `Spacing ${spacings.length + 1}`,
         value: '1rem',
       },
@@ -53,10 +38,10 @@ function DesignSystemSectionSpacings() {
   }, [spacings, handleSpacingChange])
 
   useEffect(() => {
-    if (!spacingsQueryResult.data?.spacings) return
+    if (!foundSpacings) return
 
-    setSpacings(spacingsQueryResult.data.spacings)
-  }, [spacingsQueryResult.data])
+    setSpacings(foundSpacings)
+  }, [foundSpacings])
 
   return (
     <Div xflex="y2s">
@@ -66,16 +51,16 @@ function DesignSystemSectionSpacings() {
         columnGap={2}
         rowGap={1}
       >
-        {spacings.map(spacing => (
+        {spacings?.map(spacing => (
           <SpacingItem
             key={spacing.id}
             spacing={spacing}
             onChange={spacing => handleSpacingChange(spacings.map(c => c.id === spacing.id ? spacing : c))}
           />
         ))}
-        {!spacings.length && (
+        {!spacings?.length && (
           <Div color="text-light">
-            {spacingsQueryResult.fetching ? 'Fetching...' : 'No spacing variables'}
+            No spacing variables
           </Div>
         )}
       </Div>
@@ -91,8 +76,8 @@ function DesignSystemSectionSpacings() {
 }
 
 type SpacingItemPropsType = {
-  spacing: SpacingType
-  onChange: (spacing: SpacingType) => void
+  spacing: CssVariableType
+  onChange: (spacing: CssVariableType) => void
 }
 
 function SpacingItem({ spacing, onChange }: SpacingItemPropsType) {

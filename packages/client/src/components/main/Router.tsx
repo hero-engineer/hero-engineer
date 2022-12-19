@@ -7,7 +7,6 @@ import Component from '~components/scene-component/Component'
 import Components from '~components/scene-components/Components'
 import Design from '~components/scene-design/Design'
 import DesignSystem from '~components/scene-design/DesignSystem'
-import DesignRootCss from '~components/scene-design/DesignRootCss'
 import DesignFavicon from '~components/scene-design/DesignFavicon'
 import Settings from '~components/scene-settings/Settings'
 import SettingsGeneral from '~components/scene-settings/SettingsGeneral'
@@ -62,10 +61,6 @@ function Router({ children }: any) {
               <Route
                 path="system"
                 element={<DesignSystem />}
-              />
-              <Route
-                path="root-css"
-                element={<DesignRootCss />}
               />
               <Route
                 path="favicon"

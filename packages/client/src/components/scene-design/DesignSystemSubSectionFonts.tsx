@@ -1,4 +1,4 @@
-import { FormEvent, MouseEvent, useCallback, useEffect, useState } from 'react'
+import { FormEvent, MouseEvent, useCallback, useState } from 'react'
 import { Button, Div, Form, H3, Input, Switch } from 'honorable'
 import { CiEdit } from 'react-icons/ci'
 import { SlTrash } from 'react-icons/sl'
@@ -8,34 +8,16 @@ import shortId from 'shortid'
 
 import { FontType } from '~types'
 
-import { refetchKeys } from '~constants'
-
-import { FontsQuery, FontsQueryDataType, UpdateFontsMutation, UpdateFontsMutationDataType } from '~queries'
-
-import useQuery from '~hooks/useQuery'
-import useMutation from '~hooks/useMutation'
-import useRefetch from '~hooks/useRefetch'
-
 function DesignSystemSubSectionFonts() {
   const [fonts, setFonts] = useState<FontType[]>([])
-
-  const [fontsQueryResult, refetchFontsQuery] = useQuery<FontsQueryDataType>({
-    query: FontsQuery,
-  })
-  const [, updateFonts] = useMutation<UpdateFontsMutationDataType>(UpdateFontsMutation)
-
-  useRefetch({
-    key: refetchKeys.fonts,
-    refetch: refetchFontsQuery,
-  })
 
   const handleEdit = useCallback(async (fonts: FontType[]) => {
     setFonts(fonts)
 
-    await updateFonts({
-      fontsJson: JSON.stringify(fonts),
-    })
-  }, [updateFonts])
+    // await updateFonts({
+    //   fontsJson: JSON.stringify(fonts),
+    // })
+  }, [])
 
   const handleUpdate = useCallback((font: FontType) => {
     const nextFonts = [...fonts]
@@ -51,12 +33,6 @@ function DesignSystemSubSectionFonts() {
 
     handleEdit(fonts.filter(f => f.id !== font.id))
   }, [fonts, handleEdit])
-
-  useEffect(() => {
-    if (!fontsQueryResult.data?.fonts) return
-
-    setFonts(fontsQueryResult.data.fonts)
-  }, [fontsQueryResult.data])
 
   return (
     <Div xflex="y2s">
@@ -75,7 +51,7 @@ function DesignSystemSubSectionFonts() {
           color="text-light"
           py={0.5}
         >
-          {fontsQueryResult.fetching ? 'Fetching...' : 'No fonts'}
+          No fonts
         </Div>
       )}
       <Button
