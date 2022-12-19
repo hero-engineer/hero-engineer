@@ -1,6 +1,6 @@
 {
   "name": "@hero-engineer/client",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Build anything you want",
   "type": "module",
   "repository": {
@@ -35,7 +35,9 @@
     "dev": "nodemon --watch node_modules --ext js,json,css --exec \"npm run build:watch\"",
     "lint": "eslint --quiet src",
     "lint:fix": "eslint --quiet --fix src",
-    "prepublishOnly": "npm run build:production"
+    "prepublishOnly": "npm run build:production",
+    "patch": "npm version patch && git add . -A && git commit -m \"[server] Publish patch\" && npm publish",
+    "minor": "npm version minor && git add . -A && git commit -m \"[server] Publish minor\" && npm publish"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
