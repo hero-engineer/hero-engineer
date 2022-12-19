@@ -1,19 +1,36 @@
 {
-  "name": "ecu",
-  "version": "1.0.28",
-  "description": "A self-reprogramming shield for creating React app fast",
-  "main": "src/index.js",
+  "name": "hero-engineer",
+  "version": "0.0.0",
+  "description": "Build anything you want",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dherault/ecu.git"
+    "url": "git+https://github.com/hero-engineer/hero-engineer.git"
   },
+  "keywords": [
+    "Hero",
+    "engineer",
+    "low-code",
+    "no-code",
+    "lowcode",
+    "nocode",
+    "lcnc"
+  ],
   "author": "David Hérault <dherault@gmail.com> (https://github.com/dherault)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/dherault/ecu/issues"
+    "url": "https://github.com/hero-engineer/hero-engineer/issues"
   },
-  "homepage": "https://github.com/dherault/ecu#readme",
+  "homepage": "https://github.com/hero-engineer/hero-engineer#readme",
+  "files": [
+    "build",
+    "project-template.zip"
+  ],
+  "module": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "bin": {
+    "hero-engineer": "./build/cli.js"
+  },
   "scripts": {
     "dev": "nodemon --watch src --ext ts,tsx --exec \"npm run build\"",
     "build": "tsc",
@@ -23,18 +40,9 @@
   },
   "dependencies": {
     "commander": "^9.4.1",
-    "ecu-client": "^1.0.2",
-    "ecu-server": "^1.0.10",
+    "@hero-engineer/client": "^0.0.0",
+    "@hero-engineer/server": "^0.0.0",
     "extract-zip": "^2.0.1",
     "find-up": "^6.3.0"
-  },
-  "files": [
-    "build",
-    "project-template.zip"
-  ],
-  "module": "./build/index.js",
-  "types": "./build/index.d.ts",
-  "bin": {
-    "ecu": "./build/cli.js"
   }
 }

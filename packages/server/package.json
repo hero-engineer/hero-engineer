@@ -7,6 +7,15 @@
     "type": "git",
     "url": "git+https://github.com/hero-engineer/hero-engineer.git"
   },
+  "keywords": [
+    "Hero",
+    "engineer",
+    "low-code",
+    "no-code",
+    "lowcode",
+    "nocode",
+    "lcnc"
+  ],
   "author": "David Hérault <dherault@gmail.com> (https://github.com/dherault)",
   "license": "MIT",
   "bugs": {
