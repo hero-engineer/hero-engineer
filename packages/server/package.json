@@ -1,6 +1,6 @@
 {
   "name": "@hero-engineer/server",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Build anything you want",
   "type": "module",
   "repository": {
@@ -31,7 +31,8 @@
   "scripts": {
     "dev": "nodemon --watch src --ext ts,tsx --exec \"npm run build\"",
     "build": "tsc",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "patch": "npm version patch && git add . -A && git commit -m \"[server] Publish patch\" && npm publish"
   },
   "dependencies": {
     "apollo-server-express": "^3.11.1",

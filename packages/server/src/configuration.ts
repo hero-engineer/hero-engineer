@@ -10,7 +10,7 @@ export const appPath = path.join(process.cwd(), 'app')
 
 export const commitPrefix = '[hero-engineer] '
 
-export const initialCommitMessage = `${commitPrefix}Create Hero Engineer project`
+export const initialCommitMessage = 'Create Hero Engineer project'
 
 export const heroEngineerRelativePath = '.hero-engineer'
 

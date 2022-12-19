@@ -25,7 +25,7 @@ async function undo() {
     throw new Error('Cannot undo non-Hero Engineer commit')
   }
 
-  if (message === initialCommitMessage) {
+  if (message === commitPrefix + initialCommitMessage) {
     throw new Error('End of Hero Engineer commit history')
   }
 
