@@ -1,6 +1,6 @@
 {
   "name": "@hero-engineer/client",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Build anything you want",
   "type": "module",
   "repository": {
@@ -25,7 +25,8 @@
   "files": [
     "build"
   ],
-  "module": "./build/ecu-client.es.js",
+  "main": "./build/hero-engineer-client.js",
+  "module": "./build/hero-engineer-client.js",
   "types": "./build/index.d.ts",
   "scripts": {
     "build": "tsc && vite build",
