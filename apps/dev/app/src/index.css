@@ -28,6 +28,16 @@
   --spacing-xxlarge: 64px; /* xxlarge */
   --spacing-xxxlarge: 96px; /* xxxlarge */
   --spacing-eLlUOFIiT: 1rem; /* Jumbo */
+  --spacing-xxxsmall: 1px; /* xxxsmall */
+  --spacing-xxsmall: 2px; /* xxsmall */
+  --spacing-xsmall: 4px; /* xsmall */
+  --spacing-small: 8px; /* small */
+  --spacing-medium: 16px; /* medium */
+  --spacing-large: 24px; /* large */
+  --spacing-xlarge: 32px; /* xlarge */
+  --spacing-xxlarge: 64px; /* xxlarge */
+  --spacing-xxxlarge: 96px; /* xxxlarge */
+  --spacing-eLlUOFIiT: 1px; /* Jumbo */
 }
 
 html {
