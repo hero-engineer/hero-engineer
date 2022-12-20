@@ -7,8 +7,6 @@ import withLog from './withLog.js'
 import fileQuery from './queries/fileQuery.js'
 import filesQuery from './queries/filesQuery.js'
 import filePathsQuery from './queries/filePathsQuery.js'
-import breakpointsQuery from './queries/breakpointsQuery.js'
-import componentMetadataQuery from './queries/componentMetadataQuery.js'
 import packagesUpdatesQuery from './queries/packagesUpdatesQuery.js'
 import undoRedoMetadataQuery from './queries/undoRedoMetdataQuery.js'
 
@@ -28,24 +26,9 @@ export const typeDefs = gql`
     type: String!
   }
 
-  type Breakpoint {
-    id: String!
-    name: String!
-    min: Int!
-    max: Int!
-    base: Int!
-    scale: Float!
-    media: String!
-  }
-
   type UndoRedoMetadataOutput {
     undoMessage: String!
     redoMessage: String
-  }
-
-  type IsCssValidOutput {
-    isCssValid: Boolean!
-    css: String!
   }
 
   type FileType {
@@ -53,17 +36,10 @@ export const typeDefs = gql`
     code: String!
   }
 
-  type ComponentFileMetadataOutput {
-    decoratorPaths: [String]!
-  }
-
   type Query {
     file(filePath: String!): String!
     files: [FileType]!
     filePaths: [String!]!
-
-    breakpoints: [Breakpoint]!
-    componentMetadata(componentPath: String!): ComponentFileMetadataOutput!
 
     packagesUpdates: [Package]!
 
@@ -87,9 +63,6 @@ export const resolvers = {
     file: withLog(fileQuery, 'file'),
     files: withLog(filesQuery, 'files'),
     filePaths: withLog(filePathsQuery, 'filePaths'),
-
-    componentMetadata: withLog(componentMetadataQuery, 'componentMetadata'),
-    breakpoints: withLog(breakpointsQuery, 'breakpoints'),
 
     packagesUpdates: withLog(packagesUpdatesQuery, 'packagesUpdates'),
 

@@ -1,4 +1,4 @@
-import readBreakpoints from '../../domain/css/readBreakpoints.js'
+import readBreakpoints from '../domain/css/readBreakpoints.js'
 
 function breakpointsQuery() {
   return readBreakpoints()
