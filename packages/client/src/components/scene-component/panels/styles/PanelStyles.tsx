@@ -404,9 +404,9 @@ function PanelStyles() {
   ])
 
   // console.log('similiarHierarchies', similiarHierarchies)
-  console.log('updatedAttributes', updatedAttributes)
+  // console.log('updatedAttributes', updatedAttributes)
   // console.log('concernedMedias', concernedMedias)
-  console.log('styleContextValue', styleContextValue)
+  // console.log('styleContextValue', styleContextValue)
 
   return (
     <StylesContext.Provider value={styleContextValue}>

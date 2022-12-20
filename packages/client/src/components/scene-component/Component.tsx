@@ -4,15 +4,9 @@ import { Div } from 'honorable'
 import { RiNodeTree } from 'react-icons/ri'
 import { MdBrush } from 'react-icons/md'
 
-import { refetchKeys } from '~constants'
-
-import { ComponentMetadataQuery, ComponentMetadataQueryDataType } from '~queries'
-
 import TabsContext from '~contexts/TabsContext'
 
 import useCurrentComponentPath from '~hooks/useCurrentComponentPath'
-import useQuery from '~hooks/useQuery'
-import useRefetch from '~hooks/useRefetch'
 
 import BreakpointsButtons from '~components/scene-component/BreakpointsButtons'
 import WidthBar from '~components/scene-component/WidthBar'
@@ -31,19 +25,6 @@ function Component() {
 
   const componentPath = useCurrentComponentPath()
 
-  const [componentMetadataQueryResult, refetchComponentMetadataQuery] = useQuery<ComponentMetadataQueryDataType>({
-    query: ComponentMetadataQuery,
-    variables: {
-      componentPath,
-    },
-    pause: !componentPath,
-  })
-
-  useRefetch({
-    key: refetchKeys.componentMetadata,
-    refetch: refetchComponentMetadataQuery,
-  })
-
   useEffect(() => {
     if (!ecuComponentPath) return
 
@@ -57,9 +38,6 @@ function Component() {
   }, [ecuComponentPath, componentPath, setTabs])
 
   if (!componentPath) return null
-  if (!componentMetadataQueryResult.data) return null
-
-  const { decoratorPaths } = componentMetadataQueryResult.data.componentMetadata
 
   return (
     <Div
@@ -106,10 +84,7 @@ function Component() {
           <Div width={3 * 32} />
           <Div flexGrow />
         </Div>
-        <ComponentWindow
-          componentPath={componentPath}
-          decoratorPaths={decoratorPaths}
-        />
+        <ComponentWindow componentPath={componentPath} />
         <WidthBar />
         <HierarchyBar />
       </Div>

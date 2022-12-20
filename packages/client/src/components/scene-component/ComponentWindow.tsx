@@ -13,10 +13,9 @@ import ComponentIframe from '~components/scene-component/ComponentIframe'
 
 type ComponentWindowPropsType = {
   componentPath: string
-  decoratorPaths: string[]
 }
 
-function ComponentWindow({ componentPath, decoratorPaths }: ComponentWindowPropsType) {
+function ComponentWindow({ componentPath }: ComponentWindowPropsType) {
   const { key } = useContext(ComponentRemountContext)
 
   return (
@@ -36,7 +35,6 @@ function ComponentWindow({ componentPath, decoratorPaths }: ComponentWindowProps
                     <ComponentLoader
                       head={head}
                       componentPath={componentPath}
-                      decoratorPaths={decoratorPaths}
                     />
                   </WithComponentHierarchy>
                 </WithComponentError>

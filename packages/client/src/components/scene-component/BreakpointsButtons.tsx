@@ -11,7 +11,7 @@ import { zIndexes } from '~constants'
 
 import BreakpointContext from '~contexts/BreakpointContext'
 
-import breakpoints from '~data/breakpoints.json'
+import breakpoints from '~data/breakpoints'
 
 const infinityValue = 999999999
 

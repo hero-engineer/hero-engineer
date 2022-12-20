@@ -1,4 +1,3 @@
-import { ViteHotContext } from 'vite/types/hot'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
 import { Provider as GraphqlProvider } from 'urql'
 import { DndProvider } from 'react-dnd'
@@ -6,8 +5,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 
 import { LogsType, SnackBarItemType, TabType, WarningsType } from '~types'
 
-import ModeContext from '~contexts/ModeContext'
-import HotContext from '~contexts/HotContext'
+import EnvContext from '~contexts/EnvContext'
 import LogsContext, { LogsContextType } from '~contexts/LogsContext'
 import WarningContext, { WarningsContextType } from '~contexts/WarningsContext'
 import RefetchContext, { RefetchContextType } from '~contexts/RefetchContext'
@@ -21,13 +19,12 @@ import usePersistedState from '~hooks/usePersistedState'
 import client from '../../client'
 
 type ProviderHeroEngineerPropsType = {
-  mode: string
-  hot: ViteHotContext | null
+  env: Record<string, any>
   children: ReactNode
 }
 
 // The providers for the whole application
-function ProviderHeroEngineer({ mode, hot, children }: ProviderHeroEngineerPropsType) {
+function ProviderHeroEngineer({ env, children }: ProviderHeroEngineerPropsType) {
   const [logs, setLogs] = usePersistedState<LogsType>('logs', { typescript: false, css: false })
   const logsContextValue = useMemo<LogsContextType>(() => ({ logs, setLogs }), [logs, setLogs])
 
@@ -50,23 +47,21 @@ function ProviderHeroEngineer({ mode, hot, children }: ProviderHeroEngineerProps
   return (
     <GraphqlProvider value={client}>
       <DndProvider backend={HTML5Backend}>
-        <ModeContext.Provider value={mode}>
-          <HotContext.Provider value={hot}>
-            <LogsContext.Provider value={logsContextValue}>
-              <WarningContext.Provider value={warningsContextValue}>
-                <RefetchContext.Provider value={refetchContextValue}>
-                  <ThemeModeContext.Provider value={themeModeContextValue}>
-                    <SnackBarContext.Provider value={snackBarContextValue}>
-                      <TabsContext.Provider value={tabsContextValue}>
-                        {children}
-                      </TabsContext.Provider>
-                    </SnackBarContext.Provider>
-                  </ThemeModeContext.Provider>
-                </RefetchContext.Provider>
-              </WarningContext.Provider>
-            </LogsContext.Provider>
-          </HotContext.Provider>
-        </ModeContext.Provider>
+        <EnvContext.Provider value={env}>
+          <LogsContext.Provider value={logsContextValue}>
+            <WarningContext.Provider value={warningsContextValue}>
+              <RefetchContext.Provider value={refetchContextValue}>
+                <ThemeModeContext.Provider value={themeModeContextValue}>
+                  <SnackBarContext.Provider value={snackBarContextValue}>
+                    <TabsContext.Provider value={tabsContextValue}>
+                      {children}
+                    </TabsContext.Provider>
+                  </SnackBarContext.Provider>
+                </ThemeModeContext.Provider>
+              </RefetchContext.Provider>
+            </WarningContext.Provider>
+          </LogsContext.Provider>
+        </EnvContext.Provider>
       </DndProvider>
     </GraphqlProvider>
   )

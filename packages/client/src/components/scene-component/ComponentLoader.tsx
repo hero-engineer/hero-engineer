@@ -2,18 +2,24 @@ import { Suspense, lazy, memo, useContext } from 'react'
 
 import ComponentRemountContext from '~contexts/ComponentRemountContext'
 
+import useDecoratorPaths from '~hooks/useDecoratorPaths'
+
 type ComponentLoaderPropsType = {
   componentPath: string
-  decoratorPaths: string[]
   head: HTMLHeadElement | null
 }
 
 // A component fetcher that uses React.lazy
-function ComponentLoader({ componentPath, decoratorPaths, head }: ComponentLoaderPropsType) {
+function ComponentLoader({ componentPath, head }: ComponentLoaderPropsType) {
   const { key } = useContext(ComponentRemountContext)
 
-  const decorators = decoratorPaths.map(decoratorPath => lazy(() => import(/* @vite-ignore */ /* webpackIgnore: true */ decoratorPath)))
-  const Component = lazy(() => import(/* @vite-ignore */ /* webpackIgnore: true */ componentPath))
+  const decoratorPaths = useDecoratorPaths(componentPath)
+  const decorators = (decoratorPaths || []).map(decoratorPath => lazy(() => import(/* @vite-ignore */ decoratorPath)))
+  const Component = lazy(() => import(/* @vite-ignore */ componentPath))
+
+  console.log('decoratorPaths', decoratorPaths)
+
+  if (!decoratorPaths?.length) return null
 
   return (
     <Suspense>

@@ -2,6 +2,7 @@ import path from 'node:path'
 
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import cwd from 'vite-plugin-cwd'
 import dts from 'vite-plugin-dts'
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 import { typescriptPaths } from 'rollup-plugin-typescript-paths'
@@ -11,6 +12,7 @@ const isProductionBuild = process.env.PRODUCTION_BUILD === 'true'
 export default defineConfig({
   plugins: [
     react({ jsxRuntime: 'classic' }),
+    cwd(),
     cssInjectedByJsPlugin(),
     isProductionBuild && dts({
       insertTypesEntry: true,
