@@ -31,7 +31,6 @@ function ProviderComponent({ children }: ProviderComponentPropsType) {
     scale: 1,
     media: '',
   })
-  const [breakpoints, setBreakpoints] = usePersistedState<BreakpointType[]>('breakpoints', [])
   const [width, setWidth] = usePersistedState<number>('width', 0, (x: any) => parseFloat(x))
   const [height, setHeight] = usePersistedState<number | null>('height', null, (x: any) => {
     const n = parseFloat(x)
@@ -39,7 +38,7 @@ function ProviderComponent({ children }: ProviderComponentPropsType) {
     return n === n ? n : x
   })
   const [isDragging, setIsDragging] = useState(false)
-  const breakpointContextValue = useMemo<BreakpointContextType>(() => ({ breakpoint, setBreakpoint, breakpoints, setBreakpoints, width, setWidth, height, setHeight, isDragging, setIsDragging }), [breakpoint, setBreakpoint, breakpoints, setBreakpoints, width, setWidth, height, setHeight, isDragging])
+  const breakpointContextValue = useMemo<BreakpointContextType>(() => ({ breakpoint, setBreakpoint, width, setWidth, height, setHeight, isDragging, setIsDragging }), [breakpoint, setBreakpoint, width, setWidth, height, setHeight, isDragging])
 
   const [isInteractiveMode, setIsInteractiveMode] = usePersistedState('interactive-mode', false)
   const isInteractiveModeContextValue = useMemo<IsInteractiveModeContextType>(() => ({ isInteractiveMode, setIsInteractiveMode }), [isInteractiveMode, setIsInteractiveMode])

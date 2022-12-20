@@ -24,7 +24,8 @@
       "~components/*": ["components/*"],
       "~contexts/*": ["contexts/*"],
       "~hooks/*": ["hooks/*"],
-      "~utils/*": ["utils/*"]
+      "~utils/*": ["utils/*"],
+      "~data/*": ["data/*"]
     },
   },
   "include": ["src", "src/.old/components/core/DesignRootCss.tsx"],

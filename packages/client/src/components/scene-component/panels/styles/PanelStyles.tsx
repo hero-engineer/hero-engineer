@@ -39,10 +39,12 @@ import StylesSubSectionLayout from '~components/scene-component/panels/styles/St
 import StylesSubSectionSpacing from '~components/scene-component/panels/styles/StylesSubSectionSpacing'
 import StylesSubSectionTypography from '~components/scene-component/panels/styles/StylesSubSectionTypography'
 
+import breakpoints from '~data/breakpoints'
+
 // The styles panel
 // Displayed in the right retractable panel
 function PanelStyles() {
-  const { breakpoint, breakpoints } = useContext(BreakpointContext)
+  const { breakpoint } = useContext(BreakpointContext)
   const { hierarchy, currentHierarchyId } = useContext(HierarchyContext)
   const { warnings, setWarnings } = useContext(WarningsContext)
 
@@ -60,6 +62,8 @@ function PanelStyles() {
 
   // The medias that can impact the current breakpoint
   const concernedMedias = useMemo(() => {
+    if (!breakpoints.length) return []
+
     const indexOfMasterBreakpoint = breakpoints.findIndex(b => !b.media)
     const indexOfCurrentBreakpoint = breakpoints.findIndex(b => b.id === breakpoint.id)
     // Determines weither the current breakpoint is going upscreen or downscreen from the master breakpoint
@@ -79,7 +83,7 @@ function PanelStyles() {
     }
 
     return concernedMedias
-  }, [breakpoints, breakpoint])
+  }, [breakpoint])
 
   const currentHierarchy = useMemo(() => findHierarchy(hierarchy, currentHierarchyId), [hierarchy, currentHierarchyId])
   const similiarHierarchies = useMemo(() => findSimilarHierarchies(hierarchy, currentHierarchyId), [hierarchy, currentHierarchyId])
@@ -156,7 +160,7 @@ function PanelStyles() {
   const throttledHandleCssUpdate = useThrottleAsynchronous(handleCssUpdate, 1000)
 
   const handleCreateClassName = useCallback(async (className: string) => {
-    const { code, filePath } = await createSelector(`.${className}`, breakpoints)
+    const { code, filePath } = await createSelector(`.${className}`)
 
     // TODO error handling
     if (!code) return
@@ -168,7 +172,7 @@ function PanelStyles() {
       code,
       commitMessage: `Add selector .${className} to index.css`,
     })
-  }, [breakpoints, saveFile, handleRefreshClasses])
+  }, [saveFile, handleRefreshClasses])
 
   const handleUpdateClassName = useCallback(async (className: string) => {
     if (!currentHierarchy?.element) return

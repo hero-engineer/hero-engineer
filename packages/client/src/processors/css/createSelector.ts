@@ -3,6 +3,8 @@ import { BreakpointType } from '~types'
 import postCss, { cssReady, getIndexCss, setIndexCss } from '~processors/css'
 import traverse from '~processors/css/traverse'
 
+import breakpoints from '~data/breakpoints'
+
 function sortBreakpoints(a: BreakpointType, b: BreakpointType) {
   if (!a.media && b.media) return -1
   if (a.media && !b.media) return 1
@@ -10,7 +12,7 @@ function sortBreakpoints(a: BreakpointType, b: BreakpointType) {
   return b.base - a.base
 }
 
-async function createSelector(selector: string, breakpoints: BreakpointType[]) {
+async function createSelector(selector: string) {
   await cssReady.promise
 
   const { filePath, code } = getIndexCss()

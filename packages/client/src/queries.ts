@@ -99,16 +99,16 @@ export type FilePathsQueryDataType = {
   filePaths: string[]
 }
 
-export const ComponentFileMetadataQuery = `
-  query ($path: String!) {
-    componentFileMetadata(path: $path) {
+export const ComponentMetadataQuery = `
+  query ($componentPath: String!) {
+    componentMetadata(componentPath: $componentPath) {
       decoratorPaths
     }
   }
 `
 
-export type ComponentFileQueryDataType = {
-  componentFileMetadata: {
+export type ComponentMetadataQueryDataType = {
+  componentMetadata: {
     decoratorPaths: string[]
   }
 }

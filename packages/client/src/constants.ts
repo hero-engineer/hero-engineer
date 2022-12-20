@@ -15,11 +15,10 @@ export const zIndexes = {
 
 export const refetchKeys = {
   all: 'all',
-  componentFileMetadata: 'componentFileMetadata',
+  componentMetadata: 'componentMetadata',
   undoRedoMetadata: 'undoRedoMetadata',
   packages: 'packages',
   packagesUpdates: 'packagesUpdates',
-  breakpoints: 'breakpoints',
   favicon: 'favicon',
   filePaths: 'filePaths',
   files: 'files',

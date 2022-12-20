@@ -6,7 +6,7 @@ import { MdBrush } from 'react-icons/md'
 
 import { refetchKeys } from '~constants'
 
-import { ComponentFileMetadataQuery, ComponentFileQueryDataType } from '~queries'
+import { ComponentMetadataQuery, ComponentMetadataQueryDataType } from '~queries'
 
 import TabsContext from '~contexts/TabsContext'
 
@@ -29,19 +29,19 @@ function Component() {
 
   const { tabs, setTabs } = useContext(TabsContext)
 
-  const path = useCurrentComponentPath()
+  const componentPath = useCurrentComponentPath()
 
-  const [componentFileMetadataQueryResult, refetchFileMetadataQuery] = useQuery<ComponentFileQueryDataType>({
-    query: ComponentFileMetadataQuery,
+  const [componentMetadataQueryResult, refetchComponentMetadataQuery] = useQuery<ComponentMetadataQueryDataType>({
+    query: ComponentMetadataQuery,
     variables: {
-      path,
+      componentPath,
     },
-    pause: !path,
+    pause: !componentPath,
   })
 
   useRefetch({
-    key: refetchKeys.componentFileMetadata,
-    refetch: refetchFileMetadataQuery,
+    key: refetchKeys.componentMetadata,
+    refetch: refetchComponentMetadataQuery,
   })
 
   useEffect(() => {
@@ -51,15 +51,15 @@ function Component() {
 
     if (tabs.some(tab => tab.url === url)) return
 
-    setTabs(tabs => [...tabs, { url, label: path.split('/').pop() ?? '?' }])
+    setTabs(tabs => [...tabs, { url, label: componentPath.split('/').pop() ?? '?' }])
   // Omitting tabs to trigger on ecuComponentPath change only
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ecuComponentPath, path, setTabs])
+  }, [ecuComponentPath, componentPath, setTabs])
 
-  if (!path) return null
-  if (!componentFileMetadataQueryResult.data) return null
+  if (!componentPath) return null
+  if (!componentMetadataQueryResult.data) return null
 
-  const { decoratorPaths } = componentFileMetadataQueryResult.data.componentFileMetadata
+  const { decoratorPaths } = componentMetadataQueryResult.data.componentMetadata
 
   return (
     <Div
@@ -107,7 +107,7 @@ function Component() {
           <Div flexGrow />
         </Div>
         <ComponentWindow
-          componentPath={path}
+          componentPath={componentPath}
           decoratorPaths={decoratorPaths}
         />
         <WidthBar />
