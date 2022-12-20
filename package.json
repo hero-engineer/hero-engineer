@@ -2,11 +2,12 @@
   "private": true,
   "name": "hero-engineer-monorepo",
   "scripts": {
-    "link": "npm run link:server && npm run link:client && npm run link:ecu && npm run link:app",
-    "link:server": "cd packages/ecu-server && npm link",
-    "link:client": "cd packages/ecu-client && npm link",
-    "link:ecu": "cd packages/ecu && npm link ecu-server ecu-client && npm link",
-    "link:app": "cd ../ecu-app && npm link ecu && cd app && npm link ecu"
+    "link": "npm run link:server && npm run link:client && npm run link:cli && npm run link:apps",
+    "link:server": "cd packages/server && npm link",
+    "link:client": "cd packages/client && npm link",
+    "link:cli": "cd packages/cli && npm link @hero-engineer/server && npm link",
+    "link:apps": "npm run link:apps:dev",
+    "link:apps:dev": "cd apps/dev && npm link hero-engineer && cd app && npm link @hero-engineer/client"
   },
   "repository": {
     "type": "git",
