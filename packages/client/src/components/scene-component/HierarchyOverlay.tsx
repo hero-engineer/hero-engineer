@@ -69,6 +69,7 @@ function HierarchyOverlay({ children }: HierarchyOverlayPropsType) {
 
   return (
     <Div
+      xflex="y2s"
       position="relative"
       height={height}
       overflow="hidden"

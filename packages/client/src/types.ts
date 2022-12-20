@@ -58,9 +58,11 @@ export type FontType = {
   isVariable: boolean
 }
 
+export type CssVariableTypeType = 'color' | 'spacing' | 'other'
+
 export type CssVariableType ={
   id: string
-  type: 'color' | 'spacing' | 'other'
+  type: CssVariableTypeType
   name: string
   value: string
 }

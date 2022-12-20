@@ -1,46 +1,68 @@
 import { Comment, Declaration } from 'postcss'
 
-import { CssVariableType } from '~types'
+import { CssVariableType, CssVariableTypeType } from '~types'
 
-import postCss, { cssReady, getIndexCss } from '~processors/css'
+import postCss, { cssReady, getIndexCss, setIndexCss } from '~processors/css'
 import traverse from '~processors/css/traverse'
 import getVariables from '~processors/css/getVariables'
 
-async function setVariables(variables: CssVariableType[]) {
+async function setVariables(variables: CssVariableType[], type: CssVariableTypeType) {
   await cssReady.promise
 
   const { filePath, code } = getIndexCss()
   const { root } = postCss.process(code, { from: filePath })
 
-  const added: CssVariableType[] = []
-  const deleted: CssVariableType[] = []
-  const existingVariables = getVariables()
-  // const variables: CssVariableType[] = []
+  const existingVariables = await getVariables()
+  const existingVariablesOfType = existingVariables.filter(v => v.type === type)
 
-  // traverse(root, rule => {
-  //   if (rule.selector !== ':root') return
+  traverse(root, rule => {
+    if (rule.selector !== ':root') return
 
-  //   rule.nodes.forEach((node, i) => {
-  //     if (node.type !== 'decl') return
+    rule.nodes.forEach((node, i) => {
+      if (node.type !== 'decl') return
 
-  //     const declaration = node as Declaration
+      const declaration = node as Declaration
 
-  //     if (!declaration.variable) return
+      if (!declaration.variable) return
 
-  //     variables.push({
-  //       id: declaration.prop,
-  //       type: declaration.prop.startsWith('--color') || declaration.prop.startsWith('$color')
-  //         ? 'color'
-  //         : declaration.prop.startsWith('--spacing') || declaration.prop.startsWith('$spacing')
-  //           ? 'spacing'
-  //           : 'other',
-  //       name: rule.nodes[i + 1]?.type === 'comment' ? (rule.nodes[i + 1] as Comment).text : declaration.prop,
-  //       value: declaration.value,
-  //     })
-  //   })
-  // })
+      const existingVariable = existingVariablesOfType.find(v => v.id === declaration.prop)
 
-  // return variables
+      if (!existingVariable) return
+
+      rule.removeChild(node)
+
+      if (rule.nodes[i]?.type !== 'comment') return
+
+      rule.removeChild(rule.nodes[i])
+    })
+
+    variables.forEach(variable => {
+      rule.append(new Declaration({
+        prop: variable.id,
+        value: variable.value,
+        raws: {
+          before: '\n  ',
+          after: '',
+        },
+      }))
+
+      rule.append(new Comment({
+        text: variable.name,
+        raws: {
+          before: ' ',
+        },
+      }))
+    })
+  })
+
+  const nextCode = root.toString()
+
+  setIndexCss(nextCode)
+
+  return {
+    filePath,
+    code: nextCode,
+  }
 }
 
 export default setVariables

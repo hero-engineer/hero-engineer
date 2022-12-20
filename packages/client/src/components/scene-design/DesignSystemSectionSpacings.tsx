@@ -1,32 +1,46 @@
-import { useCallback, useEffect, useState } from 'react'
-import { A, Button, Div, H2, Input } from 'honorable'
+import { useCallback, useContext, useEffect, useState } from 'react'
+import { Button, Div, H2, Input } from 'honorable'
+import { SlTrash } from 'react-icons/sl'
 import shortId from 'shortid'
 
 import { CssVariableType } from '~types'
 
+import { SaveFileMutation, SaveFileMutationDataType } from '~queries'
+
 import getSpacings from '~processors/css/getSpacings'
+import setVariables from '~processors/css/setVariables'
+
+import DesignSystemIsEditModeContext from '~contexts/DesignSystemIsEditModeContext'
 
 import useAsync from '~hooks/useAsync'
+import useMutation from '~hooks/useMutation'
 
 import CssValueInput from '~components/css-inputs/CssValueInput'
 
 function DesignSystemSectionSpacings() {
-  const [spacings, setSpacings] = useState<CssVariableType[]>([])
+  const isEditMode = useContext(DesignSystemIsEditModeContext)
 
+  const [spacings, setSpacings] = useState<CssVariableType[]>([])
   const foundSpacings = useAsync(getSpacings, [])
 
-  const handleSpacingChange = useCallback(async (spacings: CssVariableType[]) => {
+  const [, saveFile] = useMutation<SaveFileMutationDataType>(SaveFileMutation)
+
+  const handleSpacingsChange = useCallback(async (spacings: CssVariableType[]) => {
     setSpacings(spacings)
 
-    // await throttledUpdateSpacings({
-    //   spacingsJson: JSON.stringify(spacings),
-    // })
-  }, [])
+    const { filePath, code } = await setVariables(spacings, 'color')
+
+    await saveFile({
+      filePath,
+      code,
+      commitMessage: 'Update spacing variables in index.css',
+    })
+  }, [saveFile])
 
   const handleCreateSpacing = useCallback(() => {
     const id = shortId()
 
-    handleSpacingChange([
+    handleSpacingsChange([
       ...spacings,
       {
         id: `--spacing-${id}`,
@@ -35,7 +49,7 @@ function DesignSystemSectionSpacings() {
         value: '1rem',
       },
     ])
-  }, [spacings, handleSpacingChange])
+  }, [spacings, handleSpacingsChange])
 
   useEffect(() => {
     if (!foundSpacings) return
@@ -45,7 +59,20 @@ function DesignSystemSectionSpacings() {
 
   return (
     <Div xflex="y2s">
-      <H2 mb={2}>Spacing</H2>
+      <Div
+        xflex="x5b"
+        gap={1}
+        mb={2}
+      >
+        <H2>
+          Spacing
+        </H2>
+        {isEditMode && (
+          <Button onClick={handleCreateSpacing}>
+            Add spacing
+          </Button>
+        )}
+      </Div>
       <Div
         xflex="x11"
         columnGap={2}
@@ -55,7 +82,9 @@ function DesignSystemSectionSpacings() {
           <SpacingItem
             key={spacing.id}
             spacing={spacing}
-            onChange={spacing => handleSpacingChange(spacings.map(c => c.id === spacing.id ? spacing : c))}
+            isEditMode={isEditMode}
+            onChange={spacing => handleSpacingsChange(spacings.map(s => s.id === spacing.id ? spacing : s))}
+            onDelete={() => handleSpacingsChange(spacings.filter(s => s.id !== spacing.id))}
           />
         ))}
         {!spacings?.length && (
@@ -64,36 +93,25 @@ function DesignSystemSectionSpacings() {
           </Div>
         )}
       </Div>
-      <Button
-        onClick={handleCreateSpacing}
-        alignSelf="flex-start"
-        mt={1.5}
-      >
-        Add spacing
-      </Button>
+
     </Div>
   )
 }
 
 type SpacingItemPropsType = {
   spacing: CssVariableType
+  isEditMode: boolean
   onChange: (spacing: CssVariableType) => void
+  onDelete: () => void
 }
 
-function SpacingItem({ spacing, onChange }: SpacingItemPropsType) {
+function SpacingItem({ spacing, isEditMode, onChange, onDelete }: SpacingItemPropsType) {
   const [name, setName] = useState(spacing.name)
-  const [isEdited, setIsEdited] = useState(false)
-  const [isNameEdited, setIsNameEdited] = useState(false)
 
   const handleUpdateName = useCallback(() => {
-    setIsNameEdited(false)
-
     if (!name) return
 
-    onChange({
-      ...spacing,
-      name,
-    })
+    onChange({ ...spacing, name })
   }, [spacing, name, onChange])
 
   return (
@@ -102,32 +120,26 @@ function SpacingItem({ spacing, onChange }: SpacingItemPropsType) {
       width={`calc(max(${spacing.value}, 128px))`}
       minWidth={0} // For ellipsis to work
       gap={1}
-      _hover={{
-        '> #SpacingItem-edit': {
-          opacity: 1,
-        },
-      }}
     >
-      <Div
-        ellipsis
-        onClick={() => setIsNameEdited(true)}
-        px={0.5}
-      >
-        {isNameEdited ? (
-          <Input
-            bare
-            autoFocus
-            autoSelect
-            width="100%"
-            inputProps={{ textAlign: 'center' }}
-            value={name}
-            onChange={event => setName(event.target.value)}
-            onBlur={handleUpdateName}
-            onEnter={handleUpdateName}
-          />
-        ) : spacing.name}
-      </Div>
-      {isEdited && (
+      {isEditMode ? (
+        <Input
+          bare
+          width="100%"
+          inputProps={{ textAlign: 'center' }}
+          value={name}
+          onChange={event => setName(event.target.value)}
+          onBlur={handleUpdateName}
+          onEnter={handleUpdateName}
+        />
+      ) : (
+        <Div
+          ellipsis
+          maxWidth="100%"
+        >
+          {spacing.name}
+        </Div>
+      )}
+      {isEditMode ? (
         <Div
           xflex="x5"
           fontSize="0.75rem"
@@ -137,21 +149,31 @@ function SpacingItem({ spacing, onChange }: SpacingItemPropsType) {
             onChange={value => onChange({ ...spacing, value })}
           />
         </Div>
+      ) : (
+        <Div
+          ellipsis
+          maxWidth="100%"
+        >
+          {spacing.value}
+        </Div>
       )}
       <Div
         width={spacing.value}
         height={spacing.value}
         backgroundColor="primary"
       />
-      <Div
-        id="SpacingItem-edit"
-        fontWeight="0.75rem"
-        opacity={isEdited ? 1 : 0}
-      >
-        <A onClick={() => setIsEdited(x => !x)}>
-          {isEdited ? 'End editing' : 'Edit'}
-        </A>
-      </Div>
+      {isEditMode && (
+        <Div
+          xflex="x5"
+          flexShrink={0}
+          color="danger"
+          fontSize="0.75rem"
+          cursor="pointer"
+          onClick={onDelete}
+        >
+          <SlTrash />
+        </Div>
+      )}
     </Div>
   )
 }

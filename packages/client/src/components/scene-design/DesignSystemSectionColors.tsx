@@ -1,32 +1,46 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { Button, Div, H2, Input } from 'honorable'
+import { SlTrash } from 'react-icons/sl'
 import shortId from 'shortid'
 
 import { CssVariableType } from '~types'
 
+import { SaveFileMutation, SaveFileMutationDataType } from '~queries'
+
 import getColors from '~processors/css/getColors'
+import setVariables from '~processors/css/setVariables'
+
+import DesignSystemIsEditModeContext from '~contexts/DesignSystemIsEditModeContext'
 
 import useAsync from '~hooks/useAsync'
+import useMutation from '~hooks/useMutation'
 
 import ColorPicker from '~components/css-inputs/ColorPicker'
 
 function DesignSystemSectionColors() {
-  const [colors, setColors] = useState<CssVariableType[]>([])
+  const isEditMode = useContext(DesignSystemIsEditModeContext)
 
+  const [colors, setColors] = useState<CssVariableType[]>([])
   const foundColors = useAsync(getColors, [])
 
-  const handleColorChange = useCallback(async (colors: CssVariableType[]) => {
+  const [, saveFile] = useMutation<SaveFileMutationDataType>(SaveFileMutation)
+
+  const handleColorsChange = useCallback(async (colors: CssVariableType[]) => {
     setColors(colors)
 
-    // await updateColors({
-    //   colorsJson: JSON.stringify(colors),
-    // })
-  }, [])
+    const { filePath, code } = await setVariables(colors, 'color')
+
+    await saveFile({
+      filePath,
+      code,
+      commitMessage: 'Update color variables in index.css',
+    })
+  }, [saveFile])
 
   const handleCreateColor = useCallback(() => {
     const id = shortId()
 
-    handleColorChange([
+    handleColorsChange([
       ...colors,
       {
         id: `--color-${id}`,
@@ -35,7 +49,7 @@ function DesignSystemSectionColors() {
         value: '#ffffff',
       },
     ])
-  }, [colors, handleColorChange])
+  }, [colors, handleColorsChange])
 
   useEffect(() => {
     if (!foundColors) return
@@ -45,7 +59,20 @@ function DesignSystemSectionColors() {
 
   return (
     <Div xflex="y2s">
-      <H2 mb={2}>Colors</H2>
+      <Div
+        xflex="x5b"
+        gap={1}
+        mb={2}
+      >
+        <H2>
+          Colors
+        </H2>
+        {isEditMode && (
+          <Button onClick={handleCreateColor}>
+            Add color
+          </Button>
+        )}
+      </Div>
       <Div
         xflex="x11"
         columnGap={2}
@@ -55,7 +82,9 @@ function DesignSystemSectionColors() {
           <ColorItem
             key={color.id}
             color={color}
-            onChange={color => handleColorChange(colors.map(c => c.id === color.id ? color : c))}
+            isEditMode={isEditMode}
+            onChange={color => handleColorsChange(colors.map(c => c.id === color.id ? color : c))}
+            onDelete={() => handleColorsChange(colors.filter(c => c.id !== color.id))}
           />
         ))}
         {!colors?.length && (
@@ -64,64 +93,52 @@ function DesignSystemSectionColors() {
           </Div>
         )}
       </Div>
-      <Button
-        onClick={handleCreateColor}
-        alignSelf="flex-start"
-        mt={1}
-      >
-        Add color
-      </Button>
     </Div>
   )
 }
 
 type ColorItemPropsType = {
   color: CssVariableType
+  isEditMode: boolean
   onChange: (color: CssVariableType) => void
+  onDelete: () => void
 }
 
-function ColorItem({ color, onChange }: ColorItemPropsType) {
+function ColorItem({ color, isEditMode, onChange, onDelete }: ColorItemPropsType) {
   const [name, setName] = useState(color.name)
-  const [isEdited, setIsEdited] = useState(false)
 
   const handleUpdateName = useCallback(() => {
-    setIsEdited(false)
-
     if (!name) return
 
-    onChange({
-      ...color,
-      name,
-    })
+    onChange({ ...color, name })
   }, [color, name, onChange])
 
   return (
     <Div
       xflex="y2"
       width={128}
-      maxWidth="100%"
-      minWidth={0}// For ellipsis to work
-      gap={0.75}
+      minWidth={0} // For ellipsis to work
+      gap={0.5}
     >
-      <Div
-        ellipsis
-        onClick={() => setIsEdited(true)}
-        px={0.5}
-      >
-        {isEdited ? (
-          <Input
-            bare
-            autoFocus
-            autoSelect
-            width="100%"
-            inputProps={{ textAlign: 'center' }}
-            value={name}
-            onChange={event => setName(event.target.value)}
-            onBlur={handleUpdateName}
-            onEnter={handleUpdateName}
-          />
-        ) : color.name}
-      </Div>
+      {isEditMode ? (
+        <Input
+          bare
+          flexGrow
+          width="100%"
+          inputProps={{ textAlign: 'center' }}
+          value={name}
+          onChange={event => setName(event.target.value)}
+          onBlur={handleUpdateName}
+          onEnter={handleUpdateName}
+        />
+      ) : (
+        <Div
+          ellipsis
+          maxWidth="100%"
+        >
+          {color.name}
+        </Div>
+      )}
       <Div>
         {color.value}
       </Div>
@@ -129,13 +146,33 @@ function ColorItem({ color, onChange }: ColorItemPropsType) {
         xflex="x5"
         elevation={1}
       >
-        <ColorPicker
-          noInput
-          size={128}
-          value={color.value}
-          onChange={value => onChange({ ...color, value })}
-        />
+        {isEditMode ? (
+          <ColorPicker
+            noInput
+            size={128}
+            value={color.value}
+            onChange={value => onChange({ ...color, value })}
+          />
+        ) : (
+          <Div
+            width={128}
+            height={128}
+            backgroundColor={color.value}
+          />
+        )}
       </Div>
+      {isEditMode && (
+        <Div
+          xflex="x5"
+          flexShrink={0}
+          color="danger"
+          fontSize="0.75rem"
+          cursor="pointer"
+          onClick={onDelete}
+        >
+          <SlTrash />
+        </Div>
+      )}
     </Div>
   )
 }
