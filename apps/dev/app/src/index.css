@@ -1,13 +1,14 @@
 :root {
   --color-2Eg6KU26p: #ffffff; /* Color 1 */
-  --spacing-xxlarge: 64px; /* xxlarge */
   --spacing-xsmall: 4px; /* xsmall */
-  --spacing-xlarge: 32px; /* xlarge */
   --spacing-xxxsmall: 1px; /* xxxsmall */
-  --spacing-xsmall: 4px; /* xsmall */
   --spacing-medium: 16px; /* medium */
-  --spacing-xlarge: 32px; /* xlarge */
   --spacing-xxxlarge: 96px; /* xxxlarge */
+  --spacing-xxsmall: 2px; /* xxsmall */
+  --spacing-small: 8px; /* small */
+  --spacing-large: 24px; /* large */
+  --spacing-xxlarge: 64px; /* xxlarge */
+  --spacing-9qjQOEqyE: 128px; /* Spacing 10 */
   --spacing-xxxsmall: 1px; /* xxxsmall */
   --spacing-xxsmall: 2px; /* xxsmall */
   --spacing-xsmall: 4px; /* xsmall */
@@ -17,7 +18,7 @@
   --spacing-xlarge: 32px; /* xlarge */
   --spacing-xxlarge: 64px; /* xxlarge */
   --spacing-xxxlarge: 96px; /* xxxlarge */
-  --spacing-9qjQOEqyE: 128px; /* Spacing 10 */
+  --spacing-9qjQOEqyE: 128px; /* Jumbo */
 }
 
 html {
