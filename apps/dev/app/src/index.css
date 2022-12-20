@@ -1,17 +1,15 @@
 :root {
---spacing-xxxsmall: 0.0625rem; /* xxxsmall */
---spacing-xxsmall: 0.125rem; /* xxsmall */
---spacing-xsmall: 0.25rem; /* xsmall */
---spacing-small: 0.5rem; /* small */
---spacing-medium: 1rem; /* medium */
---spacing-large: 1.5rem; /* large */
---spacing-xlarge: 2rem; /* xlarge */
---spacing-xxlarge: 4rem; /* xxlarge */
---spacing-xxxlarge: 6rem; /* xxxlarge */ /* Color 1 */
-  --color-4kTbSoO29: #ffffff;
+  --spacing-xxxsmall: 1px; /* xxxsmall */
+  --spacing-xxsmall: 2px; /* xxsmall */
+  --spacing-xsmall: 4px; /* xsmall */
+  --spacing-small: 8px; /* small */
+  --spacing-medium: 16px; /* medium */
+  --spacing-large: 24px; /* large */
+  --spacing-xlarge: 32px; /* xlarge */
+  --spacing-xxlarge: 64px; /* xxlarge */
+  --spacing-xxxlarge: 96px; /* xxxlarge */
+  --color-yImN9XxtB: #ffffff;
   /* Color 1 */
-  --color-jOcyU2lIN: #ffffff;
-  /* Color 2 */
 }
 
 html {
