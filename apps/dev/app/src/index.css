@@ -7,7 +7,8 @@
   --spacing-large: 24px; /* large */
   --spacing-xlarge: 32px; /* xlarge */
   --spacing-xxlarge: 64px; /* xxlarge */
-  --spacing-xxxlarge: 96px; /* xxxlarge */ /* Color 1 */
+  --spacing-xxxlarge: 96px; /* xxxlarge */
+  --color-yMgmmym14: #ffffff; /* Color 1 */
 }
 
 html {
