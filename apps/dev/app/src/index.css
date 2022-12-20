@@ -1,5 +1,4 @@
 :root {
-  --color-2Eg6KU26p: #ffffff; /* Color 1 */
   --spacing-xsmall: 4px; /* xsmall */
   --spacing-xxxsmall: 1px; /* xxxsmall */
   --spacing-medium: 16px; /* medium */
@@ -19,6 +18,7 @@
   --spacing-xxlarge: 64px; /* xxlarge */
   --spacing-xxxlarge: 96px; /* xxxlarge */
   --spacing-9qjQOEqyE: 128px; /* Jumbo */
+  --color-2Eg6KU26p: #931616; /* Color 1 */
 }
 
 html {
