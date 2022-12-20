@@ -1,8 +1,8 @@
 :root {
-  --spacing-xxlarge: 64px; /* xxlarge */
   --color-2Eg6KU26p: #ffffff; /* Color 1 */
-  --spacing-small: 8px; /* small */
   --spacing-xxlarge: 64px; /* xxlarge */
+  --spacing-xsmall: 4px; /* xsmall */
+  --spacing-xlarge: 32px; /* xlarge */
   --spacing-xxxsmall: 1px; /* xxxsmall */
   --spacing-xsmall: 4px; /* xsmall */
   --spacing-medium: 16px; /* medium */
@@ -17,7 +17,7 @@
   --spacing-xlarge: 32px; /* xlarge */
   --spacing-xxlarge: 64px; /* xxlarge */
   --spacing-xxxlarge: 96px; /* xxxlarge */
-  --spacing-9qjQOEqyE: 12px; /* Spacing 10 */
+  --spacing-9qjQOEqyE: 128px; /* Spacing 10 */
 }
 
 html {
