@@ -28,7 +28,7 @@ function DesignSystemSectionSpacings() {
   const handleSpacingsChange = useCallback(async (spacings: CssVariableType[]) => {
     setSpacings(spacings)
 
-    const { filePath, code } = await setVariables(spacings, 'color')
+    const { filePath, code } = await setVariables(spacings, 'spacing')
 
     await saveFile({
       filePath,
@@ -46,7 +46,7 @@ function DesignSystemSectionSpacings() {
         id: `--spacing-${id}`,
         type: 'spacing',
         name: `Spacing ${spacings.length + 1}`,
-        value: '1rem',
+        value: '16px',
       },
     ])
   }, [spacings, handleSpacingsChange])
