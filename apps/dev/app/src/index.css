@@ -1,5 +1,5 @@
 :root {
---spacing-xxsmall: 0.0625rem; /* xxxsmall */
+--spacing-xxxsmall: 0.0625rem; /* xxxsmall */
 --spacing-xxsmall: 0.125rem; /* xxsmall */
 --spacing-xsmall: 0.25rem; /* xsmall */
 --spacing-small: 0.5rem; /* small */
@@ -7,7 +7,7 @@
 --spacing-large: 1.5rem; /* large */
 --spacing-xlarge: 2rem; /* xlarge */
 --spacing-xxlarge: 4rem; /* xxlarge */
---spacing-xxxlarge: 6rem; /* xxxlarge */
+--spacing-xxxlarge: 6rem; /* xxxlarge */ --color-4kTbSoO29: #ffffff; /* Color 1 */
 }
 
 html {
