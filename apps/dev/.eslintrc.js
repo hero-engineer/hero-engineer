@@ -1,3 +1,3 @@
 module.exports = {
-  extends: 'hero-engineer',
+  extends: '@hero-engineer/eslint-config',
 }
