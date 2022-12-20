@@ -17,8 +17,6 @@ function ComponentLoader({ componentPath, head }: ComponentLoaderPropsType) {
   const decorators = (decoratorPaths || []).map(decoratorPath => lazy(() => import(/* @vite-ignore */ decoratorPath)))
   const Component = lazy(() => import(/* @vite-ignore */ componentPath))
 
-  console.log('decoratorPaths', decoratorPaths)
-
   if (!decoratorPaths?.length) return null
 
   return (
