@@ -1,13 +1,4 @@
 :root {
-  --spacing-xsmall: 4px; /* xsmall */
-  --spacing-xxxsmall: 1px; /* xxxsmall */
-  --spacing-medium: 16px; /* medium */
-  --spacing-xxxlarge: 96px; /* xxxlarge */
-  --spacing-xxsmall: 2px; /* xxsmall */
-  --spacing-small: 8px; /* small */
-  --spacing-large: 24px; /* large */
-  --spacing-xxlarge: 64px; /* xxlarge */
-  --spacing-9qjQOEqyE: 128px; /* Spacing 10 */
   --spacing-xxxsmall: 1px; /* xxxsmall */
   --spacing-xxsmall: 2px; /* xxsmall */
   --spacing-xsmall: 4px; /* xsmall */
@@ -18,7 +9,7 @@
   --spacing-xxlarge: 64px; /* xxlarge */
   --spacing-xxxlarge: 96px; /* xxxlarge */
   --spacing-9qjQOEqyE: 128px; /* Jumbo */
-  --color-2Eg6KU26p: #931616; /* Color 1 */
+  --color-2Eg6KU26p: #b92424; /* Color 1 */
 }
 
 html {
