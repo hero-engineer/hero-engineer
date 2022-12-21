@@ -60,5 +60,8 @@ html {
 
 @media screen and (max-width: 478px) {
   .foo {
+    flex-direction: column;
+    font-family: "Lobster Two", sans-serif;
+    display: flex;
   }
 }
