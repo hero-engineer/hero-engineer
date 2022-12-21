@@ -38,6 +38,7 @@ html {
 
 @media screen and (min-width: 1280px) {
   .foo {
+    font-family: Inter, sans-serif;
   }
 }
 
