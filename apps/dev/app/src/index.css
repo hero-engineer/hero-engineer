@@ -28,6 +28,7 @@ html {
 }
 
 .w2 {
+  font-size: inherit !important;
   display: flex;
   width: 128px;
   text-align: inherit;
