@@ -6,25 +6,18 @@ import { cssAttributesMap, cssValueReset } from '~constants'
 // Delete attributes with the value `cssValueReset`
 // Convert attributes that require conversion
 function deleteAndConvertCssAttributes(attributes: CssAttributeType[]) {
-  for (const key of Object.keys(attributes)) {
-    const index = parseInt(key)
-    const attribute = attributes[index]
+  const nextAttributes = attributes.filter(attribute => attribute.value !== cssValueReset)
 
-    if (attribute.value === cssValueReset) {
-      attributes.splice(index, 1)
-
-      continue
-    }
-
+  nextAttributes.forEach((attribute, i) => {
     const { converter } = cssAttributesMap[attribute.cssName]
 
     if (typeof converter === 'function') {
-      attributes.splice(index, 1)
-      attributes.push(...converter(attribute.value, attribute.isImportant))
+      nextAttributes.splice(i, 1)
+      nextAttributes.push(...converter(attribute.value, attribute.isImportant))
     }
-  }
+  })
 
-  return attributes
+  return nextAttributes
 }
 
 export default deleteAndConvertCssAttributes

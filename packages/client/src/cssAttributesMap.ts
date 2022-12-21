@@ -66,7 +66,7 @@ function isSpacingValueValid(value: CssValueType) {
   const [rawValue, unit] = splitSpacingValue(value)
   const numericValue = parseFloat(rawValue)
 
-  return (rawValue === 'auto' || rawValue === 'inherit' || numericValue === numericValue) && (unit === 'inherit' || cssValueUnits.includes(unit))
+  return unit === 'auto' || unit === 'inherit' || (numericValue === numericValue && cssValueUnits.includes(unit))
 }
 
 function isSpacingsValueValid(value: CssValueType) {

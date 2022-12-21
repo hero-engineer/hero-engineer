@@ -2,7 +2,7 @@ export const zIndexes = {
   tooltip: 99999999999, // 11 9
   snackBar: 9999999999, // 10 9
   modal: 999999999, // 9 9
-  emojiPicker: 999999999, // 9 9
+  // emojiPicker: 999999999, // 9 9
   colorPicker: 999999999, // 9 9
   breakpointsMenu: 999999999, // 9 9
   cssSelectorChipMenu: 999999999, // 9 9

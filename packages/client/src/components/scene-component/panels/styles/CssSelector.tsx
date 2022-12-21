@@ -1,16 +1,11 @@
 import { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react'
-import { Autocomplete, Div, WithOutsideClick } from 'honorable'
-import createEmojiRegex from 'emoji-regex'
-import { HiOutlineFaceSmile } from 'react-icons/hi2'
+import { Autocomplete, Div } from 'honorable'
 
 import { CssClassType } from '~types'
-
-import { zIndexes } from '~constants'
 
 import extractClassNamesFromSelector from '~utils/extractClassNamesFromSelector'
 
 import CssSelectorChip from '~components/scene-component/panels/styles/CssSelectorChip'
-import EmojiPickerBase from '~components/emoji/EmojiPickerBase'
 
 type CssSelectorPropType = {
   allClasses: CssClassType[]
@@ -23,9 +18,7 @@ type CssSelectorPropType = {
   onWarnAboutCssClassOrdering: () => void
 }
 
-const emojiRegex = createEmojiRegex()
 const classNameRegex = /^[a-zA-Z_-]+[\w-]*$/
-const classNameRegex2 = /^[a-zA-Z_-]*[\w-]*$/
 
 const ecuAnyValue = `__hero_any__${Math.random()}`
 const anyOption = { value: ecuAnyValue, label: 'Create new class' }
@@ -34,20 +27,9 @@ const errorOption = { value: ecuErrorValue, label: 'Invalid class name' }
 
 function CssSelector({ allClasses, classNames, selectedClassName, onSelectedClassNameChange, onCreateClassName, onDeleteClassName, onClassNamesChange, onWarnAboutCssClassOrdering }: CssSelectorPropType) {
   const [search, setSearch] = useState('')
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false)
   const [forceOpen, setForceOpen] = useState(false)
 
-  // const [{ fetching }, createCssClass] = useMutation<CreateCssClassMutationDataType>(CreateCssClassMutation)
-
-  const isError = useMemo(() => {
-    if (!search) return false
-
-    const match = search.match(emojiRegex)
-    const replaced = search.replaceAll(emojiRegex, '')
-
-    return !!replaced && !(match && match.index === 0 ? classNameRegex2.test(replaced) : classNameRegex.test(replaced))
-  }, [search])
+  const isError = useMemo(() => !!search && !classNameRegex.test(search), [search])
 
   const options = useMemo(() => isError ? [] : [...new Set(
     allClasses
@@ -61,38 +43,38 @@ function CssSelector({ allClasses, classNames, selectedClassName, onSelectedClas
   }, [])
 
   const handleSelect = useCallback((selectedValue: any) => {
+    setSearch('')
+
     if (selectedValue === ecuErrorValue || isError) return
 
     const isCreated = selectedValue === ecuAnyValue
     const addedClassName = isCreated ? search : selectedValue
 
-    setSearch('')
+    if (!addedClassName) return
 
-    if (addedClassName) {
-      const nextClassNames = [...new Set([...classNames, addedClassName])]
+    const nextClassNames = [...new Set([...classNames, addedClassName])]
 
-      if (nextClassNames.length === classNames.length) return
+    if (nextClassNames.length === classNames.length) return
 
-      if (isCreated) onCreateClassName(addedClassName)
+    if (isCreated) onCreateClassName(addedClassName)
 
-      const orderedNextClassNames = [...nextClassNames]
+    const orderedNextClassNames = [...nextClassNames]
 
-      if (!isCreated) {
-        orderedNextClassNames.sort((a, b) => {
-          const selectorA = `.${a}`
-          const selectorB = `.${b}`
-          const indexOfA = allClasses.findIndex(c => c.selector === selectorA)
-          const indexOfB = allClasses.findIndex(c => c.selector === selectorB)
+    if (!isCreated) {
+      orderedNextClassNames.sort((a, b) => {
+        const selectorA = `.${a}`
+        const selectorB = `.${b}`
+        const indexOfA = allClasses.findIndex(c => c.selector === selectorA)
+        const indexOfB = allClasses.findIndex(c => c.selector === selectorB)
 
-          return indexOfA < indexOfB ? -1 : 1
-        })
+        return indexOfA < indexOfB ? -1 : 1
+      })
 
-        if (nextClassNames.join(' ') !== orderedNextClassNames.join(' ')) onWarnAboutCssClassOrdering()
-      }
-
-      onClassNamesChange(orderedNextClassNames)
-      onSelectedClassNameChange(addedClassName)
+      if (nextClassNames.join(' ') !== orderedNextClassNames.join(' ')) onWarnAboutCssClassOrdering()
     }
+
+    onClassNamesChange(orderedNextClassNames)
+    onSelectedClassNameChange(addedClassName)
   }, [
     isError,
     search,
@@ -119,18 +101,6 @@ function CssSelector({ allClasses, classNames, selectedClassName, onSelectedClas
     handleChipDiscard(className)
     onDeleteClassName(className)
   }, [handleChipDiscard, onDeleteClassName])
-
-  const handleEmojiSelect = useCallback((_unified: string, emoji: string) => {
-    setSearch(x => x + emoji)
-    setIsEmojiPickerOpen(false)
-    setForceOpen(true)
-  }, [])
-
-  const handleEmojiOutsideClick = useCallback((event: MouseEvent | TouchEvent) => {
-    event.stopPropagation()
-
-    setIsEmojiPickerOpen(false)
-  }, [])
 
   return (
     <Div
@@ -169,7 +139,6 @@ function CssSelector({ allClasses, classNames, selectedClassName, onSelectedClas
         value={search}
         onChange={handleSearch}
         onSelect={handleSelect}
-        onOpen={setIsMenuOpen}
         forceOpen={forceOpen}
         onForceOpen={() => setForceOpen(false)}
         inputProps={{
@@ -177,56 +146,12 @@ function CssSelector({ allClasses, classNames, selectedClassName, onSelectedClas
           color: isError ? 'danger' : 'inherit',
           onClick: () => setForceOpen(true),
         }}
-        endIcon={(
-          isMenuOpen
-            ? (
-              <HiOutlineFaceSmile
-                onClick={() => setIsEmojiPickerOpen(x => !x)}
-                style={{ cursor: 'pointer' }}
-              />
-            )
-            : null
-        )}
+        Ê
         flexGrow
         flexShrink={1}
         position="initial" // Give the menu to the parent
         p={0.25}
       />
-      {isEmojiPickerOpen && (
-        <>
-          <Div
-            // Overlay to prevent outside click to select anything
-            position="fixed"
-            top={0}
-            left={0}
-            right={0}
-            bottom={0}
-            zIndex={zIndexes.emojiPicker}
-          />
-          <WithOutsideClick
-            preventFirstFire
-            onOutsideClick={handleEmojiOutsideClick}
-          >
-            <Div
-              position="fixed"
-              top={8}
-              right={8}
-              zIndex={zIndexes.emojiPicker + 1}
-            >
-              <EmojiPickerBase onChange={handleEmojiSelect} />
-            </Div>
-          </WithOutsideClick>
-        </>
-      )}
-      {false && (
-        <Div
-          position="absolute"
-          top={0}
-          bottom={0}
-          left={0}
-          right={0}
-        />
-      )}
     </Div>
   )
 }

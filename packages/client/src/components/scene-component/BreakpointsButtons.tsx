@@ -182,8 +182,9 @@ function BreakpointsButtons() {
             ghost
             toggled={bp.id === breakpoint?.id}
             color={bp.media && bp.id === breakpoint?.id ? 'breakpoint' : 'inherit'}
-            borderRight="1px solid border"
+            borderTop="1px solid border"
             borderBottom="1px solid border"
+            borderRight="1px solid border"
             _first={{
               borderLeft: '1px solid border',
             }}

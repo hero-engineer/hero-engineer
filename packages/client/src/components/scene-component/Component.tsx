@@ -72,17 +72,17 @@ function Component() {
           xflex="x4"
           height={32}
           backgroundColor="background-component"
+          my={0.5}
         >
           <Div flexGrow />
           <Div width={128} />
           <InteractiveModeButton
-            borderLeft="1px solid border"
-            borderRight="1px solid border"
-            borderBottom="1px solid border"
+            border="1px solid border"
           />
           <RemountButton
-            borderRight="1px solid border"
+            borderTop="1px solid border"
             borderBottom="1px solid border"
+            borderRight="1px solid border"
           />
           <Div width={32} />
           <BreakpointsButtons />

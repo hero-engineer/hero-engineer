@@ -27,7 +27,7 @@ function StylesList({
     >
       <Div
         xflex="x5b"
-        height={30} // To match a ghost button's height
+        height={31} // To match a ghost button's height
       >
         <StylesAttributeTitle
           attributeNames={[attributeName]}

@@ -108,14 +108,13 @@ function PanelStyles() {
 
   // The attributes for the complete styling
   // Displayed when no class is selected
-  const fullAttributes = useMemo(() => normalizeCssAttributes(getCascadingCssAttributes(masterBreakpointClasses)), [masterBreakpointClasses])
-  const fullBreakpointAttributes = useMemo(() => normalizeCssAttributes(getCascadingCssAttributes(breakpointClasses)), [breakpointClasses])
-  const fullCurrentBreakpointAttributes = useMemo(() => normalizeCssAttributes(getCascadingCssAttributes(currentBreakpointClasses)), [currentBreakpointClasses]) // Might be unused
+  const fullAttributes = useMemo(() => normalizeCssAttributes(deleteAndConvertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(masterBreakpointClasses), updatedAttributes))), [masterBreakpointClasses, updatedAttributes])
+  const fullBreakpointAttributes = useMemo(() => normalizeCssAttributes(deleteAndConvertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(breakpointClasses), updatedAttributes))), [breakpointClasses, updatedAttributes])
+  const fullCurrentBreakpointAttributes = useMemo(() => normalizeCssAttributes(deleteAndConvertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(currentBreakpointClasses), updatedAttributes))), [currentBreakpointClasses, updatedAttributes])
 
   // The attributes for the selected class
   // Displayed when a class is selected
-  // TODO investigate why the tertiary operator on media and create comment about it
-  const selectedAttributes = useMemo(() => normalizeCssAttributes(deleteAndConvertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(selectedMasterBreakpointClasses), breakpoint.media ? [] : updatedAttributes))), [selectedMasterBreakpointClasses, breakpoint, updatedAttributes])
+  const selectedAttributes = useMemo(() => normalizeCssAttributes(deleteAndConvertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(selectedMasterBreakpointClasses), updatedAttributes))), [selectedMasterBreakpointClasses, updatedAttributes])
   const selectedBreakpointAttributes = useMemo(() => normalizeCssAttributes(deleteAndConvertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(selectedBreakpointClasses), updatedAttributes))), [selectedBreakpointClasses, updatedAttributes])
   const selectedCurrentBreakpointAttributes = useMemo(() => normalizeCssAttributes(deleteAndConvertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(selectedCurrentBreakpointClasses), updatedAttributes))), [selectedCurrentBreakpointClasses, updatedAttributes])
 
@@ -130,11 +129,14 @@ function PanelStyles() {
   const handleCssUpdate = useCallback(async () => {
     if (!selectedClassName) return
     if (!classNames.length || previousAttributesHash === attributesHash) return
-    // if (!isStyleUpdated) return
 
     const attributes = Object.values(selectedBreakpointAttributes)
 
-    if (!areAttributesValid(attributes)) return
+    if (!areAttributesValid(attributes)) {
+      console.log('Invalid attributes!', attributes)
+
+      return
+    }
 
     const { filePath, code } = await updateSelector(`.${selectedClassName}`, attributes, breakpoint)
 
@@ -152,7 +154,6 @@ function PanelStyles() {
     previousAttributesHash,
     selectedClassName,
     breakpoint,
-    // isStyleUpdated,
     handleRefreshClasses,
     saveFile,
   ])
@@ -237,7 +238,6 @@ function PanelStyles() {
     if (!selectedClassName) return
 
     const mergedAttributes = mergeCssAttributes(updatedAttributes, attributes)
-    // setIsStyleUpdated(true)
     setUpdatedAttributes(mergedAttributes)
     handleUpdateElementStyle(mergedAttributes)
   }, [selectedClassName, updatedAttributes, handleUpdateElementStyle])
@@ -371,7 +371,6 @@ function PanelStyles() {
 
   // Reset style state on new breakpoint or new selected className
   useEffect(() => {
-    // setIsStyleUpdated(false)
     setUpdatedAttributes([])
     handleUpdateElementStyle([])
   // Omiting handleUpdateElementStyle on purpose as it would trigger the effect on every hierarchy change

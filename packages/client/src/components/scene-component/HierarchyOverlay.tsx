@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useContext, useEffect, useState } from 'react'
+import { ReactNode, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { Div } from 'honorable'
 
 import { HierarchyType } from '~types'
@@ -14,11 +14,14 @@ type HierarchyOverlayPropsType = {
 }
 
 function HierarchyOverlay({ children }: HierarchyOverlayPropsType) {
+  const childrenRef = useRef<HTMLDivElement>(null)
+
   const { isDragging, width, height } = useContext(BreakpointContext)
   const { isInteractiveMode } = useContext(IsInteractiveModeContext)
   const { hierarchy, currentHierarchyId, setCurrentHierarchyId } = useContext(HierarchyContext)
 
   const [isScrolling, setIsScrolling] = useState(false)
+  const [refresh, setRefresh] = useState(0)
 
   const renderOverlayElement = useCallback((hierarchy: HierarchyType, parentHierarchy: HierarchyType | null = null) => {
     if (hierarchy.type === 'text') return null
@@ -53,7 +56,7 @@ function HierarchyOverlay({ children }: HierarchyOverlayPropsType) {
       </Div>
     )
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hierarchy, width, height, renderOverlayElement])
+  }, [hierarchy, width, height, refresh, renderOverlayElement])
 
   useEffect(() => {
     if (!isScrolling) return
@@ -67,14 +70,34 @@ function HierarchyOverlay({ children }: HierarchyOverlayPropsType) {
     }
   }, [isScrolling])
 
+  useEffect(() => {
+    if (!childrenRef.current) return
+
+    const mutationObserver = new MutationObserver(() => {
+      setRefresh(x => x + 1)
+    })
+
+    mutationObserver.observe(childrenRef.current, {
+      characterData: true,
+      attributes: true,
+      childList: true,
+      subtree: true,
+    })
+
+    return () => {
+      mutationObserver.disconnect()
+    }
+  }, [])
+
   return (
     <Div
       xflex="y2s"
       position="relative"
       height={height}
-      overflow="hidden"
     >
-      {children}
+      <div ref={childrenRef}>
+        {children}
+      </div>
       {!(isDragging || isInteractiveMode) && renderOverlay()}
     </Div>
   )
