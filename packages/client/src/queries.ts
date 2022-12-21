@@ -76,6 +76,16 @@ export type PackagesUpdatesQueryDataType = {
   packagesUpdates: PackageType[]
 }
 
+export const FileQuery = `
+  query  ($filePath: String!) {
+    file (filePath: $filePath)
+  }
+`
+
+export type FileQueryDataType = {
+  file: string
+}
+
 export const FilesQuery = `
   query {
     files {

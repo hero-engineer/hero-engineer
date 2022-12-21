@@ -15,6 +15,7 @@ function ResponsiveLayout({ children }: ResponsiveLayoutPropsType) {
       <Div
         xflex="y2s"
         flexGrow
+        width="100%"
         maxWidth={1024 + 256 + 64 + 16 + 4}
         mx="auto"
         mt={1}

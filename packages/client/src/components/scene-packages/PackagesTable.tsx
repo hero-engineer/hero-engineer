@@ -28,26 +28,18 @@ function PackagesTable({ packages, updatedPackages }: PackagesTablePropsType) {
       pb={0.5}
     >
       <Div
-        xflex="x4"
+        display="grid"
+        gridTemplateColumns="1fr 2fr 1fr"
         fontWeight={500}
         py={1}
       >
-        <Div
-          width="25%"
-          px={1}
-        >
+        <Div px={1}>
           Name
         </Div>
-        <Div
-          width="50%"
-          px={1}
-        >
+        <Div px={1}>
           Version
         </Div>
-        <Div
-          width="25%"
-          px={1}
-        >
+        <Div px={1}>
           Actions
         </Div>
       </Div>
@@ -130,19 +122,14 @@ function PackageTableRow({ pkg, updatedPackages }: PackageTableRowPropsType) {
 
   return (
     <Div
-      xflex="x4"
+      display="grid"
+      gridTemplateColumns="1fr 2fr 1fr"
       py={0.5}
     >
-      <Div
-        width="25%"
-        px={1}
-      >
+      <Div px={1}>
         {pkg.name}
       </Div>
-      <Div
-        width="50%"
-        px={1}
-      >
+      <Div px={1}>
         {isEditing ? (
           <Form onSubmit={handleSubmit}>
             <Input
@@ -155,7 +142,6 @@ function PackageTableRow({ pkg, updatedPackages }: PackageTableRowPropsType) {
         ) : pkg.version}
       </Div>
       <Div
-        width="25%"
         xflex="x1s"
         gap={0.5}
         px={1}

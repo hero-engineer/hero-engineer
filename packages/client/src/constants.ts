@@ -15,7 +15,6 @@ export const zIndexes = {
 
 export const refetchKeys = {
   all: 'all',
-  componentMetadata: 'componentMetadata',
   undoRedoMetadata: 'undoRedoMetadata',
   packages: 'packages',
   packagesUpdates: 'packagesUpdates',

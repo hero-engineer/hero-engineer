@@ -1,9 +1,13 @@
-import { useMemo } from 'react'
+import { useContext, useMemo } from 'react'
 import { Div, H1, Spinner } from 'honorable'
+
+import { PackageType } from '~types'
 
 import { refetchKeys } from '~constants'
 
-import { PackagesQuery, PackagesQueryDataType, PackagesUpdatesQuery, PackagesUpdatesQueryDataType } from '~queries'
+import { FileQuery, FileQueryDataType, PackagesUpdatesQuery, PackagesUpdatesQueryDataType } from '~queries'
+
+import EnvContext from '~contexts/EnvContext'
 
 import useQuery from '~hooks/useQuery'
 import useRefetch from '~hooks/useRefetch'
@@ -13,23 +17,51 @@ import AddPackageButton from '~components/scene-packages/AddPackageButton'
 
 // Packages scene
 function Packages() {
-  const [packagesQueryResult, refetchPackagesQuery] = useQuery<PackagesQueryDataType>({
-    query: PackagesQuery,
+  const env = useContext(EnvContext)
+
+  const [fileQueryResult, refetchFileQuery] = useQuery<FileQueryDataType>({
+    query: FileQuery,
+    variables: {
+      filePath: `${env.VITE_CWD}/package.json`,
+    },
   })
+
   const [packagesUpdatesQueryResult, refetchPackagesUpdatesQuery] = useQuery<PackagesUpdatesQueryDataType>({
     query: PackagesUpdatesQuery,
   })
 
-  const isFetching = useMemo(() => packagesQueryResult.fetching || packagesUpdatesQueryResult.fetching, [packagesQueryResult.fetching, packagesUpdatesQueryResult.fetching])
-  const packages = useMemo(() => packagesQueryResult.data?.packages ?? [], [packagesQueryResult.data])
+  const { dependencies, devDependencies } = useMemo<{ dependencies: PackageType[], devDependencies: PackageType[] }>(() => {
+    if (!fileQueryResult.data) return { dependencies: [], devDependencies: [] }
+
+    try {
+      const { dependencies, devDependencies } = JSON.parse(fileQueryResult.data.file)
+
+      return {
+        dependencies: Object.entries(dependencies).map(([name, version]) => ({
+          name,
+          version: version as string,
+          type: 'dependencies' as const,
+        })),
+        devDependencies: Object.entries(devDependencies).map(([name, version]) => ({
+          name,
+          version: version as string,
+          type: 'devDependencies' as const,
+        })),
+      }
+    }
+    catch (error) {
+      console.error(error)
+
+      return { dependencies: [], devDependencies: [] }
+    }
+  }, [fileQueryResult.data])
   const packagesUpdates = useMemo(() => packagesUpdatesQueryResult.data?.packagesUpdates ?? [], [packagesUpdatesQueryResult.data])
-  const dependencies = useMemo(() => packages.filter(pkg => pkg.type === 'dependencies'), [packages])
-  const devDependencies = useMemo(() => packages.filter(pkg => pkg.type === 'devDependencies'), [packages])
+  const isFetching = useMemo(() => fileQueryResult.fetching || packagesUpdatesQueryResult.fetching, [fileQueryResult.fetching, packagesUpdatesQueryResult.fetching])
 
   useRefetch(
     {
       key: refetchKeys.packages,
-      refetch: refetchPackagesQuery,
+      refetch: refetchFileQuery,
     },
     {
       key: refetchKeys.packagesUpdates,
@@ -43,7 +75,9 @@ function Packages() {
         xflex="x4"
         gap={1}
       >
-        <H1>Packages</H1>
+        <H1>
+          Packages
+        </H1>
         {isFetching && <Spinner />}
       </Div>
       <Div
