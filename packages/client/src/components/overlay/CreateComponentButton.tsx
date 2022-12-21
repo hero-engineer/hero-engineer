@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useContext, useState } from 'react'
 import { useMutation } from 'urql'
 import { useNavigate } from 'react-router-dom'
 import { Button, Div, H2, Input, Modal, Tooltip } from 'honorable'
@@ -6,10 +6,20 @@ import { AiOutlinePlus } from 'react-icons/ai'
 
 import { SaveFileMutation, SaveFileMutationDataType } from '~queries'
 
+import EnvContext from '~contexts/EnvContext'
+
+import createComponentCode from '~data/componentTemplate'
+
+const componentNameRegex = /^[A-Z][a-zA-Z0-9]*$/
+
 // A button that pops a modal for creating a new component
 function CreateComponentButton(props: any) {
-  const [name, setName] = useState('')
+  const env = useContext(EnvContext)
+
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [name, setName] = useState('')
+  const [relativePath, setRelativePath] = useState('components/')
+  const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
 
   const [, saveFile] = useMutation<SaveFileMutationDataType>(SaveFileMutation)
@@ -17,17 +27,29 @@ function CreateComponentButton(props: any) {
   const handleCreateComponentClick = useCallback(async () => {
     if (!name) return
 
-    // const results = await createComponent({ name })
+    if (!componentNameRegex.test(name)) {
+      window.alert('Invalid component name. Components names must start with a capital letter and contain only letters and numbers.')
 
-    setIsModalOpen(false)
+      return
+    }
+
+    setIsLoading(true)
+
+    const code = createComponentCode(name)
+    const fullRelativePath = `${relativePath}${relativePath.endsWith('/') || name.startsWith('/') ? '' : '/'}${name}`
+
+    await saveFile({
+      filePath: `${env.VITE_CWD}/src/${fullRelativePath}.tsx`,
+      code,
+      commitMessage: `Create component ${name}`,
+    })
+
+    navigate(`/_hero_/~/${fullRelativePath}`)
     setName('')
-
-    // if (!results.data) return
-
-    // const { file, component } = results.data.createComponent
-
-    // navigate(`/_hero_/component/${file.address}/${component.address}`)
-  }, [name])
+    setRelativePath('components/')
+    setIsModalOpen(false)
+    setIsLoading(false)
+  }, [env.VITE_CWD, name, relativePath, saveFile, navigate])
 
   return (
     <>
@@ -48,12 +70,29 @@ function CreateComponentButton(props: any) {
         onClose={() => setIsModalOpen(false)}
       >
         <H2>Create component</H2>
+        <Div
+          fontWeight="bold"
+          mt={2}
+        >
+          Name
+        </Div>
         <Input
           width="100%"
           value={name}
           onChange={e => setName(e.target.value)}
-          placeholder="Component name"
+          placeholder="ProductCard"
+        />
+        <Div
+          fontWeight="bold"
           mt={2}
+        >
+          Path
+        </Div>
+        <Input
+          width="100%"
+          value={relativePath}
+          onChange={e => setRelativePath(e.target.value)}
+          startIcon="src/"
         />
         <Div
           xflex="x6"
@@ -63,7 +102,10 @@ function CreateComponentButton(props: any) {
           <Button onClick={() => setIsModalOpen(false)}>
             Cancel
           </Button>
-          <Button onClick={handleCreateComponentClick}>
+          <Button
+            loading={isLoading}
+            onClick={handleCreateComponentClick}
+          >
             Create
           </Button>
         </Div>

@@ -3,17 +3,14 @@ export function convertToComponentPath(path: string) {
 
   const pathArray = path.split('.')
 
-  const extension = pathArray.pop()
+  // Pop extension
+  pathArray.pop()
 
-  return `${pathArray.join('.')}/${extension}`
+  return encodeURIComponent(`${pathArray.join('.')}`)
 }
 
 export function convertFromComponentPath(ecuPath: string) {
   if (!ecuPath) return ecuPath
 
-  const pathArray = ecuPath.split('/')
-
-  const extension = pathArray.pop()
-
-  return `${pathArray.join('/')}.${extension}`
+  return `${decodeURIComponent(ecuPath)}.tsx`
 }

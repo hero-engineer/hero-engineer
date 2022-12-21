@@ -22,20 +22,22 @@ function extractRelativePath(path: string) {
 function FilesTree({ filter }: FilesTreePropsType) {
   const filePaths = useContext(FilePathsContext)
 
-  console.log('filePaths', filePaths)
-
   return (
     <Div>
       {filePaths.map(filePath => {
         if (typeof filter === 'function' && !filter(filePath)) return null
 
         const relativePath = extractRelativePath(filePath)
+        const labelParts = relativePath.split('/').pop()?.split('.')
+
+        // Pop extension
+        labelParts?.pop()
 
         return (
           <Div key={relativePath}>
             <TabLink
               to={`/_hero_/~/${convertToComponentPath(relativePath)}`}
-              label={relativePath.split('/').pop() ?? '?'}
+              label={labelParts?.join('.') ?? '?'}
             >
               {relativePath}
             </TabLink>

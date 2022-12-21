@@ -32,7 +32,12 @@ function Component() {
 
     if (tabs.some(tab => tab.url === url)) return
 
-    setTabs(tabs => [...tabs, { url, label: componentPath.split('/').pop() ?? '?' }])
+    const labelParts = componentPath.split('/').pop()?.split('.')
+
+    // Pop extension
+    labelParts?.pop()
+
+    setTabs(tabs => [...tabs, { url, label: labelParts?.join('.') ?? '?' }])
   // Omitting tabs to trigger on ecuComponentPath change only
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ecuComponentPath, componentPath, setTabs])
