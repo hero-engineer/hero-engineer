@@ -57,3 +57,26 @@ html {
   .foo {
   }
 }
+
+.bar {
+}
+
+@media screen and (min-width: 1280px) {
+  .bar {
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .bar {
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .bar {
+  }
+}
+
+@media screen and (max-width: 478px) {
+  .bar {
+  }
+}
