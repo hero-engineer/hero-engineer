@@ -37,6 +37,7 @@ html {
 
 @media screen and (max-width: 991px) {
   .w2 {
+    width: 256px;
   }
 }
 
