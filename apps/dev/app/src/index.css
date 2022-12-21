@@ -28,6 +28,7 @@ html {
 }
 
 .w2 {
+  min-height: auto !important;
   text-align: center;
   display: block;
   justify-content: center;
