@@ -43,6 +43,7 @@ html {
 
 @media screen and (max-width: 991px) {
   .foo {
+    font-family: Inter, sans-serif;
   }
 }
 
