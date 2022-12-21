@@ -45,9 +45,9 @@ function CreateComponentButton(props: any) {
     })
 
     navigate(`/_hero_/~/${fullRelativePath}`)
+    setIsModalOpen(false)
     setName('')
     setRelativePath('components/')
-    setIsModalOpen(false)
     setIsLoading(false)
   }, [env.VITE_CWD, name, relativePath, saveFile, navigate])
 
