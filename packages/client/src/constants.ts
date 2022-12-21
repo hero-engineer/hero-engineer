@@ -1,15 +1,15 @@
 export const zIndexes = {
   tooltip: 99999999999, // 11 9
   snackBar: 9999999999, // 10 9
-  modal: 999999999, // 9 9
-  // emojiPicker: 999999999, // 9 9
-  colorPicker: 999999999, // 9 9
-  breakpointsMenu: 999999999, // 9 9
-  cssSelectorChipMenu: 999999999, // 9 9
-  componentIframeExpanderHandle: 99999999, // 8 9
-  retractablePanel: 9999999, // 7 9
-  hierarchyOverlayElement: 999999, // 6 9
-  tabDropGhost: 99999, // 5 9
+  modal: 99999, // 5 9
+  // emojiPicker: 99999, // 5 9
+  colorPicker: 99999, // 5 9
+  breakpointsMenu: 99999, // 5 9
+  cssSelectorChipMenu: 99999, // 5 9
+  componentIframeExpanderHandle: 9999, // 4 9
+  retractablePanel: 999, // 3 9
+  hierarchyOverlayElement: 99, // 2 9
+  tabDropGhost: 9, // 1 9
   hierarchyBarItem: 9, // 1 9
 }
 
