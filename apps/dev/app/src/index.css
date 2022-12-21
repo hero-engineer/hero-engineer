@@ -28,8 +28,8 @@ html {
 }
 
 .w2 {
+  display: block;
   justify-content: center;
-  display: flex;
   margin-right: auto;
   margin-left: auto;
 }
