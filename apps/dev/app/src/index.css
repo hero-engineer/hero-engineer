@@ -28,8 +28,8 @@ html {
 }
 
 .w2 {
+  text-align: inherit;
   min-height: auto;
-  text-align: center;
   display: block;
   justify-content: center;
   margin-right: auto;
