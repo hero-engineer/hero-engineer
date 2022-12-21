@@ -1,6 +1,6 @@
 function App() {
   return (
-    <div className="w2">
+    <div>
       Edit me I'm famous
     </div>
   )
