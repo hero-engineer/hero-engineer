@@ -28,6 +28,7 @@ html {
 }
 
 .w2 {
+  justify-content: center;
   display: flex;
   margin-right: auto;
   margin-left: auto;
