@@ -28,6 +28,7 @@ html {
 }
 
 .w2 {
+  width: 128px;
   text-align: inherit;
   min-height: auto;
   display: block;
