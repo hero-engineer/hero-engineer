@@ -33,6 +33,7 @@ html {
 
 
 .foo {
+  display: flex;
   font-family: Inter, sans-serif;
 }
 
