@@ -1,9 +1,11 @@
 /* --
  * DO NOT DELETE THIS FILE
  * HeroEngineerDecorator.tsx is used to decorate any Hero Engineer component
- * Its primary role is to inject the index.css into the Hero Engineer iframe
+ * Its primary role is to inject the CSS into the Hero Engineer iframe
 -- */
 import { ReactNode, useEffect, useState } from 'react'
+
+import normalizeCss from 'normalize.css'
 
 import indexCss from '../index.css?inline'
 
@@ -24,7 +26,7 @@ function HeroEngineerDecorator({ children, head }: HeroEngineerCommonDecoratorPr
 
     const style = document.createElement('style')
 
-    style.innerHTML = indexCss
+    style.innerHTML = `${normalizeCss}\n${indexCss}`
 
     head.appendChild(style)
 
