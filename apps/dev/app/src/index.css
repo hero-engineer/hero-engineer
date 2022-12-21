@@ -31,34 +31,3 @@ html {
   box-sizing: inherit;
 }
 
-.w2 {
-  font-size: inherit;
-  font-family: inherit;
-  text-align: inherit;
-  min-height: auto;
-  justify-content: center;
-  margin-right: auto;
-  margin-left: auto;
-}
-
-@media screen and (min-width: 1280px) {
-  .w2 {
-  }
-}
-
-@media screen and (max-width: 991px) {
-  .w2 {
-    margin-right: auto;
-    margin-left: auto;
-  }
-}
-
-@media screen and (max-width: 767px) {
-  .w2 {
-  }
-}
-
-@media screen and (max-width: 478px) {
-  .w2 {
-  }
-}
