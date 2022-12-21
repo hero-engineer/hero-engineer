@@ -26,3 +26,26 @@ html {
 *, *:before, *:after {
   box-sizing: inherit;
 }
+
+.w2 {
+}
+
+@media screen and (min-width: 1280px) {
+  .w2 {
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .w2 {
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .w2 {
+  }
+}
+
+@media screen and (max-width: 478px) {
+  .w2 {
+  }
+}
