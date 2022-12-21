@@ -1,22 +1,17 @@
-import { useMemo } from 'react'
+import { useContext } from 'react'
 import { Div } from 'honorable'
 
-import { refetchKeys } from '~constants'
-
-import { FilePathsQuery, FilePathsQueryDataType } from '~queries'
-
-import useQuery from '~hooks/useQuery'
-import useRefetch from '~hooks/useRefetch'
+import FilePathsContext from '~contexts/FilePathsContext'
 
 import { convertToComponentPath } from '~utils/convertComponentPath'
 
 import TabLink from '~components/layout/TabLink'
 
 type FilesTreePropsType = {
-  filter?: (relativePath: string) => boolean
+  filter?: (filePath: string) => boolean
 }
 
-const lookup = 'app/src/'
+const lookup = '/src/'
 
 function extractRelativePath(path: string) {
   const index = path.indexOf(lookup)
@@ -25,23 +20,16 @@ function extractRelativePath(path: string) {
 }
 
 function FilesTree({ filter }: FilesTreePropsType) {
-  const [filePathsQueryResult, refetchFilePathsQuery] = useQuery<FilePathsQueryDataType>({
-    query: FilePathsQuery,
-  })
+  const filePaths = useContext(FilePathsContext)
 
-  useRefetch({
-    key: refetchKeys.filePaths,
-    refetch: refetchFilePathsQuery,
-  })
-
-  const paths = useMemo(() => filePathsQueryResult.data?.filePaths ?? [], [filePathsQueryResult.data])
+  console.log('filePaths', filePaths)
 
   return (
     <Div>
-      {paths.map(path => {
-        const relativePath = extractRelativePath(path)
+      {filePaths.map(filePath => {
+        if (typeof filter === 'function' && !filter(filePath)) return null
 
-        if (typeof filter === 'function' && !filter(relativePath)) return null
+        const relativePath = extractRelativePath(filePath)
 
         return (
           <Div key={relativePath}>

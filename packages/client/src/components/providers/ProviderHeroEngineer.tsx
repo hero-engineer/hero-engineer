@@ -13,8 +13,10 @@ import ThemeModeContext, { ThemeModeContextType } from '~contexts/ThemeModeConte
 import SnackBarContext, { SnackBarContextType } from '~contexts/SnackBarContext'
 import TabsContext, { TabsContextType } from '~contexts/TabsContext'
 
-import useCreateRefetchRegistry from '~hooks/useCreateRefetchRegistry'
 import usePersistedState from '~hooks/usePersistedState'
+import useCreateRefetchRegistry from '~hooks/useCreateRefetchRegistry'
+
+import ProviderFilePaths from '~components/providers/ProviderFilePaths'
 
 import client from '../../client'
 
@@ -25,17 +27,14 @@ type ProviderHeroEngineerPropsType = {
 
 // The providers for the whole application
 function ProviderHeroEngineer({ env, children }: ProviderHeroEngineerPropsType) {
+  const { refetch, register } = useCreateRefetchRegistry()
+  const refetchContextValue = useMemo<RefetchContextType>(() => ({ refetch, register }), [refetch, register])
+
   const [logs, setLogs] = usePersistedState<LogsType>('logs', { typescript: false, css: false })
   const logsContextValue = useMemo<LogsContextType>(() => ({ logs, setLogs }), [logs, setLogs])
 
   const [warnings, setWarnings] = usePersistedState<WarningsType>('warnings', { cssClassOrdering: true })
   const warningsContextValue = useMemo<WarningsContextType>(() => ({ warnings, setWarnings }), [warnings, setWarnings])
-
-  const { refetch, register } = useCreateRefetchRegistry()
-  const refetchContextValue = useMemo<RefetchContextType>(() => ({ refetch, register }), [refetch, register])
-
-  const [themeMode, setThemeMode] = usePersistedState<'light' | 'dark'>('theme-mode', 'dark')
-  const themeModeContextValue = useMemo<ThemeModeContextType>(() => ({ themeMode, setThemeMode }), [themeMode, setThemeMode])
 
   const [snackBarItems, setSnackBarItems] = useState<SnackBarItemType[]>([])
   const appendSnackBarItem = useCallback((item: SnackBarItemType) => setSnackBarItems(x => [...x, item]), [])
@@ -44,23 +43,28 @@ function ProviderHeroEngineer({ env, children }: ProviderHeroEngineerPropsType) 
   const [tabs, setTabs] = usePersistedState<TabType[]>('tabs', [])
   const tabsContextValue = useMemo<TabsContextType>(() => ({ tabs, setTabs }), [tabs, setTabs])
 
+  const [themeMode, setThemeMode] = usePersistedState<'light' | 'dark'>('theme-mode', 'dark')
+  const themeModeContextValue = useMemo<ThemeModeContextType>(() => ({ themeMode, setThemeMode }), [themeMode, setThemeMode])
+
   return (
     <GraphqlProvider value={client}>
       <DndProvider backend={HTML5Backend}>
         <EnvContext.Provider value={env}>
-          <LogsContext.Provider value={logsContextValue}>
-            <WarningContext.Provider value={warningsContextValue}>
-              <RefetchContext.Provider value={refetchContextValue}>
-                <ThemeModeContext.Provider value={themeModeContextValue}>
-                  <SnackBarContext.Provider value={snackBarContextValue}>
-                    <TabsContext.Provider value={tabsContextValue}>
-                      {children}
-                    </TabsContext.Provider>
-                  </SnackBarContext.Provider>
-                </ThemeModeContext.Provider>
-              </RefetchContext.Provider>
-            </WarningContext.Provider>
-          </LogsContext.Provider>
+          <RefetchContext.Provider value={refetchContextValue}>
+            <LogsContext.Provider value={logsContextValue}>
+              <WarningContext.Provider value={warningsContextValue}>
+                <SnackBarContext.Provider value={snackBarContextValue}>
+                  <TabsContext.Provider value={tabsContextValue}>
+                    <ThemeModeContext.Provider value={themeModeContextValue}>
+                      <ProviderFilePaths>
+                        {children}
+                      </ProviderFilePaths>
+                    </ThemeModeContext.Provider>
+                  </TabsContext.Provider>
+                </SnackBarContext.Provider>
+              </WarningContext.Provider>
+            </LogsContext.Provider>
+          </RefetchContext.Provider>
         </EnvContext.Provider>
       </DndProvider>
     </GraphqlProvider>

@@ -2,12 +2,14 @@ import { H1 } from 'honorable'
 
 import FilesTree from '~components/scene-components/FilesTree'
 
-const filterComponents = (relativePath: string) => relativePath.endsWith('.tsx') && !relativePath.startsWith('decorators/') && relativePath !== 'main.tsx'
+const filterComponents = (filePath: string) => filePath.endsWith('.tsx') && !filePath.includes('/decorators/') && !filePath.endsWith('main.tsx')
 
 function Components() {
   return (
     <>
-      <H1 mb={2}>Components</H1>
+      <H1 mb={2}>
+        Components
+      </H1>
       <FilesTree filter={filterComponents} />
     </>
   )

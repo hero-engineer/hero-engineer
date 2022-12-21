@@ -107,6 +107,7 @@ type SpacingItemPropsType = {
 
 function SpacingItem({ spacing, isEditMode, onChange, onDelete }: SpacingItemPropsType) {
   const [name, setName] = useState(spacing.name)
+  const [value, setValue] = useState(spacing.value)
 
   const handleUpdateName = useCallback(() => {
     if (!name) return
@@ -145,8 +146,9 @@ function SpacingItem({ spacing, isEditMode, onChange, onDelete }: SpacingItemPro
           fontSize="0.75rem"
         >
           <CssValueInput
-            value={spacing.value}
-            onChange={value => onChange({ ...spacing, value })}
+            value={value}
+            onChange={setValue}
+            onBlur={() => onChange({ ...spacing, value })}
           />
         </Div>
       ) : (
@@ -165,13 +167,18 @@ function SpacingItem({ spacing, isEditMode, onChange, onDelete }: SpacingItemPro
       {isEditMode && (
         <Div
           xflex="x5"
-          flexShrink={0}
-          color="danger"
-          fontSize="0.75rem"
-          cursor="pointer"
-          onClick={onDelete}
+          gap={0.5}
         >
-          <SlTrash />
+          <Div
+            xflex="x5"
+            flexShrink={0}
+            color="danger"
+            fontSize="0.75rem"
+            cursor="pointer"
+            onClick={onDelete}
+          >
+            <SlTrash />
+          </Div>
         </Div>
       )}
     </Div>

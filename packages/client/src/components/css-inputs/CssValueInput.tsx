@@ -9,15 +9,16 @@ import splitSpacingValue from '~utils/splitSpacingValue'
 import trimLeadingZeroes from '~utils/trimLeadingZeroes'
 
 type CssValueInputPropsType = {
-  value: string
-  onChange: (value: string) => void
   allowInherit?: boolean
   large?: boolean
+  value: string
+  onChange: (value: string) => void
+  onBlur?: () => void
 }
 
 const validationRegex = /^auto|inherit|[0-9-+*%/\s]+(?:px|%|rem|em|vw|vh|vmin|vmax|ch|ex|mm|cm|in|pt|pc|svh|lvh|dvh)*$/
 
-function CssValueInput({ value, onChange, allowInherit = false, large }: CssValueInputPropsType) {
+function CssValueInput({ allowInherit = false, large = false, value, onChange, onBlur }: CssValueInputPropsType) {
   const [rawValue, unit = allowInherit ? 'inherit' : 'auto'] = splitSpacingValue(value)
   const [isUnitMenuOpen, setIsUnitMenuOpen] = useState(false)
 
@@ -140,6 +141,7 @@ function CssValueInput({ value, onChange, allowInherit = false, large }: CssValu
         value={rawValue}
         onChange={handleInputChange}
         onEnter={handleInputEvalutate}
+        onBlur={onBlur}
         backgroundColor="background"
         endIcon={renderAdornment()}
         width={large ? 128 - 32 : undefined}
