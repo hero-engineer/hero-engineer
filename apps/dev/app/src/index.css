@@ -44,8 +44,9 @@ html {
 
 @media screen and (max-width: 991px) {
   .foo {
-    display: flex;
+    flex-direction: column;
     font-family: "Lobster Two", sans-serif;
+    display: flex;
   }
 }
 
