@@ -1,7 +1,7 @@
-import { memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { A, Div } from 'honorable'
 
-import { CssAttributeType } from '~types'
+import { BreakpointType, CssAttributeType, NormalizedCssAttributesType } from '~types'
 
 import { SaveFileMutation, SaveFileMutationDataType } from '~queries'
 
@@ -19,7 +19,7 @@ import StylesContext, { StylesContextType } from '~contexts/StylesContext'
 import useAsync from '~hooks/useAsync'
 import useMutation from '~hooks/useMutation'
 import usePersistedState from '~hooks/usePersistedState'
-import useThrottleAsynchronous from '~hooks/useThrottleAsynchronous'
+import useCssUpdate from '~hooks/useCssUpdate'
 
 import findHierarchy from '~utils/findHierarchy'
 import findSimilarHierarchies from '~utils/findSimilarHierarchies'
@@ -107,20 +107,26 @@ function PanelStyles() {
   const selectedCurrentBreakpointClasses = useMemo(() => filterClassesByClassNamesAndMedias(allClasses, [selectedClassName], [breakpoint.media]), [allClasses, selectedClassName, breakpoint.media])
   // The attributes for the complete styling
   // Displayed when no class is selected
-  const fullAttributes = useMemo(() => normalizeCssAttributes(convertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(masterBreakpointClasses), updatedAttributes))), [masterBreakpointClasses, updatedAttributes])
-  const fullBreakpointAttributes = useMemo(() => normalizeCssAttributes(convertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(breakpointClasses), updatedAttributes))), [breakpointClasses, updatedAttributes])
-  const fullCurrentBreakpointAttributes = useMemo(() => normalizeCssAttributes(convertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(currentBreakpointClasses), updatedAttributes))), [currentBreakpointClasses, updatedAttributes])
+  const fullAttributes = useMemo(() => normalizeCssAttributes(convertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(masterBreakpointClasses), deleteCssAttributes(updatedAttributes)))), [masterBreakpointClasses, updatedAttributes])
+  const fullBreakpointAttributes = useMemo(() => normalizeCssAttributes(convertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(breakpointClasses), deleteCssAttributes(updatedAttributes)))), [breakpointClasses, updatedAttributes])
+  const fullCurrentBreakpointAttributes = useMemo(() => normalizeCssAttributes(convertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(currentBreakpointClasses), deleteCssAttributes(updatedAttributes)))), [currentBreakpointClasses, updatedAttributes])
   // The attributes for the selected class
   // Displayed when a class is selected
-  const selectedAttributes = useMemo(() => normalizeCssAttributes(convertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(selectedMasterBreakpointClasses), updatedAttributes))), [selectedMasterBreakpointClasses, updatedAttributes])
-  const selectedBreakpointAttributes = useMemo(() => normalizeCssAttributes(convertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(selectedBreakpointClasses), updatedAttributes))), [selectedBreakpointClasses, updatedAttributes])
+  const selectedAttributes = useMemo(() => normalizeCssAttributes(convertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(selectedMasterBreakpointClasses), deleteCssAttributes(updatedAttributes)))), [selectedMasterBreakpointClasses, updatedAttributes])
+  const selectedBreakpointAttributes = useMemo(() => normalizeCssAttributes(deleteCssAttributes(convertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(selectedBreakpointClasses), updatedAttributes)))), [selectedBreakpointClasses, updatedAttributes])
   const selectedCurrentBreakpointAttributes = useMemo(() => normalizeCssAttributes(deleteCssAttributes(convertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(selectedCurrentBreakpointClasses), updatedAttributes)))), [selectedCurrentBreakpointClasses, updatedAttributes])
 
   const handleRefreshClasses = useCallback(() => {
     setClassesRefresh(x => x + 1)
   }, [])
 
-  const handleCssUpdate = useCallback(async () => {
+  const handleCssUpdate = useCallback(async (
+    selectedClassName: string,
+    classNames: string[],
+    updatedAttributes: CssAttributeType[],
+    selectedCurrentBreakpointAttributes: NormalizedCssAttributesType,
+    breakpoint: BreakpointType,
+  ) => {
     if (!(selectedClassName && classNames.length && updatedAttributes.length)) return
 
     const attributes = Object.values(selectedCurrentBreakpointAttributes)
@@ -131,26 +137,18 @@ function PanelStyles() {
       return
     }
 
-    const { filePath, code } = await updateSelector(`.${selectedClassName}`, attributes, breakpoint)
+    const { filePath, code } = await updateSelector(`.${selectedClassName}`, breakpoint, attributes)
 
     handleRefreshClasses()
 
     await saveFile({
       filePath,
       code,
-      commitMessage: `Update .${selectedClassName} in index.css`,
+      commitMessage: `Update selector .${selectedClassName} in index.css`,
     })
-  }, [
-    classNames,
-    updatedAttributes,
-    selectedCurrentBreakpointAttributes,
-    selectedClassName,
-    breakpoint,
-    handleRefreshClasses,
-    saveFile,
-  ])
+  }, [handleRefreshClasses, saveFile])
 
-  const throttledHandleCssUpdate = useThrottleAsynchronous(handleCssUpdate, 1000)
+  const registerCssUpdate = useCssUpdate(handleCssUpdate)
 
   const handleCreateClassName = useCallback(async (className: string) => {
     const { code, filePath } = await createSelector(`.${className}`)
@@ -370,10 +368,21 @@ function PanelStyles() {
   }, [breakpoint, selectedClassName])
 
   useEffect(() => {
-    throttledHandleCssUpdate()
-  // Adding throttledHandleCssUpdate as a dep seems to cause infinite useEffect trigger
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [updatedAttributes])
+    registerCssUpdate(
+      selectedClassName,
+      classNames,
+      updatedAttributes,
+      selectedCurrentBreakpointAttributes,
+      breakpoint,
+    )
+  }, [
+    selectedClassName,
+    classNames,
+    updatedAttributes,
+    selectedCurrentBreakpointAttributes,
+    breakpoint,
+    registerCssUpdate,
+  ])
 
   // Styles context
   const styleContextValue = useMemo<StylesContextType>(() => ({
@@ -395,9 +404,9 @@ function PanelStyles() {
   ])
 
   // console.log('similiarHierarchies', similiarHierarchies)
-  console.log('updatedAttributes', updatedAttributes)
+  // console.log('updatedAttributes', updatedAttributes)
   // console.log('concernedMedias', concernedMedias)
-  console.log('styleContextValue', styleContextValue)
+  // console.log('styleContextValue', styleContextValue)
 
   return (
     <StylesContext.Provider value={styleContextValue}>

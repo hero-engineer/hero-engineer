@@ -3,7 +3,7 @@ import { BreakpointType, CssAttributeType } from '~types'
 import postCss, { cssReady, getIndexCss, setIndexCss } from '~processors/css'
 import traverse from '~processors/css/traverse'
 
-async function updateSelector(selector: string, attributes: CssAttributeType[], breakpoint: BreakpointType) {
+async function updateSelector(selector: string, breakpoint: BreakpointType, attributes: CssAttributeType[]) {
   await cssReady.promise
 
   const { filePath, code } = getIndexCss()

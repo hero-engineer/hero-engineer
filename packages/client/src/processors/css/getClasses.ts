@@ -27,7 +27,7 @@ async function getClasses() {
           cssName: node.prop,
           jsName: convertCssAttributeCssNameToJs(node.prop),
           value: node.value,
-          isImportant: node.important,
+          isImportant: !!node.important,
           comment: node.raws.value?.raw ?? '',
         })
       }
