@@ -33,7 +33,7 @@ html {
 
 
 .foo {
-  flex-direction: column;
+  flex-direction: row;
   display: flex;
   font-family: Inter, sans-serif;
 }
