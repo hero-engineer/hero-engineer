@@ -52,6 +52,9 @@ html {
 
 @media screen and (max-width: 767px) {
   .foo {
+    flex-direction: row;
+    font-family: "Lobster Two", sans-serif;
+    display: flex;
   }
 }
 
