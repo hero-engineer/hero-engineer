@@ -1,4 +1,4 @@
-import { useCallback, useContext, useRef } from 'react'
+import { memo, useCallback, useContext, useRef } from 'react'
 import { Accordion, Div, MenuItem, Select } from 'honorable'
 
 import StylesContext from '~contexts/StylesContext'
@@ -112,4 +112,4 @@ function StylesSubSectionPosition() {
   )
 }
 
-export default StylesSubSectionPosition
+export default memo(StylesSubSectionPosition)

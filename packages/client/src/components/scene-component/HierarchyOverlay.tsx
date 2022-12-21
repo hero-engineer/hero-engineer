@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { ReactNode, memo, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { Div } from 'honorable'
 
 import { HierarchyType } from '~types'
@@ -103,4 +103,4 @@ function HierarchyOverlay({ children }: HierarchyOverlayPropsType) {
   )
 }
 
-export default HierarchyOverlay
+export default memo(HierarchyOverlay)

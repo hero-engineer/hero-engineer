@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { memo, useContext } from 'react'
 import { Div } from 'honorable'
 
 import StylesContext from '~contexts/StylesContext'
@@ -23,4 +23,4 @@ function StylesDisabledOverlay() {
   )
 }
 
-export default StylesDisabledOverlay
+export default memo(StylesDisabledOverlay)

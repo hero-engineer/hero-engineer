@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react'
+import { Dispatch, SetStateAction, memo, useCallback, useMemo, useState } from 'react'
 import { Autocomplete, Div } from 'honorable'
 
 import { CssClassType } from '~types'
@@ -156,4 +156,4 @@ function CssSelector({ allClasses, classNames, selectedClassName, onSelectedClas
   )
 }
 
-export default CssSelector
+export default memo(CssSelector)

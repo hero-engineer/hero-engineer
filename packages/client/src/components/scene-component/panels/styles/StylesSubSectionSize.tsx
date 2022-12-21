@@ -1,4 +1,4 @@
-import { useCallback, useContext } from 'react'
+import { memo, useCallback, useContext } from 'react'
 import { Accordion, Button, Div, Tooltip } from 'honorable'
 import { AiOutlineColumnHeight, AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 
@@ -132,4 +132,4 @@ function StylesSubSectionSize() {
   )
 }
 
-export default StylesSubSectionSize
+export default memo(StylesSubSectionSize)

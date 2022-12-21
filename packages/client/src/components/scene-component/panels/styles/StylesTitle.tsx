@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import { Div } from 'honorable'
 
 import useStylesSubSectionHelpers from '~hooks/useStylesSubSectionHelpers'
@@ -44,4 +44,4 @@ function StylesTitle({ title, expanded, attributeNames }: StylesSubSectionTitleP
   )
 }
 
-export default StylesTitle
+export default memo(StylesTitle)

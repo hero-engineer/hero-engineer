@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { memo, useContext } from 'react'
 import { Button, Tooltip } from 'honorable'
 import { AiOutlineReload } from 'react-icons/ai'
 
@@ -23,4 +23,4 @@ function RemountButton(props: any) {
   )
 }
 
-export default RemountButton
+export default memo(RemountButton)

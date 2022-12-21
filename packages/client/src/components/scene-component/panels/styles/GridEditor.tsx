@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { Div } from 'honorable'
 
 function GridEditor() {
@@ -82,4 +83,4 @@ function GridEditor() {
   )
 }
 
-export default GridEditor
+export default memo(GridEditor)

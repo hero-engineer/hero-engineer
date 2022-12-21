@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { memo, useContext } from 'react'
 import { Button, Tooltip } from 'honorable'
 import { VscGithubAction } from 'react-icons/vsc'
 
@@ -24,4 +24,4 @@ function InteractiveModeButton(props: any) {
   )
 }
 
-export default InteractiveModeButton
+export default memo(InteractiveModeButton)

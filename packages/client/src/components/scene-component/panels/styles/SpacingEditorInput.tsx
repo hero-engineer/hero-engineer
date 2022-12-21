@@ -1,4 +1,4 @@
-import { Ref, forwardRef, useCallback, useContext } from 'react'
+import { Ref, forwardRef, memo, useCallback, useContext } from 'react'
 import { Button, Div, Slider } from 'honorable'
 import { CgUndo } from 'react-icons/cg'
 
@@ -114,4 +114,4 @@ function SpacingEditorInputRef({ title, value, onChange, allowNegativeValues }: 
   )
 }
 
-export default forwardRef(SpacingEditorInputRef)
+export default memo(forwardRef(SpacingEditorInputRef))

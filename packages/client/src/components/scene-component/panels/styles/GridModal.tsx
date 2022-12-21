@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { H3, Modal } from 'honorable'
 
 import GridEditor from '~components/scene-component/panels/styles/GridEditor'
@@ -21,4 +22,4 @@ function GridModal({ open, onClose }: GridModalPropsType) {
   )
 }
 
-export default GridModal
+export default memo(GridModal)

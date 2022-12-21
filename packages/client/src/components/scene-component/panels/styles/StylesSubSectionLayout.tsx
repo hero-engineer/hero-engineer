@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from 'react'
+import { memo, useCallback, useContext, useState } from 'react'
 import { Accordion, Button, Div, Tooltip } from 'honorable'
 import { CgArrowAlignH, CgArrowAlignV, CgDisplayFlex, CgDisplayFullwidth, CgDisplayGrid } from 'react-icons/cg'
 import { FaRegEyeSlash } from 'react-icons/fa'
@@ -668,4 +668,4 @@ function StylesSubSectionLayout() {
   )
 }
 
-export default StylesSubSectionLayout
+export default memo(StylesSubSectionLayout)

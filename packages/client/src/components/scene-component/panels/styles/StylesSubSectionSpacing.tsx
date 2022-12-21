@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { memo, useRef } from 'react'
 import { Accordion } from 'honorable'
 
 import usePersistedState from '~hooks/usePersistedState'
@@ -71,4 +71,4 @@ function StylesSubSectionSpacing() {
   )
 }
 
-export default StylesSubSectionSpacing
+export default memo(StylesSubSectionSpacing)

@@ -1,4 +1,4 @@
-import { MouseEvent, ReactNode, useCallback, useEffect, useRef, useState } from 'react'
+import { MouseEvent, ReactNode, memo, useCallback, useEffect, useRef, useState } from 'react'
 import { Div } from 'honorable'
 
 import { HierarchyType } from '~types'
@@ -158,4 +158,4 @@ function HierarchyOverlayElement({ hierarchy, parentHierarchy, isSelected, isHid
   )
 }
 
-export default HierarchyOverlayElement
+export default memo(HierarchyOverlayElement)

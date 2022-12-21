@@ -1,4 +1,4 @@
-import { Dispatch, ReactNode, SetStateAction, useEffect, useRef } from 'react'
+import { Dispatch, ReactNode, SetStateAction, memo, useEffect, useRef } from 'react'
 
 type WithComponentIframeHeightPropsType = {
   setHeight: Dispatch<SetStateAction<number>>
@@ -31,4 +31,4 @@ function WithComponentIframeHeight({ setHeight, children }: WithComponentIframeH
   )
 }
 
-export default WithComponentIframeHeight
+export default memo(WithComponentIframeHeight)

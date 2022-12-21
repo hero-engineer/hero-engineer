@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useContext, useEffect, useRef } from 'react'
+import { ReactNode, memo, useCallback, useContext, useEffect, useRef } from 'react'
 
 import createHierarchy from '~processors/typescript/createHierarchy'
 
@@ -72,4 +72,4 @@ function WithComponentHierarchy({ children }: WithComponentHierarchyPropsType) {
   )
 }
 
-export default WithComponentHierarchy
+export default memo(WithComponentHierarchy)

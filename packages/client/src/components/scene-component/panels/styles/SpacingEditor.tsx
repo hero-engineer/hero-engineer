@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useContext, useMemo, useRef, useState } from 'react'
+import { ReactNode, memo, useCallback, useContext, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Div, Path, Svg, WithOutsideClick } from 'honorable'
 
@@ -281,4 +281,4 @@ function SpacingEditor({
   )
 }
 
-export default SpacingEditor
+export default memo(SpacingEditor)

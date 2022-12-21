@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ReactNode, memo } from 'react'
 import { Div } from 'honorable'
 import { HiPlus } from 'react-icons/hi'
 
@@ -59,4 +59,4 @@ function StylesList({
   )
 }
 
-export default StylesList
+export default memo(StylesList)

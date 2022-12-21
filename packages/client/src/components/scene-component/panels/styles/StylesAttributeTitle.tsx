@@ -1,4 +1,4 @@
-import { useCallback, useContext, useMemo } from 'react'
+import { memo, useCallback, useContext, useMemo } from 'react'
 import { Div, DivProps } from 'honorable'
 import { TbExclamationMark, TbExclamationMarkOff } from 'react-icons/tb'
 import { BiUndo } from 'react-icons/bi'
@@ -102,4 +102,4 @@ function StylesAttributeTitle({
   )
 }
 
-export default StylesAttributeTitle
+export default memo(StylesAttributeTitle)

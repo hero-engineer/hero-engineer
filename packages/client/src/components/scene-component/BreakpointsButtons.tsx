@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from 'react'
+import { memo, useCallback, useContext, useEffect, useState } from 'react'
 import { Button, Div, Input, Menu, MenuItem, Tooltip, WithOutsideClick } from 'honorable'
 import { AiOutlineDesktop, AiOutlineMobile, AiOutlineTablet } from 'react-icons/ai'
 import { MdClose } from 'react-icons/md'
@@ -200,4 +200,4 @@ function BreakpointsButtons() {
   )
 }
 
-export default BreakpointsButtons
+export default memo(BreakpointsButtons)

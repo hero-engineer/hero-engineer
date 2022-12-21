@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { memo, useCallback, useState } from 'react'
 import { Div, Menu, MenuItem, WithOutsideClick } from 'honorable'
 import { MdClose, MdMoreVert } from 'react-icons/md'
 
@@ -95,4 +95,4 @@ function CssSelectorChip({ selector, isSelected, onSelect, onDiscard, onDelete }
   )
 }
 
-export default CssSelectorChip
+export default memo(CssSelectorChip)

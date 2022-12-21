@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useContext, useEffect, useMemo } from 'react'
+import { ReactNode, memo, useCallback, useContext, useEffect, useMemo } from 'react'
 import { Accordion, Button, Div, MenuItem, Select, Tooltip } from 'honorable'
 import { TfiAlignCenter, TfiAlignJustify, TfiAlignLeft, TfiAlignRight } from 'react-icons/tfi'
 import { BsTypeItalic } from 'react-icons/bs'
@@ -535,4 +535,4 @@ function StylesSubSectionTypography() {
   )
 }
 
-export default StylesSubSectionTypography
+export default memo(StylesSubSectionTypography)
