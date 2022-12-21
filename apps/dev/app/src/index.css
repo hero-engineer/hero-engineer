@@ -32,6 +32,7 @@ html {
 }
 
 .w2 {
+  font-family: Inter, sans-serif;
   font-size: inherit !important;
   text-align: inherit;
   min-height: auto;
