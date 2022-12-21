@@ -45,7 +45,7 @@ html {
 
 @media screen and (max-width: 991px) {
   .foo {
-    flex-direction: column;
+    flex-direction: row;
   }
 }
 
