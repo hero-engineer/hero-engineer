@@ -13,12 +13,19 @@ npm i -D vite-plugin-cwd
 ```js
 // vite.config.js
 import { defineConfig } from 'vite'
-import vitePluginCwd from 'vite-plugin-cwd'
+import cwd from 'vite-plugin-cwd'
 
 export default defineConfig({
-  plugins: [vitePluginCwd()]
+  plugins: [cwd()]
 })
 ```
+
+```js
+// src/main.js
+console.log(import.meta.env.VITE_CWD) // /path/to/project
+```
+
+
 
 ## License
 
