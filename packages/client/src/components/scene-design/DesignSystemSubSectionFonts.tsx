@@ -72,10 +72,7 @@ function DesignSystemSubSectionTypefaces() {
           Typefaces
         </H3>
         {isEditMode && (
-          <Button
-            slim
-            onClick={() => setIsModalOpen(true)}
-          >
+          <Button onClick={() => setIsModalOpen(true)}>
             Add typeface
           </Button>
         )}
@@ -105,14 +102,14 @@ function DesignSystemSubSectionTypefaces() {
           Add typeface
         </H3>
         <Div mt={2}>
-          Select one or more typefaces from
+          Select one or more families from
           {' '}
           <A
             href="https://fonts.google.com/"
             target="_blank"
             rel="noopeneer noreferer"
           >
-            Google Typefaces
+            Google Fonts
           </A>
           {' '}
           and paste the URL here.
