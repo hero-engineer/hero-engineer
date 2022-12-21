@@ -162,16 +162,14 @@ function ColorItem({ color, isEditMode, onChange, onDelete }: ColorItemPropsType
         )}
       </Div>
       {isEditMode && (
-        <Div
-          xflex="x5"
-          flexShrink={0}
-          color="danger"
+        <Button
+          tiny
+          danger
           fontSize="0.75rem"
-          cursor="pointer"
           onClick={onDelete}
         >
           <SlTrash />
-        </Div>
+        </Button>
       )}
     </Div>
   )

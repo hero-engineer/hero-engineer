@@ -165,21 +165,14 @@ function SpacingItem({ spacing, isEditMode, onChange, onDelete }: SpacingItemPro
         backgroundColor="primary"
       />
       {isEditMode && (
-        <Div
-          xflex="x5"
-          gap={0.5}
+        <Button
+          tiny
+          danger
+          fontSize="0.75rem"
+          onClick={onDelete}
         >
-          <Div
-            xflex="x5"
-            flexShrink={0}
-            color="danger"
-            fontSize="0.75rem"
-            cursor="pointer"
-            onClick={onDelete}
-          >
-            <SlTrash />
-          </Div>
-        </Div>
+          <SlTrash />
+        </Button>
       )}
     </Div>
   )

@@ -5,8 +5,7 @@ import { BsTypeItalic } from 'react-icons/bs'
 import { RxLetterCaseCapitalize, RxLetterCaseLowercase, RxLetterCaseUppercase, RxOverline, RxStrikethrough, RxUnderline } from 'react-icons/rx'
 import { MdClose, MdOutlineFormatTextdirectionLToR, MdOutlineFormatTextdirectionRToL } from 'react-icons/md'
 
-import { FontType } from '~types'
-
+import getTypefaces from '~processors/css/getTypefaces'
 import getColors from '~processors/css/getColors'
 
 import StylesContext from '~contexts/StylesContext'
@@ -127,7 +126,7 @@ const whiteSpaces = [
   'break-spaces',
 ]
 
-const defaultWeights = [100, 200, 300, 400, 500, 600, 700, 800, 900]
+const defaultWeights = [400, 700]
 
 const prepareFontFamily = (fontName: string) => fontName.includes(' ') ? `"${fontName}", sans-serif` : `${fontName}, sans-serif`
 
@@ -138,16 +137,14 @@ function StylesSubSectionTypography() {
 
   const { getValue, isToggled, updateCssAttribute } = useStylesSubSectionHelpers()
 
-  const fonts = useMemo<FontType[]>(() => [], [])
+  const typefaces = useAsync(getTypefaces, [])
   const colors = useAsync(getColors, [])
   const fontFamily = getValue('font-family')
   const weights = useMemo(() => {
-    const font = fonts.find(({ name }) => fontFamily === prepareFontFamily(name))
+    const typeface = typefaces?.find(({ name }) => fontFamily === prepareFontFamily(name))
 
-    if (!font) return defaultWeights
-
-    return font.isVariable ? defaultWeights : font.weights
-  }, [fonts, fontFamily])
+    return typeface?.weights ?? defaultWeights
+  }, [typefaces, fontFamily])
 
   const renderInheritButton = useCallback((attributeName: string) => (
     <>
@@ -214,18 +211,18 @@ function StylesSubSectionTypography() {
         >
           fantasy
         </MenuItem>
-        {fonts.map(font => (
+        {typefaces?.map(typeface => (
           <MenuItem
-            key={font.id}
-            value={prepareFontFamily(font.name)}
-            fontFamily={prepareFontFamily(font.name)}
+            key={typeface.url}
+            value={prepareFontFamily(typeface.name)}
+            fontFamily={prepareFontFamily(typeface.name)}
           >
-            {font.name}
+            {typeface.name}
           </MenuItem>
         ))}
       </Select>
     </Div>
-  ), [fonts, getValue, updateCssAttribute, onChange])
+  ), [typefaces, getValue, updateCssAttribute, onChange])
 
   const renderWeightsSection = useCallback(() => (
     <Div xflex="x4">

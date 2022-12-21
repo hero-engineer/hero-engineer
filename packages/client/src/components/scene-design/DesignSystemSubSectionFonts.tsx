@@ -1,75 +1,174 @@
-import { FormEvent, MouseEvent, useCallback, useState } from 'react'
-import { Button, Div, Form, H3, Input, Switch } from 'honorable'
-import { CiEdit } from 'react-icons/ci'
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { A, Button, Div, H3, Input, Modal } from 'honorable'
 import { SlTrash } from 'react-icons/sl'
-import { BsCheck2, BsPlus } from 'react-icons/bs'
-import { IoCloseOutline } from 'react-icons/io5'
-import shortId from 'shortid'
 
-import { FontType } from '~types'
+import { TypefaceType } from '~types'
 
-function DesignSystemSubSectionFonts() {
-  const [fonts, setFonts] = useState<FontType[]>([])
+import { SaveFileMutation, SaveFileMutationDataType } from '~queries'
 
-  const handleEdit = useCallback(async (fonts: FontType[]) => {
-    setFonts(fonts)
+import getTypefaces from '~processors/css/getTypefaces'
+import setTypefaces from '~processors/css/setTypefaces'
 
-    // await updateFonts({
-    //   fontsJson: JSON.stringify(fonts),
-    // })
-  }, [])
+import DesignSystemIsEditModeContext from '~contexts/DesignSystemIsEditModeContext'
 
-  const handleUpdate = useCallback((font: FontType) => {
-    const nextFonts = [...fonts]
-    const fontIndex = nextFonts.findIndex(f => f.id === font.id)
+import useAsync from '~hooks/useAsync'
+import useMutation from '~hooks/useMutation'
 
-    nextFonts[fontIndex] = font
+import extractTypefacesFromUrl from '~utils/extractTypefacesFromUrl'
 
-    handleEdit(nextFonts)
-  }, [fonts, handleEdit])
+function DesignSystemSubSectionTypefaces() {
+  const isEditMode = useContext(DesignSystemIsEditModeContext)
 
-  const handleDelete = useCallback((font: FontType) => {
-    if (!window.confirm(`Are you sure you want to delete the font ${font.name}?`)) return
+  const [workingTypefaces, setWorkingTypefaces] = useState<TypefaceType[]>([])
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [typefaceUrl, setTypefaceUrl] = useState('')
 
-    handleEdit(fonts.filter(f => f.id !== font.id))
-  }, [fonts, handleEdit])
+  const foundTypefaces = useAsync(getTypefaces, [])
+  const { isError, typefaces: addedTypefaces } = useMemo(() => extractTypefacesFromUrl(typefaceUrl), [typefaceUrl])
+
+  const [, saveFile] = useMutation<SaveFileMutationDataType>(SaveFileMutation)
+
+  const handleTypefacesChange = useCallback(async (typefaces: TypefaceType[]) => {
+    setWorkingTypefaces(typefaces)
+
+    const { filePath, code } = await setTypefaces(typefaces)
+
+    await saveFile({
+      filePath,
+      code,
+      commitMessage: 'Update typeface imports in index.css',
+    })
+  }, [saveFile])
+
+  const handleCreateTypeface = useCallback(() => {
+    if (isError) return
+
+    setIsModalOpen(false)
+    setTypefaceUrl('')
+
+    handleTypefacesChange([...workingTypefaces, ...addedTypefaces])
+  }, [isError, workingTypefaces, addedTypefaces, handleTypefacesChange])
+
+  const handleDeleteTypeface = useCallback((typeface: TypefaceType) => {
+    if (!window.confirm(`Are you sure you want to delete the typeface ${typeface.name}?`)) return
+
+    handleTypefacesChange(workingTypefaces.filter(f => f.url !== typeface.url))
+  }, [workingTypefaces, handleTypefacesChange])
+
+  useEffect(() => {
+    if (!foundTypefaces) return
+
+    setWorkingTypefaces(foundTypefaces)
+  }, [foundTypefaces])
 
   return (
     <Div xflex="y2s">
-      <H3 mb={1}>Fonts</H3>
+      <Div
+        xflex="x5b"
+        gap={1}
+        mb={1}
+      >
+        <H3>
+          Typefaces
+        </H3>
+        {isEditMode && (
+          <Button
+            slim
+            onClick={() => setIsModalOpen(true)}
+          >
+            Add typeface
+          </Button>
+        )}
+      </Div>
       <FontHeader />
-      {fonts.map(font => (
+      {workingTypefaces.map(typeface => (
         <FontRow
-          key={font.id}
-          font={font}
-          onUpdate={(font: FontType) => handleUpdate(font)}
-          onDelete={() => handleDelete(font)}
+          key={typeface.url}
+          typeface={typeface}
+          isEditMode={isEditMode}
+          onDelete={() => handleDeleteTypeface(typeface)}
         />
       ))}
-      {!fonts.length && (
+      {!workingTypefaces.length && (
         <Div
           color="text-light"
           py={0.5}
         >
-          No fonts
+          No typefaces
         </Div>
       )}
-      <Button
-        onClick={() => setFonts(x => [
-          ...x,
-          {
-            id: shortId(),
-            name: '',
-            url: '',
-            isVariable: false,
-            weights: [],
-          },
-        ])}
-        alignSelf="flex-start"
-        mt={1}
+      <Modal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
       >
-        Add font
-      </Button>
+        <H3>
+          Add typeface
+        </H3>
+        <Div mt={2}>
+          Select one or more typefaces from
+          {' '}
+          <A
+            href="https://fonts.google.com/"
+            target="_blank"
+            rel="noopeneer noreferer"
+          >
+            Google Typefaces
+          </A>
+          {' '}
+          and paste the URL here.
+        </Div>
+        <Input
+          value={typefaceUrl}
+          onChange={event => setTypefaceUrl(event.target.value)}
+          placeholder="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+          width="100%"
+          mt={1}
+        />
+        {isError && (
+          <Div
+            color="danger"
+            mt={1}
+          >
+            Invalid URL
+          </Div>
+        )}
+        {!!addedTypefaces.length && (
+          <Div mt={1}>
+            This will add the following typefaces:
+            <Div
+              xflex="y2s"
+              gap={0.5}
+              mt={1}
+            >
+              {addedTypefaces.map(typeface => (
+                <Div key={typeface.url}>
+                  {typeface.name}
+                  {' '}
+                  -
+                  {' '}
+                  {typeface.weights.join(', ')}
+                </Div>
+              ))}
+            </Div>
+          </Div>
+        )}
+        <Div
+          xflex="x6"
+          gap={0.5}
+          mt={2}
+        >
+          <Button
+            secondary
+            onClick={() => setIsModalOpen(false)}
+          >
+            Cancel
+          </Button>
+          <Button onClick={handleCreateTypeface}>
+            Add typeface
+            {addedTypefaces.length > 1 ? 's' : ''}
+          </Button>
+        </Div>
+      </Modal>
     </Div>
   )
 }
@@ -78,14 +177,14 @@ function FontHeader() {
   return (
     <Div
       xflex="x4"
-      fontWeight="bold"
+      typefaceWeight="bold"
       py={0.5}
       gap={0.5}
     >
-      <Div width={128 + 32 + 8 + 2}>
+      <Div width={128 + 64}>
         Family
       </Div>
-      <Div width={128 + 32 + 8 + 2}>
+      <Div width={128 + 64}>
         Weights
       </Div>
       <Div width={512}>
@@ -96,132 +195,53 @@ function FontHeader() {
 }
 
 type FontRowPropsType = {
-  font: FontType
-  onUpdate: (font: FontType) => void
+  typeface: TypefaceType
+  isEditMode: boolean
   onDelete: () => void
 }
 
-function FontRow({ font, onUpdate, onDelete }: FontRowPropsType) {
-  const [isEdited, setIsEdited] = useState(!font.name)
-  const [isError, setIsError] = useState(false)
-  const [name, setName] = useState(font.name)
-  const [url, setUrl] = useState(font.url)
-  const [isVariable, setIsVariable] = useState(font.isVariable)
-  const [weights, setWeights] = useState<(number | string)[]>(font.weights)
-
-  const handleCancel = useCallback(() => {
-    setIsEdited(false)
-    setName(font.name)
-    setUrl(font.url)
-    setIsVariable(font.isVariable)
-    setWeights(font.weights)
-  }, [font])
-
-  const handleSubmit = useCallback((event: FormEvent<HTMLFormElement> | MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-
-    if (!(name && url && (isVariable || weights.map(Number).filter(Boolean).length))) {
-      setIsError(true)
-
-      return
-    }
-
-    if (name.includes('~~~')) { // Server-related
-      setIsError(true)
-
-      return
-    }
-
-    setIsEdited(false)
-    setIsError(false)
-
-    onUpdate({
-      ...font,
-      name: name.trim(),
-      url: url.trim(),
-      isVariable,
-      weights: weights.map(x => x.toString().trim()).map(Number).filter(Boolean),
-    })
-  }, [font, name, url, isVariable, weights, onUpdate])
+function FontRow({ typeface, isEditMode, onDelete }: FontRowPropsType) {
 
   return (
-    <Form
+    <Div
       xflex="x1"
       gap={0.5}
-      _hover={{
-        '& #FontRow-actions': {
-          display: 'flex',
-        },
-      }}
-      onSubmit={handleSubmit}
     >
       <Div
         xflex="x1"
         py={0.5}
-        minWidth={0}
+        minWidth={0} // For ellipsis to work
         gap={0.5}
       >
         <Div
           ellipsis
-          width={128 + 32 + 8 + 2}
+          width={128 + 64}
         >
-          {isEdited ? (
-            <Input
-              slim
-              width="100%"
-              value={name}
-              onChange={event => setName(event.target.value)}
-            />
-          ) : font.name}
+          {typeface.name}
         </Div>
         <Div
           ellipsis
-          width={128 + 32 + 8 + 2}
+          width={128 + 64}
         >
-          {isEdited ? (
-            <FontWeightsEditor
-              isVariable={isVariable}
-              weights={weights}
-              onChange={(isVariable: boolean, weights: (number | string)[]) => {
-                setIsVariable(isVariable)
-                setWeights(weights)
-              }}
-            />
-          ) : font.isVariable ? 'Variable' : font.weights.join(', ')}
+          {typeface.weights.join(', ')}
         </Div>
         <Div
           ellipsis
           width={512}
           fontSize="0.75rem"
           color="text-light"
-          mt={isEdited ? 0 : '2px'}
+          mt="2px"
         >
-          {isEdited ? (
-            <Input
-              slim
-              width="100%"
-              placeholder="https://fonts.googleapis.com/css2?family=..."
-              value={url}
-              onChange={event => setUrl(event.target.value)}
-            />
-          ) : font.url}
+          {typeface.url}
         </Div>
       </Div>
-      {!isEdited && (
+      {isEditMode && (
         <Div
-          id="FontRow-actions"
-          display="none"
           xflex="x4"
           fontSize="0.75rem"
           gap={0.5}
           pt={0.25}
         >
-          <Button
-            tiny
-            onClick={() => setIsEdited(true)}
-          >
-            <CiEdit />
-          </Button>
           <Button
             tiny
             danger
@@ -231,90 +251,8 @@ function FontRow({ font, onUpdate, onDelete }: FontRowPropsType) {
           </Button>
         </Div>
       )}
-      {isEdited && (
-        <Div
-          xflex="x4"
-          fontSize="0.75rem"
-          gap={0.5}
-          pt={1}
-        >
-          <Button
-            tiny
-            type="submit"
-            onClick={handleSubmit}
-          >
-            <BsCheck2 />
-          </Button>
-          <Button
-            tiny
-            secondary
-            onClick={handleCancel}
-          >
-            <IoCloseOutline />
-          </Button>
-          {isError && (
-            <Div color="danger">
-              Please fill all fields
-            </Div>
-          )}
-        </Div>
-      )}
-    </Form>
-  )
-}
-
-type FontWeightsEditorPropsType = {
-  isVariable: boolean
-  weights: (number | string)[]
-  onChange: (variable: boolean, weights: (number | string)[]) => void
-}
-
-function FontWeightsEditor({ isVariable, weights, onChange }: FontWeightsEditorPropsType) {
-  return (
-    <Div
-      xflex="y2s"
-      py={0.5}
-      gap={0.5}
-    >
-      <Switch
-        checked={isVariable}
-        onChange={event => onChange(event.target.checked, weights)}
-        ml="2px"
-      >
-        Variable
-      </Switch>
-      {!isVariable && (
-        <>
-          {weights.map((weight, i) => (
-            <Input
-              key={i}
-              slim
-              type="number"
-              width="100%"
-              value={weight}
-              onChange={event => {
-                let nextWeight: string | number = parseInt(event.target.value, 10)
-
-                if (nextWeight !== nextWeight) nextWeight = event.target.value
-
-                const nextWeights = [...weights]
-
-                nextWeights[i] = nextWeight
-
-                onChange(isVariable, nextWeights)
-              }}
-            />
-          ))}
-          <Button
-            type="button"
-            onClick={() => onChange(isVariable, [...weights, ''])}
-          >
-            <BsPlus />
-          </Button>
-        </>
-      )}
     </Div>
   )
 }
 
-export default DesignSystemSubSectionFonts
+export default DesignSystemSubSectionTypefaces

@@ -50,8 +50,7 @@ export type CSsAttributesMapType = Record<string, {
   converter?: (value: CssValueType, isImportant: boolean) => CssAttributeType[]
 }>
 
-export type FontType = {
-  id: string
+export type TypefaceType = {
   name: string
   url: string
   weights: number[]
