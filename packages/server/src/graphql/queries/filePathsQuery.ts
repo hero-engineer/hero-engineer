@@ -5,21 +5,22 @@ import { appPath } from '../../configuration.js'
 
 function filePathsQuery() {
   const filePaths: string[] = []
-  const srcPath = path.join(appPath, 'src')
 
   function readDirectory(location: string) {
     fs.readdirSync(location).forEach(fileName => {
       const filePath = path.join(location, fileName)
 
-      if (fs.statSync(filePath).isDirectory()) {
-        return readDirectory(filePath)
+      if (fs.statSync(filePath).isDirectory() && !filePath.includes('node_modules')) {
+        readDirectory(filePath)
+
+        return
       }
 
       filePaths.push(filePath)
     })
   }
 
-  readDirectory(srcPath)
+  readDirectory(appPath)
 
   return filePaths
 }
