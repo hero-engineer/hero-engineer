@@ -28,6 +28,7 @@ html {
 }
 
 .w2 {
+  margin-left: auto;
   width: 256px;
 }
 
@@ -38,8 +39,6 @@ html {
 
 @media screen and (max-width: 991px) {
   .w2 {
-    width: 256px;
-
   }
 }
 
