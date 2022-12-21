@@ -30,7 +30,7 @@ function StylesAttributeTitle({
 
   const isImportant = useMemo(() => attributeNames.some(attributeName => breakpointAttributes[attributeName]?.isImportant), [attributeNames, breakpointAttributes])
   const isOtherwiseImportant = useMemo(() => attributeNames.some(attributeName => fullBreakpointAttributes[attributeName]?.isImportant), [attributeNames, fullBreakpointAttributes])
-  const isResetable = useMemo(() => attributeNames.some(attributeName => currentBreakpointAttributes[attributeName] && currentBreakpointAttributes[attributeName].value !== cssAttributesMap[attributeName].defaultValue), [attributeNames, currentBreakpointAttributes])
+  const isResetable = useMemo(() => attributeNames.some(attributeName => !!currentBreakpointAttributes[attributeName]), [attributeNames, currentBreakpointAttributes])
   const color = getTextColor(attributeNames)
 
   const handleImportantClick = useCallback(() => {
@@ -50,7 +50,7 @@ function StylesAttributeTitle({
       minWidth={width}
       maxWidth={width}
       color={color}
-      textDecoration={isResetable ? 'underline' : 'none'}
+      textDecoration={isResetable || isImportant ? 'underline' : 'none'}
       textDecorationThickness={0.5}
       textUnderlineOffset={2}
       textDecor

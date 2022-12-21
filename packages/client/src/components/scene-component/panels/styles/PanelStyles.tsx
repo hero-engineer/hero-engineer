@@ -18,7 +18,6 @@ import StylesContext, { StylesContextType } from '~contexts/StylesContext'
 
 import useAsync from '~hooks/useAsync'
 import useMutation from '~hooks/useMutation'
-import usePrevious from '~hooks/usePrevious'
 import usePersistedState from '~hooks/usePersistedState'
 import useThrottleAsynchronous from '~hooks/useThrottleAsynchronous'
 
@@ -29,7 +28,8 @@ import areAttributesValid from '~utils/areAttributesValid'
 import mergeCssAttributes from '~utils/mergeCssAttributes'
 import normalizeCssAttributes from '~utils/normalizeCssAttributes'
 import getCascadingCssAttributes from '~utils/getCascadingCssAttributes'
-import deleteAndConvertCssAttributes from '~utils/deleteAndConvertCssAttributes'
+import convertCssAttributes from '~utils/convertCssAttributes'
+import deleteCssAttributes from '~utils/deleteCssAttributes'
 import convertStylesToCssString from '~utils/convertStylesToCssString'
 
 import CssSelector from '~components/scene-component/panels/styles/CssSelector'
@@ -105,32 +105,25 @@ function PanelStyles() {
   const currentBreakpointClasses = useMemo(() => filterClassesByClassNamesAndMedias(allClasses, classNames, [breakpoint.media]), [allClasses, classNames, breakpoint.media])
   // Current breakpoint classes for the selected className
   const selectedCurrentBreakpointClasses = useMemo(() => filterClassesByClassNamesAndMedias(allClasses, [selectedClassName], [breakpoint.media]), [allClasses, selectedClassName, breakpoint.media])
-
   // The attributes for the complete styling
   // Displayed when no class is selected
-  const fullAttributes = useMemo(() => normalizeCssAttributes(deleteAndConvertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(masterBreakpointClasses), updatedAttributes))), [masterBreakpointClasses, updatedAttributes])
-  const fullBreakpointAttributes = useMemo(() => normalizeCssAttributes(deleteAndConvertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(breakpointClasses), updatedAttributes))), [breakpointClasses, updatedAttributes])
-  const fullCurrentBreakpointAttributes = useMemo(() => normalizeCssAttributes(deleteAndConvertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(currentBreakpointClasses), updatedAttributes))), [currentBreakpointClasses, updatedAttributes])
-
+  const fullAttributes = useMemo(() => normalizeCssAttributes(convertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(masterBreakpointClasses), updatedAttributes))), [masterBreakpointClasses, updatedAttributes])
+  const fullBreakpointAttributes = useMemo(() => normalizeCssAttributes(convertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(breakpointClasses), updatedAttributes))), [breakpointClasses, updatedAttributes])
+  const fullCurrentBreakpointAttributes = useMemo(() => normalizeCssAttributes(convertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(currentBreakpointClasses), updatedAttributes))), [currentBreakpointClasses, updatedAttributes])
   // The attributes for the selected class
   // Displayed when a class is selected
-  const selectedAttributes = useMemo(() => normalizeCssAttributes(deleteAndConvertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(selectedMasterBreakpointClasses), updatedAttributes))), [selectedMasterBreakpointClasses, updatedAttributes])
-  const selectedBreakpointAttributes = useMemo(() => normalizeCssAttributes(deleteAndConvertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(selectedBreakpointClasses), updatedAttributes))), [selectedBreakpointClasses, updatedAttributes])
-  const selectedCurrentBreakpointAttributes = useMemo(() => normalizeCssAttributes(deleteAndConvertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(selectedCurrentBreakpointClasses), updatedAttributes))), [selectedCurrentBreakpointClasses, updatedAttributes])
-
-  // The attributes to be updated
-  const attributesHash = useMemo(() => Object.values(selectedBreakpointAttributes).map(({ cssName, value, isImportant }) => `${cssName}${value}${isImportant}`).join(''), [selectedBreakpointAttributes])
-  const previousAttributesHash = usePrevious(attributesHash)
+  const selectedAttributes = useMemo(() => normalizeCssAttributes(convertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(selectedMasterBreakpointClasses), updatedAttributes))), [selectedMasterBreakpointClasses, updatedAttributes])
+  const selectedBreakpointAttributes = useMemo(() => normalizeCssAttributes(convertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(selectedBreakpointClasses), updatedAttributes))), [selectedBreakpointClasses, updatedAttributes])
+  const selectedCurrentBreakpointAttributes = useMemo(() => normalizeCssAttributes(deleteCssAttributes(convertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(selectedCurrentBreakpointClasses), updatedAttributes)))), [selectedCurrentBreakpointClasses, updatedAttributes])
 
   const handleRefreshClasses = useCallback(() => {
     setClassesRefresh(x => x + 1)
   }, [])
 
   const handleCssUpdate = useCallback(async () => {
-    if (!selectedClassName) return
-    if (!classNames.length || previousAttributesHash === attributesHash) return
+    if (!(selectedClassName && classNames.length && updatedAttributes.length)) return
 
-    const attributes = Object.values(selectedBreakpointAttributes)
+    const attributes = Object.values(selectedCurrentBreakpointAttributes)
 
     if (!areAttributesValid(attributes)) {
       console.log('Invalid attributes!', attributes)
@@ -149,9 +142,8 @@ function PanelStyles() {
     })
   }, [
     classNames,
-    selectedBreakpointAttributes,
-    attributesHash,
-    previousAttributesHash,
+    updatedAttributes,
+    selectedCurrentBreakpointAttributes,
     selectedClassName,
     breakpoint,
     handleRefreshClasses,
@@ -381,7 +373,7 @@ function PanelStyles() {
     throttledHandleCssUpdate()
   // Adding throttledHandleCssUpdate as a dep seems to cause infinite useEffect trigger
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [attributesHash])
+  }, [updatedAttributes])
 
   // Styles context
   const styleContextValue = useMemo<StylesContextType>(() => ({
@@ -403,9 +395,9 @@ function PanelStyles() {
   ])
 
   // console.log('similiarHierarchies', similiarHierarchies)
-  // console.log('updatedAttributes', updatedAttributes)
+  console.log('updatedAttributes', updatedAttributes)
   // console.log('concernedMedias', concernedMedias)
-  // console.log('styleContextValue', styleContextValue)
+  console.log('styleContextValue', styleContextValue)
 
   return (
     <StylesContext.Provider value={styleContextValue}>

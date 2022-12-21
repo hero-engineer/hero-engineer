@@ -5,11 +5,13 @@ import { CssAttributeType, CssValueType } from '~types'
 import { cssAttributesMap } from '~constants'
 
 import StylesContext from '~contexts/StylesContext'
+import BreakpointContext from '~contexts/BreakpointContext'
 
 import convertCssAttributeCssNameToJs from '~utils/convertCssAttributeCssNameToJs'
 
 function useStylesSubSectionHelpers() {
-  const { attributes, breakpointAttributes } = useContext(StylesContext)
+  const { breakpoint } = useContext(BreakpointContext)
+  const { attributes, breakpointAttributes, currentBreakpointAttributes } = useContext(StylesContext)
 
   const getValue = useCallback((attributeCssName: string) => (breakpointAttributes[attributeCssName]?.value ?? attributes[attributeCssName]?.value ?? cssAttributesMap[attributeCssName].defaultValue).toString(), [breakpointAttributes, attributes])
 
@@ -18,17 +20,15 @@ function useStylesSubSectionHelpers() {
   const getTextColor = useCallback((attributeCssNames: string[]) => (
     attributeCssNames
     .map(attributeCssName => (
-      breakpointAttributes[attributeCssName]
-      && breakpointAttributes[attributeCssName]?.value !== attributes[attributeCssName]?.value
-      && (attributes[attributeCssName] || breakpointAttributes[attributeCssName]?.value !== cssAttributesMap[attributeCssName].defaultValue)
+      breakpoint.media && currentBreakpointAttributes[attributeCssName]
         ? 'breakpoint'
         : attributes[attributeCssName]
-        && ((breakpointAttributes[attributeCssName] && breakpointAttributes[attributeCssName]?.value !== attributes[attributeCssName]?.value) || attributes[attributeCssName]?.value !== cssAttributesMap[attributeCssName].defaultValue)
+        && attributes[attributeCssName].value !== cssAttributesMap[attributeCssName].defaultValue
           ? 'primary'
           : 'text-light'
     ))
     .reduce((acc, color) => color === 'breakpoint' ? color : color === 'primary' ? color : acc, 'text-light')
-  ), [breakpointAttributes, attributes])
+  ), [breakpoint.media, currentBreakpointAttributes, attributes])
 
   const isToggled = useCallback((attributeCssName: string, values: CssValueType[]) => values.includes(getValue(attributeCssName)), [getValue])
 
