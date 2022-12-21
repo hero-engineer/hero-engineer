@@ -28,6 +28,7 @@ html {
 }
 
 .w2 {
+  margin-right: auto;
   margin-left: auto;
   width: 256px;
 }
