@@ -28,10 +28,10 @@ html {
 }
 
 .w2 {
+  display: flex;
   width: 128px;
   text-align: inherit;
   min-height: auto;
-  display: block;
   justify-content: center;
   margin-right: auto;
   margin-left: auto;
