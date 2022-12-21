@@ -32,8 +32,8 @@ html {
 }
 
 .w2 {
+  font-size: inherit;
   font-family: inherit;
-  font-size: inherit !important;
   text-align: inherit;
   min-height: auto;
   justify-content: center;
