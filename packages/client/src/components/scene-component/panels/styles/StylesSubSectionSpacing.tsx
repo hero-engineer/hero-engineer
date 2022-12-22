@@ -38,6 +38,8 @@ function StylesSubSectionSpacing() {
       smallTitlePadding
       smallChildrenPadding
       childrenPositionRelative
+      expanded={expanded}
+      onExpand={setExpanded}
       title={(
         <StylesTitle
           title="Spacing"
@@ -45,8 +47,6 @@ function StylesSubSectionSpacing() {
           attributeNames={attributeNames}
         />
       )}
-      expanded={expanded}
-      onExpand={setExpanded}
     >
       <SpacingEditor
         allowNegativeValues

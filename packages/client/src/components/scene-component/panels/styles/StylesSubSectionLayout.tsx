@@ -635,6 +635,8 @@ function StylesSubSectionLayout() {
       smallTitlePadding
       smallChildrenPadding
       childrenPositionRelative
+      expanded={expanded}
+      onExpand={setExpanded}
       title={(
         <StylesTitle
           title="Layout"
@@ -642,8 +644,6 @@ function StylesSubSectionLayout() {
           attributeNames={attributeNames}
         />
       )}
-      expanded={expanded}
-      onExpand={setExpanded}
       borderTop="1px solid border"
     >
       <Div

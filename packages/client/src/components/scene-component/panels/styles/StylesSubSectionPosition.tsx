@@ -88,6 +88,8 @@ function StylesSubSectionPosition() {
       smallTitlePadding
       smallChildrenPadding
       childrenPositionRelative
+      expanded={expanded}
+      onExpand={setExpanded}
       title={(
         <StylesTitle
           title="Position"
@@ -95,8 +97,6 @@ function StylesSubSectionPosition() {
           attributeNames={attributeNames}
         />
       )}
-      expanded={expanded}
-      onExpand={setExpanded}
     >
       <Div
         xflex="y2s"

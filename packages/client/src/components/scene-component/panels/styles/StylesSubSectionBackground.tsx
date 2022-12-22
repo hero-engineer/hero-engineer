@@ -58,6 +58,8 @@ function StylesSubSectionBackground() {
       smallTitlePadding
       noChildrenPadding
       childrenPositionRelative
+      expanded={expanded}
+      onExpand={setExpanded}
       title={(
         <StylesTitle
           title="Background"
@@ -65,8 +67,6 @@ function StylesSubSectionBackground() {
           attributeNames={attributeNames}
         />
       )}
-      expanded={expanded}
-      onExpand={setExpanded}
     >
       <Div
         xflex="y2s"

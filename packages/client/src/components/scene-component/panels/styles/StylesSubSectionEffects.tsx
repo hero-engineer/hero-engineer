@@ -93,6 +93,8 @@ function StylesSubSectionEffects() {
       smallTitlePadding
       noChildrenPadding
       childrenPositionRelative
+      expanded={expanded}
+      onExpand={setExpanded}
       title={(
         <StylesTitle
           title="Effects"
@@ -100,8 +102,6 @@ function StylesSubSectionEffects() {
           attributeNames={attributeNames}
         />
       )}
-      expanded={expanded}
-      onExpand={setExpanded}
     >
       <Div
         xflex="y2s"
