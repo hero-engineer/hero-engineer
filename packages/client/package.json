@@ -63,7 +63,6 @@
     "react-icons": "^4.7.1",
     "react-router-dom": "^6.6.0",
     "shortid": "^2.2.16",
-    "stylelint": "^14.16.0",
     "ts-morph": "^17.0.1",
     "urql": "^3.0.3"
   },
