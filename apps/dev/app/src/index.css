@@ -33,9 +33,9 @@ html {
 
 
 .foo {
+  font-family: "Lobster Two", sans-serif;
   flex-direction: column;
   display: flex;
-  font-family: Inter, sans-serif;
 }
 
 @media screen and (min-width: 1280px) {
