@@ -37,8 +37,8 @@
     "lint": "eslint --quiet src",
     "lint:fix": "eslint --quiet --fix src",
     "prepublishOnly": "npm run build:production",
-    "patch": "npm version patch && git add . -A && git commit -m \"[server] Publish patch\" && npm publish",
-    "minor": "npm version minor && git add . -A && git commit -m \"[server] Publish minor\" && npm publish"
+    "patch": "npm version patch && git add . -A && git commit -m \"[client] Publish patch\" && npm publish",
+    "minor": "npm version minor && git add . -A && git commit -m \"[client] Publish minor\" && npm publish"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
