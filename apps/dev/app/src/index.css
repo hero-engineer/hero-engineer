@@ -33,6 +33,7 @@ html {
 
 
 .foo {
+  cursor: auto !important;
   font-family: "Lobster Two", sans-serif;
   display: flex;
 }
