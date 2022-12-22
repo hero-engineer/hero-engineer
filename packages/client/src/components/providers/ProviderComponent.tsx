@@ -34,8 +34,9 @@ function ProviderComponent({ children }: ProviderComponentPropsType) {
 
     return n === n ? n : x
   })
-  const [isDragging, setIsDragging] = useState(false)
-  const breakpointDimensionsContextValue = useMemo<BreakpointDimensionsContextType>(() => ({ width, setWidth, height, setHeight, isDragging, setIsDragging }), [width, setWidth, height, setHeight, isDragging])
+  const [isDraggingWidth, setIsDraggingWidth] = useState(false)
+  const [isDraggingHeight, setIsDraggingHeight] = useState(false)
+  const breakpointDimensionsContextValue = useMemo<BreakpointDimensionsContextType>(() => ({ width, setWidth, height, setHeight, isDraggingWidth, setIsDraggingWidth, isDraggingHeight, setIsDraggingHeight }), [width, setWidth, height, setHeight, isDraggingWidth, isDraggingHeight])
 
   const [isInteractiveMode, setIsInteractiveMode] = usePersistedState('interactive-mode', false)
   const isInteractiveModeContextValue = useMemo<IsInteractiveModeContextType>(() => ({ isInteractiveMode, setIsInteractiveMode }), [isInteractiveMode, setIsInteractiveMode])

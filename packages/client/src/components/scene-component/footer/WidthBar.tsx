@@ -12,10 +12,10 @@ const tickWidth = 1
 
 function WidthBar() {
   const rootRef = useRef<HTMLDivElement>(null)
-  const { width, isDragging } = useContext(BreakpointDimensionsContext)
+  const { width, isDraggingWidth } = useContext(BreakpointDimensionsContext)
   const { themeMode } = useContext(ThemeModeContext)
 
-  useRefresh([isDragging])
+  useRefresh([isDraggingWidth])
 
   const ticks = useMemo(() => {
     if (!rootRef.current) return null
@@ -59,7 +59,7 @@ function WidthBar() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rootRef.current])
 
-  if (!isDragging) return null
+  if (!isDraggingWidth) return null
 
   return (
     <Div

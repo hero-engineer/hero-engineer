@@ -34,7 +34,7 @@ const caretSize = Math.sqrt(height ** 2 / 2)
 
 // The hierarchy bar displays the flattened hierarchy of the current component
 function HierarchyBar() {
-  const { isDragging } = useContext(BreakpointDimensionsContext)
+  const { isDraggingWidth } = useContext(BreakpointDimensionsContext)
   const { isInteractiveMode } = useContext(IsInteractiveModeContext)
   const { hierarchy, currentHierarchyId, setCurrentHierarchyId } = useContext(HierarchyContext)
 
@@ -44,7 +44,7 @@ function HierarchyBar() {
     setCurrentHierarchyId(hierarchy.id)
   }, [setCurrentHierarchyId])
 
-  if (isDragging) return null
+  if (isDraggingWidth) return null
 
   return (
     <Div

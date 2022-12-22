@@ -16,7 +16,7 @@ type HierarchyOverlayPropsType = {
 function HierarchyOverlay({ children }: HierarchyOverlayPropsType) {
   const childrenRef = useRef<HTMLDivElement>(null)
 
-  const { isDragging, width, height } = useContext(BreakpointDimensionsContext)
+  const { width, height, isDraggingWidth, isDraggingHeight } = useContext(BreakpointDimensionsContext)
   const { isInteractiveMode } = useContext(IsInteractiveModeContext)
   const { hierarchy, currentHierarchyId, setCurrentHierarchyId } = useContext(HierarchyContext)
 
@@ -97,7 +97,7 @@ function HierarchyOverlay({ children }: HierarchyOverlayPropsType) {
       >
         {children}
       </Div>
-      {!(isDragging || isInteractiveMode) && renderOverlay()}
+      {!(isDraggingWidth || isDraggingHeight || isInteractiveMode) && renderOverlay()}
     </Div>
   )
 }

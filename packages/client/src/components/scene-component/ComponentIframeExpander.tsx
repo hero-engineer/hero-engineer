@@ -61,7 +61,10 @@ function ComponentIframeExanderHandle({ isLeft, isHeight, maxWidth, currentHeigh
   const [isDraggingCurrent, setIsDraggingCurrent] = useState(false)
 
   const { breakpoint } = useContext(BreakpointContext)
-  const { setWidth, setHeight, isDragging, setIsDragging } = useContext(BreakpointDimensionsContext)
+  const { setWidth, setHeight, isDraggingWidth, setIsDraggingWidth, isDraggingHeight, setIsDraggingHeight } = useContext(BreakpointDimensionsContext)
+
+  const isDragging = useMemo(() => isHeight ? isDraggingHeight : isDraggingWidth, [isHeight, isDraggingHeight, isDraggingWidth])
+  const setIsDragging = useMemo(() => isHeight ? setIsDraggingHeight : setIsDraggingWidth, [isHeight, setIsDraggingHeight, setIsDraggingWidth])
 
   const handleMouseDown = useCallback(() => {
     setIsDragging(true)

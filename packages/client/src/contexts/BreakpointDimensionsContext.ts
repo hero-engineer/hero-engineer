@@ -5,8 +5,10 @@ export type BreakpointDimensionsContextType = {
   setWidth: Dispatch<SetStateAction<number>>
   height: number | null
   setHeight: Dispatch<SetStateAction<number | null>>
-  isDragging: boolean
-  setIsDragging: Dispatch<SetStateAction<boolean>>
+  isDraggingWidth: boolean
+  setIsDraggingWidth: Dispatch<SetStateAction<boolean>>
+  isDraggingHeight: boolean
+  setIsDraggingHeight: Dispatch<SetStateAction<boolean>>
 }
 
 export default createContext<BreakpointDimensionsContextType>({
@@ -14,6 +16,8 @@ export default createContext<BreakpointDimensionsContextType>({
   setWidth: () => {},
   height: null,
   setHeight: () => {},
-  isDragging: false,
-  setIsDragging: () => {},
+  isDraggingWidth: false,
+  setIsDraggingWidth: () => {},
+  isDraggingHeight: false,
+  setIsDraggingHeight: () => {},
 })
