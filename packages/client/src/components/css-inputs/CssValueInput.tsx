@@ -155,6 +155,7 @@ function CssValueInput({
         backgroundColor="background"
         endIcon={renderAdornment()}
         width="100%"
+        height={18}
         overflow="hidden"
         pr={0}
       />

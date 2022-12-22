@@ -67,6 +67,7 @@ function StylesAttributeTitle({
       <Div
         flexGrow
         ellipsis
+        flexShrink={1}
       >
         {children}
         {isImportant ? '!' : ''}
@@ -75,6 +76,7 @@ function StylesAttributeTitle({
       <Div
         id="StylesSubSectionAttributeTitle-important"
         xflex="x5"
+        flexShrink={0}
         display="none"
         cursor="pointer"
         color="primary"
@@ -88,6 +90,7 @@ function StylesAttributeTitle({
         <Div
           id="StylesSubSectionAttributeTitle-reset"
           xflex="x5"
+          flexShrink={0}
           display="none"
           cursor="pointer"
           color="danger"

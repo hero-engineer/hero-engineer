@@ -1,6 +1,7 @@
 import { memo, useCallback, useContext, useState } from 'react'
 import { Accordion, Button, Div, MenuItem, Select } from 'honorable'
 import { CgBorderAll, CgBorderBottom, CgBorderLeft, CgBorderRight, CgBorderTop } from 'react-icons/cg'
+import { TbBorderRadius } from 'react-icons/tb'
 
 import StylesContext from '~contexts/StylesContext'
 
@@ -152,14 +153,16 @@ function StylesSubSectionBorder() {
   ])
 
   const renderBorderSection = useCallback(() => (
-    <Div xflex="y2s">
+    <Div
+      xflex="y2s"
+      gap={0.25}
+    >
       <StylesAttributeTitle attributeNames={borderAttributeNames}>
         Border
       </StylesAttributeTitle>
       <Div
         xflex="x4s"
         gap={0.25}
-        mt={0.25}
       >
         <Div xflex="y2s">
           <Div xflex="x5s">
@@ -229,13 +232,85 @@ function StylesSubSectionBorder() {
   ])
 
   const renderBorderRadiusSection = useCallback(() => (
-    <Div xflex="x1">
+    <Div
+      xflex="y2s"
+      gap={0.5}
+    >
       <StylesAttributeTitle attributeNames={borderRadiusAttributeNames}>
         Radius
       </StylesAttributeTitle>
-
+      <Div xflex="x4s">
+        <StylesAttributeTitle
+          attributeNames={['border-radius']}
+          width={36}
+        >
+          <CgBorderAll style={{ marginTop: 2 }} />
+        </StylesAttributeTitle>
+        <CssValueInput
+          value={getValue('border-radius')}
+          onChange={value => onChange([updateCssAttribute('border-radius', value)])}
+        />
+      </Div>
+      <Div
+        xflex="x4s"
+        gap={1}
+      >
+        <Div xflex="x4s">
+          <StylesAttributeTitle
+            attributeNames={['border-radius-top-left']}
+            width={36}
+          >
+            <TbBorderRadius style={{ marginTop: 2 }} />
+          </StylesAttributeTitle>
+          <CssValueInput
+            value={getValue('border-radius-top-left')}
+            onChange={value => onChange([updateCssAttribute('border-radius-top-left', value)])}
+          />
+        </Div>
+        <Div xflex="x4s">
+          <StylesAttributeTitle
+            attributeNames={['border-radius-top-right']}
+            width={36}
+          >
+            <TbBorderRadius style={{ marginTop: 2, transform: 'rotate(-90deg)' }} />
+          </StylesAttributeTitle>
+          <CssValueInput
+            value={getValue('border-radius-top-right')}
+            onChange={value => onChange([updateCssAttribute('border-radius-top-right', value)])}
+          />
+        </Div>
+      </Div>
+      <Div
+        xflex="x4s"
+        gap={1}
+      >
+        <Div xflex="x4s">
+          <StylesAttributeTitle
+            attributeNames={['border-radius-bottom-left']}
+            width={36}
+          >
+            <TbBorderRadius style={{ marginTop: 2, transform: 'rotate(180deg)' }} />
+          </StylesAttributeTitle>
+          <CssValueInput
+            value={getValue('border-radius-bottom-left')}
+            onChange={value => onChange([updateCssAttribute('border-radius-bottom-left', value)])}
+          />
+        </Div>
+        <Div xflex="x4s">
+          <StylesAttributeTitle
+            attributeNames={['border-radius-bottom-right']}
+            width={36}
+          >
+            <TbBorderRadius style={{ marginTop: 2, transform: 'rotate(90deg)' }} />
+          </StylesAttributeTitle>
+          <CssValueInput
+            value={getValue('border-radius-bottom-right')}
+            onChange={value => onChange([updateCssAttribute('border-radius-bottom-right', value)])}
+          />
+        </Div>
+      </Div>
     </Div>
-  ), [])
+  ), [getValue, onChange, updateCssAttribute])
 
   return (
     <Accordion
