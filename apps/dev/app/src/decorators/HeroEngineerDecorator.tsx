@@ -3,7 +3,7 @@
  * HeroEngineerDecorator.tsx is used to decorate any Hero Engineer component
  * Its primary role is to inject the CSS into the Hero Engineer iframe
 -- */
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode, useEffect, useRef } from 'react'
 
 import normalizeCss from 'normalize.css'
 
@@ -14,24 +14,32 @@ type HeroEngineerCommonDecoratorPropsType = {
   children: ReactNode
 }
 
+const csss = [
+  normalizeCss,
+  indexCss,
+]
+
 function HeroEngineerDecorator({ children, head }: HeroEngineerCommonDecoratorPropsType) {
-  const [styleElement, setStyleElement] = useState<HTMLStyleElement | null>(null)
+  const styleElements = useRef<HTMLStyleElement[]>([])
 
   useEffect(() => {
     if (!head) return
 
-    if (styleElement) {
+    styleElements.current.forEach(styleElement => {
       head.removeChild(styleElement)
-    }
+    })
 
-    const style = document.createElement('style')
+    styleElements.current.length = 0
 
-    style.innerHTML = `${normalizeCss}\n${indexCss}`
+    csss.forEach(css => {
+      const styleElement = document.createElement('style')
 
-    head.appendChild(style)
+      styleElement.innerHTML = css
 
-    setStyleElement(style)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+      head.appendChild(styleElement)
+
+      styleElements.current.push(styleElement)
+    })
   }, [head])
 
   return children
