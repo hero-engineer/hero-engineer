@@ -509,7 +509,6 @@ export default mergeTheme(defaultTheme, {
       },
       ({ short }: any) => short && {
         minHeight: 0,
-        width: 64,
         paddingLeft: 4,
       },
       ({ colorInput }: any) => colorInput && {

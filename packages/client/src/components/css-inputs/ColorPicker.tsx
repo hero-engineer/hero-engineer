@@ -1,22 +1,27 @@
 import '../../css/ColorPicker.css'
 
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
-import { Button, Div, Input, MenuItem, Select, WithOutsideClick } from 'honorable'
+import { Button, Div, DivProps, Input, MenuItem, Select, WithOutsideClick } from 'honorable'
 import { ChromePicker } from 'react-color'
 
 import { CssVariableType } from '~types'
 
 import { zIndexes } from '~constants'
 
-type ColorPickerPropsType = {
+import getColors from '~processors/css/getColors'
+
+import useAsync from '~hooks/useAsync'
+
+type BaseColorPickerPropsType = {
   noInput?: boolean
   value: string | null
   onChange: (value: string) => void
   size?: number
   pickerLeftOffset?: number
   withOverlay?: boolean
-  colors?: CssVariableType[]
 }
+
+type ColorPickerPropsType = BaseColorPickerPropsType & Omit<DivProps, keyof BaseColorPickerPropsType>
 
 const prepareVariable = (color: CssVariableType) => `var(${color.id})`
 
@@ -27,9 +32,11 @@ function ColorPicker({
   size = 16,
   pickerLeftOffset = 0,
   withOverlay = false,
-  colors = [],
+  width = 96,
+  ...props
 }: ColorPickerPropsType) {
-  const selectedColor = useMemo(() => colors.find(color => prepareVariable(color) === value), [colors, value])
+  const colors = useAsync(getColors, [])
+  const selectedColor = useMemo(() => (colors ?? []).find(color => prepareVariable(color) === value), [colors, value])
 
   const [isOpen, setIsOpen] = useState(false)
   const [currentValue, setCurrentValue] = useState(value === null ? '#ffffff' : selectedColor?.value ?? value)
@@ -124,6 +131,8 @@ function ColorPicker({
       <Div
         position="relative"
         xflex="x4"
+        width={width}
+        {...props}
       >
         {!noInput && (
           <Input
@@ -132,7 +141,7 @@ function ColorPicker({
             colorInput
             disabledNoBackground
             noStartIconPadding
-            width={72}
+            width="100%"
             backgroundColor="background"
             borderTopLeftRadius={0}
             borderBottomLeftRadius={0}
@@ -162,7 +171,7 @@ function ColorPicker({
               gap={0.5}
               p={0.5}
             >
-              {!!colors.length && (
+              {!!colors?.length && (
                 <>
                   Design system colors:
                   <Select

@@ -17,6 +17,7 @@ const cssTextDecorationValues = ['none', 'underline', 'overline', 'line-through'
 const cssTextTransformValues = ['none', 'capitalize', 'uppercase', 'lowercase', 'full-width', 'full-size-kana']
 const cssDirectionValues = ['ltr', 'rtl']
 const cssWhiteSpaceValues = ['normal', 'nowrap', 'pre', 'pre-wrap', 'pre-line', 'break-spaces']
+const cssBorderStyleValues = ['none', 'hidden', 'dotted', 'dashed', 'solid', 'double', 'groove', 'ridge', 'inset', 'outset']
 
 function prepareSpacingValue(value: string) {
   return value.split(' ').map(x => x.trim()).filter(x => x.length)
@@ -335,6 +336,116 @@ const cssAttributesMap: CSsAttributesMapType = {
     cssNames: ['direction'],
     defaultValue: 'inherit',
     isValueValid: value => typeof value === 'string' && cssDirectionValues.includes(value) || value === 'inherit',
+  },
+  'background-color': {
+    cssNames: ['background-color'],
+    defaultValue: 'transparent',
+    isValueValid: value => typeof value === 'string',
+  },
+  background: {
+    cssNames: ['background'],
+    defaultValue: 'none',
+    isValueValid: value => typeof value === 'string',
+  },
+  'border-style': {
+    cssNames: ['border-style'],
+    defaultValue: 'none',
+    isValueValid: value => typeof value === 'string' && cssBorderStyleValues.includes(value),
+  },
+  'border-top-style': {
+    cssNames: ['border-top-style'],
+    defaultValue: 'none',
+    isValueValid: value => typeof value === 'string' && cssBorderStyleValues.includes(value),
+  },
+  'border-right-style': {
+    cssNames: ['border-right-style'],
+    defaultValue: 'none',
+    isValueValid: value => typeof value === 'string' && cssBorderStyleValues.includes(value),
+  },
+  'border-bottom-style': {
+    cssNames: ['border-bottom-style'],
+    defaultValue: 'none',
+    isValueValid: value => typeof value === 'string' && cssBorderStyleValues.includes(value),
+  },
+  'border-left-style': {
+    cssNames: ['border-left-style'],
+    defaultValue: 'none',
+    isValueValid: value => typeof value === 'string' && cssBorderStyleValues.includes(value),
+  },
+  'border-color': {
+    cssNames: ['border-color'],
+    defaultValue: 'transparent',
+    isValueValid: value => typeof value === 'string',
+  },
+  'border-top-color': {
+    cssNames: ['border-top-color'],
+    defaultValue: 'transparent',
+    isValueValid: value => typeof value === 'string',
+  },
+  'border-right-color': {
+    cssNames: ['border-right-color'],
+    defaultValue: 'transparent',
+    isValueValid: value => typeof value === 'string',
+  },
+  'border-bottom-color': {
+    cssNames: ['border-bottom-color'],
+    defaultValue: 'transparent',
+    isValueValid: value => typeof value === 'string',
+  },
+  'border-left-color': {
+    cssNames: ['border-left-color'],
+    defaultValue: 'transparent',
+    isValueValid: value => typeof value === 'string',
+  },
+  'border-width': {
+    cssNames: ['border-width'],
+    defaultValue: '0',
+    isValueValid: value => isSizeValueValid(value),
+  },
+  'border-top-width': {
+    cssNames: ['border-top-width'],
+    defaultValue: '0',
+    isValueValid: value => isSizeValueValid(value),
+  },
+  'border-right-width': {
+    cssNames: ['border-right-width'],
+    defaultValue: '0',
+    isValueValid: value => isSizeValueValid(value),
+  },
+  'border-bottom-width': {
+    cssNames: ['border-bottom-width'],
+    defaultValue: '0',
+    isValueValid: value => isSizeValueValid(value),
+  },
+  'border-left-width': {
+    cssNames: ['border-left-width'],
+    defaultValue: '0',
+    isValueValid: value => isSizeValueValid(value),
+  },
+  'border-radius': {
+    cssNames: ['border-radius'],
+    defaultValue: '0',
+    isValueValid: value => isSizeValueValid(value),
+  },
+  'border-radius-top-left': {
+    cssNames: ['border-radius-top-left'],
+    defaultValue: '0',
+    isValueValid: value => isSizeValueValid(value),
+  },
+  'border-radius-top-right': {
+    cssNames: ['border-radius-top-right'],
+    defaultValue: '0',
+    isValueValid: value => isSizeValueValid(value),
+  },
+  'border-radius-bottom-left': {
+    cssNames: ['border-radius-bottom-left'],
+    defaultValue: '0',
+    isValueValid: value => isSizeValueValid(value),
+  },
+  'border-radius-bottom-right': {
+    cssNames: ['border-radius-bottom-right'],
+    defaultValue: '0',
+    isValueValid: value => isSizeValueValid(value),
   },
 } as const
 

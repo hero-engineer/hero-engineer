@@ -6,7 +6,6 @@ import { RxLetterCaseCapitalize, RxLetterCaseLowercase, RxLetterCaseUppercase, R
 import { MdClose, MdOutlineFormatTextdirectionLToR, MdOutlineFormatTextdirectionRToL } from 'react-icons/md'
 
 import getTypefaces from '~processors/css/getTypefaces'
-import getColors from '~processors/css/getColors'
 
 import StylesContext from '~contexts/StylesContext'
 
@@ -138,7 +137,6 @@ function StylesSubSectionTypography() {
   const { getValue, isToggled, updateCssAttribute } = useStylesSubSectionHelpers()
 
   const typefaces = useAsync(getTypefaces, [])
-  const colors = useAsync(getColors, [])
   const fontFamily = getValue('font-family')
   const weights = useMemo(() => {
     const typeface = typefaces?.find(({ name }) => fontFamily === prepareFontFamily(name))
@@ -301,14 +299,12 @@ function StylesSubSectionTypography() {
           withOverlay
           value={color === 'inherit' ? null : color}
           onChange={value => onChange([updateCssAttribute('color', value)])}
-          size={16}
           pickerLeftOffset={-29} // Adjusted from sight
-          colors={colors ?? []}
         />
         {renderInheritButton('color')}
       </Div>
     )
-  }, [colors, renderInheritButton, getValue, updateCssAttribute, onChange])
+  }, [renderInheritButton, getValue, updateCssAttribute, onChange])
 
   const renderAlignSection = useCallback(() => (
     <Div xflex="x4">

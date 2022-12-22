@@ -38,6 +38,8 @@ import StylesSubSectionSize from '~components/scene-component/panels/styles/Styl
 import StylesSubSectionLayout from '~components/scene-component/panels/styles/StylesSubSectionLayout'
 import StylesSubSectionSpacing from '~components/scene-component/panels/styles/StylesSubSectionSpacing'
 import StylesSubSectionTypography from '~components/scene-component/panels/styles/StylesSubSectionTypography'
+import StylesSubSectionBackground from '~components/scene-component/panels/styles/StylesSubSectionBackground'
+import StylesSubSectionBorder from '~components/scene-component/panels/styles/StylesSubSectionBorder'
 
 import breakpoints from '~data/breakpoints'
 
@@ -316,6 +318,8 @@ function PanelStyles() {
       <StylesSubSectionSize />
       <StylesSubSectionPosition />
       <StylesSubSectionTypography />
+      <StylesSubSectionBackground />
+      <StylesSubSectionBorder />
     </Div>
   ), [
     shouldDisplayCssClassOrderingWarning,
