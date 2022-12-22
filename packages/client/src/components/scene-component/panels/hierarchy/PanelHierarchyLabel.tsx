@@ -43,9 +43,11 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand, 
       fontWeight={active ? 'bold' : undefined}
       userSelect="none"
       onClick={handleClick}
+      gap={0.5}
+      pr={1}
       _hover={{
         '> #PanelHierarchyLabel-delete': {
-          display: 'flex',
+          visibility: 'visible',
         },
       }}
     >
@@ -56,32 +58,28 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand, 
           transform={expanded ? 'rotate(90deg)' : undefined}
           transformOrigin="45% 45%"
           onClick={handleExpand}
-          pr={0.25}
           ml="-6px"
+          mr={-0.5}
+          pr={0.25}
         >
           <BiCaretRight />
         </Div>
       )}
-      <Div
-        flexGrow
-        ellipsis
-      >
+      <Div ellipsis>
         {hierarchy.name}
       </Div>
-      {hierarchy.start !== -1 && (
-        <Div
-          id="PanelHierarchyLabel-delete"
-          xflex="x5"
-          flexShrink={0}
-          display="none"
-          fontSize="0.75rem"
-          color="danger"
-          onClick={handleDelete}
-          px={0.5}
-        >
-          <SlTrash />
-        </Div>
-      )}
+      <Div
+        id="PanelHierarchyLabel-delete"
+        xflex="x5"
+        flexShrink={0}
+        fontSize="0.75rem"
+        color="danger"
+        visibility="hidden"
+        onClick={handleDelete}
+        px={0.5}
+      >
+        <SlTrash />
+      </Div>
     </Div>
   )
 }

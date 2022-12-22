@@ -212,6 +212,7 @@ function PanelStyles() {
     const css = convertStylesToCssString(style)
 
     similiarHierarchies.forEach(similarHierarchy => {
+      if (similarHierarchy.type === 'text') return
       // Prevent infinite hierarchy recreation
       if (similarHierarchy.element?.getAttribute('style') === css) return
 
