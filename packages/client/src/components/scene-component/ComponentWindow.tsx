@@ -33,8 +33,9 @@ function ComponentWindow({ componentPath }: ComponentWindowPropsType) {
                 <WithComponentHierarchy>
                   <WithComponentIframeHeight setHeight={setHeight}>
                     <ComponentLoader
-                      head={head}
                       componentPath={componentPath}
+                      window={window}
+                      head={head}
                     />
                   </WithComponentIframeHeight>
                 </WithComponentHierarchy>

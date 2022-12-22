@@ -7,10 +7,11 @@ import useDecoratorPaths from '~hooks/useDecoratorPaths'
 type ComponentLoaderPropsType = {
   componentPath: string
   head: HTMLHeadElement | null
+  window: Window | null
 }
 
 // A component fetcher that uses React.lazy
-function ComponentLoader({ componentPath, head }: ComponentLoaderPropsType) {
+function ComponentLoader({ componentPath, window, head }: ComponentLoaderPropsType) {
   const { key } = useContext(ComponentRemountContext)
 
   const decoratorPaths = useDecoratorPaths(componentPath)
@@ -20,7 +21,10 @@ function ComponentLoader({ componentPath, head }: ComponentLoaderPropsType) {
   return (
     <Suspense>
       {decorators.reduce((children, Decorator) => (
-        <Decorator head={head}>
+        <Decorator
+          window={window}
+          head={head}
+        >
           {children}
         </Decorator>
       ), <Component key={key} />)}
