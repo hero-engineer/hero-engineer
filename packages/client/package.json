@@ -57,8 +57,6 @@
     "honorable-recipe-xflex": "^0.0.0",
     "honorable-theme-default": "^1.0.0-beta.5",
     "postcss": "^8.4.20",
-    "postcss-import": "^15.1.0",
-    "postcss-nested": "^6.0.0",
     "react-color": "^2.19.3",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",

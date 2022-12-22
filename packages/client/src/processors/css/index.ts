@@ -1,11 +1,10 @@
 import Postcss from 'postcss'
-import PosscssNested from 'postcss-nested'
 
 import { FileType } from '~types'
 
 import createDeferedPromise from '~utils/createDeferredPromise'
 
-const postcss = Postcss([PosscssNested])
+const postcss = Postcss()
 
 const allowedCssExtensions = ['css']
 
