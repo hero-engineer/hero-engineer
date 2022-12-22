@@ -10,6 +10,7 @@ import { BreakpointType } from '~types'
 import { zIndexes } from '~constants'
 
 import BreakpointContext from '~contexts/BreakpointContext'
+import BreakpointDimensionsContext from '~contexts/BreakpointDimensionsContext'
 
 import breakpoints from '~data/breakpoints'
 
@@ -24,7 +25,8 @@ const icons = [
 ]
 
 function BreakpointsButtons() {
-  const { breakpoint, setBreakpoint, width, setWidth, height, setHeight } = useContext(BreakpointContext)
+  const { breakpoint, setBreakpoint } = useContext(BreakpointContext)
+  const { width, setWidth, height, setHeight } = useContext(BreakpointDimensionsContext)
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 

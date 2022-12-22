@@ -2,7 +2,7 @@ import { Dispatch, ReactElement, SetStateAction, memo, useCallback, useContext, 
 import { createPortal } from 'react-dom'
 import { Iframe } from 'honorable'
 
-import BreakpointContext from '~contexts/BreakpointContext'
+import BreakpointDimensionsContext from '~contexts/BreakpointDimensionsContext'
 
 import useRefresh from '~hooks/useRefresh'
 
@@ -21,7 +21,7 @@ function ComponentIframe({ children }: ComponentIframePropsType) {
 
   useRefresh()
 
-  const { width, height } = useContext(BreakpointContext)
+  const { width, height } = useContext(BreakpointDimensionsContext)
 
   const [baseHeight, setBaseHeight] = useState(0)
 

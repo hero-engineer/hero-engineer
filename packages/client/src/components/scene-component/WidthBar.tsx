@@ -1,7 +1,7 @@
 import { ReactNode, memo, useContext, useMemo, useRef } from 'react'
 import { Div } from 'honorable'
 
-import BreakpointContext from '~contexts/BreakpointContext'
+import BreakpointDimensionsContext from '~contexts/BreakpointDimensionsContext'
 import ThemeModeContext from '~contexts/ThemeModeContext'
 
 import useRefresh from '~hooks/useRefresh'
@@ -12,7 +12,7 @@ const tickWidth = 1
 
 function WidthBar() {
   const rootRef = useRef<HTMLDivElement>(null)
-  const { width, isDragging } = useContext(BreakpointContext)
+  const { width, isDragging } = useContext(BreakpointDimensionsContext)
   const { themeMode } = useContext(ThemeModeContext)
 
   useRefresh([isDragging])

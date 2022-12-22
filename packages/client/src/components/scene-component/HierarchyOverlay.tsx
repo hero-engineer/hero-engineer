@@ -5,7 +5,7 @@ import { HierarchyType } from '~types'
 
 import IsInteractiveModeContext from '~contexts/IsInteractiveModeContext'
 import HierarchyContext from '~contexts/HierarchyContext'
-import BreakpointContext from '~contexts/BreakpointContext'
+import BreakpointDimensionsContext from '~contexts/BreakpointDimensionsContext'
 
 import HierarchyOverlayElement from '~components/scene-component/HierarchyOverlayElement'
 
@@ -16,7 +16,7 @@ type HierarchyOverlayPropsType = {
 function HierarchyOverlay({ children }: HierarchyOverlayPropsType) {
   const childrenRef = useRef<HTMLDivElement>(null)
 
-  const { isDragging, width, height } = useContext(BreakpointContext)
+  const { isDragging, width, height } = useContext(BreakpointDimensionsContext)
   const { isInteractiveMode } = useContext(IsInteractiveModeContext)
   const { hierarchy, currentHierarchyId, setCurrentHierarchyId } = useContext(HierarchyContext)
 
@@ -95,9 +95,12 @@ function HierarchyOverlay({ children }: HierarchyOverlayPropsType) {
       position="relative"
       height={height}
     >
-      <div ref={childrenRef}>
+      <Div
+        ref={childrenRef}
+        xflex="y2s"
+      >
         {children}
-      </div>
+      </Div>
       {!(isDragging || isInteractiveMode) && renderOverlay()}
     </Div>
   )

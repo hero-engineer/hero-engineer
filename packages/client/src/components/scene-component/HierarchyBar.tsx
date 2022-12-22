@@ -6,7 +6,7 @@ import { HierarchyType } from '~types'
 import { zIndexes } from '~constants'
 
 import HierarchyContext from '~contexts/HierarchyContext'
-import BreakpointContext from '~contexts/BreakpointContext'
+import BreakpointDimensionsContext from '~contexts/BreakpointDimensionsContext'
 import IsInteractiveModeContext from '~contexts/IsInteractiveModeContext'
 
 function hasHierarchyChild(hierarchy: HierarchyType, targetId: string): boolean {
@@ -34,7 +34,7 @@ const caretSize = Math.sqrt(height ** 2 / 2)
 
 // The hierarchy bar displays the flattened hierarchy of the current component
 function HierarchyBar() {
-  const { isDragging } = useContext(BreakpointContext)
+  const { isDragging } = useContext(BreakpointDimensionsContext)
   const { isInteractiveMode } = useContext(IsInteractiveModeContext)
   const { hierarchy, currentHierarchyId, setCurrentHierarchyId } = useContext(HierarchyContext)
 

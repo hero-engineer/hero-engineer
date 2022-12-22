@@ -4,10 +4,13 @@ import { BreakpointType, HierarchyType } from '~types'
 
 import HierarchyContext, { HierarchyContextType } from '~contexts/HierarchyContext'
 import BreakpointContext, { BreakpointContextType } from '~contexts/BreakpointContext'
+import BreakpointDimensionsContext, { BreakpointDimensionsContextType } from '~contexts/BreakpointDimensionsContext'
 import IsInteractiveModeContext, { IsInteractiveModeContextType } from '~contexts/IsInteractiveModeContext'
 import ComponentRemountContext, { ComponentRemountContextType } from '~contexts/ComponentRemountContext'
 
 import usePersistedState from '~hooks/usePersistedState'
+
+import breakpoints from '~data/breakpoints'
 
 type ProviderComponentPropsType = {
   children: ReactNode
@@ -22,15 +25,9 @@ function ProviderComponent({ children }: ProviderComponentPropsType) {
   const [currentHierarchyId, setCurrentHierarchyId] = usePersistedState('current-hierarchy-id', '')
   const hierarchyContextValue = useMemo<HierarchyContextType>(() => ({ hierarchy, setHierarchy, currentHierarchyId, setCurrentHierarchyId }), [hierarchy, currentHierarchyId, setCurrentHierarchyId])
 
-  const [breakpoint, setBreakpoint] = usePersistedState<BreakpointType>('breakpoint', {
-    id: 'Default',
-    name: 'Default',
-    base: 1232,
-    min: 992,
-    max: 1279,
-    scale: 1,
-    media: '',
-  })
+  const [breakpoint, setBreakpoint] = usePersistedState<BreakpointType>('breakpoint', breakpoints[1])
+  const breakpointContextValue = useMemo<BreakpointContextType>(() => ({ breakpoint, setBreakpoint }), [breakpoint, setBreakpoint])
+
   const [width, setWidth] = usePersistedState<number>('width', 0, (x: any) => parseFloat(x))
   const [height, setHeight] = usePersistedState<number | null>('height', null, (x: any) => {
     const n = parseFloat(x)
@@ -38,7 +35,7 @@ function ProviderComponent({ children }: ProviderComponentPropsType) {
     return n === n ? n : x
   })
   const [isDragging, setIsDragging] = useState(false)
-  const breakpointContextValue = useMemo<BreakpointContextType>(() => ({ breakpoint, setBreakpoint, width, setWidth, height, setHeight, isDragging, setIsDragging }), [breakpoint, setBreakpoint, width, setWidth, height, setHeight, isDragging])
+  const breakpointDimensionsContextValue = useMemo<BreakpointDimensionsContextType>(() => ({ width, setWidth, height, setHeight, isDragging, setIsDragging }), [width, setWidth, height, setHeight, isDragging])
 
   const [isInteractiveMode, setIsInteractiveMode] = usePersistedState('interactive-mode', false)
   const isInteractiveModeContextValue = useMemo<IsInteractiveModeContextType>(() => ({ isInteractiveMode, setIsInteractiveMode }), [isInteractiveMode, setIsInteractiveMode])
@@ -47,9 +44,11 @@ function ProviderComponent({ children }: ProviderComponentPropsType) {
     <ComponentRemountContext.Provider value={componentRemountContextValue}>
       <HierarchyContext.Provider value={hierarchyContextValue}>
         <BreakpointContext.Provider value={breakpointContextValue}>
-          <IsInteractiveModeContext.Provider value={isInteractiveModeContextValue}>
-            {children}
-          </IsInteractiveModeContext.Provider>
+          <BreakpointDimensionsContext.Provider value={breakpointDimensionsContextValue}>
+            <IsInteractiveModeContext.Provider value={isInteractiveModeContextValue}>
+              {children}
+            </IsInteractiveModeContext.Provider>
+          </BreakpointDimensionsContext.Provider>
         </BreakpointContext.Provider>
       </HierarchyContext.Provider>
     </ComponentRemountContext.Provider>

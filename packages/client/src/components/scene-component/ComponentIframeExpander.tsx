@@ -4,8 +4,7 @@ import { Div } from 'honorable'
 import { zIndexes } from '~constants'
 
 import BreakpointContext from '~contexts/BreakpointContext'
-
-// import useClearHierarchyIdsAndComponentDeltaOnClick from '~hooks/useClearHierarchyIdsAndComponentDeltaOnClick'
+import BreakpointDimensionsContext from '~contexts/BreakpointDimensionsContext'
 
 type ComponentIframeWidthExanderPropsType = {
   children: ReactNode
@@ -15,7 +14,7 @@ function ComponentIframeExpander({ children }: ComponentIframeWidthExanderPropsT
   const rootRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
 
-  const { width } = useContext(BreakpointContext)
+  const { width } = useContext(BreakpointDimensionsContext)
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const maxWidth = useMemo(() => rootRef.current?.getBoundingClientRect().width ?? Infinity, [rootRef.current])
@@ -61,7 +60,8 @@ type ComponentIframeWidthExanderHandlePropsType = {
 function ComponentIframeExanderHandle({ isLeft, isHeight, maxWidth, currentHeight }: ComponentIframeWidthExanderHandlePropsType) {
   const [isDraggingCurrent, setIsDraggingCurrent] = useState(false)
 
-  const { breakpoint, setWidth, setHeight, isDragging, setIsDragging } = useContext(BreakpointContext)
+  const { breakpoint } = useContext(BreakpointContext)
+  const { setWidth, setHeight, isDragging, setIsDragging } = useContext(BreakpointDimensionsContext)
 
   const handleMouseDown = useCallback(() => {
     setIsDragging(true)
