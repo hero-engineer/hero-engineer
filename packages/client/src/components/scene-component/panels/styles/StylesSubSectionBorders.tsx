@@ -60,10 +60,10 @@ const borderStyles = [
   'hidden',
 ]
 
-function StylesSubSectionBorder() {
+function StylesSubSectionBorders() {
   const { onChange } = useContext(StylesContext)
 
-  const [expanded, setExpanded] = usePersistedState('styles-sub-section-border-expanded', true)
+  const [expanded, setExpanded] = usePersistedState('styles-sub-section-borders-expanded', true)
   const [selectedBorder, setSelectedBorder] = useState('border')
 
   const { getTextColor, getValue, updateCssAttribute } = useStylesSubSectionHelpers()
@@ -322,7 +322,7 @@ function StylesSubSectionBorder() {
       childrenPositionRelative
       title={(
         <StylesTitle
-          title="Border"
+          title="Borders"
           expanded={expanded}
           attributeNames={attributeNames}
         />
@@ -343,4 +343,4 @@ function StylesSubSectionBorder() {
   )
 }
 
-export default memo(StylesSubSectionBorder)
+export default memo(StylesSubSectionBorders)

@@ -18,6 +18,7 @@ const cssTextTransformValues = ['none', 'capitalize', 'uppercase', 'lowercase', 
 const cssDirectionValues = ['ltr', 'rtl']
 const cssWhiteSpaceValues = ['normal', 'nowrap', 'pre', 'pre-wrap', 'pre-line', 'break-spaces']
 const cssBorderStyleValues = ['none', 'hidden', 'dotted', 'dashed', 'solid', 'double', 'groove', 'ridge', 'inset', 'outset']
+const cssCursorValues = ['auto', 'default', 'none', 'context-menu', 'help', 'pointer', 'progress', 'wait', 'cell', 'crosshair', 'text', 'vertical-text', 'alias', 'copy', 'move', 'no-drop', 'not-allowed', 'grab', 'grabbing', 'all-scroll', 'col-resize', 'row-resize', 'n-resize', 'e-resize', 's-resize', 'w-resize', 'ne-resize', 'nw-resize', 'se-resize', 'sw-resize', 'ew-resize', 'ns-resize', 'nesw-resize', 'nwse-resize', 'zoom-in', 'zoom-out', 'initial', 'inherit']
 
 function prepareSpacingValue(value: string) {
   return value.split(' ').map(x => x.trim()).filter(x => x.length)
@@ -446,6 +447,11 @@ const cssAttributesMap: CSsAttributesMapType = {
     cssNames: ['border-radius-bottom-right'],
     defaultValue: '0',
     isValueValid: value => isSizeValueValid(value),
+  },
+  cursor: {
+    cssNames: ['cursor'],
+    defaultValue: 'auto',
+    isValueValid: value => typeof value === 'string' && cssCursorValues.includes(value),
   },
 } as const
 
