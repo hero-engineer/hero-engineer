@@ -6,7 +6,7 @@ type CoolDaddyPropsType = {
 
 function CoolDaddy({ children }: CoolDaddyPropsType) {
   return (
-    <div className="foo">
+    <div>
       Next is a cool child
       {children}
       Previous is a cool child
