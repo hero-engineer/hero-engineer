@@ -3,7 +3,7 @@ import { Div } from 'honorable'
 
 import { HierarchyType } from '~types'
 
-import { zIndexes } from '~constants'
+import { hierarchyTypeToColor, zIndexes } from '~constants'
 
 type HierarchyOverlayElementPropsType = {
   hierarchy: HierarchyType
@@ -13,14 +13,6 @@ type HierarchyOverlayElementPropsType = {
   onSelect: () => void
   onScroll: () => void
   children: ReactNode
-}
-
-const typeToColor = {
-  component: 'hierarchy-type-component',
-  element: 'hierarchy-type-element',
-  children: 'hierarchy-type-children',
-  array: 'hierarchy-type-array',
-  text: 'hierarchy-type-text',
 }
 
 function scrollElement(element: HTMLElement, deltaY: number, deltaX: number): boolean {
@@ -127,7 +119,7 @@ function HierarchyOverlayElement({ hierarchy, parentHierarchy, isSelected, isHid
     }
   }, [handleWheel])
 
-  const color = typeToColor[hierarchy.type]
+  const color = hierarchyTypeToColor[hierarchy.type] ?? 'text'
   const { top, left, width, height } = getLimitedDomRect(hierarchy)
   const { top: parentTop, left: parentLeft } = parentHierarchy ? getLimitedDomRect(parentHierarchy) : { top: 0, left: 0 }
 

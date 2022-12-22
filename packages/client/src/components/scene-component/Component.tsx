@@ -15,7 +15,7 @@ import InteractiveModeButton from '~components/scene-component/InteractiveModeBu
 import RemountButton from '~components/scene-component/RemountButton'
 import ComponentWindow from '~components/scene-component/ComponentWindow'
 import RetractablePanel from '~components/layout/RetractablePanel'
-import PanelHierarchy from '~components/scene-component/panels/PanelHierarchy'
+import PanelHierarchy from '~components/scene-component/panels/hierarchy/PanelHierarchy'
 import PanelStyles from '~components/scene-component/panels/styles/PanelStyles'
 
 function Component() {

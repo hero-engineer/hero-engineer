@@ -23,6 +23,14 @@ export const refetchKeys = {
   files: 'files',
 }
 
+export const hierarchyTypeToColor = {
+  component: 'hierarchy-type-component',
+  element: 'hierarchy-type-element',
+  children: 'hierarchy-type-children',
+  array: 'hierarchy-type-array',
+  text: 'hierarchy-type-text',
+}
+
 export const cssValueReset = `__reset__${Math.random()}`
 
 export const cssValueUnits = [
