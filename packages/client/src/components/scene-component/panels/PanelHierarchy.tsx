@@ -31,31 +31,27 @@ function PanelHierarchy() {
     await deleteNode(hierarchy, logs.typescript)
   }, [logs.typescript])
 
-  const renderHierarchy = useCallback((hierarchy: HierarchyType, isRoot = false) => {
-    if (hierarchy.type === 'text') return null
-
-    return (
-      <TreeView
-        key={hierarchy.id}
-        expanded={!collapsed[hierarchy.id]}
-        label={(
-          <PanelHierarchyLabel
-            hierarchy={hierarchy}
-            active={currentHierarchyId === hierarchy.id}
-            expanded={!collapsed[hierarchy.id]}
-            onSelect={() => setCurrentHierarchyId(hierarchy.id)}
-            onExpand={() => setCollapsed(x => ({ ...x, [hierarchy.id]: !collapsed[hierarchy.id] }))}
-            onDelete={() => handleDelete(hierarchy)}
-          />
-        )}
-        barColor={typeToColor[hierarchy.type] ?? 'text'}
-        width="100%"
-        mt={isRoot ? -0.5 : 0}
-      >
-        {hierarchy.children.map(child => renderHierarchy(child))}
-      </TreeView>
-    )
-  }, [collapsed, currentHierarchyId, setCollapsed, setCurrentHierarchyId, handleDelete])
+  const renderHierarchy = useCallback((hierarchy: HierarchyType, isRoot = false) => (
+    <TreeView
+      key={hierarchy.id}
+      expanded={!collapsed[hierarchy.id]}
+      label={(
+        <PanelHierarchyLabel
+          hierarchy={hierarchy}
+          active={currentHierarchyId === hierarchy.id}
+          expanded={!collapsed[hierarchy.id]}
+          onSelect={() => setCurrentHierarchyId(hierarchy.id)}
+          onExpand={() => setCollapsed(x => ({ ...x, [hierarchy.id]: !collapsed[hierarchy.id] }))}
+          onDelete={() => handleDelete(hierarchy)}
+        />
+      )}
+      barColor={typeToColor[hierarchy.type] ?? 'text'}
+      width="100%"
+      mt={isRoot ? -0.5 : 0}
+    >
+      {hierarchy.children.map(child => renderHierarchy(child))}
+    </TreeView>
+  ), [collapsed, currentHierarchyId, setCollapsed, setCurrentHierarchyId, handleDelete])
 
   return (
     <Div

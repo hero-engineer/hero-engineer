@@ -23,23 +23,19 @@ function HierarchyOverlay({ children }: HierarchyOverlayPropsType) {
   const [isScrolling, setIsScrolling] = useState(false)
   const [refresh, setRefresh] = useState(0)
 
-  const renderOverlayElement = useCallback((hierarchy: HierarchyType, parentHierarchy: HierarchyType | null = null) => {
-    if (hierarchy.type === 'text') return null
-
-    return (
-      <HierarchyOverlayElement
-        key={hierarchy.id}
-        hierarchy={hierarchy}
-        parentHierarchy={parentHierarchy}
-        isSelected={hierarchy.id === currentHierarchyId}
-        isHidden={isScrolling}
-        onSelect={() => setCurrentHierarchyId(hierarchy.id)}
-        onScroll={() => setIsScrolling(true)}
-      >
-        {hierarchy.children.map(childHierarchy => renderOverlayElement(childHierarchy, hierarchy))}
-      </HierarchyOverlayElement>
-    )
-  }, [currentHierarchyId, isScrolling, setCurrentHierarchyId])
+  const renderOverlayElement = useCallback((hierarchy: HierarchyType, parentHierarchy: HierarchyType | null = null) => (
+    <HierarchyOverlayElement
+      key={hierarchy.id}
+      hierarchy={hierarchy}
+      parentHierarchy={parentHierarchy}
+      isSelected={hierarchy.id === currentHierarchyId}
+      isHidden={isScrolling}
+      onSelect={() => setCurrentHierarchyId(hierarchy.id)}
+      onScroll={() => setIsScrolling(true)}
+    >
+      {hierarchy.children.map(childHierarchy => renderOverlayElement(childHierarchy, hierarchy))}
+    </HierarchyOverlayElement>
+  ), [currentHierarchyId, isScrolling, setCurrentHierarchyId])
 
   const renderOverlay = useCallback(() => {
     if (!hierarchy) return null

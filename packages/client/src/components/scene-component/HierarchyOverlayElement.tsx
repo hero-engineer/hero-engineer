@@ -37,7 +37,18 @@ function scrollElement(element: HTMLElement, deltaY: number, deltaX: number): bo
 }
 
 function getLimitedDomRect(hierarchy: HierarchyType) {
-  if (hierarchy.element) return hierarchy.element.getBoundingClientRect()
+  if (hierarchy.type === 'element') return hierarchy.element!.getBoundingClientRect()
+  if (hierarchy.type === 'text') {
+    const range = document.createRange()
+
+    range.selectNode(hierarchy.element!)
+
+    const rect = range.getBoundingClientRect()
+
+    range.detach()
+
+    return rect
+  }
 
   const childElements = getChildElements(hierarchy)
 
@@ -136,7 +147,6 @@ function HierarchyOverlayElement({ hierarchy, parentHierarchy, isSelected, isHid
       zIndex={isHovered ? zIndexes.hierarchyOverlayElement : 'auto'}
     >
       <Div
-        id="HierarchyOverlayElement-vignette"
         xflex="x4"
         display={isSelected && !isHidden ? 'flex' : 'none'}
         position="absolute"

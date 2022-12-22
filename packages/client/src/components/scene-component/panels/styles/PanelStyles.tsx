@@ -58,8 +58,6 @@ function PanelStyles() {
   const [className, setClassName] = useState('')
   const [selectedClassName, setSelelectedClassName] = usePersistedState('selected-class-name', '')
   const [updatedAttributes, setUpdatedAttributes] = useState<CssAttributeType[]>([])
-
-  // const [isStyleUpdated, setIsStyleUpdated] = useState(false)
   const [classesRefresh, setClassesRefresh] = useState(0)
   const [shouldDisplayCssClassOrderingWarning, setShouldDisplayCssClassOrderingWarning] = useState(false)
 
@@ -362,7 +360,7 @@ function PanelStyles() {
   ])
 
   useEffect(() => {
-    setClassName(currentHierarchy?.element ? currentHierarchy.element.className : '')
+    setClassName(currentHierarchy?.element?.className ?? '')
   }, [currentHierarchy])
 
   // Reset style state on new breakpoint or new selected className

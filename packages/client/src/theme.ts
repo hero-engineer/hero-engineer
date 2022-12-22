@@ -167,7 +167,10 @@ export default mergeTheme(defaultTheme, {
     'hierarchy-type-element': 'primary',
     'hierarchy-type-children': 'pink.500',
     'hierarchy-type-array': 'green.500',
-    'hierarchy-type-text': 'grey.500',
+    'hierarchy-type-text': {
+      light: 'grey.500',
+      dark: 'grey.300',
+    },
     breakpoint: {
       light: 'yellow.600',
       dark: 'yellow.300',
