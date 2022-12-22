@@ -4,7 +4,7 @@ import CoolDaddy from './components/CoolDaddy'
 function App() {
   return (
     <>
-      <div>
+      <div className="foo">
         Edit me I'm famous
       </div>
       <CoolDiv />
@@ -13,6 +13,31 @@ function App() {
         <div>
           Edit me I'm famous too
         </div>
+        <CoolDaddy>
+          <CoolDaddy>
+            <CoolDaddy>
+              <CoolDaddy>
+                <CoolDaddy>
+                  <CoolDaddy>
+                    <CoolDaddy>
+                      <CoolDaddy>
+                        <CoolDaddy>
+                          <CoolDaddy>
+                            <CoolDaddy>
+                              <CoolDaddy>
+                                <CoolDiv />
+                              </CoolDaddy>
+                            </CoolDaddy>
+                          </CoolDaddy>
+                        </CoolDaddy>
+                      </CoolDaddy>
+                    </CoolDaddy>
+                  </CoolDaddy>
+                </CoolDaddy>
+              </CoolDaddy>
+            </CoolDaddy>
+          </CoolDaddy>
+        </CoolDaddy>
       </CoolDaddy>
     </>
   )
