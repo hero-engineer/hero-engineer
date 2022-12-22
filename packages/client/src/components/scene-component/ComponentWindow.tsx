@@ -4,7 +4,7 @@ import { Div } from 'honorable'
 import ComponentRemountContext from '~contexts/ComponentRemountContext'
 
 import WithComponentHierarchy from '~components/scene-component/WithComponentHierarchy'
-import HierarchyOverlay from '~components/scene-component/HierarchyOverlay'
+import HierarchyOverlay from '~components/scene-component/hierarchy-overlay/HierarchyOverlay'
 import WithComponentError from '~components/scene-component/WithComponentError'
 import WithComponentIframeHeight from '~components/scene-component/WithComponentIframeHeight'
 import ComponentLoader from '~components/scene-component/ComponentLoader'

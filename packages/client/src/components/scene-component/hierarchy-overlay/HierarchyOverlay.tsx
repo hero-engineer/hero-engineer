@@ -7,7 +7,7 @@ import IsInteractiveModeContext from '~contexts/IsInteractiveModeContext'
 import HierarchyContext from '~contexts/HierarchyContext'
 import BreakpointDimensionsContext from '~contexts/BreakpointDimensionsContext'
 
-import HierarchyOverlayElement from '~components/scene-component/HierarchyOverlayElement'
+import HierarchyOverlayElement from '~components/scene-component/hierarchy-overlay/HierarchyOverlayElement'
 
 type HierarchyOverlayPropsType = {
   children: ReactNode
