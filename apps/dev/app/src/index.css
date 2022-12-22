@@ -33,7 +33,7 @@ html {
 
 
 .foo {
-  font-family: "Lobster Two", sans-serif;
+  font-family: Inter, sans-serif;
   flex-direction: column;
   display: flex;
 }
