@@ -33,7 +33,6 @@ html {
 
 
 .foo {
-  flex-direction: row;
   font-family: "Lobster Two", sans-serif;
   display: flex;
 }
