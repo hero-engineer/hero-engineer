@@ -29,17 +29,17 @@ function ComponentWindow({ componentPath }: ComponentWindowPropsType) {
         <HierarchyOverlay>
           <ComponentIframe>
             {({ window, head, setHeight }) => (
-              <WithComponentError key={key}>
-                <WithComponentHierarchy>
-                  <WithComponentIframeHeight setHeight={setHeight}>
+              <WithComponentIframeHeight setHeight={setHeight}>
+                <WithComponentError key={key}>
+                  <WithComponentHierarchy>
                     <ComponentLoader
                       componentPath={componentPath}
                       window={window}
                       head={head}
                     />
-                  </WithComponentIframeHeight>
-                </WithComponentHierarchy>
-              </WithComponentError>
+                  </WithComponentHierarchy>
+                </WithComponentError>
+              </WithComponentIframeHeight>
             )}
           </ComponentIframe>
         </HierarchyOverlay>
