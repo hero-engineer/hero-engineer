@@ -10,20 +10,20 @@ It acts as a shield around your app to reprogram it as you create new components
 
 ## Current features
 
+- Create components
 - Component isolation
 - Undo/Redo
 - Packages management
+- Fonts and CSS variables management
 - Favicon management
 - Dark mode
 - Interactive mode
 
 ## Working on
 
-- Create components
 - Insert component in hierarchy
 - Delete component from hierarchy
 - Design system
-- Fonts and CSS variables management
 - Style components
 
 ## Roadmap
@@ -40,17 +40,15 @@ And much more!
 
 ## Development
 
-Run `npm i` in the root, `packages/cli`, `packages/server` and `packages/client`  directories.
+Run `npm i` in the root, `packages/cli`, `packages/server`, `packages/client`, `apps/dev` and `apps/dev/app`  directories.
+
+Run `npm run link` in the root directory.
 
 Run `npm run dev` in the `packages/cli`, `packages/server` and `packages/client` directories.
 
-Etheir:
-- Use [the shared dev Hero Engineer app](https://github.com/dherault/ecu-app) for a lot of boilerplate and use cases: `cd ..` then `git clone git@github.com:dherault/ecu-app.git` then `cd ecu-app` then `npm i` then `cd app` then `npm i`.
-- Use a blank new Hero Engineer app for a project creation developer experience: create an empty git repository at `../ecu-app` (`cd .. && mkdir ecu-app && cd ecu-app && git init`). Run `npx ecu create` in `ecu-app`.
+Run `npm run serve` and `npm run dev` in the `apps/dev` directory.
 
-Go back to `../hero-engineer` and run `npm run link`. You Hero Engineer app at `../ecu-app` now uses the dev version of Hero Engineer.
-
-Finally, in `../ecu-app` run `npm run serve` in a first terminal and `npm run dev` in another one. You can now open the link given by ViteJS to view the live app using Hero Engineer. :tada:
+You can now open the link given by ViteJS to view the live app using Hero Engineer. :tada:
 
 ## License
 
