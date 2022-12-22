@@ -1,6 +1,6 @@
 function App() {
   return (
-    <div className="bar">
+    <div className="foo bar">
       Edit me I'm famous
     </div>
   )
