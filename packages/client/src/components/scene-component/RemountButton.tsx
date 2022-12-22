@@ -10,7 +10,7 @@ function RemountButton(props: any) {
   return (
     <Tooltip
       label="Reload component"
-      placement="bottom-end"
+      placement="bottom"
     >
       <Button
         ghost

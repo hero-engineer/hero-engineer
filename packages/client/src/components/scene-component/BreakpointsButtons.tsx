@@ -63,7 +63,7 @@ function BreakpointsButtons() {
       label={(
         <Div xflex="y2">
           <Div>{bp.name}</Div>
-          <Div>
+          <Div mt={0.25}>
             {bp.max >= infinityValue ? '∞' : bp.max}
             px -
             {' '}

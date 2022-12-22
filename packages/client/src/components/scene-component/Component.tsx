@@ -75,7 +75,7 @@ function Component() {
           my={0.5}
         >
           <Div flexGrow />
-          <Div width={128} />
+          <Div width={64} />
           <InteractiveModeButton
             border="1px solid border"
           />
@@ -84,9 +84,8 @@ function Component() {
             borderBottom="1px solid border"
             borderRight="1px solid border"
           />
-          <Div width={32} />
+          <Div width={8} />
           <BreakpointsButtons />
-          <Div width={3 * 32} />
           <Div flexGrow />
         </Div>
         <ComponentWindow componentPath={componentPath} />

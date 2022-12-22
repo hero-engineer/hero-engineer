@@ -10,7 +10,7 @@ function InteractiveModeButton(props: any) {
   return (
     <Tooltip
       label={`${isInteractiveMode ? 'Disable' : 'Enable'} interactive mode`}
-      placement="bottom-end"
+      placement="bottom"
     >
       <Button
         ghost
