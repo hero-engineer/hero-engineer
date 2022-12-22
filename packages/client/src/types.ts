@@ -144,3 +144,9 @@ export type NormalizedCssAttributesType = Record<string, CssAttributeType>
 export type WarningsType = {
   cssClassOrdering: boolean
 }
+
+export type FileTreeType = {
+  path: string
+  fullPath: string
+  children: FileTreeType[]
+}

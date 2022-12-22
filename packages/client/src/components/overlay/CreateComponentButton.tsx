@@ -4,9 +4,13 @@ import { useNavigate } from 'react-router-dom'
 import { Button, Div, H2, Input, Modal, Tooltip } from 'honorable'
 import { AiOutlinePlus } from 'react-icons/ai'
 
+import { refetchKeys } from '~constants'
+
 import { SaveFileMutation, SaveFileMutationDataType } from '~queries'
 
 import EnvContext from '~contexts/EnvContext'
+
+import useRefetch from '~hooks/useRefetch'
 
 import createComponentCode from '~data/componentTemplate'
 
@@ -23,6 +27,8 @@ function CreateComponentButton(props: any) {
   const navigate = useNavigate()
 
   const [, saveFile] = useMutation<SaveFileMutationDataType>(SaveFileMutation)
+
+  const refetch = useRefetch()
 
   const handleCreateComponentClick = useCallback(async () => {
     if (!name) return
@@ -44,12 +50,15 @@ function CreateComponentButton(props: any) {
       commitMessage: `Create component ${name}`,
     })
 
+    refetch(refetchKeys.filePaths)
+    refetch(refetchKeys.files)
+
     navigate(`/_hero_/~/${fullRelativePath}`)
     setIsModalOpen(false)
     setName('')
     setRelativePath('components/')
     setIsLoading(false)
-  }, [env.VITE_CWD, name, relativePath, saveFile, navigate])
+  }, [env.VITE_CWD, name, relativePath, saveFile, navigate, refetch])
 
   return (
     <>
@@ -104,7 +113,10 @@ function CreateComponentButton(props: any) {
           gap={0.5}
           mt={2}
         >
-          <Button onClick={() => setIsModalOpen(false)}>
+          <Button
+            secondary
+            onClick={() => setIsModalOpen(false)}
+          >
             Cancel
           </Button>
           <Button
