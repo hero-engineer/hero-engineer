@@ -6,11 +6,11 @@ export function convertToComponentPath(path: string) {
   // Pop extension
   pathArray.pop()
 
-  return encodeURIComponent(`${pathArray.join('.')}`)
+  return encodeURI(`${pathArray.join('.')}`)
 }
 
 export function convertFromComponentPath(ecuPath: string) {
   if (!ecuPath) return ecuPath
 
-  return `${decodeURIComponent(ecuPath)}.tsx`
+  return `${decodeURI(ecuPath)}.tsx`
 }

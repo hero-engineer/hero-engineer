@@ -12,7 +12,8 @@ function WithComponentIframeHeight({ setHeight, children }: WithComponentIframeH
     if (!rootRef.current) return
 
     const observer = new ResizeObserver(() => {
-      if (!rootRef.current) return
+      // Prevent setting 0 as the iframe height
+      if (!(rootRef.current && rootRef.current.offsetHeight)) return
 
       setHeight(rootRef.current.offsetHeight)
     })
