@@ -1,4 +1,4 @@
-import { memo, useCallback, useContext, useEffect, useState } from 'react'
+import { memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { Button, Div, Input, Menu, MenuItem, Tooltip, WithOutsideClick } from 'honorable'
 import { AiOutlineDesktop, AiOutlineMobile, AiOutlineTablet } from 'react-icons/ai'
 import { MdClose } from 'react-icons/md'
@@ -56,6 +56,40 @@ function BreakpointsButtons() {
   const handleMenuClose = useCallback(() => {
     setIsMenuOpen(false)
   }, [])
+
+  const breakpointNodes = useMemo(() => breakpoints.map((bp, i) => (
+    <Tooltip
+      key={bp.id}
+      label={(
+        <Div xflex="y2">
+          <Div>{bp.name}</Div>
+          <Div>
+            {bp.max >= infinityValue ? '∞' : bp.max}
+            px -
+            {' '}
+            {bp.min}
+            px
+          </Div>
+        </Div>
+      )}
+      placement="bottom"
+    >
+      <Button
+        ghost
+        toggled={bp.id === breakpoint?.id}
+        color={bp.media && bp.id === breakpoint?.id ? 'breakpoint' : 'inherit'}
+        borderTop="1px solid border"
+        borderBottom="1px solid border"
+        borderRight="1px solid border"
+        _first={{
+          borderLeft: '1px solid border',
+        }}
+        onClick={() => handleBreakpointClick(bp)}
+      >
+        {icons[i]}
+      </Button>
+    </Tooltip>
+  )), [breakpoint, handleBreakpointClick])
 
   const renderViewport = useCallback(() => (
     <Div
@@ -163,39 +197,7 @@ function BreakpointsButtons() {
       position="relative"
       userSelect="none"
     >
-      {breakpoints.map((bp, i) => (
-        <Tooltip
-          key={bp.id}
-          label={(
-            <Div xflex="y2">
-              <Div>{bp.name}</Div>
-              <Div>
-                {bp.max >= infinityValue ? '∞' : bp.max}
-                px -
-                {' '}
-                {bp.min}
-                px
-              </Div>
-            </Div>
-          )}
-          placement="bottom"
-        >
-          <Button
-            ghost
-            toggled={bp.id === breakpoint?.id}
-            color={bp.media && bp.id === breakpoint?.id ? 'breakpoint' : 'inherit'}
-            borderTop="1px solid border"
-            borderBottom="1px solid border"
-            borderRight="1px solid border"
-            _first={{
-              borderLeft: '1px solid border',
-            }}
-            onClick={() => handleBreakpointClick(bp)}
-          >
-            {icons[i]}
-          </Button>
-        </Tooltip>
-      ))}
+      {breakpointNodes}
       {!!breakpoint && renderViewport()}
       {isMenuOpen && renderMenu()}
     </Div>
