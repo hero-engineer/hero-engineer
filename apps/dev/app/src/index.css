@@ -33,6 +33,7 @@ html {
 
 
 .foo {
+  border-width: 1px;
   border-style: solid;
   font-family: "Lobster Two", sans-serif;
   display: flex;
