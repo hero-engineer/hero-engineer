@@ -76,7 +76,7 @@ function StylesSubSectionEffects() {
             slim
             key={cursor}
             value={cursor}
-            cursor={cursor}
+            ChildrenProps={{ cursor }}
           >
             {cursor}
           </MenuItem>
