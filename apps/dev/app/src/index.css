@@ -33,6 +33,7 @@ html {
 
 
 .foo {
+  background-color: #b63f3f;
   font-family: "Lobster Two", sans-serif;
   display: flex;
 }
