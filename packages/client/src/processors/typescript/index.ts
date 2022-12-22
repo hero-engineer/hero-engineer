@@ -40,7 +40,7 @@ export function addTypescriptSourceFiles(files: FileType[], shouldLog = false) {
 
   project.resolveSourceFileDependencies()
 
-  consoleLog('typescript', project.getSourceFiles().length, Date.now() - start)
+  consoleLog('typescript', project.getSourceFiles().length, 'files', Date.now() - start, 'ms')
 
   projectReady.resolve()
 }

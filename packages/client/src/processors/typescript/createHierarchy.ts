@@ -49,7 +49,7 @@ async function createHierarchy(filePath: string, componentElements: HTMLElement[
 
   const hierarchy = createHierarchySync(filePath, componentElements, undefined, shouldLog)
 
-  return hierarchy ? cleanHierarchy(hierarchy) : null
+  return hierarchy ? addHierarchyCursors(cleanHierarchy(hierarchy)) : null
 }
 
 function createHierarchySync(filePath: string, componentElements: HTMLElement[], parentContext?: ExtendedHierarchyContextType, shouldLog = false) {
@@ -1291,6 +1291,16 @@ function createHierarchyFromElement(hierarchy: ExtendedHierarchyType, element: H
   })
 
   return subHierarchy
+}
+
+function addHierarchyCursors(hierarchy: HierarchyType, cursors = [0]) {
+  hierarchy.cursors = cursors
+
+  hierarchy.children.forEach((child, index) => {
+    addHierarchyCursors(child, [...cursors, index])
+  })
+
+  return hierarchy
 }
 
 /* --

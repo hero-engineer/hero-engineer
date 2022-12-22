@@ -98,6 +98,7 @@ export type HierarchyType = {
   element: HTMLElement | null
   children: HierarchyType[]
   onFilePath: string
+  cursors: number[]
 }
 
 export type ExtendedHierarchyContextType = {
@@ -110,7 +111,7 @@ export type ExtendedHierarchyContextType = {
   childrenOnFilePath: string
 }
 
-export type ExtendedHierarchyType = Omit<HierarchyType, 'children'> & {
+export type ExtendedHierarchyType = Omit<HierarchyType, 'children' | 'cursors'> & {
   children: ExtendedHierarchyType[]
   childrenElements: HTMLElement[]
   childrenElementsStack: HTMLElement[]

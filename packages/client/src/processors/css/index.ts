@@ -21,7 +21,7 @@ export function addCssSourceFiles(files: FileType[], shouldLog = false) {
     filePathToCode[path] = code
   })
 
-  consoleLog('css', Object.keys(filePathToCode).length)
+  consoleLog('css', Object.keys(filePathToCode).length, 'files')
 
   cssReady.resolve()
 }
