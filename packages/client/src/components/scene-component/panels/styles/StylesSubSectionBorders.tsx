@@ -272,7 +272,7 @@ function StylesSubSectionBorders() {
             attributeNames={['border-radius-top-right']}
             width={36}
           >
-            <TbBorderRadius style={{ marginTop: 2, transform: 'rotate(-90deg)' }} />
+            <TbBorderRadius style={{ marginTop: 2, transform: 'rotate(90deg)' }} />
           </StylesAttributeTitle>
           <CssValueInput
             value={getValue('border-radius-top-right')}
@@ -289,7 +289,7 @@ function StylesSubSectionBorders() {
             attributeNames={['border-radius-bottom-left']}
             width={36}
           >
-            <TbBorderRadius style={{ marginTop: 2, transform: 'rotate(180deg)' }} />
+            <TbBorderRadius style={{ marginTop: 2, transform: 'rotate(-90deg)' }} />
           </StylesAttributeTitle>
           <CssValueInput
             value={getValue('border-radius-bottom-left')}
@@ -301,7 +301,7 @@ function StylesSubSectionBorders() {
             attributeNames={['border-radius-bottom-right']}
             width={36}
           >
-            <TbBorderRadius style={{ marginTop: 2, transform: 'rotate(90deg)' }} />
+            <TbBorderRadius style={{ marginTop: 2, transform: 'rotate(180deg)' }} />
           </StylesAttributeTitle>
           <CssValueInput
             value={getValue('border-radius-bottom-right')}
