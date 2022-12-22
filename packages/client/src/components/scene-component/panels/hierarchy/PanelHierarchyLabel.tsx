@@ -1,4 +1,5 @@
-import { MouseEvent, memo, useCallback } from 'react'
+import { MouseEvent, memo, useCallback, useRef } from 'react'
+import { useDrag, useDrop } from 'react-dnd'
 import { Div } from 'honorable'
 import { BiCaretRight } from 'react-icons/bi'
 import { SlTrash } from 'react-icons/sl'
@@ -17,6 +18,8 @@ type PanelHierarchyLabelPropsType = {
 }
 
 function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand, onDelete }: PanelHierarchyLabelPropsType) {
+  const rootRef = useRef<HTMLDivElement>(null)
+
   const handleClick = useCallback((event: MouseEvent) => {
     event.stopPropagation()
 
@@ -37,6 +40,7 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand, 
 
   return (
     <Div
+      ref={rootRef}
       xflex="x4"
       minWidth={0} // For ellipsis to work
       color={hierarchyTypeToColor[hierarchy.type] ?? 'text'}

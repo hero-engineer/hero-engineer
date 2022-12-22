@@ -1,11 +1,9 @@
-import { MouseEvent, ReactNode, useCallback, useContext, useRef, useState } from 'react'
-import { Div, useForkedRef } from 'honorable'
-import { XYCoord, useDrag, useDrop } from 'react-dnd'
+import { MouseEvent, ReactNode, useCallback, useContext, useRef } from 'react'
+import { Div } from 'honorable'
+import { useDrag, useDrop } from 'react-dnd'
 import { MdClose } from 'react-icons/md'
 
 import { TabType } from '~types'
-
-import { zIndexes } from '~constants'
 
 import TabsContext from '~contexts/TabsContext'
 
@@ -13,18 +11,8 @@ type DragObject = {
   url: string
 }
 
-type DropResult = {
-  url: string
-  isLeftDropZone: boolean
-}
-
 type DragCollectedProp = {
-  offset: XYCoord | null
-}
-
-type DropCollectedProps = {
-  canDrop: boolean
-  isOver: boolean
+  isDragging: boolean
 }
 
 type TabPropsType = {
@@ -37,80 +25,95 @@ type TabPropsType = {
 
 function Tab({ tab, active, icon, onClick, onClose }: TabPropsType) {
   const rootRef = useRef<HTMLDivElement>(null)
-  const { setTabs } = useContext(TabsContext)
-  const [isLeftDropZone, setIsLeftDropZone] = useState(false)
+  const { tabs, setTabs } = useContext(TabsContext)
 
-  const handleTabDrop = useCallback((dropUrl: string, isLeftDropZone: boolean) => {
+  const handleTabMove = useCallback((dragIndex: number, hoverIndex: number) => {
     setTabs(tabs => {
       const nextTabs = [...tabs]
+      const [tab] = nextTabs.splice(dragIndex, 1)
 
-      nextTabs.splice(nextTabs.indexOf(tab), 1)
-      nextTabs.splice(nextTabs.findIndex(t => t.url === dropUrl) + (isLeftDropZone ? 0 : 1), 0, tab)
+      nextTabs.splice(hoverIndex, 0, tab)
 
       return nextTabs
     })
-  }, [tab, setTabs])
+  }, [setTabs])
 
-  const [, drag] = useDrag<DragObject, DropResult, DragCollectedProp>(() => ({
+  const [{ isDragging }, drag] = useDrag<DragObject, void, DragCollectedProp>(() => ({
     type: 'Tab',
     item: () => ({ url: tab.url }),
-    end: (item, monitor) => {
-      const dropResult = monitor.getDropResult<DropResult>()
-
-      if (item && dropResult && dropResult.url !== tab.url) {
-        handleTabDrop(dropResult.url, dropResult.isLeftDropZone)
-      }
-    },
-  }), [tab.url, handleTabDrop])
-
-  const [{ canDrop, isOver }, drop] = useDrop<DragObject, DropResult, DropCollectedProps>(() => ({
-    accept: 'Tab',
-    hover: (_item, monitor) => {
-      const offset = monitor.getClientOffset()
-
-      if (offset && rootRef.current) {
-        const rect = rootRef.current.getBoundingClientRect()
-        const x = offset.x - rect.left
-
-        setIsLeftDropZone(x < rect.width / 2)
-      }
-    },
-    drop: (_item, monitor) => {
-      if (monitor.didDrop()) return
-
-      return {
-        url: tab.url,
-        isLeftDropZone,
-      }
-    },
-    collect: monitor => ({
-      canDrop: monitor.canDrop(),
-      isOver: monitor.isOver(),
+    collect: (monitor: any) => ({
+      isDragging: monitor.isDragging(),
     }),
-  }), [tab.url, isLeftDropZone])
+  }), [tab.url])
 
-  const forkedRef = useForkedRef(rootRef, useForkedRef(drag, drop))
+  const [, drop] = useDrop<DragObject, void, void>(() => ({
+    accept: 'Tab',
+    hover: (item, monitor) => {
+      if (!rootRef.current) return
+
+      const dragUrl = item.url
+      const hoverUrl = tab.url
+
+      // Don't replace items with themselves
+      if (dragUrl === hoverUrl) {
+        return
+      }
+
+      const dragIndex = tabs.findIndex(t => t.url === dragUrl)
+      const hoverIndex = tabs.findIndex(t => t.url === hoverUrl)
+
+      // Determine rectangle on screen
+      const hoverBoundingRect = rootRef.current?.getBoundingClientRect()
+
+      // Get horizontal middle
+      const hoverMiddleX = (hoverBoundingRect.right - hoverBoundingRect.left) / 2
+
+      // Determine mouse position
+      const clientOffset = monitor.getClientOffset()
+
+      if (!clientOffset) return
+
+      // Get pixels to the left
+      const hoverClientX = clientOffset.x - hoverBoundingRect.left
+
+      // Only perform the move when the mouse has crossed half of the items height
+      // When dragging rightward, only move when the cursor is below 50%
+      // When dragging leftward, only move when the cursor is above 50%
+
+      // Dragging rightward
+      if (dragIndex < hoverIndex && hoverClientX < hoverMiddleX) return
+
+      // Dragging leftward
+      if (dragIndex > hoverIndex && hoverClientX > hoverMiddleX) return
+
+      // Time to actually perform the action
+      handleTabMove(dragIndex, hoverIndex)
+    },
+  }), [tab.url, tabs])
+
+  drag(drop(rootRef))
 
   return (
     <Div
-      ref={forkedRef}
+      ref={rootRef}
       xflex="x4s"
       position="relative"
       width={128}
       maxWidth={128}
       backgroundColor={active ? 'background' : 'background-light'}
+      opacity={isDragging ? 0 : 1}
       borderRight="1px solid border"
+      cursor="pointer"
+      userSelect="none"
+      onClick={onClick}
+      pl={1}
+      pr={0.25}
       _hover={{
-        backgroundColor: 'background',
+        backgroundColor: active ? 'background' : 'background-light-dark',
         '> #Tab-close': {
           display: 'flex',
         },
       }}
-      onClick={onClick}
-      cursor="pointer"
-      userSelect="none"
-      pl={1}
-      pr={0.25}
     >
       {!!icon && (
         <Div
@@ -145,18 +148,6 @@ function Tab({ tab, active, icon, onClick, onClose }: TabPropsType) {
       >
         <MdClose />
       </Div>
-      {canDrop && isOver && (
-        <Div
-          position="absolute"
-          top={0}
-          bottom={0}
-          left={isLeftDropZone ? -3 : null}
-          right={isLeftDropZone ? null : -2}
-          width={4}
-          backgroundColor="primary"
-          zndex={zIndexes.tabDropGhost}
-        />
-      )}
     </Div>
   )
 }

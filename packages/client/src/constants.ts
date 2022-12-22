@@ -9,7 +9,7 @@ export const zIndexes = {
   componentIframeExpanderHandle: 9999, // 4 9
   retractablePanel: 999, // 3 9
   hierarchyOverlayElement: 99, // 2 9
-  tabDropGhost: 9, // 1 9
+  // tabDropGhost: 9, // 1 9
   hierarchyBarItem: 9, // 1 9
 }
 
