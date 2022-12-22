@@ -81,6 +81,7 @@ function CreateComponentButton(props: any) {
           value={name}
           onChange={e => setName(e.target.value)}
           placeholder="ProductCard"
+          mt={0.5}
         />
         <Div
           fontWeight="bold"
@@ -93,6 +94,10 @@ function CreateComponentButton(props: any) {
           value={relativePath}
           onChange={e => setRelativePath(e.target.value)}
           startIcon="src/"
+          StartIconProps={{
+            paddingRight: 0,
+          }}
+          mt={0.5}
         />
         <Div
           xflex="x6"
