@@ -23,9 +23,11 @@
 - [ ] Staging environment (~0.5)
 - [ ] Authentication (~0.5)
 - [ ] Dashboard (~1)
+- [ ] Password-protect instances
 - [ ] Create HE instances on demand (~4)
 - [ ] Domain mapping or url mapping (~1)
 - [ ] Stress test (~1)
+- [ ] Limit instances spawn and lifetime (~1)
 
 ## Epic "Props"
 
@@ -37,18 +39,47 @@
 
 ## Epic "Publish"
 
+- [ ] Create plugins system
+- [ ] Create plugins list as a package
+- [ ] Create Firebase deploy plugin
+- [ ] Probably Google auth
+- [ ] Cusom domain mapping
+
 ## Epic "Data"
+
+- [ ] Create Firebase data plugin
 
 ## Epic "3rd party libraries"
 
-## Epic "Onboarding and tutorial"
+- [ ] Create MUI component plugin, or just discover 3rd-party libs
+- [ ] Include Tailwind optionnaly
+
+## Epic "Onboarding, tutorial and education"
 
 ## Epic "Hero.engineer website"
+
+- [ ] Find an AI artist to rock it
 
 ## Epic "Recipes"
 
 ## Epic "AI"
 
+- [ ] Use a 3rd party tool that must exist by then or create it
+- [ ] Collect lots of website templates
+- [ ] Train AI
+- [ ] Implement AI results in UI
+
 ## Epic "Design refactor"
 
+- [ ] Open-source design materials
+- [ ] Either integrate a designer into the team or use a design service
+
+## Epic "Documentation"
+
+- [ ] Create and deploy docs site (staging/prod)
+
 ## Epic "Launch"
+
+## Epic "HE Pro"
+
+-  [ ] Integrate Stripe
