@@ -11,19 +11,21 @@
 - [ ] Complete styles panel (~4)
 - [ ] Publish packages (~0.5)
 
-## Epic 2 "Devops"
+## Epic 2 "Tryouts"
+
+- [ ] Adapt for GitHub codespace hosting (~1)
+- [ ] Prepare how to ask for feedback (~0.5)
+- [ ] Find 3 potential users and ask for feedback (~6)
+
+## Epic 3 "Devops"
 
 - [ ] hero.engineer app + deploy (~0.5)
+- [ ] Staging environment (~0.5)
 - [ ] Authentication (~0.5)
 - [ ] Dashboard (~1)
 - [ ] Create HE instances on demand (~4)
 - [ ] Domain mapping or url mapping (~1)
 - [ ] Stress test (~1)
-
-## Epic 3 "Tryouts"
-
-- [ ] Prepare how to ask for feedback (~0.5)
-- [ ] Find 3 potential users and ask for feedback (~6)
 
 ## Epic "Props"
 
