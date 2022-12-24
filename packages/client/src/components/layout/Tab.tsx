@@ -89,7 +89,7 @@ function Tab({ tab, active, icon, onClick, onClose }: TabPropsType) {
       // Time to actually perform the action
       handleTabMove(dragIndex, hoverIndex)
     },
-  }), [tab.url, tabs])
+  }), [tab.url, tabs, handleTabMove])
 
   drag(drop(rootRef))
 
