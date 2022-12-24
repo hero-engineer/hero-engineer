@@ -31,11 +31,18 @@
 
 ## Epic "Props"
 
+ - [ ]
 ## Epic "State"
+
+ - [ ]
 
 ## Epic "Context"
 
+ - [ ]
+
 ## Epic "Eject and build"
+
+ - [ ]
 
 ## Epic "Publish"
 
@@ -56,11 +63,15 @@
 
 ## Epic "Onboarding, tutorial and education"
 
+ - [ ]
+
 ## Epic "Hero.engineer website"
 
 - [ ] Find an AI artist to rock it
 
 ## Epic "Recipes"
+
+ - [ ]
 
 ## Epic "AI"
 
@@ -79,6 +90,8 @@
 - [ ] Create and deploy docs site (staging/prod)
 
 ## Epic "Launch"
+
+ - [ ]
 
 ## Epic "HE Pro"
 
