@@ -21,10 +21,9 @@ type PanelHierarchyLabelPropsType = {
   onSelect: () => void
   onExpand: () => void
   onDelete: () => void
-  onMove: (dragHierarchy: HierarchyType, hoverHierarchy: HierarchyType) => void
 }
 
-function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand, onDelete, onMove }: PanelHierarchyLabelPropsType) {
+function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand, onDelete }: PanelHierarchyLabelPropsType) {
   const rootRef = useRef<HTMLDivElement>(null)
 
   const handleClick = useCallback((event: MouseEvent) => {
@@ -44,6 +43,10 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand, 
 
     onDelete()
   }, [onDelete])
+
+  const handleMove = useCallback((dragHierarchy: HierarchyType, hoverHierarchy: HierarchyType) => {
+
+  }, [])
 
   const [{ isDragging }, drag] = useDrag<HierarchyType, void, DragCollectedProp>(() => ({
     type: 'Node',
@@ -90,9 +93,9 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand, 
       if (cursorsComparison === 1 && hoverClientY > hoverMiddleY) return
 
       // Time to actually perform the action
-      onMove(item, hierarchy)
+      handleMove(item, hierarchy)
     },
-  }), [hierarchy, onMove])
+  }), [hierarchy, handleMove])
 
   drag(drop(rootRef))
 
