@@ -1,4 +1,4 @@
-import { MouseEvent, memo, useCallback, useRef } from 'react'
+import { MouseEvent, memo, useCallback, useContext, useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import { Div } from 'honorable'
 import { BiCaretRight } from 'react-icons/bi'
@@ -7,6 +7,8 @@ import { SlTrash } from 'react-icons/sl'
 import { HierarchyType } from '~types'
 
 import { hierarchyTypeToColor } from '~constants'
+
+import HierarchyContext from '~contexts/HierarchyContext'
 
 import compareCursors from '~utils/compareCursors'
 
@@ -25,6 +27,9 @@ type PanelHierarchyLabelPropsType = {
 
 function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand, onDelete }: PanelHierarchyLabelPropsType) {
   const rootRef = useRef<HTMLDivElement>(null)
+  const nameRef = useRef<HTMLDivElement>(null)
+
+  const { setHierarchy } = useContext(HierarchyContext)
 
   const handleClick = useCallback((event: MouseEvent) => {
     event.stopPropagation()
@@ -45,16 +50,52 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand, 
   }, [onDelete])
 
   const handleMove = useCallback((dragHierarchy: HierarchyType, hoverHierarchy: HierarchyType) => {
+    console.log('dragHierarchy.cursors', dragHierarchy.cursors)
+    console.log('hoverHierarchy.cursors', hoverHierarchy.cursors)
 
-  }, [])
+    setHierarchy(hierarchy => {
+      if (!hierarchy) return hierarchy
+
+      const nextHierarchy = { ...hierarchy }
+      let parentHierarchy = nextHierarchy
+
+      dragHierarchy.cursors.slice(0, -1).forEach(cursor => {
+        parentHierarchy.children = [...parentHierarchy.children]
+
+        parentHierarchy = parentHierarchy.children[cursor]
+      })
+
+      parentHierarchy.children = [...parentHierarchy.children]
+      parentHierarchy.children.splice(dragHierarchy.cursors[dragHierarchy.cursors.length - 1], 1)
+
+      parentHierarchy = nextHierarchy
+
+      hoverHierarchy.cursors.slice(0, -1).forEach(cursor => {
+        parentHierarchy.children = [...parentHierarchy.children]
+
+        parentHierarchy = parentHierarchy.children[cursor]
+      })
+
+      parentHierarchy.children = [...parentHierarchy.children]
+      parentHierarchy.children.splice(hoverHierarchy.cursors[hoverHierarchy.cursors.length - 1], 0, dragHierarchy)
+
+      return nextHierarchy
+    })
+  }, [setHierarchy])
 
   const [{ isDragging }, drag] = useDrag<HierarchyType, void, DragCollectedProp>(() => ({
     type: 'Node',
-    item: () => hierarchy,
+    item: () => {
+      onSelect()
+
+      console.log('item')
+
+      return hierarchy
+    },
     collect: (monitor: any) => ({
       isDragging: monitor.isDragging(),
     }),
-  }), [hierarchy])
+  }), [hierarchy, onSelect])
 
   const [, drop] = useDrop<HierarchyType, void, void>(() => ({
     accept: 'Node',
@@ -97,7 +138,7 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand, 
     },
   }), [hierarchy, handleMove])
 
-  drag(drop(rootRef))
+  drag(drop(nameRef))
 
   return (
     <Div
@@ -113,7 +154,7 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand, 
       pr={1}
       _hover={{
         '> #PanelHierarchyLabel-delete': {
-          visibility: 'visible',
+          visibility: isDragging ? 'hidden' : 'visible',
         },
       }}
     >
@@ -131,7 +172,10 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand, 
           <BiCaretRight />
         </Div>
       )}
-      <Div ellipsis>
+      <Div
+        ref={nameRef}
+        ellipsis
+      >
         {hierarchy.name}
       </Div>
       <Div
