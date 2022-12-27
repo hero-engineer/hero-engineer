@@ -1,4 +1,6 @@
-# Hero Engineer
+<p align="center">
+  <img src="assets/logo-swords-white-bg.png" width="200">
+<p>
 
 Self reprogrammation rocks!!!
 
