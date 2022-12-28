@@ -1,6 +1,6 @@
 # To do
 
-## Epic 1 POC
+## Epic 1 POC
 
 - [ ] Dnd on hierarchy panel (~1)
 - [ ] Dnd on hierarchy overlay (~0.5)
@@ -11,7 +11,7 @@
 - [ ] Complete styles panel (~4)
 - [ ] Publish packages (~0.5)
 
-## Epic 2 Tryouts
+## Epic 2 Tryouts
 
 - [ ] Adapt for GitHub codespace hosting (~1)
 - [ ] Prepare how to ask for feedback (~0.5)
@@ -31,13 +31,13 @@
 
 ## Epic Props
 
-## Epic State
+## Epic State
 
 ## Epic Context
 
 ## Epic Eject and build
 
-## Epic Publish
+## Epic Publish
 
 - [ ] Create plugins system
 - [ ] Create plugins list as a package
@@ -45,18 +45,18 @@
 - [ ] Probably Google auth
 - [ ] Cusom domain mapping
 
-## Epic Data
+## Epic Data
 
 - [ ] Create Firebase data plugin
 
-## Epic 3rd party libraries
+## Epic 3rd party libraries
 
 - [ ] Create MUI component plugin, or just discover 3rd-party libs
 - [ ] Include Tailwind optionnaly
 
 ## Epic Onboarding, tutorial and education
 
-## Epic Hero.engineer website
+## Epic Hero.engineer website
 
 - [ ] Find an AI artist to rock it
 
@@ -80,6 +80,6 @@
 
 ## Epic Launch
 
-## Epic HE Pro
+## Epic HE Pro
 
 -  [ ] Integrate Stripe
