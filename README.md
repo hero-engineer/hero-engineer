@@ -40,16 +40,7 @@ Once you are ready to fly on your onw, you can eject the tooling and you'll be l
 
 ## Roadmap
 
-- Drag-and-drop components
-- Props editing
-- Routing
-- State management
-- Context management
-- Delete component/file
-- App ejection and build
-- See TODO.md
-
-And much more!
+Here is the [temporary roadmap](TODO.md).
 
 ## Development
 
