@@ -2,6 +2,10 @@
   "private": true,
   "name": "hero-engineer-monorepo",
   "scripts": {
+    "dev:core": "npm run dev:cli & npm run dev:server & npm run dev:client",
+    "dev:cli": "cd packages/cli && npm run dev",
+    "dev:server": "cd packages/server && npm run dev",
+    "dev:client": "cd packages/client && npm run dev",
     "link": "npm run link:server && npm run link:client && npm run link:cli && npm run link:apps",
     "link:server": "cd packages/server && npm link",
     "link:client": "cd packages/client && npm link",
