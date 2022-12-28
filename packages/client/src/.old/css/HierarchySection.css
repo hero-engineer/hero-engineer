@@ -1,9 +1,0 @@
-.hero-engineer-hierarchy-label {
-  > * > .hero-engineer-hierarchy-label-edit {
-    display: none;
-  }
-
-  &:hover > * > .hero-engineer-hierarchy-label-edit {
-    display: inline-block;
-  }
-}
