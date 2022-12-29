@@ -10,7 +10,7 @@ const isProductionBuild = process.env.PRODUCTION_BUILD === 'true'
 
 export default defineConfig({
   plugins: [
-    react({ jsxRuntime: 'classic' }),
+    react(),
     cssInjectedByJsPlugin(),
     isProductionBuild && dts({
       insertTypesEntry: true,
