@@ -79,3 +79,26 @@ html {
   .bar {
   }
 }
+
+.shanon {
+}
+
+@media screen and (min-width: 1280px) {
+  .shanon {
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .shanon {
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .shanon {
+  }
+}
+
+@media screen and (max-width: 478px) {
+  .shanon {
+  }
+}
