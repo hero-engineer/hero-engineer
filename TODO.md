@@ -19,7 +19,7 @@
 
 ## Epic 3 Devops
 
-Might be pushed back a bit
+Might be pushed back a bit.
 
 - [ ] hero.engineer app + deploy (~0.5)
 - [ ] Staging environment (~0.5)
