@@ -90,6 +90,7 @@ html {
 
 @media screen and (max-width: 991px) {
   .shanon {
+    color: var(--color-2Eg6KU26p);
     margin-top: 64px;
   }
 }
