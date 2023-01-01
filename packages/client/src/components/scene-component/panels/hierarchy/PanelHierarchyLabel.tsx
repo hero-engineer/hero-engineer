@@ -12,6 +12,10 @@ import HierarchyContext from '~contexts/HierarchyContext'
 
 import compareCursors from '~utils/compareCursors'
 
+type DragItem = {
+  cursors: number[]
+}
+
 type DragCollectedProp = {
   isDragging: boolean
 }
@@ -22,10 +26,17 @@ type PanelHierarchyLabelPropsType = {
   expanded: boolean
   onSelect: () => void
   onExpand: () => void
-  onDelete: () => void
 }
 
-function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand, onDelete }: PanelHierarchyLabelPropsType) {
+function repairCursors(hierarchy: HierarchyType) {
+  hierarchy.children.forEach((child, index) => {
+    child.cursors = [...hierarchy.cursors, index]
+
+    repairCursors(child)
+  })
+}
+
+function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand }: PanelHierarchyLabelPropsType) {
   const rootRef = useRef<HTMLDivElement>(null)
   const nameRef = useRef<HTMLDivElement>(null)
 
@@ -43,15 +54,10 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand, 
     onExpand()
   }, [onExpand])
 
-  const handleDelete = useCallback((event: MouseEvent) => {
-    event.stopPropagation()
-
-    onDelete()
-  }, [onDelete])
-
-  const handleMove = useCallback((dragHierarchy: HierarchyType, hoverHierarchy: HierarchyType) => {
-    console.log('dragHierarchy.cursors', dragHierarchy.cursors)
+  const handleMove = useCallback((dragCursors: number[], hoverHierarchy: HierarchyType, cursorsComparison: -1 | 0 | 1) => {
+    console.log('dragHierarchy.cursors', dragCursors)
     console.log('hoverHierarchy.cursors', hoverHierarchy.cursors)
+    console.log('cursorsComparison', cursorsComparison)
 
     setHierarchy(hierarchy => {
       if (!hierarchy) return hierarchy
@@ -59,53 +65,60 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand, 
       const nextHierarchy = { ...hierarchy }
       let parentHierarchy = nextHierarchy
 
-      dragHierarchy.cursors.slice(0, -1).forEach(cursor => {
+      dragCursors.slice(1, -1).forEach(cursor => {
         parentHierarchy.children = [...parentHierarchy.children]
 
         parentHierarchy = parentHierarchy.children[cursor]
       })
 
       parentHierarchy.children = [...parentHierarchy.children]
-      parentHierarchy.children.splice(dragHierarchy.cursors[dragHierarchy.cursors.length - 1], 1)
+      const [dragHierarchy] = parentHierarchy.children.splice(dragCursors[dragCursors.length - 1], 1)
+
+      repairCursors(parentHierarchy)
 
       parentHierarchy = nextHierarchy
+      // console.log('1', parentHierarchy)
 
-      hoverHierarchy.cursors.slice(0, -1).forEach(cursor => {
+      hoverHierarchy.cursors.slice(1, -1).forEach(cursor => {
         parentHierarchy.children = [...parentHierarchy.children]
 
         parentHierarchy = parentHierarchy.children[cursor]
       })
 
       parentHierarchy.children = [...parentHierarchy.children]
-      parentHierarchy.children.splice(hoverHierarchy.cursors[hoverHierarchy.cursors.length - 1], 0, dragHierarchy)
+      parentHierarchy.children.splice(hoverHierarchy.cursors[hoverHierarchy.cursors.length - 1] - cursorsComparison, 0, dragHierarchy)
+
+      console.log('2', parentHierarchy)
+
+      repairCursors(parentHierarchy)
 
       return nextHierarchy
     })
   }, [setHierarchy])
 
-  const [{ isDragging }, drag] = useDrag<HierarchyType, void, DragCollectedProp>(() => ({
+  const [{ isDragging }, drag] = useDrag<DragItem, void, DragCollectedProp>(() => ({
     type: 'Node',
     item: () => {
       onSelect()
 
-      console.log('item')
-
-      return hierarchy
+      return {
+        cursors: [...hierarchy.cursors],
+      }
     },
     collect: (monitor: any) => ({
       isDragging: monitor.isDragging(),
     }),
-  }), [hierarchy, onSelect])
+  }), [onSelect])
 
-  const [, drop] = useDrop<HierarchyType, void, void>(() => ({
+  const [, drop] = useDrop<DragItem, void, void>(() => ({
     accept: 'Node',
     hover: (item, monitor) => {
       if (!rootRef.current) return
 
+      const cursorsComparison = compareCursors(item.cursors, hierarchy.cursors)
+
       // Don't replace items with themselves
-      if (item.id === hierarchy.id) {
-        return
-      }
+      if (cursorsComparison === 0) return
 
       // Determine rectangle on screen
       const hoverBoundingRect = rootRef.current?.getBoundingClientRect()
@@ -121,8 +134,6 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand, 
       // Get pixels to the top
       const hoverClientY = clientOffset.y - hoverBoundingRect.top
 
-      const cursorsComparison = compareCursors(item.cursors, hierarchy.cursors)
-
       // Only perform the move when the mouse has crossed half of the items height
       // When dragging downward, only move when the cursor is below 50%
       // When dragging upward, only move when the cursor is above 50%
@@ -134,7 +145,10 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand, 
       if (cursorsComparison === 1 && hoverClientY > hoverMiddleY) return
 
       // Time to actually perform the action
-      handleMove(item, hierarchy)
+      handleMove(item.cursors, hierarchy, cursorsComparison)
+
+      // item.cursors = [...hierarchy.cursors]
+      item.cursors[item.cursors.length - 1] -= cursorsComparison
     },
   }), [hierarchy, handleMove])
 
@@ -152,11 +166,6 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand, 
       onClick={handleClick}
       gap={0.5}
       pr={1}
-      _hover={{
-        '> #PanelHierarchyLabel-delete': {
-          visibility: isDragging ? 'hidden' : 'visible',
-        },
-      }}
     >
       {!!hierarchy.children.length && (
         <Div
@@ -177,18 +186,6 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand, 
         ellipsis
       >
         {hierarchy.name}
-      </Div>
-      <Div
-        id="PanelHierarchyLabel-delete"
-        xflex="x5"
-        flexShrink={0}
-        fontSize="0.75rem"
-        color="danger"
-        visibility="hidden"
-        onClick={handleDelete}
-        px={0.5}
-      >
-        <SlTrash />
       </Div>
     </Div>
   )

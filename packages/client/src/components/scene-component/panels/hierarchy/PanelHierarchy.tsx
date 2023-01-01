@@ -5,10 +5,10 @@ import { HierarchyType } from '~types'
 
 import { hierarchyTypeToColor } from '~constants'
 
-import deleteNode from '~processors/typescript/deleteNode'
+// import deleteNode from '~processors/typescript/deleteNode'
 
 import HierarchyContext from '~contexts/HierarchyContext'
-import LogsContext from '~contexts/LogsContext'
+// import LogsContext from '~contexts/LogsContext'
 
 import usePersistedState from '~hooks/usePersistedState'
 
@@ -17,13 +17,13 @@ import PanelHierarchyLabel from '~components/scene-component/panels/hierarchy/Pa
 // The hierarchy section
 // Displayed in the left panel
 function PanelHierarchy() {
-  const { logs } = useContext(LogsContext)
+  // const { logs } = useContext(LogsContext)
   const { hierarchy, currentHierarchyId, setCurrentHierarchyId } = useContext(HierarchyContext)
   const [collapsed, setCollapsed] = usePersistedState<Record<string, boolean>>('panel-hierarchy-collapsed', {})
 
-  const handleDelete = useCallback(async (hierarchy: HierarchyType) => {
-    await deleteNode(hierarchy, logs.typescript)
-  }, [logs.typescript])
+  // const handleDelete = useCallback(async (hierarchy: HierarchyType) => {
+  //   await deleteNode(hierarchy, logs.typescript)
+  // }, [logs.typescript])
 
   const renderHierarchy = useCallback((hierarchy: HierarchyType, isRoot = false) => (
     <TreeView
@@ -36,7 +36,6 @@ function PanelHierarchy() {
           expanded={!collapsed[hierarchy.id]}
           onSelect={() => setCurrentHierarchyId(hierarchy.id)}
           onExpand={() => setCollapsed(x => ({ ...x, [hierarchy.id]: !collapsed[hierarchy.id] }))}
-          onDelete={() => handleDelete(hierarchy)}
         />
       )}
       barColor={hierarchyTypeToColor[hierarchy.type] ?? 'text'}
@@ -45,7 +44,7 @@ function PanelHierarchy() {
     >
       {hierarchy.children.map(child => renderHierarchy(child))}
     </TreeView>
-  ), [collapsed, currentHierarchyId, setCollapsed, setCurrentHierarchyId, handleDelete])
+  ), [collapsed, currentHierarchyId, setCollapsed, setCurrentHierarchyId])
 
   return (
     <Div
