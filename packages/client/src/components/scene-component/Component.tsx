@@ -8,9 +8,7 @@ import TabsContext from '~contexts/TabsContext'
 
 import useCurrentComponentPath from '~hooks/useCurrentComponentPath'
 
-import InteractiveModeButton from '~components/scene-component/controls/InteractiveModeButton'
-import RemountButton from '~components/scene-component/controls/RemountButton'
-import BreakpointsButtons from '~components/scene-component/controls/BreakpointsButtons'
+import ControlsBar from '~components/scene-component/ControlsBar'
 import ComponentWindow from '~components/scene-component/ComponentWindow'
 import WidthBar from '~components/scene-component/footer/WidthBar'
 import HierarchyBar from '~components/scene-component/footer/HierarchyBar'
@@ -68,26 +66,7 @@ function Component() {
         overflow="hidden"
         backgroundColor="background-component"
       >
-        <Div
-          xflex="x4"
-          height={32}
-          backgroundColor="background-component"
-          my={0.5}
-        >
-          <Div flexGrow />
-          <Div width={64} />
-          <InteractiveModeButton
-            border="1px solid border"
-          />
-          <RemountButton
-            borderTop="1px solid border"
-            borderBottom="1px solid border"
-            borderRight="1px solid border"
-          />
-          <Div width={8} />
-          <BreakpointsButtons />
-          <Div flexGrow />
-        </Div>
+        <ControlsBar />
         <ComponentWindow componentPath={componentPath} />
         <WidthBar />
         <HierarchyBar />
@@ -97,7 +76,7 @@ function Component() {
         openPersistedStateKey="right-panel-open"
         items={[
           {
-            label: 'Style',
+            label: 'Styles',
             icon: <MdBrush />,
             children: <PanelStyles />,
           },
