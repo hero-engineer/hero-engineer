@@ -54,9 +54,9 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand }
     onExpand()
   }, [onExpand])
 
-  const handleMove = useCallback((dragCursors: number[], hoverHierarchy: HierarchyType, cursorsComparison: -1 | 0 | 1) => {
+  const handleMove = useCallback((dragCursors: number[], hoverCursors: number[], cursorsComparison: -1 | 0 | 1) => {
     console.log('dragHierarchy.cursors', dragCursors)
-    console.log('hoverHierarchy.cursors', hoverHierarchy.cursors)
+    console.log('hoverHierarchy.cursors', hoverCursors)
     console.log('cursorsComparison', cursorsComparison)
 
     setHierarchy(hierarchy => {
@@ -77,18 +77,18 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand }
       repairCursors(parentHierarchy)
 
       parentHierarchy = nextHierarchy
-      // console.log('1', parentHierarchy)
+      // console.log('1 hoverHierarchy.cursors', hoverHierarchy.cursors)
 
-      hoverHierarchy.cursors.slice(1, -1).forEach(cursor => {
+      hoverCursors.slice(1, -1).forEach(cursor => {
         parentHierarchy.children = [...parentHierarchy.children]
 
         parentHierarchy = parentHierarchy.children[cursor]
       })
 
       parentHierarchy.children = [...parentHierarchy.children]
-      parentHierarchy.children.splice(hoverHierarchy.cursors[hoverHierarchy.cursors.length - 1] - cursorsComparison, 0, dragHierarchy)
+      parentHierarchy.children.splice(hoverCursors[hoverCursors.length - 1], 0, dragHierarchy)
 
-      console.log('2', parentHierarchy)
+      // console.log('2', parentHierarchy)
 
       repairCursors(parentHierarchy)
 
@@ -100,6 +100,8 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand }
     type: 'Node',
     item: () => {
       onSelect()
+
+      // console.log('cursors', [...hierarchy.cursors])
 
       return {
         cursors: [...hierarchy.cursors],
@@ -144,11 +146,15 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand }
       // Dragging upward
       if (cursorsComparison === 1 && hoverClientY > hoverMiddleY) return
 
-      // Time to actually perform the action
-      handleMove(item.cursors, hierarchy, cursorsComparison)
+      const hoverCursors = [...hierarchy.cursors]
 
-      // item.cursors = [...hierarchy.cursors]
-      item.cursors[item.cursors.length - 1] -= cursorsComparison
+      // Time to actually perform the action
+      handleMove(item.cursors, hoverCursors, cursorsComparison)
+
+      item.cursors = hoverCursors
+      // console.log('item.cursors', item.cursors)
+      // item.cursors[item.cursors.length - 1] -= cursorsComparison
+      // console.log('item.cursors', item.cursors[item.cursors.length - 1])
     },
   }), [hierarchy, handleMove])
 
