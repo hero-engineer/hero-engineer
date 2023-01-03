@@ -7,6 +7,7 @@ import BreakpointContext, { BreakpointContextType } from '~contexts/BreakpointCo
 import BreakpointDimensionsContext, { BreakpointDimensionsContextType } from '~contexts/BreakpointDimensionsContext'
 import IsInteractiveModeContext, { IsInteractiveModeContextType } from '~contexts/IsInteractiveModeContext'
 import ComponentRemountContext, { ComponentRemountContextType } from '~contexts/ComponentRemountContext'
+import ComponentPanelsContext, { ComponentPanelsContextType } from '~contexts/ComponentPanelsContext'
 
 import usePersistedState from '~hooks/usePersistedState'
 
@@ -41,13 +42,19 @@ function ProviderComponent({ children }: ProviderComponentPropsType) {
   const [isInteractiveMode, setIsInteractiveMode] = usePersistedState('interactive-mode', false)
   const isInteractiveModeContextValue = useMemo<IsInteractiveModeContextType>(() => ({ isInteractiveMode, setIsInteractiveMode }), [isInteractiveMode, setIsInteractiveMode])
 
+  const [leftKey, setLeftKey] = usePersistedState('left-key', '')
+  const [rightKey, setRightKey] = usePersistedState('right-key', '')
+  const componentPanelsContextValue = useMemo<ComponentPanelsContextType>(() => ({ leftKey, setLeftKey, rightKey, setRightKey }), [leftKey, setLeftKey, rightKey, setRightKey])
+
   return (
     <ComponentRemountContext.Provider value={componentRemountContextValue}>
       <HierarchyContext.Provider value={hierarchyContextValue}>
         <BreakpointContext.Provider value={breakpointContextValue}>
           <BreakpointDimensionsContext.Provider value={breakpointDimensionsContextValue}>
             <IsInteractiveModeContext.Provider value={isInteractiveModeContextValue}>
-              {children}
+              <ComponentPanelsContext.Provider value={componentPanelsContextValue}>
+                {children}
+              </ComponentPanelsContext.Provider>
             </IsInteractiveModeContext.Provider>
           </BreakpointDimensionsContext.Provider>
         </BreakpointContext.Provider>

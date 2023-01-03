@@ -1,14 +1,12 @@
 import { useContext, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Div } from 'honorable'
-import { RiNodeTree } from 'react-icons/ri'
-import { MdBrush } from 'react-icons/md'
 
 import TabsContext from '~contexts/TabsContext'
 
 import useCurrentComponentPath from '~hooks/useCurrentComponentPath'
 
-import ControlsBar from '~components/scene-component/ControlsBar'
+import ControlsBar from '~components/scene-component/controls/ControlsBar'
 import ComponentWindow from '~components/scene-component/ComponentWindow'
 import WidthBar from '~components/scene-component/footer/WidthBar'
 import HierarchyBar from '~components/scene-component/footer/HierarchyBar'
@@ -43,46 +41,38 @@ function Component() {
   if (!componentPath) return null
 
   return (
-    <Div
-      xflex="x4s"
-      flexGrow
-      maxHeight="100%"
-    >
-      <RetractablePanel
-        direction="left"
-        openPersistedStateKey="left-panel-open"
-        items={[
-          {
-            label: 'Hierarchy',
-            icon: <RiNodeTree />,
-            children: <PanelHierarchy />,
-          },
-        ]}
-      />
+    <>
+      <ControlsBar />
       <Div
-        xflex="y2s"
+        xflex="x4s"
         flexGrow
         maxHeight="100%"
-        overflow="hidden"
-        backgroundColor="background-component"
       >
-        <ControlsBar />
-        <ComponentWindow componentPath={componentPath} />
-        <WidthBar />
-        <HierarchyBar />
+        <RetractablePanel
+          direction="left"
+          items={{
+            hierarchy: <PanelHierarchy />,
+          }}
+        />
+        <Div
+          xflex="y2s"
+          flexGrow
+          maxHeight="100%"
+          overflow="hidden"
+          backgroundColor="background-component"
+        >
+          <ComponentWindow componentPath={componentPath} />
+          <WidthBar />
+          <HierarchyBar />
+        </Div>
+        <RetractablePanel
+          direction="right"
+          items={{
+            styles: <PanelStyles />,
+          }}
+        />
       </Div>
-      <RetractablePanel
-        direction="right"
-        openPersistedStateKey="right-panel-open"
-        items={[
-          {
-            label: 'Styles',
-            icon: <MdBrush />,
-            children: <PanelStyles />,
-          },
-        ]}
-      />
-    </Div>
+    </>
   )
 }
 
