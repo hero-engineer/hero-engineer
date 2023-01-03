@@ -21,6 +21,7 @@ function ControlsBar() {
       />
       <Div flexGrow />
       <BreakpointsButtons />
+      <Div flexGrow />
     </Div>
   )
 }
