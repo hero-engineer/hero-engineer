@@ -106,6 +106,7 @@ html {
 }
 
 .flex {
+  column-gap: 16px;
   display: flex;
 }
 
