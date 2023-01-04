@@ -33,6 +33,7 @@ function Tabs() {
   return (
     <Div
       xflex="x4s"
+      flexGrow
       flexShrink={1}
       fontSize="0.85rem"
     >

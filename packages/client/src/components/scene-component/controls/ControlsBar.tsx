@@ -16,7 +16,6 @@ function ControlsBar() {
   return (
     <Div
       xflex="x4"
-      height={32}
       backgroundColor="background-light"
       borderBottom="1px solid border"
     >
@@ -27,7 +26,6 @@ function ControlsBar() {
         <Button
           ghost
           onClick={() => setLeftKey('hierarchy')}
-          borderRight="1px solid border"
         >
           <RiNodeTree />
         </Button>
@@ -39,7 +37,6 @@ function ControlsBar() {
         <Button
           ghost
           onClick={() => setRightKey('styles')}
-          borderRight="1px solid border"
         >
           <MdBrush />
         </Button>
@@ -51,7 +48,6 @@ function ControlsBar() {
         <Button
           ghost
           onClick={() => setRightKey('insert-component')}
-          borderRight="1px solid border"
         >
           <AiOutlinePlusSquare />
         </Button>
@@ -59,8 +55,8 @@ function ControlsBar() {
       <Div flexGrow />
       <BreakpointsButtons />
       <Div flexGrow />
-      <InteractiveModeButton borderLeft="1px solid border" />
-      <RemountButton borderLeft="1px solid border" />
+      <InteractiveModeButton />
+      <RemountButton />
     </Div>
   )
 }

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Button, Tooltip } from 'honorable'
-import { GiRosaShield } from 'react-icons/gi'
+import { GiSwordsEmblem } from 'react-icons/gi'
 
 // A button that links to the home scene
 function HeroEngineerButton(props: any) {
@@ -15,7 +15,7 @@ function HeroEngineerButton(props: any) {
         to="/_hero_"
         {...props}
       >
-        <GiRosaShield />
+        <GiSwordsEmblem />
       </Button>
     </Tooltip>
   )

@@ -57,7 +57,6 @@ function UndoRedoButtons() {
       >
         <Button
           ghost
-          borderLeft="1px solid border"
           onClick={handleUndoClick}
           loading={loading}
           spinnerColor="text"
@@ -71,7 +70,6 @@ function UndoRedoButtons() {
       >
         <Button
           ghost
-          borderLeft="1px solid border"
           onClick={handleRedoClick}
           disabled={!redoMessage}
           loading={loading}

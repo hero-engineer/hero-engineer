@@ -24,7 +24,6 @@ function PushButton() {
     >
       <Button
         ghost
-        borderLeft="1px solid border"
         onClick={handlePushClick}
         loading={loading}
         spinnerColor="text"

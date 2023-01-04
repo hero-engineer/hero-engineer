@@ -7,7 +7,6 @@ import HeroEngineerButton from '~components/overlay/HeroEngineerButton'
 import CreateComponentButton from '~components/overlay/CreateComponentButton'
 import ComponentsLinkButton from '~components/overlay/ComponentsLinkButton'
 import DesignLinkButton from '~components/overlay/DesignLinkButton'
-import PackagesLinkButton from '~components/overlay/PackagesLinkButton'
 import UndoRedoButtons from '~components/overlay/UndoRedoButtons'
 import PushButton from '~components/overlay/PushButton'
 import SettingsLinkButton from '~components/overlay/SettingsLinkButton'
@@ -25,26 +24,21 @@ function Overlay({ children }: OverlayPropsType) {
         backgroundColor="background-light"
         borderBottom="1px solid border"
       >
-        <Div xflex="x4s">
-          <HeroEngineerButton
-            borderLeft="1px solid transparent"
-            borderRight="1px solid border"
-          />
-          <ComponentsLinkButton borderRight="1px solid border" />
-          <CreateComponentButton borderRight="1px solid border" />
-          <DesignLinkButton borderRight="1px solid border" />
-          <PackagesLinkButton borderRight="1px solid border" />
+        <Div
+          xflex="x4s"
+          borderRight="1px solid border"
+        >
+          <HeroEngineerButton />
+          <DesignLinkButton />
+          <ComponentsLinkButton />
+          <CreateComponentButton />
         </Div>
         <Tabs />
-        <Div flexGrow />
         <Div xflex="x6s">
           <UndoRedoButtons />
           <PushButton />
-          <SettingsLinkButton borderLeft="1px solid border" />
-          <ViewAppButton
-            borderLeft="1px solid border"
-            borderRight="1px solid transparent"
-          />
+          <SettingsLinkButton />
+          <ViewAppButton />
         </Div>
       </Div>
       <Div

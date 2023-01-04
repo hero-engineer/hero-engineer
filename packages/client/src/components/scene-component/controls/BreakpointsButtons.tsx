@@ -78,10 +78,6 @@ function BreakpointsButtons() {
         ghost
         toggled={bp.id === breakpoint?.id}
         color={bp.media && bp.id === breakpoint?.id ? 'breakpoint' : 'inherit'}
-        borderRight="1px solid border"
-        _first={{
-          borderLeft: '1px solid border',
-        }}
         onClick={() => handleBreakpointClick(bp)}
       >
         {icons[i]}
