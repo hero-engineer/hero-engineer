@@ -4,23 +4,23 @@ import CoolDaddy from './components/CoolDaddy'
 function App() {
   return (
     <>
-      <div className="foo">
+      <div>
         Edit me I'm famous
       </div>
-      <div className="foo">
+      <div>
         Edit me I'm famous
       </div>
-      <div className="foo">
+      <div>
         Edit me I'm famous
       </div>
       <div className="flex">
-        <div className="foo">
+        <div>
           Edit me I'm famous
         </div>
-        <div className="foo">
+        <div>
           Edit me I'm famous
         </div>
-        <div className="foo">
+        <div>
           Edit me I'm famous
         </div>
       </div>

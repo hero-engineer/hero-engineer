@@ -1,6 +1,11 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300..700&display=swap');
 
 @import url('https://fonts.googleapis.com/css2?family=Lobster+Two:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   --spacing-xxxsmall: 1px; /* xxxsmall */
@@ -29,104 +34,4 @@ html {
 /* You should not modify the following */
 *, *:before, *:after {
   box-sizing: inherit;
-}
-
-
-.foo {
-  font-family: "Lobster Two", sans-serif;
-  display: flex;
-}
-
-@media screen and (min-width: 1280px) {
-  .foo {
-  }
-}
-
-@media screen and (max-width: 991px) {
-  .foo {
-  }
-}
-
-@media screen and (max-width: 767px) {
-  .foo {
-  }
-}
-
-@media screen and (max-width: 478px) {
-  .foo {
-  }
-}
-
-.bar {
-}
-
-@media screen and (min-width: 1280px) {
-  .bar {
-  }
-}
-
-@media screen and (max-width: 991px) {
-  .bar {
-  }
-}
-
-@media screen and (max-width: 767px) {
-  .bar {
-  }
-}
-
-@media screen and (max-width: 478px) {
-  .bar {
-  }
-}
-
-.shanon {
-}
-
-@media screen and (min-width: 1280px) {
-  .shanon {
-  }
-}
-
-@media screen and (max-width: 991px) {
-  .shanon {
-    color: #19b415;
-    margin-top: 64px;
-  }
-}
-
-@media screen and (max-width: 767px) {
-  .shanon {
-  }
-}
-
-@media screen and (max-width: 478px) {
-  .shanon {
-  }
-}
-
-.flex {
-  row-gap: 16px;
-  column-gap: 16px;
-  display: flex;
-}
-
-@media screen and (min-width: 1280px) {
-  .flex {
-  }
-}
-
-@media screen and (max-width: 991px) {
-  .flex {
-  }
-}
-
-@media screen and (max-width: 767px) {
-  .flex {
-  }
-}
-
-@media screen and (max-width: 478px) {
-  .flex {
-  }
 }

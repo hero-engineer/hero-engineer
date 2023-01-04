@@ -5,8 +5,6 @@
 -- */
 import { ReactNode, useEffect, useRef } from 'react'
 
-import normalizeCss from 'normalize.css'
-
 import indexCss from '../index.css?inline'
 
 type HeroEngineerCommonDecoratorPropsType = {
@@ -15,7 +13,6 @@ type HeroEngineerCommonDecoratorPropsType = {
 }
 
 const csss = [
-  normalizeCss,
   indexCss,
 ]
 
