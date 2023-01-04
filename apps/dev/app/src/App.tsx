@@ -13,7 +13,7 @@ function App() {
       <div className="foo">
         Edit me I'm famous
       </div>
-      <div className="flex">
+      <div>
         <div className="foo">
           Edit me I'm famous
         </div>
