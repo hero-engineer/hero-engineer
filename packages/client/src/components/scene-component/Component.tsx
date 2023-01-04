@@ -13,6 +13,7 @@ import HierarchyBar from '~components/scene-component/footer/HierarchyBar'
 import RetractablePanel from '~components/layout/RetractablePanel'
 import PanelHierarchy from '~components/scene-component/panels/hierarchy/PanelHierarchy'
 import PanelStyles from '~components/scene-component/panels/styles/PanelStyles'
+import InsertComponentPanel from '~components/scene-component/panels/insert-component/InsertComponentPanel'
 
 function Component() {
   const { '*': ecuComponentPath = '' } = useParams()
@@ -69,6 +70,7 @@ function Component() {
           direction="right"
           items={{
             styles: <PanelStyles />,
+            'insert-component': <InsertComponentPanel />,
           }}
         />
       </Div>

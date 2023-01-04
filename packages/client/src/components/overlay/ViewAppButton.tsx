@@ -7,7 +7,7 @@ function ViewAppButton(props: any) {
   return (
     <Tooltip
       label="View app"
-      placement="bottom-end"
+      placement="bottom"
     >
       <Button
         ghost

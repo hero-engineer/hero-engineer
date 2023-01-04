@@ -19,9 +19,9 @@ function RetractablePanel({ direction, items }: RetractablePanelPropsType) {
   return (
     <Div
       xflex="y2s"
+      flexShrink={0}
       width="fit-content"
-      height="100%"
-      maxHeight="100%"
+      height="calc(100vh - 64px)"
       backgroundColor="background-light"
       borderRight={isLeft ? '1px solid border' : null}
       borderLeft={!isLeft ? '1px solid border' : null}

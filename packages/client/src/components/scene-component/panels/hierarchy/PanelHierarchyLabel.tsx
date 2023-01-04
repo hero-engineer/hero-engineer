@@ -1,8 +1,7 @@
 import { MouseEvent, memo, useCallback, useContext, useRef } from 'react'
-import { useDrag, useDrop } from 'react-dnd'
+import { DragPreviewImage, useDrag, useDrop } from 'react-dnd'
 import { Div } from 'honorable'
 import { BiCaretRight } from 'react-icons/bi'
-import { SlTrash } from 'react-icons/sl'
 
 import { HierarchyType } from '~types'
 
@@ -16,16 +15,15 @@ type DragItem = {
   cursors: number[]
 }
 
-type DragCollectedProp = {
-  isDragging: boolean
-}
-
 type PanelHierarchyLabelPropsType = {
   hierarchy: HierarchyType
   active: boolean
   expanded: boolean
+  dragged: boolean
   onSelect: () => void
   onExpand: () => void
+  onDragStart: () => void
+  onDragEnd: () => void
 }
 
 function repairCursors(hierarchy: HierarchyType) {
@@ -36,9 +34,8 @@ function repairCursors(hierarchy: HierarchyType) {
   })
 }
 
-function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand }: PanelHierarchyLabelPropsType) {
+function PanelHierarchyLabel({ hierarchy, active, expanded, dragged, onSelect, onExpand, onDragStart, onDragEnd }: PanelHierarchyLabelPropsType) {
   const rootRef = useRef<HTMLDivElement>(null)
-  const nameRef = useRef<HTMLDivElement>(null)
 
   const { setHierarchy } = useContext(HierarchyContext)
 
@@ -54,10 +51,9 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand }
     onExpand()
   }, [onExpand])
 
-  const handleMove = useCallback((dragCursors: number[], hoverCursors: number[], cursorsComparison: -1 | 0 | 1) => {
+  const handleMove = useCallback((dragCursors: number[], hoverCursors: number[]) => {
     console.log('dragHierarchy.cursors', dragCursors)
     console.log('hoverHierarchy.cursors', hoverCursors)
-    console.log('cursorsComparison', cursorsComparison)
 
     setHierarchy(hierarchy => {
       if (!hierarchy) return hierarchy
@@ -96,20 +92,21 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand }
     })
   }, [setHierarchy])
 
-  const [{ isDragging }, drag] = useDrag<DragItem, void, DragCollectedProp>(() => ({
+  const [, drag, preview] = useDrag<DragItem, void, void>(() => ({
     type: 'Node',
     item: () => {
       onSelect()
+      onDragStart()
 
-      // console.log('cursors', [...hierarchy.cursors])
+      console.log('xxx', [...hierarchy.cursors])
 
       return {
         cursors: [...hierarchy.cursors],
       }
     },
-    collect: (monitor: any) => ({
-      isDragging: monitor.isDragging(),
-    }),
+    end: () => {
+      onDragEnd()
+    },
   }), [onSelect])
 
   const [, drop] = useDrop<DragItem, void, void>(() => ({
@@ -149,7 +146,7 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand }
       const hoverCursors = [...hierarchy.cursors]
 
       // Time to actually perform the action
-      handleMove(item.cursors, hoverCursors, cursorsComparison)
+      handleMove(item.cursors, hoverCursors)
 
       item.cursors = hoverCursors
       // console.log('item.cursors', item.cursors)
@@ -158,42 +155,46 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand }
     },
   }), [hierarchy, handleMove])
 
-  drag(drop(nameRef))
+  drag(drop(rootRef))
 
   return (
-    <Div
-      ref={rootRef}
-      xflex="x4"
-      opacity={isDragging ? 0 : 1}
-      minWidth={0} // For ellipsis to work
-      color={hierarchyTypeToColor[hierarchy.type] ?? 'text'}
-      fontWeight={active ? 'bold' : undefined}
-      userSelect="none"
-      onClick={handleClick}
-      gap={0.5}
-      pr={1}
-    >
-      {!!hierarchy.children.length && (
-        <Div
-          xflex="x5"
-          flexShrink={0}
-          transform={expanded ? 'rotate(90deg)' : undefined}
-          transformOrigin="45% 45%"
-          onClick={handleExpand}
-          ml="-6px"
-          mr={-0.5}
-          pr={0.25}
-        >
-          <BiCaretRight />
-        </Div>
-      )}
+    <>
       <Div
-        ref={nameRef}
-        ellipsis
+        ref={rootRef}
+        xflex="x4"
+        opacity={dragged ? 0.5 : 1}
+        minWidth={0} // For ellipsis to work
+        color={hierarchyTypeToColor[hierarchy.type] ?? 'text'}
+        fontWeight={active ? 'bold' : undefined}
+        userSelect="none"
+        userDrag="none"
+        onClick={handleClick}
+        gap={0.5}
+        pr={1}
       >
-        {hierarchy.name}
+        {!!hierarchy.children.length && (
+          <Div
+            xflex="x5"
+            flexShrink={0}
+            transform={expanded ? 'rotate(90deg)' : undefined}
+            transformOrigin="45% 45%"
+            onClick={handleExpand}
+            ml="-6px"
+            mr={-0.5}
+            pr={0.25}
+          >
+            <BiCaretRight />
+          </Div>
+        )}
+        <Div ellipsis>
+          {hierarchy.name}
+        </Div>
       </Div>
-    </Div>
+      <DragPreviewImage
+        connect={preview}
+        src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+      />
+    </>
   )
 }
 

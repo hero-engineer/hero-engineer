@@ -7,7 +7,7 @@ function SettingsLinkButton(props: any) {
   return (
     <Tooltip
       label="Settings"
-      placement="bottom-end"
+      placement="bottom"
     >
       <Button
         ghost

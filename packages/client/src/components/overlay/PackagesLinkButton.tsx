@@ -7,7 +7,7 @@ function PackagesLinkButton(props: any) {
   return (
     <Tooltip
       label="Packages"
-      placement="bottom-start"
+      placement="bottom"
     >
       <Button
         ghost

@@ -2,6 +2,7 @@ import { useContext } from 'react'
 import { Button, Div, Tooltip } from 'honorable'
 import { RiNodeTree } from 'react-icons/ri'
 import { MdBrush } from 'react-icons/md'
+import { AiOutlinePlusSquare } from 'react-icons/ai'
 
 import ComponentPanelsContext from '~contexts/ComponentPanelsContext'
 
@@ -41,6 +42,18 @@ function ControlsBar() {
           borderRight="1px solid border"
         >
           <MdBrush />
+        </Button>
+      </Tooltip>
+      <Tooltip
+        label="Insert component"
+        placement="bottom"
+      >
+        <Button
+          ghost
+          onClick={() => setRightKey('insert-component')}
+          borderRight="1px solid border"
+        >
+          <AiOutlinePlusSquare />
         </Button>
       </Tooltip>
       <Div flexGrow />

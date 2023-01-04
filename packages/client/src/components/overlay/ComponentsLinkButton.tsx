@@ -7,7 +7,7 @@ function ComponentsLinkButton(props: any) {
   return (
     <Tooltip
       label="Components"
-      placement="bottom-start"
+      placement="bottom"
     >
       <Button
         ghost

@@ -20,7 +20,7 @@ function PushButton() {
   return (
     <Tooltip
       label="Push to git repository"
-      placement="bottom-end"
+      placement="bottom"
     >
       <Button
         ghost

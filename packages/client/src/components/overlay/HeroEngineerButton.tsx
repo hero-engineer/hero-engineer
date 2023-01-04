@@ -7,7 +7,7 @@ function HeroEngineerButton(props: any) {
   return (
     <Tooltip
       label="Hero Engineer home"
-      placement="bottom-start"
+      placement="bottom"
     >
       <Button
         ghost

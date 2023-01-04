@@ -8,6 +8,7 @@ import BreakpointDimensionsContext, { BreakpointDimensionsContextType } from '~c
 import IsInteractiveModeContext, { IsInteractiveModeContextType } from '~contexts/IsInteractiveModeContext'
 import ComponentRemountContext, { ComponentRemountContextType } from '~contexts/ComponentRemountContext'
 import ComponentPanelsContext, { ComponentPanelsContextType } from '~contexts/ComponentPanelsContext'
+import ComponentDragContext, { ComponentDragContextType } from '~contexts/ComponentDragContext'
 
 import usePersistedState from '~hooks/usePersistedState'
 
@@ -46,6 +47,9 @@ function ProviderComponent({ children }: ProviderComponentPropsType) {
   const [rightKey, setRightKey] = usePersistedState('right-key', '')
   const componentPanelsContextValue = useMemo<ComponentPanelsContextType>(() => ({ leftKey, setLeftKey, rightKey, setRightKey }), [leftKey, setLeftKey, rightKey, setRightKey])
 
+  const [draggedHierarchyId, setDraggedHierarchyId] = useState('')
+  const componentDragContextValue = useMemo<ComponentDragContextType>(() => ({ draggedHierarchyId, setDraggedHierarchyId }), [draggedHierarchyId, setDraggedHierarchyId])
+
   return (
     <ComponentRemountContext.Provider value={componentRemountContextValue}>
       <HierarchyContext.Provider value={hierarchyContextValue}>
@@ -53,7 +57,9 @@ function ProviderComponent({ children }: ProviderComponentPropsType) {
           <BreakpointDimensionsContext.Provider value={breakpointDimensionsContextValue}>
             <IsInteractiveModeContext.Provider value={isInteractiveModeContextValue}>
               <ComponentPanelsContext.Provider value={componentPanelsContextValue}>
-                {children}
+                <ComponentDragContext.Provider value={componentDragContextValue}>
+                  {children}
+                </ComponentDragContext.Provider>
               </ComponentPanelsContext.Provider>
             </IsInteractiveModeContext.Provider>
           </BreakpointDimensionsContext.Provider>

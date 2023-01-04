@@ -7,7 +7,7 @@ function DesignLinkButton(props: any) {
   return (
     <Tooltip
       label="Design"
-      placement="bottom-start"
+      placement="bottom"
     >
       <Button
         ghost
