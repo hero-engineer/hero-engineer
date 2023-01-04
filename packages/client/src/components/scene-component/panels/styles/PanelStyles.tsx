@@ -31,6 +31,7 @@ import getCascadingCssAttributes from '~utils/getCascadingCssAttributes'
 import convertCssAttributes from '~utils/convertCssAttributes'
 import deleteCssAttributes from '~utils/deleteCssAttributes'
 import convertStylesToCssString from '~utils/convertStylesToCssString'
+import extractClassNamesFromSelector from '~utils/extractClassNamesFromSelector'
 
 import CssSelector from '~components/scene-component/panels/styles/CssSelector'
 import StylesSubSectionPosition from '~components/scene-component/panels/styles/StylesSubSectionPosition'
@@ -89,6 +90,7 @@ function PanelStyles() {
   const currentHierarchy = useMemo(() => findHierarchy(hierarchy, currentHierarchyId), [hierarchy, currentHierarchyId])
   const similiarHierarchies = useMemo(() => findSimilarHierarchies(hierarchy, currentHierarchyId), [hierarchy, currentHierarchyId])
   const isNoElementSelected = useMemo(() => currentHierarchy?.type !== 'element', [currentHierarchy])
+  // The classNames in use
   const classNames = useMemo(() => className.split(' ').map(c => c.trim()).filter(Boolean), [className])
   // Arrays of CssClasses
   // All classes
@@ -116,6 +118,8 @@ function PanelStyles() {
   const selectedAttributes = useMemo(() => normalizeCssAttributes(convertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(selectedMasterBreakpointClasses), deleteCssAttributes(updatedAttributes)))), [selectedMasterBreakpointClasses, updatedAttributes])
   const selectedBreakpointAttributes = useMemo(() => normalizeCssAttributes(deleteCssAttributes(convertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(selectedBreakpointClasses), updatedAttributes)))), [selectedBreakpointClasses, updatedAttributes])
   const selectedCurrentBreakpointAttributes = useMemo(() => normalizeCssAttributes(deleteCssAttributes(convertCssAttributes(mergeCssAttributes(getCascadingCssAttributes(selectedCurrentBreakpointClasses), updatedAttributes)))), [selectedCurrentBreakpointClasses, updatedAttributes])
+
+  const allClasseNames = useMemo(() => allClasses.map(c => extractClassNamesFromSelector(c.selector)).flat(), [allClasses])
 
   const handleRefreshClasses = useCallback(() => {
     setClassesRefresh(x => x + 1)
@@ -335,7 +339,7 @@ function PanelStyles() {
         px={0.5}
       >
         <CssSelector
-          allClasses={allClasses}
+          allClasseNames={allClasseNames}
           classNames={classNames}
           selectedClassName={selectedClassName}
           onCreateClassName={handleCreateClassName}
@@ -348,8 +352,9 @@ function PanelStyles() {
       {!classNames.length ? renderNoClassNames() : renderSubSections()}
     </>
   ), [
-    allClasses,
+    allClasseNames,
     classNames,
+    // tailwindClassNames,
     selectedClassName,
     setSelelectedClassName,
     handleCreateClassName,

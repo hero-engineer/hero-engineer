@@ -89,11 +89,16 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand }
       // Dragging upward
       if (cursorsComparison === 1 && hoverClientY > hoverMiddleY) return
 
+      // Get vertical third boundaries
+      const hoverThirdY1 = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 3
+      const hoverThirdY2 = (hoverBoundingRect.bottom - hoverBoundingRect.top) * 2 / 3
+      const isWithinThird = hoverClientY >= hoverThirdY1 && hoverClientY <= hoverThirdY2
+
       // Will be modified by handleMove
       const hoverCursors = [...hierarchy.cursors]
 
       // Time to actually perform the action
-      handleNodeDrag(item.cursors, hoverCursors)
+      handleNodeDrag(item.cursors, hoverCursors, isWithinThird)
 
       item.cursors = hoverCursors
     },

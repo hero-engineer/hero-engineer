@@ -21,7 +21,7 @@ function useNodeDragHelpers() {
     setDragged({ type: 'hierarchy', hierarchyId: hierarchy.id })
   }, [setDragged])
 
-  const handleNodeDrag = useCallback((dragCursors: number[], hoverCursors: number[]) => {
+  const handleNodeDrag = useCallback((dragCursors: number[], hoverCursors: number[], isWithin: boolean) => {
     console.log(dragCursors, hoverCursors)
 
     setHierarchy(hierarchy => {
@@ -43,7 +43,7 @@ function useNodeDragHelpers() {
 
       parentHierarchy = nextHierarchy
 
-      hoverCursors.slice(1, -1).forEach(cursor => {
+      hoverCursors.slice(1, isWithin ? hoverCursors.length - 1 : -1).forEach(cursor => {
         parentHierarchy.children = [...parentHierarchy.children]
 
         parentHierarchy = parentHierarchy.children[cursor]

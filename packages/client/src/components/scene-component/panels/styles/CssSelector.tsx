@@ -1,14 +1,10 @@
 import { Dispatch, SetStateAction, memo, useCallback, useMemo, useState } from 'react'
 import { Autocomplete, Div } from 'honorable'
 
-import { CssClassType } from '~types'
-
-import extractClassNamesFromSelector from '~utils/extractClassNamesFromSelector'
-
 import CssSelectorChip from '~components/scene-component/panels/styles/CssSelectorChip'
 
 type CssSelectorPropType = {
-  allClasses: CssClassType[]
+  allClasseNames: string[]
   classNames: string[]
   selectedClassName: string
   onCreateClassName: (className: string) => void
@@ -20,23 +16,26 @@ type CssSelectorPropType = {
 
 const classNameRegex = /^[a-zA-Z_-]+[\w-]*$/
 
-const ecuAnyValue = `__hero_any__${Math.random()}`
-const anyOption = { value: ecuAnyValue, label: 'Create new class' }
-const ecuErrorValue = `__hero_error__${Math.random()}`
-const errorOption = { value: ecuErrorValue, label: 'Invalid class name' }
+const anyValue = `__hero_any__${Math.random()}`
+const anyOption = { value: anyValue, label: 'Create new class' }
+const errorValue = `__hero_error__${Math.random()}`
+const errorOption = { value: errorValue, label: 'Invalid class name' }
 
-function CssSelector({ allClasses, classNames, selectedClassName, onSelectedClassNameChange, onCreateClassName, onDeleteClassName, onClassNamesChange, onWarnAboutCssClassOrdering }: CssSelectorPropType) {
+function CssSelector({
+  allClasseNames,
+  classNames,
+  selectedClassName,
+  onSelectedClassNameChange,
+  onCreateClassName,
+  onDeleteClassName,
+  onClassNamesChange,
+  onWarnAboutCssClassOrdering,
+}: CssSelectorPropType) {
   const [search, setSearch] = useState('')
   const [forceOpen, setForceOpen] = useState(false)
 
   const isError = useMemo(() => !!search && !classNameRegex.test(search), [search])
-
-  const options = useMemo(() => isError ? [] : [...new Set(
-    allClasses
-    .map(c => extractClassNamesFromSelector(c.selector))
-    .flat()
-    .filter(className => !classNames.includes(className))
-  )], [isError, allClasses, classNames])
+  const options = useMemo(() => isError ? [] : [...new Set(allClasseNames.filter(className => !classNames.includes(className)))], [isError, allClasseNames, classNames])
 
   const handleSearch = useCallback((nextSearch: string) => {
     setSearch(nextSearch === anyOption.label || nextSearch === errorOption.label ? '' : nextSearch)
@@ -45,9 +44,9 @@ function CssSelector({ allClasses, classNames, selectedClassName, onSelectedClas
   const handleSelect = useCallback((selectedValue: any) => {
     setSearch('')
 
-    if (selectedValue === ecuErrorValue || isError) return
+    if (selectedValue === errorValue || isError) return
 
-    const isCreated = selectedValue === ecuAnyValue
+    const isCreated = selectedValue === anyValue
     const addedClassName = isCreated ? search : selectedValue
 
     if (!addedClassName) return
@@ -61,14 +60,7 @@ function CssSelector({ allClasses, classNames, selectedClassName, onSelectedClas
     const orderedNextClassNames = [...nextClassNames]
 
     if (!isCreated) {
-      orderedNextClassNames.sort((a, b) => {
-        const selectorA = `.${a}`
-        const selectorB = `.${b}`
-        const indexOfA = allClasses.findIndex(c => c.selector === selectorA)
-        const indexOfB = allClasses.findIndex(c => c.selector === selectorB)
-
-        return indexOfA < indexOfB ? -1 : 1
-      })
+      orderedNextClassNames.sort((a, b) => allClasseNames.indexOf(a) < allClasseNames.indexOf(b) ? -1 : 1)
 
       if (nextClassNames.join(' ') !== orderedNextClassNames.join(' ')) onWarnAboutCssClassOrdering()
     }
@@ -78,7 +70,7 @@ function CssSelector({ allClasses, classNames, selectedClassName, onSelectedClas
   }, [
     isError,
     search,
-    allClasses,
+    allClasseNames,
     classNames,
     onCreateClassName,
     onClassNamesChange,
@@ -133,7 +125,7 @@ function CssSelector({ allClasses, classNames, selectedClassName, onSelectedClas
       )}
       <Autocomplete
         bare
-        placeholder={`${classNames.length ? 'Add' : 'Choose'} or create class`}
+        placeholder={`${classNames.length ? 'Add' : 'Choose'} or create a custom class`}
         options={options}
         anyOption={isError ? errorOption : anyOption}
         value={search}
@@ -146,10 +138,9 @@ function CssSelector({ allClasses, classNames, selectedClassName, onSelectedClas
           color: isError ? 'danger' : 'inherit',
           onClick: () => setForceOpen(true),
         }}
-        Ê
         flexGrow
         flexShrink={1}
-        position="initial" // Give the menu to the parent
+        position="static" // Give the menu to the parent
         p={0.25}
       />
     </Div>

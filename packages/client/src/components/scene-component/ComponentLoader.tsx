@@ -15,8 +15,8 @@ function ComponentLoader({ componentPath, window, head }: ComponentLoaderPropsTy
   const { key } = useContext(ComponentRemountContext)
 
   const decoratorPaths = useDecoratorPaths(componentPath)
-  const decorators = (decoratorPaths || []).map(decoratorPath => lazy(() => import(/* @vite-ignore */ decoratorPath)))
-  const Component = lazy(() => import(/* @vite-ignore */ componentPath))
+  const decorators = (decoratorPaths || []).map(decoratorPath => lazy(() => import(/* @vite-ignore */decoratorPath)))
+  const Component = lazy(() => import(/* @vite-ignore */componentPath))
 
   return (
     <Suspense>

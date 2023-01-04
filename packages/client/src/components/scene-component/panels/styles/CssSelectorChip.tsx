@@ -7,12 +7,13 @@ import { zIndexes } from '~constants'
 type CssSelectorChipPropsType = {
   selector: string
   isSelected: boolean
+  isVendor?: boolean
   onSelect: () => void
   onDiscard: () => void
   onDelete: () => void
 }
 
-function CssSelectorChip({ selector, isSelected, onSelect, onDiscard, onDelete }: CssSelectorChipPropsType) {
+function CssSelectorChip({ selector, isSelected, isVendor, onSelect, onDiscard, onDelete }: CssSelectorChipPropsType) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const handleMenuClose = useCallback(() => {
@@ -76,13 +77,15 @@ function CssSelectorChip({ selector, isSelected, onSelect, onDiscard, onDelete }
       >
         {selector}
       </Div>
-      <Div
-        xflex="x5"
-        fontSize="0.75em"
-        onClick={() => setIsMenuOpen(true)}
-      >
-        <MdMoreVert />
-      </Div>
+      {!isVendor && (
+        <Div
+          xflex="x5"
+          fontSize="0.75em"
+          onClick={() => setIsMenuOpen(true)}
+        >
+          <MdMoreVert />
+        </Div>
+      )}
       <Div
         xflex="x5"
         fontSize="0.75em"

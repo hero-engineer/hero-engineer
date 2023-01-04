@@ -19,107 +19,109 @@ import ProviderTheme from '~components/providers/ProviderTheme'
 function Router({ children }: any) {
   return (
     <BrowserRouter>
-      <ProviderTheme>
-        <Routes>
+      <Routes>
+        <Route
+          path="_hero_"
+          element={(
+            <ProviderTheme>
+              <Layout />
+            </ProviderTheme>
+          )}
+        >
           <Route
-            path="_hero_"
-            element={<Layout />}
+            index
+            element={(
+              <ResponsiveLayout>
+                <Home />
+              </ResponsiveLayout>
+            )}
+          />
+          <Route
+            path="components"
+            element={(
+              <ResponsiveLayout>
+                <Components />
+              </ResponsiveLayout>
+            )}
+          />
+          <Route
+            path="design"
+            element={(
+              <ResponsiveLayout>
+                <Design />
+              </ResponsiveLayout>
+            )}
           >
             <Route
               index
               element={(
-                <ResponsiveLayout>
-                  <Home />
-                </ResponsiveLayout>
+                <Navigate
+                  replace
+                  to="system"
+                />
               )}
             />
             <Route
-              path="components"
-              element={(
-                <ResponsiveLayout>
-                  <Components />
-                </ResponsiveLayout>
-              )}
+              path="system"
+              element={<DesignSystem />}
             />
             <Route
-              path="design"
-              element={(
-                <ResponsiveLayout>
-                  <Design />
-                </ResponsiveLayout>
-              )}
-            >
-              <Route
-                index
-                element={(
-                  <Navigate
-                    replace
-                    to="system"
-                  />
-                )}
-              />
-              <Route
-                path="system"
-                element={<DesignSystem />}
-              />
-              <Route
-                path="favicon"
-                element={<DesignFavicon />}
-              />
-            </Route>
-            <Route
-              path="packages"
-              element={(
-                <ResponsiveLayout>
-                  <Packages />
-                </ResponsiveLayout>
-              )}
-            />
-            <Route
-              path="settings"
-              element={(
-                <ResponsiveLayout>
-                  <Settings />
-                </ResponsiveLayout>
-              )}
-            >
-              <Route
-                index
-                element={(
-                  <Navigate
-                    replace
-                    to="general"
-                  />
-                )}
-              />
-              <Route
-                path="general"
-                element={<SettingsGeneral />}
-              />
-              <Route
-                path="logs"
-                element={<SettingsLogs />}
-              />
-            </Route>
-            <Route
-              path="~/*"
-              element={(
-                <ProviderComponent>
-                  <Component />
-                </ProviderComponent>
-              )}
-            />
-            <Route
-              path="*"
-              element={<div>Not found</div>}
+              path="favicon"
+              element={<DesignFavicon />}
             />
           </Route>
           <Route
-            path="*"
-            element={children}
+            path="packages"
+            element={(
+              <ResponsiveLayout>
+                <Packages />
+              </ResponsiveLayout>
+            )}
           />
-        </Routes>
-      </ProviderTheme>
+          <Route
+            path="settings"
+            element={(
+              <ResponsiveLayout>
+                <Settings />
+              </ResponsiveLayout>
+            )}
+          >
+            <Route
+              index
+              element={(
+                <Navigate
+                  replace
+                  to="general"
+                />
+              )}
+            />
+            <Route
+              path="general"
+              element={<SettingsGeneral />}
+            />
+            <Route
+              path="logs"
+              element={<SettingsLogs />}
+            />
+          </Route>
+          <Route
+            path="~/*"
+            element={(
+              <ProviderComponent>
+                <Component />
+              </ProviderComponent>
+            )}
+          />
+          <Route
+            path="*"
+            element={<div>Not found</div>}
+          />
+        </Route>
+        <Route
+          path="*"
+          element={children}
+        />
+      </Routes>
     </BrowserRouter>
   )
 }
