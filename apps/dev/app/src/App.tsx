@@ -13,6 +13,17 @@ function App() {
       <div className="foo">
         Edit me I'm famous
       </div>
+      <div className="flex">
+        <div className="foo">
+          Edit me I'm famous
+        </div>
+        <div className="foo">
+          Edit me I'm famous
+        </div>
+        <div className="foo">
+          Edit me I'm famous
+        </div>
+      </div>
       <CoolDiv />
       <CoolDaddy>
         <CoolDiv />
