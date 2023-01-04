@@ -1,6 +1,6 @@
 function CoolDiv() {
   return (
-    <div className="shanon">
+    <div>
       CoolDiv
     </div>
   )
