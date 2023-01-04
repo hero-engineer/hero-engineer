@@ -8,7 +8,6 @@ import { hierarchyTypeToColor } from '~constants'
 // import deleteNode from '~processors/typescript/deleteNode'
 
 import HierarchyContext from '~contexts/HierarchyContext'
-import ComponentDragContext from '~contexts/ComponentDragContext'
 // import LogsContext from '~contexts/LogsContext'
 
 import usePersistedState from '~hooks/usePersistedState'
@@ -20,7 +19,6 @@ import PanelHierarchyLabel from '~components/scene-component/panels/hierarchy/Pa
 function PanelHierarchy() {
   // const { logs } = useContext(LogsContext)
   const { hierarchy, currentHierarchyId, setCurrentHierarchyId } = useContext(HierarchyContext)
-  const { draggedHierarchyId, setDraggedHierarchyId } = useContext(ComponentDragContext)
   const [collapsed, setCollapsed] = usePersistedState<Record<string, boolean>>('panel-hierarchy-collapsed', {})
 
   // const handleDelete = useCallback(async (hierarchy: HierarchyType) => {
@@ -36,11 +34,8 @@ function PanelHierarchy() {
           hierarchy={hierarchy}
           active={currentHierarchyId === hierarchy.id}
           expanded={!collapsed[hierarchy.id]}
-          dragged={draggedHierarchyId === hierarchy.id}
           onSelect={() => setCurrentHierarchyId(hierarchy.id)}
           onExpand={() => setCollapsed(x => ({ ...x, [hierarchy.id]: !collapsed[hierarchy.id] }))}
-          onDragStart={() => setDraggedHierarchyId(hierarchy.id)}
-          onDragEnd={() => setDraggedHierarchyId('')}
         />
       )}
       barColor={hierarchyTypeToColor[hierarchy.type] ?? 'text'}
@@ -49,7 +44,7 @@ function PanelHierarchy() {
     >
       {hierarchy.children.map(child => renderHierarchy(child))}
     </TreeView>
-  ), [collapsed, currentHierarchyId, draggedHierarchyId, setCollapsed, setCurrentHierarchyId, setDraggedHierarchyId])
+  ), [collapsed, currentHierarchyId, setCollapsed, setCurrentHierarchyId])
 
   return (
     <Div

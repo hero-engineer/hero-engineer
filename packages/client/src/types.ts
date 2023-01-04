@@ -151,3 +151,24 @@ export type FileTreeType = {
   fullPath: string
   children: FileTreeType[]
 }
+
+export type NodeDragItemType = {
+  cursors: number[]
+}
+
+export type InsertedNodeDragItemType = {
+  type: 'html-tag'
+  name: string
+}
+
+export type HierarchyDragType = {
+  type: 'hierarchy',
+  hierarchyId: string
+}
+
+export type HtmlTagDragType = {
+  type: 'html-tag',
+  name: string
+}
+
+export type DragType = HierarchyDragType | HtmlTagDragType

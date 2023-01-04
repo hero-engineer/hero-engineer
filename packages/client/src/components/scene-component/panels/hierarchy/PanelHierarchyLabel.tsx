@@ -3,41 +3,30 @@ import { DragPreviewImage, useDrag, useDrop } from 'react-dnd'
 import { Div } from 'honorable'
 import { BiCaretRight } from 'react-icons/bi'
 
-import { HierarchyType } from '~types'
+import { HierarchyType, NodeDragItemType } from '~types'
 
 import { hierarchyTypeToColor } from '~constants'
 
-import HierarchyContext from '~contexts/HierarchyContext'
+import ComponentDragContext from '~contexts/ComponentDragContext'
+
+import useNodeDragHelpers from '~hooks/useNodeDragHelpers'
 
 import compareCursors from '~utils/compareCursors'
-
-type DragItem = {
-  cursors: number[]
-}
 
 type PanelHierarchyLabelPropsType = {
   hierarchy: HierarchyType
   active: boolean
   expanded: boolean
-  dragged: boolean
   onSelect: () => void
   onExpand: () => void
-  onDragStart: () => void
-  onDragEnd: () => void
 }
 
-function repairCursors(hierarchy: HierarchyType) {
-  hierarchy.children.forEach((child, index) => {
-    child.cursors = [...hierarchy.cursors, index]
-
-    repairCursors(child)
-  })
-}
-
-function PanelHierarchyLabel({ hierarchy, active, expanded, dragged, onSelect, onExpand, onDragStart, onDragEnd }: PanelHierarchyLabelPropsType) {
+function PanelHierarchyLabel({ hierarchy, active, expanded, onSelect, onExpand }: PanelHierarchyLabelPropsType) {
   const rootRef = useRef<HTMLDivElement>(null)
 
-  const { setHierarchy } = useContext(HierarchyContext)
+  const { dragged } = useContext(ComponentDragContext)
+
+  const { handleNodeDragStart, handleNodeDrag, handleNodeDragEnd } = useNodeDragHelpers()
 
   const handleClick = useCallback((event: MouseEvent) => {
     event.stopPropagation()
@@ -51,65 +40,22 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, dragged, onSelect, o
     onExpand()
   }, [onExpand])
 
-  const handleMove = useCallback((dragCursors: number[], hoverCursors: number[]) => {
-    console.log('dragHierarchy.cursors', dragCursors)
-    console.log('hoverHierarchy.cursors', hoverCursors)
-
-    setHierarchy(hierarchy => {
-      if (!hierarchy) return hierarchy
-
-      const nextHierarchy = { ...hierarchy }
-      let parentHierarchy = nextHierarchy
-
-      dragCursors.slice(1, -1).forEach(cursor => {
-        parentHierarchy.children = [...parentHierarchy.children]
-
-        parentHierarchy = parentHierarchy.children[cursor]
-      })
-
-      parentHierarchy.children = [...parentHierarchy.children]
-      const [dragHierarchy] = parentHierarchy.children.splice(dragCursors[dragCursors.length - 1], 1)
-
-      repairCursors(parentHierarchy)
-
-      parentHierarchy = nextHierarchy
-      // console.log('1 hoverHierarchy.cursors', hoverHierarchy.cursors)
-
-      hoverCursors.slice(1, -1).forEach(cursor => {
-        parentHierarchy.children = [...parentHierarchy.children]
-
-        parentHierarchy = parentHierarchy.children[cursor]
-      })
-
-      parentHierarchy.children = [...parentHierarchy.children]
-      parentHierarchy.children.splice(hoverCursors[hoverCursors.length - 1], 0, dragHierarchy)
-
-      // console.log('2', parentHierarchy)
-
-      repairCursors(parentHierarchy)
-
-      return nextHierarchy
-    })
-  }, [setHierarchy])
-
-  const [, drag, preview] = useDrag<DragItem, void, void>(() => ({
+  const [, drag, preview] = useDrag<NodeDragItemType, void, void>(() => ({
     type: 'Node',
     item: () => {
       onSelect()
-      onDragStart()
+      handleNodeDragStart(hierarchy)
 
-      console.log('xxx', [...hierarchy.cursors])
+      console.log('Node drag')
 
       return {
         cursors: [...hierarchy.cursors],
       }
     },
-    end: () => {
-      onDragEnd()
-    },
-  }), [onSelect])
+    end: handleNodeDragEnd,
+  }), [hierarchy, onSelect, handleNodeDragStart, handleNodeDragEnd])
 
-  const [, drop] = useDrop<DragItem, void, void>(() => ({
+  const [, drop] = useDrop<NodeDragItemType, void, void>(() => ({
     accept: 'Node',
     hover: (item, monitor) => {
       if (!rootRef.current) return
@@ -143,26 +89,26 @@ function PanelHierarchyLabel({ hierarchy, active, expanded, dragged, onSelect, o
       // Dragging upward
       if (cursorsComparison === 1 && hoverClientY > hoverMiddleY) return
 
+      // Will be modified by handleMove
       const hoverCursors = [...hierarchy.cursors]
 
       // Time to actually perform the action
-      handleMove(item.cursors, hoverCursors)
+      handleNodeDrag(item.cursors, hoverCursors)
 
       item.cursors = hoverCursors
-      // console.log('item.cursors', item.cursors)
-      // item.cursors[item.cursors.length - 1] -= cursorsComparison
-      // console.log('item.cursors', item.cursors[item.cursors.length - 1])
     },
-  }), [hierarchy, handleMove])
+  }), [hierarchy, handleNodeDrag])
 
   drag(drop(rootRef))
+
+  const isDragged = !!dragged && dragged.type === 'hierarchy' && dragged.hierarchyId === hierarchy.id
 
   return (
     <>
       <Div
         ref={rootRef}
         xflex="x4"
-        opacity={dragged ? 0.5 : 1}
+        opacity={isDragged ? 0.5 : 1}
         minWidth={0} // For ellipsis to work
         color={hierarchyTypeToColor[hierarchy.type] ?? 'text'}
         fontWeight={active ? 'bold' : undefined}

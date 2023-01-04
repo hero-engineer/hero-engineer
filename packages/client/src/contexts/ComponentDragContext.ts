@@ -1,11 +1,13 @@
 import { Dispatch, SetStateAction, createContext } from 'react'
 
+import { DragType } from '~types'
+
 export type ComponentDragContextType = {
-  draggedHierarchyId: string,
-  setDraggedHierarchyId: Dispatch<SetStateAction<string>>,
+  dragged: DragType | null,
+  setDragged: Dispatch<SetStateAction<DragType | null>>,
 }
 
 export default createContext<ComponentDragContextType>({
-  draggedHierarchyId: '',
-  setDraggedHierarchyId: () => {},
+  dragged: null,
+  setDragged: () => {},
 })

@@ -1,6 +1,6 @@
 import { ReactNode, useMemo, useState } from 'react'
 
-import { BreakpointType, HierarchyType } from '~types'
+import { BreakpointType, DragType, HierarchyType } from '~types'
 
 import HierarchyContext, { HierarchyContextType } from '~contexts/HierarchyContext'
 import BreakpointContext, { BreakpointContextType } from '~contexts/BreakpointContext'
@@ -47,8 +47,8 @@ function ProviderComponent({ children }: ProviderComponentPropsType) {
   const [rightKey, setRightKey] = usePersistedState('right-key', '')
   const componentPanelsContextValue = useMemo<ComponentPanelsContextType>(() => ({ leftKey, setLeftKey, rightKey, setRightKey }), [leftKey, setLeftKey, rightKey, setRightKey])
 
-  const [draggedHierarchyId, setDraggedHierarchyId] = useState('')
-  const componentDragContextValue = useMemo<ComponentDragContextType>(() => ({ draggedHierarchyId, setDraggedHierarchyId }), [draggedHierarchyId, setDraggedHierarchyId])
+  const [dragged, setDragged] = useState<DragType | null>(null)
+  const componentDragContextValue = useMemo<ComponentDragContextType>(() => ({ dragged, setDragged }), [dragged, setDragged])
 
   return (
     <ComponentRemountContext.Provider value={componentRemountContextValue}>
