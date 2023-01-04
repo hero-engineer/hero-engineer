@@ -1,0 +1,38 @@
+{
+  "name": "tailwindcss-classes",
+  "version": "1.0.0",
+  "description": "A list of all TailwindCSS classes",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hero-engineer/hero-engineer.git"
+  },
+  "keywords": [
+    "tailwind",
+    "tailwindcss",
+    "css"
+  ],
+  "author": "David Hérault <dherault@gmail.com> (https://github.com/dherault)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hero-engineer/hero-engineer/issues"
+  },
+  "homepage": "https://github.com/hero-engineer/hero-engineer#readme",
+  "files": [
+    "build"
+  ],
+  "main": "./build/index.js",
+  "module": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "lint": "eslint ./src",
+    "prepublishOnly": "npm run build",
+    "patch": "npm version patch && git add . -A && git commit -m \"[tailwindcss-classes] Publish patch\" && npm publish",
+    "minor": "npm version minor && git add . -A && git commit -m \"[tailwindcss-classes] Publish minor\" && npm publish"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.4"
+  }
+}
